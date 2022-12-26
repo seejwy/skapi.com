@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LandingPage from '../views/LandingPage.vue'
+import LandingPage from '../views/Main/LandingPage.vue'
+import Main from '../views/Main/Main.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,22 +8,34 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: LandingPage
+      component: Main,
+      children:[
+        {
+          path: '',
+          name: 'landingPage',
+          component: LandingPage
+        },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('../views/Main/Dashboard.vue'),
+        }
+      ]
     },
     {
       path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/Dashboard.vue'),
-    },
-    {
-      path: '/service/:service',
-      name: 'service',
-      component: () => import('../views/ServicePage/Service.vue'),
       children: [
         {
-          path: '/records',
-          name: 'records',
-          component: () => import('../views/ServicePage/Records.vue'),
+          path: ':service',
+          name: 'service',
+          component: () => import('../views/Service/Main.vue'),
+          children: [
+            {
+              path: 'records',
+              name: 'records',
+              component: () => import('../views/Service/Records.vue'),
+            }
+          ]
         }
       ]
     }

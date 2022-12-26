@@ -1,3 +1,5 @@
+@import './variables.less';
+
 :root {
   --primary-color: #293fe6;
   --font-color: rgba(0, 0, 0, 0.85);
@@ -22,4 +24,33 @@ body {
 .material-symbols-outlined {
   vertical-align: middle;
   font-weight: normal;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.iconText {
+  vertical-align: middle;
+  position: relative;
+  top: 0.06em;
+}
+
+.clickable {
+  user-select: none;
+  cursor: pointer;
+}
+
+.onlyOnMobile {
+  display: none;
+
+  @media @ipad {
+    display: inline-block;
+  }
+}
+
+.hideOnMobile {
+  @media @ipad {
+    display: none;
+  }
 }

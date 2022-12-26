@@ -24,7 +24,7 @@
                 .title
                     .material-symbols-outlined dns
                     | &nbsp;
-                    h3 Database
+                    h3.iconText Database
                 p.
                     Auto indexed scalable database.#[br]
                     Skapi's database combines the best of both 
@@ -33,7 +33,7 @@
                 .title
                     .material-symbols-outlined manage_accounts
                     | &nbsp;
-                    h3 Authentication
+                    h3.iconText Authentication
                 p.
                     From general user login features to complex verifications ,#[br]
                     Skapi provides the simplest way to set up authentication for your web services.
@@ -41,7 +41,7 @@
                 .title
                     .material-symbols-outlined sync_alt
                     | &nbsp;
-                    h3 HTML Friendly
+                    h3.iconText HTML Friendly
                 p.
                     Compatible on both vanilla HTML projects and SPA frameworks.#[br]
                     Skapi is focused on getting the basics right without any additional setups or installations.
@@ -49,7 +49,7 @@
                 .title
                     .material-symbols-outlined exit_to_app
                     | &nbsp;
-                    h3 Cloud storage
+                    h3.iconText Cloud storage
                 p.
                     Highly accessible cloud storage.#[br]
                     Intergrated with Skapi's database,#[br]
@@ -58,7 +58,7 @@
                 .title
                     .material-symbols-outlined mark_as_unread
                     | &nbsp;
-                    h3 E-Mail Service
+                    h3.iconText E-Mail Service
                 p.
                     Skapi's e-mail endpoint addresses makes sending newsletters and setting up welcome e-mails easier.
             div
@@ -72,9 +72,9 @@
             .ex
                 pre {{ex_html_import}}
         .how
-          h3 ...for npm users
-          .ex
-            pre npm i skapi-js
+            h3 ...for npm users
+            .ex
+                pre npm i skapi-js
         .how
             h3 Initialize skapi
             .ex
@@ -107,6 +107,10 @@
 </template>
     
 <script setup>
+import { inject, ref } from 'vue';
+let pageTitle = inject('pageTitle');
+pageTitle.value = 'skapi';
+
 let ex_html_import = '<script src="https://broadwayinc.dev/jslib/0.0.56/skapi.js">';
 let ex_html = `<!DOCTYPE html>
 <head>
@@ -187,7 +191,6 @@ let ex_html = `<!DOCTYPE html>
 
 .shell {
     width: 100%;
-    box-sizing: border-box;
     --side-margins: 40px;
 
     @media @tablet {
@@ -199,18 +202,19 @@ let ex_html = `<!DOCTYPE html>
     }
 
     padding: 0 var(--side-margins);
-}
 
-.landing-page {
-    max-width: 1200px;
-    margin: auto;
+    .landing-page {
+        max-width: 1000px;
+        margin: auto;
 
-    .hero {
-        .highlight {
-            color: var(--primary-color);
+        .hero {
+            .highlight {
+                color: var(--primary-color);
+            }
         }
     }
 }
+
 
 hr {
     height: 0px;
@@ -296,7 +300,6 @@ p {
     }
 
     &>div {
-        box-sizing: border-box;
         width: 33.3%;
 
         @media @laptop {
@@ -321,8 +324,6 @@ p {
                 width: 40px;
                 height: 40px;
                 font-size: 38px;
-                top: -2px;
-                position: relative;
             }
 
             &>* {
