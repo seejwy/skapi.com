@@ -100,14 +100,14 @@
             p.
                 Hi, we just released an alpha version of our skapi.
         hr
-        img(src="../assets/img/logo-blue.svg" @click="navigate" :href="href" alt="Skapi" style="width:88px;display: inline-block;vertical-align: middle;")
+        img(src="@/assets/img/logo-blue.svg" @click="navigate" :href="href" alt="Skapi" style="width:88px;display: inline-block;vertical-align: middle;")
         p(style="display: inline-block;vertical-align: middle;") © broadwayInc.
         br
         br
 </template>
     
 <script setup>
-import { inject, ref } from 'vue';
+import { inject } from 'vue';
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
 
@@ -148,7 +148,7 @@ let ex_html = `<!DOCTYPE html>
         color: var(--primary-color);
 
         &>span {
-            color: var(--font-color);
+            // color: var(--font-color);
             opacity: .6;
             font-size: .5em;
             white-space: nowrap;

@@ -2,20 +2,20 @@
 
 :root {
   --primary-color: #293fe6;
-  --font-color: rgba(0, 0, 0, 0.85);
 }
 
 html,
 body {
   min-height: 100%;
   margin: 0;
-  width: 100;
+  width: 100%;
   padding: 0;
+  background-color: var(--app-bg-color);
+  color: var(--app-color);
 }
 
 body {
   font-size: 16px;
-  color: var(--font-color);
   font-family: "Radio Canada", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -41,7 +41,7 @@ body {
   cursor: pointer;
 }
 
-.onlyOnMobile {
+.onlyOnIpad {
   display: none;
 
   @media @ipad {
@@ -49,8 +49,21 @@ body {
   }
 }
 
-.hideOnMobile {
+.hideOnIpad {
   @media @ipad {
+    display: none;
+  }
+}
+
+.onlyOnTablet {
+  display: none;
+  @media @tablet {
+    display: inline-block;
+  }
+}
+
+.hideOnTablet {
+  @media @tablet {
     display: none;
   }
 }

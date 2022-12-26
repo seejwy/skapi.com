@@ -2,17 +2,18 @@
 .shell
     .sideScreen
         NavBar
-            li
-                router-link(to="/dashboard" tag="li") Dashboard
-            li
-                router-link(to="/" tag="li") Documentation
-            li
-                router-link(to="/" tag="li") Account Settings
-            li
-                router-link(to="/" tag="li") Logout
+            ul.iconText
+                li
+                    router-link(to="/dashboard" tag="li") Dashboard
+                li
+                    router-link(to="/" tag="li") Documentation
+                li
+                    router-link(to="/" tag="li") Account Settings
+                li
+                    router-link(to="/" tag="li") Logout
         main
             router-view
-            .padBlock.onlyOnMobile
+            .padBlock.onlyOnTablet
 
     .sidebar
         router-link(to="/", custom, v-slot="{ navigate, href }")
@@ -32,6 +33,7 @@
             span.material-symbols-outlined folder_copy
         router-link(to="/mails") 
             span.material-symbols-outlined mail
+
 </template>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
@@ -108,12 +110,12 @@
 
 .sideScreen {
     flex-grow: 1;
-    
+
     main {
-        min-height: 100vh;
         max-width: 1000px;
         margin: auto;
-        .padBlock{
+
+        .padBlock {
             width: 100%;
             height: 120px;
         }
@@ -122,10 +124,15 @@
 </style>
 <!-- script below -->
 <script setup>
-import NavBar from '@/components/navbar.vue'
+import NavBar from '@/components/navbar.vue';
 import { inject } from 'vue';
 import { useRoute } from 'vue-router';
 let route = useRoute();
+
 let pageTitle = inject('pageTitle');
 pageTitle.value = route.params.service;
+
+let appColor = inject('appColor');
+appColor.background = '#595959';
+appColor.color = '#fff';
 </script>

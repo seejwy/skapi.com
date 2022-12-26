@@ -62,7 +62,8 @@ h1 The Dashboard
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref } from 'vue';
+import { inject } from 'vue';
 let pageTitle = inject('pageTitle');
-pageTitle.value = 'Dashboard';
+pageTitle.value = 'skapi';
+
 </script>
