@@ -70,19 +70,17 @@ sui-nav#top-nav {
         height: 60px;
 
         .menu {
+            flex-shrink: 0;
+
             ul {
                 margin: 0;
                 list-style: none;
                 padding: 0;
 
                 li {
-                    margin: 0;
+                    margin: 0 0 0 20px;
                     padding: 0;
                     display: inline-block;
-
-                    &:not(:last-child) {
-                        margin: 0 20px 0 0;
-                    }
 
                     a {
                         color: inherit;
@@ -98,15 +96,19 @@ sui-nav#top-nav {
 
         .title {
             flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
 
             span {
                 &.backbutton {
+                    display: inline;
                     font-size: 24px;
                     color: rgba(255, 255, 255, .4);
                     margin-right: 4px;
                 }
 
                 &.titleText {
+                    display: inline;
                     font-weight: 700;
                     user-select: none;
                     font-size: 24px;

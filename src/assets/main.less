@@ -2,6 +2,7 @@
 
 :root {
   --primary-color: #293fe6;
+  --input-box-shadow: rgb(0 0 0 / 50%) -1px -1px 2px -1px, rgb(255 255 255 / 33%) 1px 1px 1px, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
 }
 
 html,
@@ -38,7 +39,7 @@ body {
 
 .clickable {
   user-select: none;
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .showOnIpad {
@@ -78,4 +79,108 @@ main {
   @media @phone {
     padding: 0 8px;
   }
+}
+
+.hide {
+  display: none !important;
+}
+
+.select-input {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--input-box-shadow);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  position: relative;
+
+  &>* {
+    display: inline-block;
+    position: relative;
+  }
+
+  &>*:first-child {
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      vertical-align: middle;
+      background-color: rgba(255, 255, 255, .2);
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+    }
+  }
+
+  &>.select-field {
+    sui-select {
+      width: 8em;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+  }
+
+  &>.input-field {
+    display: inline-flex;
+    flex-grow: 1;
+    align-items: center;
+
+    sui-input {
+      width: 100%;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+
+    .placeholder-icon:first-child {
+      opacity: 0.6;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      left: 10px;
+
+      &+sui-input {
+        input::placeholder {
+          padding: 24px;
+        }
+      }
+    }
+
+    sui-input {
+      input::placeholder {
+        color: rgba(255, 255, 255, .6);
+      }
+
+      input {
+        color: #fff;
+        margin-left: 12px;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+
+    .optionButton:last-child {
+      opacity: 0.6;
+      padding-right: 16px;
+    }
+  }
+}
+
+.line-button {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: none;
+}
+
+.mask {
+  position: fixed;
+  inset: 0;
 }
