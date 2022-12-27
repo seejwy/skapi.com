@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '../views/Main/LandingPage.vue'
+import Login from '../views/Main/Login.vue'
 import Main from '../views/Main/Main.vue'
 
 const router = createRouter({
@@ -19,6 +20,16 @@ const router = createRouter({
           path: 'dashboard',
           name: 'dashboard',
           component: () => import('../views/Main/Dashboard.vue'),
+        },
+        {
+          path: 'login',
+          name: 'login',
+          component: Login,
+        },
+        {
+          path: "/:catchAll(.*)",
+          name: 'notFound',
+          component: () => import('../views/Main/404.vue'),
         }
       ]
     },
@@ -30,6 +41,11 @@ const router = createRouter({
           name: 'service',
           component: () => import('../views/Service/Main.vue'),
           children: [
+            {
+              path: '',
+              name: 'serviceDashboard',
+              component: () => import('../views/Service/Service.vue'),
+            },
             {
               path: 'records',
               name: 'records',

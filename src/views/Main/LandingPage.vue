@@ -1,109 +1,108 @@
 <template lang="pug">
-.shell
-    .landing-page
-        h1.hero
-            span.highlight Backend framework 
-            span for Frontend Developers
-            br
-            | Build 
-            span.highlight fast 
-            | and 
-            span.highlight scalable 
-            | web&nbsp;services 
-            br.hide_on_tablet
-            span based on the 
-            span
-                span.highlight Serverless
-                |  technology
-        router-link(to="/signup")
-            sui-button Get Started
-        hr
-        h2 Skapi Features
-        .features
-            div
-                .title
-                    .material-symbols-outlined dns
-                    | &nbsp;
-                    h3.iconText Database
-                p.
-                    Auto indexed scalable database.#[br]
-                    Skapi's database combines the best of both 
-                    relational and nosql architectures.
-            div
-                .title
-                    .material-symbols-outlined manage_accounts
-                    | &nbsp;
-                    h3.iconText Authentication
-                p.
-                    From general user login features to complex verifications ,#[br]
-                    Skapi provides the simplest way to set up authentication for your web services.
-            div
-                .title
-                    .material-symbols-outlined sync_alt
-                    | &nbsp;
-                    h3.iconText HTML Friendly
-                p.
-                    Compatible on both vanilla HTML projects and SPA frameworks.#[br]
-                    Skapi is focused on getting the basics right without any additional setups or installations.
-            div
-                .title
-                    .material-symbols-outlined exit_to_app
-                    | &nbsp;
-                    h3.iconText Cloud storage
-                p.
-                    Highly accessible cloud storage.#[br]
-                    Intergrated with Skapi's database,#[br]
-                    indexing and security restrictions is provided by default.
-            div
-                .title
-                    .material-symbols-outlined mark_as_unread
-                    | &nbsp;
-                    h3.iconText E-Mail Service
-                p.
-                    Skapi's e-mail endpoint addresses makes sending newsletters and setting up welcome e-mails easier.
-            div
-                a(href="/docs/index.html" target="_blank")
-                    sui-button Read the Docs
-        hr
-        h2 Getting Started
-        .how
-            h3 Import skapi
-            p ...For SPA applications you can use "npm i skapi"
-            .ex
-                pre {{ex_html_import}}
-        .how
-            h3 ...for npm users
-            .ex
-                pre npm i skapi-js
-        .how
-            h3 Initialize skapi
-            .ex
-                pre.
-                    let skapi = new Skapi('your_service_id', 'your_user_id')#[br]
-                    skapi.login({
-                        email: 'user@email.com',
-                        password: 'xxxxxx'
-                    }).then(user=&gt; console.log(user));
-        .how
-            h3 Skapi works well on HTML
-            p.
-                Skapi is designed to work well with vanilla HTML forms as well.#[br]
-                Example below shows a full example of HTML login page.
-            .ex
-                pre {{ex_html}}
-        hr
-        h2 Updates
-        .updates
-            h3
-                | skapi is on ALPHA! 
-                span 2022-10-30
-            p.
-                Hi, we just released an alpha version of our skapi.
-        hr
-        img(src="@/assets/img/logo-blue.svg" @click="navigate" :href="href" alt="Skapi" style="width:88px;display: inline-block;vertical-align: middle;")
-        p(style="display: inline-block;vertical-align: middle;") © broadwayInc.
+.landing-page
+    h1.hero
+        span.highlight Backend framework 
+        span for Frontend Developers
         br
-        br
+        | Build 
+        span.highlight fast 
+        | and 
+        span.highlight scalable 
+        | web&nbsp;services 
+        br.hideOnTablet
+        span based on the 
+        span
+            span.highlight Serverless
+            |  technology
+    router-link(to="/signup")
+        sui-button Get Started
+    hr
+    h2 Skapi Features
+    .features
+        div
+            .title
+                .material-symbols-outlined dns
+                | &nbsp;
+                h3.iconText Database
+            p.
+                Auto indexed scalable database.#[br]
+                Skapi's database combines the best of both 
+                relational and nosql architectures.
+        div
+            .title
+                .material-symbols-outlined manage_accounts
+                | &nbsp;
+                h3.iconText Authentication
+            p.
+                From general user login features to complex verifications ,#[br]
+                Skapi provides the simplest way to set up authentication for your web services.
+        div
+            .title
+                .material-symbols-outlined sync_alt
+                | &nbsp;
+                h3.iconText HTML Friendly
+            p.
+                Compatible on both vanilla HTML projects and SPA frameworks.#[br]
+                Skapi is focused on getting the basics right without any additional setups or installations.
+        div
+            .title
+                .material-symbols-outlined exit_to_app
+                | &nbsp;
+                h3.iconText Cloud storage
+            p.
+                Highly accessible cloud storage.#[br]
+                Intergrated with Skapi's database,#[br]
+                indexing and security restrictions is provided by default.
+        div
+            .title
+                .material-symbols-outlined mark_as_unread
+                | &nbsp;
+                h3.iconText E-Mail Service
+            p.
+                Skapi's e-mail endpoint addresses makes sending newsletters and setting up welcome e-mails easier.
+        div
+            a(href="/docs/index.html" target="_blank")
+                sui-button Read the Docs
+    hr
+    h2 Getting Started
+    .how
+        h3 Import skapi
+        p ...For SPA applications you can use "npm i skapi"
+        .ex
+            pre {{ex_html_import}}
+    .how
+        h3 ...for npm users
+        .ex
+            pre npm i skapi-js
+    .how
+        h3 Initialize skapi
+        .ex
+            pre.
+                let skapi = new Skapi('your_service_id', 'your_user_id')#[br]
+                skapi.login({
+                    email: 'user@email.com',
+                    password: 'xxxxxx'
+                }).then(user=&gt; console.log(user));
+    .how
+        h3 Skapi works well on HTML
+        p.
+            Skapi is designed to work well with vanilla HTML forms as well.#[br]
+            Example below shows a full example of HTML login page.
+        .ex
+            pre {{ex_html}}
+    hr
+    h2 Updates
+    .updates
+        h3
+            | skapi is on ALPHA! 
+            span 2022-10-30
+        p.
+            Hi, we just released an alpha version of our skapi.
+    hr
+    img(src="@/assets/img/logo-blue.svg" @click="navigate" :href="href" alt="Skapi" style="width:88px;display: inline-block;vertical-align: middle;")
+    p(style="display: inline-block;vertical-align: middle;") © broadwayInc.
+    br
+    br
 </template>
     
 <script setup>
@@ -189,32 +188,6 @@ let ex_html = `<!DOCTYPE html>
     }
 }
 
-.shell {
-    width: 100%;
-    --side-margins: 40px;
-
-    @media @tablet {
-        --side-margins: 16px;
-    }
-
-    @media @phone {
-        --side-margins: 8px;
-    }
-
-    padding: 0 var(--side-margins);
-
-    .landing-page {
-        max-width: 1000px;
-        margin: auto;
-
-        .hero {
-            .highlight {
-                color: var(--primary-color);
-            }
-        }
-    }
-}
-
 
 hr {
     height: 0px;
@@ -223,12 +196,6 @@ hr {
     border: none;
     box-shadow: 0px 1px 3px rgb(0 0 0 / 6%);
     border-top: 2px solid rgba(0, 0, 0, 0.06);
-}
-
-.hide_on_tablet {
-    @media @tablet {
-        display: none;
-    }
 }
 
 h1 {
@@ -273,6 +240,10 @@ p {
 .hero {
     @media @ipad {
         margin-top: 50px;
+    }
+
+    .highlight {
+        color: var(--primary-color);
     }
 
     margin-top: 100px;

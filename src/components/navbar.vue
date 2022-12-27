@@ -2,29 +2,24 @@
 sui-nav#top-nav(auto-hide)
     .nav_align
         .title
-            span.onlyOnTablet.material-symbols-outlined.clickable(v-if='!props.isParentLevel' style='margin-left: -24px;padding-left: 24px;') arrow_back_ios
-            span.titleText.iconText {{ pageTitle }}
+            span.showOnTablet.material-symbols-outlined.clickable.backbutton(v-if='!props.isParentLevel' style='margin-left: -24px;padding-left: 24px;' @click='toParent') arrow_back_ios
+            span.titleText.iconText(:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null") {{ pageTitle }}
         .menu
             .hideOnTablet
                 slot
-            .material-symbols-outlined.more-button.onlyOnTablet.clickable(style='margin-right: -24px;padding-right: 24px;' @click='open') more_horiz
+            .material-symbols-outlined.more-button.showOnTablet.clickable(style='margin-right: -24px;padding-right: 24px;' @click='open') more_horiz
 
-sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' style='background-color: rgba(31, 31, 31, .6); color:white;' position="right")
-    #nav-overlay(@click="()=>close(true)")
-        slot
+    sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' style='background-color: rgba(31, 31, 31, .6); color:white;' position="right")
+        // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
+        #nav-overlay(@click="()=>close(true)")
+            slot
 
 </template>
 <style lang="less">
 @import '@/assets/variables.less';
 
 #nav-overlay {
-    // @media @ipad {
-    //     min-width: 30vw;
-    // }
-
-    // @media @tablet {
     min-width: 50vw;
-    // }
 
     @media @phone {
         min-width: 70vw;
@@ -58,10 +53,9 @@ sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' sty
 }
 
 sui-nav#top-nav {
-    background: #505050;
     box-shadow: none;
-    color: #fff;
     padding: 0 24px;
+    color: #fff;
 
     @media @tablet {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
@@ -91,7 +85,7 @@ sui-nav#top-nav {
                     }
 
                     a {
-                        color: #fff;
+                        color: inherit;
                         text-decoration: none;
                     }
                 }
@@ -106,7 +100,7 @@ sui-nav#top-nav {
             flex-grow: 1;
 
             span {
-                &.mobile {
+                &.backbutton {
                     font-size: 24px;
                     color: rgba(255, 255, 255, .4);
                     margin-right: 4px;
@@ -114,6 +108,7 @@ sui-nav#top-nav {
 
                 &.titleText {
                     font-weight: 700;
+                    user-select: none;
                     font-size: 24px;
                 }
             }
@@ -124,21 +119,30 @@ sui-nav#top-nav {
 
 <script setup>
 import { inject, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const props = defineProps(['isParentLevel']);
 
 let pageTitle = inject('pageTitle');
 let navOverlay = ref(null);
-let router = useRoute();
+let route = useRoute();
+let router = useRouter();
 
-watch(() => router.name, () => {
+watch(() => route.name, () => {
+    // always close on route change
     close();
 });
+
+function toParent() {
+    let path = route.fullPath.split('/');
+    path.pop();
+    router.push(path.join('/'));
+}
 
 function close(keepScrollPosition = false) {
     let scrollY = document.body.style.top;
     let isFixed = document.body.style.position === 'fixed';
     if (isFixed) {
+        // revert fixed background
         document.body.style.position = '';
         document.body.style.top = '';
 
@@ -147,10 +151,13 @@ function close(keepScrollPosition = false) {
         }
     }
 
-    navOverlay.value.close();
+    if (navOverlay.value) {
+        navOverlay.value.close();
+    }
 }
 
 function open() {
+    // fix background position when menu is opened
     navOverlay.value.open(() => {
         document.body.style.top = `-${window.scrollY}px`;
         document.body.style.position = 'fixed';

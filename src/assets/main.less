@@ -41,29 +41,43 @@ body {
   cursor: pointer;
 }
 
-.onlyOnIpad {
-  display: none;
-
-  @media @ipad {
-    display: inline-block;
+.showOnIpad {
+  @media @ipad_excl {
+    display: none !important;
   }
 }
 
 .hideOnIpad {
   @media @ipad {
-    display: none;
+    display: none !important;
   }
 }
 
-.onlyOnTablet {
-  display: none;
-  @media @tablet {
-    display: inline-block;
+.showOnTablet {
+  @media @tablet_excl {
+    display: none !important;
   }
 }
 
 .hideOnTablet {
   @media @tablet {
-    display: none;
+    display: none !important;
+  }
+}
+
+main {
+  max-width: 1000px;
+  margin: auto;
+
+  @media @ipad {
+    padding: 0 24px;
+  }
+
+  @media @tablet {
+    padding: 0 16px;
+  }
+
+  @media @phone {
+    padding: 0 8px;
   }
 }
