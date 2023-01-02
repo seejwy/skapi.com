@@ -72,7 +72,12 @@ export default class Admin extends Skapi {
 
     async getServices() {
         await this.checkAdmin();
-        return await this.request('get-services', null, { auth: true });
+        return await this.request('get-services', null, {
+            auth: true,
+            fetchOptions: {
+                refresh: true
+            }
+        });
     }
 
     async requireAdmin(opt = { throwError, ignoreVerification }) {

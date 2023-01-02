@@ -1,6 +1,6 @@
 <template lang="pug">
 NavBar(:is-parent-level='true' style='background-color: var(--primary-color);')
-    ul.iconText(@click='controlPropagation')
+    ul.iconText(@click='bypassSameRoute')
 
         li
             router-link(to="/") Documentation
@@ -46,13 +46,15 @@ import NavBar from '@/components/navbar.vue';
 import { inject } from 'vue';
 import { state, skapi } from '@/main';
 import { useRouter, useRoute } from 'vue-router';
+
 let router = useRouter();
 let route = useRoute();
 let appColor = inject('appColor');
 appColor.background = '#F5F5F5';
 appColor.color = 'rgba(0 0 0 / 85%)';
 
-function controlPropagation(e) {
+function bypassSameRoute(e) {
+    // bypass when same route is clicked
     let routeName = {
         'Dashboard': 'dashboard',
         'Login': 'login'

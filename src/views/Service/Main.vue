@@ -16,15 +16,14 @@
                     a.clickable(@click='()=>skapi.logout().then(() => state.user = null)') Logout
 
         main(v-if='state.connection')
-
             NotExists(v-if='service === 404')
-
             template(v-else-if='service')
                 router-view
-                .padBlock.showOnTablet
+            Login(v-else)
+            
+            .padBlock.showOnIpad
 
     .sidebar
-
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
 
         router-link(to="/dashboard")
@@ -143,9 +142,10 @@
 <script setup>
 import NavBar from '@/components/navbar.vue';
 import NotExists from '@/views/Main/404.vue';
+import Login from '../Main/Login.vue';
 import { provide, inject, watch, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import { skapi, state } from '@/main';
+import { useRoute, useRouter } from 'vue-router';
 let router = useRouter();
 
 let appColor = inject('appColor');
@@ -156,30 +156,20 @@ appColor.color = '#fff';
 // this does not trigger again when nested routes change
 let route = useRoute();
 let serviceId = route.params.service;
+let service = ref(null);
 
-let service = ref(null)
 provide('service', service);
+provide('recordTables', ref(null));
 
 let pageTitle = inject('pageTitle');
-pageTitle.value = 'Service'
+pageTitle.value = 'Service';
 
-function handleRoute(getServices) {
-    if (!state.connection) {
-        // do nothing if not connected
+function getServices(gs) {
+    if (!(gs instanceof Promise)) {
         return;
     }
 
-    if (!state.user) {
-        // throw user to login page if not logged in
-        router.replace('/login');
-        return;
-    }
-
-    if (!(getServices instanceof Promise)) {
-        return;
-    }
-
-    getServices.then(services => {
+    gs.then(services => {
         let region = skapi.region_list?.[serviceId.substring(0, 4)];
         if (!region) {
             // region does not exists
@@ -190,14 +180,23 @@ function handleRoute(getServices) {
         for (let s of services[region]) {
             if (s.service === serviceId) {
                 service.value = s;
-                break;
+                return s;
             }
         }
 
-        service.value = service.value || 404;
+        // no matching service id
+        service.value = 404;
     });
 }
 
-handleRoute(state.getServices);
-watch(() => state.getServices, handleRoute);
+getServices(state.getServices);
+
+// watch is for users visiting the page directly
+watch(() => state.getServices, getServices);
+watch(() => state.user, u => {
+    if (!u) {
+        // throw user to login page if not logged in
+        router.replace('/login');
+    }
+});
 </script>

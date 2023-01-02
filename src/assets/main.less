@@ -1,5 +1,19 @@
 @import './variables.less';
 
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.animation-rotation {
+  animation: rotation 2s infinite linear;
+}
+
 :root {
   --primary-color: #293fe6;
   --input-box-shadow: rgb(0 0 0 / 50%) -1px -1px 2px -1px, rgb(255 255 255 / 33%) 1px 1px 1px, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
@@ -40,6 +54,11 @@ body {
 .clickable {
   user-select: none;
   cursor: pointer !important;
+}
+
+.not-clickable {
+  user-select: none;
+  cursor: default !important;
 }
 
 .showOnIpad {
