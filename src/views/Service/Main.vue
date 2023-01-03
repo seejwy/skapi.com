@@ -1,7 +1,7 @@
 <template lang="pug">
 .servicePageShell
     .sideScreen
-        NavBar(style='background-color: #505050;')
+        NavBar(style='background-color: #505050;z-index: 2;')
             ul.iconText
                 li
                     router-link(to="/" tag="li") Documentation
@@ -19,6 +19,7 @@
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
+
             Login(v-else)
             
             .padBlock.showOnIpad
@@ -160,6 +161,7 @@ let service = ref(null);
 
 provide('service', service);
 provide('recordTables', ref(null));
+provide('fetchingData', ref(false));
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service';
@@ -178,8 +180,10 @@ function getServices(gs) {
         }
 
         for (let s of services[region]) {
+            console.log(s);
             if (s.service === serviceId) {
                 service.value = s;
+                
                 return s;
             }
         }

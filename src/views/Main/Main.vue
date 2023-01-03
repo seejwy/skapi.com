@@ -1,5 +1,5 @@
 <template lang="pug">
-NavBar(:is-parent-level='true' style='background-color: var(--primary-color);')
+NavBar(:is-parent-level='true' style='z-index: 2;background-color: var(--primary-color);')
     ul.iconText(@click='bypassSameRoute')
 
         li

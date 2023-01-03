@@ -1,8 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import LandingPage from '../views/Main/LandingPage.vue'
-import Login from '../views/Main/Login.vue'
-import Main from '../views/Main/Main.vue'
-import Dashboard from '../views/Main/Dashboard.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import LandingPage from '../views/Main/LandingPage.vue';
+import Login from '../views/Main/Login.vue';
+import Main from '../views/Main/Main.vue';
+import Dashboard from '../views/Main/Dashboard.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,7 +11,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Main,
-      children:[
+      children: [
         {
           path: '',
           name: 'landingPage',
@@ -49,8 +49,19 @@ const router = createRouter({
             },
             {
               path: 'records',
-              name: 'records',
-              component: () => import('../views/Service/Records.vue')
+              component: () => import('../views/Service/Records.vue'),
+              children: [
+                {
+                  path: '',
+                  name: 'records',
+                  component: import('../views/Records/Tables.vue')
+                },
+                {
+                  path: 'search',
+                  name: 'recordSearch',
+                  component: import('../views/Records/SearchResult.vue')
+                }
+              ]
             }
           ]
         }
@@ -59,8 +70,8 @@ const router = createRouter({
   ],
   scrollBehavior() {
     // always scroll to top
-    return { top: 0 }
+    return { top: 0 };
   }
 });
 
-export default router
+export default router;

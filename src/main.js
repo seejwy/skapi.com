@@ -2,8 +2,8 @@ import { createApp, reactive, watch } from 'vue';
 import App from './App.vue';
 import router from './router';
 import './assets/main.less';
-import { defineCustomElements } from 'skateui/loader';
-defineCustomElements(window);
+// import { defineCustomElements } from 'skateui/loader';
+// defineCustomElements(window);
 
 // init state
 const state = reactive({
@@ -34,9 +34,6 @@ watch(() => state.user, user => {
             else {
                 state.services = (await skapi.getServices());
             }
-
-            console.log({ services: state.services });
-
             res(state.services);
         });
     }
@@ -55,23 +52,24 @@ function storeServices() {
 window.addEventListener('beforeunload', storeServices);
 window.addEventListener("visibilitychange", storeServices);
 
-// init document
-let desktopMedia = '(min-width: 1025px)';
-let mobileMedia = '(max-width: 1024px)';
-const desktopSize = window.matchMedia(desktopMedia);
-const mobileSize = window.matchMedia(mobileMedia);
+// init document (will use when necessary)
 
-const setViewport = (e) => {
-    if (e.matches) {
-        state.viewport = e.media === desktopMedia ? "desktop" : 'mobile';
-    }
-};
+// let desktopMedia = '(min-width: 1025px)';
+// let mobileMedia = '(max-width: 1024px)';
+// const desktopSize = window.matchMedia(desktopMedia);
+// const mobileSize = window.matchMedia(mobileMedia);
 
-setViewport(desktopSize);
-setViewport(mobileSize);
+// const setViewport = (e) => {
+//     if (e.matches) {
+//         state.viewport = e.media === desktopMedia ? "desktop" : 'mobile';
+//     }
+// };
 
-desktopSize.addEventListener('change', setViewport);
-mobileSize.addEventListener('change', setViewport);
+// setViewport(desktopSize);
+// setViewport(mobileSize);
+
+// desktopSize.addEventListener('change', setViewport);
+// mobileSize.addEventListener('change', setViewport);
 
 // init vue
 const app = createApp(App);
@@ -99,4 +97,28 @@ const dateFormat = (timestamp) => {
 
     return `${date.getFullYear()}.${month}.${day} ${hours}:${mins}:${secs}`;
 };
-export { skapi, state, getSize, dateFormat };
+const log = v => { console.log(v); return v; };
+const groupArray = (arr, cg, pg) => {
+    // cg - child group
+    // pg - parent group
+    // [ [ [...], [...], [...] ], [ [...], [...], [...] ], ... ]
+
+    const outputArray = [];
+
+    for (let i = 0; i < arr.length; i += cg) {
+        outputArray.push(arr.slice(i, i + cg));
+    }
+
+    if (!pg) {
+        return outputArray;
+    }
+
+    const final = [];
+    for (let i = 0; i < outputArray.length; i += pg) {
+        final.push(outputArray.slice(i, i + pg));
+    }
+
+    return final;
+};
+
+export { skapi, state, getSize, dateFormat, log, groupArray };
