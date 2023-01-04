@@ -22,7 +22,7 @@ RecordSearch#recordSearch.hideOnTablet
         span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
         span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
         span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
-        span(v-if='route.query?.index_name') Index: {{ route.query.index_name }}, Value: {{ route.query.index_value }}, Condition: {{ route.query.index_condition }}
+        span(v-if='route.query?.index_name') Index: {{ route.query.index_type === 'string' ? '"' + route.query.index_value + '"' : route.query.index_value }} {{ route.query.index_condition }} [{{ route.query.index_name }}]
         span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
 
     // skeleton(mobile)
@@ -44,19 +44,24 @@ RecordSearch#recordSearch.hideOnTablet
                 sui-flextext(min-size='16' max-size='32') No Records
                 br
                 p There was no record matching the query.
-                .showOnTablet(style="text-align: left")
+                .showOnTablet(v-if='route.query?.access_group' style="text-align: left")
                     br
-                    span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
-                    br
-                    span(v-if='route.query.search_type === "user" && route.query?.table') Table: {{ route.query.table }}
-                    br
-                    span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
-                    br
-                    span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
-                    br
-                    span(v-if='route.query?.index_name') Index: {{ route.query.index_name }}, Value: {{ route.query.index_value }}, Condition: {{ route.query.index_condition }}
-                    br
-                    span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
+                    span Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
+                    template(v-if='route.query.search_type === "user" && route.query?.table')
+                        br
+                        span Table: {{ route.query.table }}
+                    template(v-if='route.query?.subscription')
+                        br
+                        span Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
+                    template(v-if='route.query.search_type === "table" && route.query?.reference')
+                        br
+                        span Reference: {{ route.query.reference }}
+                    template(v-if='route.query?.index_name')
+                        br
+                        span Index: {{ route.query.index_type === 'string' ? '"' + route.query.index_value + '"' : route.query.index_value }} {{ route.query.index_condition }} [{{ route.query.index_name }}]
+                    template(v-if="route.query?.tag")
+                        br
+                        span Tag: {{ route.query.tag }}
 
         template(v-else-if="groupedRecordList && groupedRecordList[currentSelectedRecordBatch]")
             .recordWrapper
