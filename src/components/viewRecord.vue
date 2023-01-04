@@ -173,6 +173,8 @@ const deleteRecord = () => {
 	.content {
 		background-color: #333333;
 		padding: 30px 20px 20px 20px;
+		max-height: 740px;
+		overflow-y: scroll;
 
 		.grid {
 			display: grid;
