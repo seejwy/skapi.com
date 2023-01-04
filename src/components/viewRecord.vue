@@ -134,6 +134,7 @@ const deleteRecord = () => {
 
     .title {
         padding: 18px 20px 24px 20px;
+		font-weight: bold;
     }
 
     .menu {
