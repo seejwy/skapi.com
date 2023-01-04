@@ -85,7 +85,7 @@ RecordSearch#recordSearch.hideOnTablet
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick } from 'vue';
+import { inject, ref, watch, computed, nextTick, onUnmounted } from 'vue';
 import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import RecordSearch from '@/components/recordSearch.vue';
@@ -173,6 +173,19 @@ function numberOfSkeletons() {
     // calculated by available vertical space
     return parseInt(window.innerHeight / 2 / 48);
 }
+
+function scrollEventMobile(event) {
+    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+        // scrolled to bottom
+        fetchMoreRecords();
+    }
+}
+
+window.addEventListener('scroll', scrollEventMobile);
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', scrollEventMobile);
+});
 
 let promiseQueue = null;
 async function fetchMoreRecords() {
