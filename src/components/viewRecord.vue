@@ -34,7 +34,7 @@
 			.grid-item.title.sub-grid(style="padding-top: 16px;") Reference
 			.grid-item.sub-grid(style="padding-top: 16px;") 
 				div multiple reference
-					sui-input(type="checkbox" :checked="props?.record?.config?.allow_multiple_reference || null") 
+					sui-input(type="checkbox" disabled :checked="props?.record?.config?.allow_multiple_reference || null") 
 				div reference limit: {{ props?.record?.config?.reference_limit || '-' }}
 			template(v-if="props?.record?.tags?.length")
 				.grid-item.title.span-2(style="padding-top: 16px;") Tags
