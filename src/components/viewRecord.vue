@@ -217,6 +217,11 @@ const deleteRecord = () => {
 
 		.data-row {
 			margin-bottom: 72px;
+
+			&:last-child {
+				margin-bottom: 36px;
+			}
+
 			.value {
 				margin-top: 20px;
 				padding: 16px 20px;
@@ -233,7 +238,7 @@ const deleteRecord = () => {
 				}
 			}
 
-			&::after {
+			&:not(:last-child)::after {
 				content: '';
 				display: block;
 				position: relative;
