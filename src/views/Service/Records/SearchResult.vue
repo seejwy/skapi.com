@@ -12,13 +12,13 @@ RecordSearch#recordSearch.hideOnTablet
 
 .record-container#data-container
     .header.hideOnTablet
-        span.not-clickable {{ searchTitle }}
+        span.not-clickable(v-html="searchTitle")
         span.material-symbols-outlined.not-clickable.animation-rotation(style='opacity:0.6;' v-if="fetchingData") cached
         .clickable(v-else @click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'records'})}")
             span(style="vertical-align:middle;") Clear
             span.material-symbols-outlined close
 
-    .searchPoints(v-if="route.query?.access_group")
+    .searchPoints.hideOnTablet(v-if="route.query?.access_group")
         span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
         span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
         span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
@@ -29,6 +29,13 @@ RecordSearch#recordSearch.hideOnTablet
     .recordWrapper.animation-skeleton.showOnTablet(v-if='searchResult === null')
         .records.clickable(v-for="t in numberOfSkeletons()")
             div
+                span.label &nbsp; 
+                span &nbsp;
+            div
+                span.label &nbsp;
+                span &nbsp;
+            div
+                span.label &nbsp;
                 span &nbsp;
 
     template(v-else)
@@ -117,19 +124,21 @@ watch(() => route.name, n => {
 let fetchingData = inject('fetchingData');
 
 // page title
-let searchTitle = computed(() => {
-    return `${fetchingData.value ? "Searching" : "Result of"} ${route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type]}" ${fetchingData.value ? '...' : ''}`;
-});
 
 let pageTitle = inject('pageTitle');
-if (route.name === 'recordList') {
-    // page title is table name
-    // route "recordList" is visited via mobile navigation
-    pageTitle.value = route.query.table;
-}
-else {
-    pageTitle.value = searchTitle.value;
-}
+
+let searchTitle = computed(() => {
+    let s = `${fetchingData.value ? "Searching" : "Result of"} ${route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type]}" ${fetchingData.value ? '...' : ''}`;
+    if (route.name === 'recordList') {
+        // page title is table name
+        // route "recordList" is visited via mobile navigation
+        pageTitle.value = route.query.table;
+    }
+    else {
+        pageTitle.value = s;
+    }
+    return s;
+});
 
 // data
 let searchResult = inject('searchResult');
