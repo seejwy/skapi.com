@@ -1,79 +1,80 @@
 <template lang="pug">
-.container
-	.close(@click="")
-		span.material-symbols-outlined close
-	.title {{ props?.record?.record_id }}
-	.menu
-		ul
-			li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
-			li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Record
-		.action(@click="overlay.open") 
-			span.material-symbols-outlined delete
-			span delete
-	.content
-		.grid(v-if="view === 'information'")
-			.grid-item.title Record ID 
-			.grid-item {{ props?.record?.record_id }}
-			.grid-item.title Table Name
-			.grid-item {{ props?.record?.table }}
-			.grid-item.title Reference 
-			.grid-item {{ props?.record?.reference || '-' }}
-			.grid-item.title User ID
-			.grid-item {{ props?.record?.user_id }}
-			.grid-item.title Subscription
-			.grid-item {{ props?.record?.subscription || '-' }}
-			.grid-item.title.span-2 Index
-			.grid-item.title.sub-grid(style="font-weight: normal") Index Name
-			.grid-item.sub-grid {{ props?.record?.index?.name || '-' }}
-			.grid-item.title.sub-grid(style="font-weight: normal") Index Value
-			.grid-item.sub-grid
-				span.type(v-if="props?.record?.index?.value") {{ typeof props?.record?.index?.value }}
-				span {{ props?.record?.index?.value || '-' }}
-			.grid-item.title(style="padding-top: 16px") Upload Datetime
-			.grid-item {{ dateFormat(props?.record?.uploaded) }}
-			.grid-item.title.sub-grid(style="padding-top: 16px;") Reference
-			.grid-item.sub-grid(style="padding-top: 16px;") 
-				div multiple reference
-					sui-input(type="checkbox" disabled :checked="props?.record?.config?.allow_multiple_reference || null") 
-				div reference limit: {{ props?.record?.config?.reference_limit || '-' }}
-			template(v-if="props?.record?.tags?.length")
-				.grid-item.title.span-2(style="padding-top: 16px;") Tags
-				.grid-item.span-2(style="padding-top: 4px;")
-					.tags-wrapper
-						.tag(v-for="tag in props?.record?.tags") {{ tag }}
+div(style="padding: 16px; box-sizing: border-box; position: relative;")
+	.container
+		.close(@click="$emit('close')")
+			span.material-symbols-outlined close
+		.title {{ props?.record?.record_id }}
+		.menu
+			ul
+				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
+				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Record
+			.action(@click="overlay.open")
+				span.material-symbols-outlined delete
+				span delete
+		.content
+			.grid(v-if="view === 'information'")
+				.grid-item.title Record ID 
+				.grid-item {{ props?.record?.record_id }}
+				.grid-item.title Table Name
+				.grid-item {{ props?.record?.table }}
+				.grid-item.title Reference 
+				.grid-item {{ props?.record?.reference || '-' }}
+				.grid-item.title User ID
+				.grid-item {{ props?.record?.user_id }}
+				.grid-item.title Subscription
+				.grid-item {{ props?.record?.subscription || '-' }}
+				.grid-item.title.span-2 Index
+				.grid-item.title.sub-grid(style="font-weight: normal") Index Name
+				.grid-item.sub-grid {{ props?.record?.index?.name || '-' }}
+				.grid-item.title.sub-grid(style="font-weight: normal") Index Value
+				.grid-item.sub-grid
+					span.type(v-if="props?.record?.index?.value") {{ typeof props?.record?.index?.value }}
+					span {{ props?.record?.index?.value || '-' }}
+				.grid-item.title(style="padding-top: 16px") Upload Datetime
+				.grid-item {{ dateFormat(props?.record?.uploaded) }}
+				.grid-item.title.sub-grid(style="padding-top: 16px;") Reference
+				.grid-item.sub-grid(style="padding-top: 16px;")
+					div multiple reference
+						sui-input(type="checkbox" disabled :checked="props?.record?.config?.allow_multiple_reference || null")
+					div reference limit: {{ props?.record?.config?.reference_limit || '-' }}
+				template(v-if="props?.record?.tags?.length")
+					.grid-item.title.span-2(style="padding-top: 16px;") Tags
+					.grid-item.span-2(style="padding-top: 4px;")
+						.tags-wrapper
+							.tag(v-for="tag in props?.record?.tags") {{ tag }}
+				template(v-else)
+					.grid-item.title Tags
+					.grid-item -
+				template(v-if="props?.record?.config?.private_access?.length")
+					.grid-item.title.span-2(style="padding-top: 16px;") Access
+					.grid-item.span-2(style="padding-top: 4px;")
+						.tags-wrapper
+							.tag(v-for="userId in props?.record?.config?.private_access") {{ userId }}
+				template(v-else)
+					.grid-item.title Access
+					.grid-item -
 			template(v-else)
-				.grid-item.title Tags
-				.grid-item -
-			template(v-if="props?.record?.config?.private_access?.length")
-				.grid-item.title.span-2(style="padding-top: 16px;") Access
-				.grid-item.span-2(style="padding-top: 4px;")
-					.tags-wrapper
-						.tag(v-for="userId in props?.record?.config?.private_access") {{ userId }}
-			template(v-else)
-				.grid-item.title Access
-				.grid-item -
-		template(v-else)
-			.data-row
-				.name
-					span.type File
-					span Title
-				.value.file
-					span.material-symbols-outlined(style="font-size: 46px;") file_present
-					span 
-						div Name of the file.jpg
-						div(style="font-size: 12px;") 1.23 KB
-				.value.file
-					span.material-symbols-outlined(style="font-size: 46px;") file_present
-					span 
-						div Name of the file.jpg
-						div(style="font-size: 12px;") 123 KB
-			.data-row
-				.name
-					span.type Json
-					span Title
-				.value xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-	.foot
-		sui-button.line-button Edit
+				.data-row
+					.name
+						span.type File
+						span Title
+					.value.file
+						span.material-symbols-outlined(style="font-size: 46px;") file_present
+						span
+							div Name of the file.jpg
+							div(style="font-size: 12px;") 1.23 KB
+					.value.file
+						span.material-symbols-outlined(style="font-size: 46px;") file_present
+						span
+							div Name of the file.jpg
+							div(style="font-size: 12px;") 123 KB
+				.data-row
+					.name
+						span.type Json
+						span Title
+					.value xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		.foot
+			sui-button.line-button Edit
 sui-overlay(ref="overlay")
 	.popup
 		.title
@@ -95,6 +96,8 @@ let props = defineProps({
   },
 });
 
+let emit = defineEmits(['close']);
+
 const overlay = ref(null);
 let view = ref('information');
 
@@ -114,8 +117,8 @@ const deleteRecord = () => {
 
 	.close {
 		position: absolute;
-		right: -16px;
-		top: -16px;
+		right: 0;
+		top: 0;
 		background-color: #D9D9D9;
 		width: 32px;
 		height: 32px;

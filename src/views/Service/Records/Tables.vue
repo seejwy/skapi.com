@@ -27,7 +27,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
     // table list
     template(v-else)
         sui-overlay(ref='openRecord' @click='openRecord.close()')
-            ViewRecord(:record='recordToOpen')
+            ViewRecord(:record='recordToOpen' @close="openRecord.close()")
 
         .noTables(v-if='!recordTables.list.length')
             div
