@@ -36,7 +36,7 @@
 				div multiple reference
 					sui-input(type="checkbox" :checked="props?.record?.config?.allow_multiple_reference || null") 
 				div reference limit: {{ props?.record?.config?.reference_limit || '-' }}
-			template(v-if="props?.record?.tags.length")
+			template(v-if="props?.record?.tags?.length")
 				.grid-item.title.span-2(style="padding-top: 16px;") Tags
 				.grid-item.span-2(style="padding-top: 4px;")
 					.tags-wrapper
