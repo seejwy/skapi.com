@@ -103,7 +103,7 @@ const deleteRecord = () => {
 	overlay.value.close();
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .container {
     background: #505050;
     border: 1px solid #808080;
