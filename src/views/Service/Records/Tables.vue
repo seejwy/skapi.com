@@ -26,6 +26,9 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
     // table list
     template(v-else)
+        sui-overlay(ref='openRecord' @click='openRecord.close()')
+            ViewRecord(:record='recordToOpen')
+
         .noTables(v-if='!recordTables.list.length')
             div
                 sui-flextext(min-size='16' max-size='32') No Record Tables
@@ -56,7 +59,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                                     br
                                     p This table will be automatically removed.
 
-                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;")
+                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>{recordToOpen = r;openRecord.open()}")
                                 div
                                     span.labelHead RECORD: 
                                     span {{ r.record_id }}
@@ -69,7 +72,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
                             .loadMore(v-if="!t.records.endOfList")
                                 span.material-symbols-outlined.animation-rotation cached
-
+                        
                 .paginator.hideOnTablet
                     span.material-symbols-outlined.arrow(
                         style="transform: rotate(180deg)"
@@ -107,6 +110,9 @@ import { inject, ref, watch, computed, nextTick } from 'vue';
 import { skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import RecordSearch from '@/components/recordSearch.vue';
+import ViewRecord from '../../../components/viewRecord.vue';
+let openRecord = ref(null);
+let recordToOpen = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
