@@ -44,6 +44,19 @@ RecordSearch#recordSearch.hideOnTablet
                 sui-flextext(min-size='16' max-size='32') No Records
                 br
                 p There was no record matching the query.
+                .showOnTablet(style="text-align: left")
+                    br
+                    span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
+                    br
+                    span(v-if='route.query.search_type === "user" && route.query?.table') Table: {{ route.query.table }}
+                    br
+                    span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
+                    br
+                    span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
+                    br
+                    span(v-if='route.query?.index_name') Index: {{ route.query.index_name }}, Value: {{ route.query.index_value }}, Condition: {{ route.query.index_condition }}
+                    br
+                    span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
 
         template(v-else-if="groupedRecordList && groupedRecordList[currentSelectedRecordBatch]")
             .recordWrapper
@@ -114,7 +127,7 @@ watch(viewport, n => {
 });
 
 watch(() => route.name, n => {
-    if (route.name !== 'recordList' && route.name !== 'recordSearch') {
+    if (route.name !== 'recordList' && route.name !== 'recordSearch' && route.name !== 'mobileSearch') {
         // set padding to original value
         appStyle.mainPadding = null;
     }
@@ -126,18 +139,11 @@ let fetchingData = inject('fetchingData');
 // page title
 
 let pageTitle = inject('pageTitle');
-
 let searchTitle = computed(() => {
-    let s = `${fetchingData.value ? "Searching" : "Result of"} ${route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type]}" ${fetchingData.value ? '...' : ''}`;
-    if (route.name === 'recordList') {
-        // page title is table name
-        // route "recordList" is visited via mobile navigation
-        pageTitle.value = route.query.table;
-    }
-    else {
-        pageTitle.value = s;
-    }
-    return s;
+    let s = `${fetchingData.value ? "Searching" : viewport.value === 'desktop' ? "Result of" : ''}${fetchingData.value ? '' : ' ' + route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type]}"${fetchingData.value ? ' ...' : ''}`;
+    let capitalized = s.trim().replace(/^\w/, c => c.toUpperCase());
+    pageTitle.value = capitalized;
+    return capitalized;
 });
 
 // data
@@ -189,7 +195,7 @@ onUnmounted(() => {
 
 let promiseQueue = null;
 async function fetchMoreRecords() {
-    if (searchResult.value.endOfList && groupedRecordList.value.length - 1 === currentSelectedRecordBatch.value) {
+    if (!groupedRecordList.value || searchResult.value.endOfList && groupedRecordList.value.length - 1 === currentSelectedRecordBatch.value) {
         return;
     }
 

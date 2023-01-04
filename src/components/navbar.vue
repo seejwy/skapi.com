@@ -100,6 +100,8 @@ sui-nav#top-nav {
             text-overflow: ellipsis;
 
             span {
+                white-space: nowrap;
+
                 &.backbutton {
                     display: inline;
                     font-size: 24px;

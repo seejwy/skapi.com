@@ -45,8 +45,8 @@ form(
                     autocomplete="off")
                 span.material-symbols-outlined.clickable.optionButton(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") tune
 
-        template(v-else)
-            sui-select.mobileSearchType(
+        .mobileSearchType(v-else)
+            sui-select(
                 name='search_type'
                 :value="searchForm.type"
                 @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
@@ -58,7 +58,7 @@ form(
             br
             br
 
-        .hideable-toggle.showOnTablet(v-if="searchForm.type !== 'record'")
+        .toggle-advancedForm.showOnTablet(v-if="searchForm.type !== 'record'")
             hr
             span(:class="{'close': searchForm.isAdvanced }" @click="searchForm.isAdvanced=!searchForm.isAdvanced") Advanced Search
 
@@ -228,8 +228,8 @@ let searchForm = reactive({
 });
 
 let indexValueFormElement = ref(null);
-function focusMe(e){
-    console.log({e})
+function focusMe(e) {
+    console.log({ e });
     e.target.focus();
 }
 function advancedFormInit() {
@@ -412,49 +412,15 @@ switch (route.name) {
 @import '@/assets/variables.less';
 
 form {
-    .hideable-toggle {
-        user-select: none;
-        display: flex;
-        gap: 16px;
-        color: rgba(255, 255, 255, 0.6);
-        cursor: pointer;
-
-        & hr {
-            flex-grow: 1;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        &>span {
-            &::after {
-                content: '';
-                display: inline-block;
-                width: 0;
-                height: 0;
-                vertical-align: middle;
-                margin-left: 16px;
-            }
-
-            &:not(.close)::after {
-                border-top: 5px solid rgba(255, 255, 255, 0.6);
-                border-left: 6px solid transparent;
-                border-right: 6px solid transparent;
-            }
-
-            &.close::after {
-                border-bottom: 5px solid rgba(255, 255, 255, 0.6);
-                border-left: 6px solid transparent;
-                border-right: 6px solid transparent;
-            }
-        }
-    }
-
-
-    sui-select.mobileSearchType {
+    .mobileSearchType {
         width: 100%;
-        background: rgba(255, 255, 255, 0.08);
-        border: 0.5px solid #8C8C8C;
-        box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
+        padding: 8px;
+        sui-select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid #8C8C8C;
+            box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
+        }
     }
 
     .mobileSearchNav {
@@ -466,6 +432,7 @@ form {
         margin-bottom: 28px;
         background-color: #333;
         z-index: 1;
+        padding-left: 24px;
 
         &::after {
             display: block;
@@ -483,8 +450,8 @@ form {
             display: inline;
             font-size: 24px;
             color: rgba(255, 255, 255, .4);
-            margin-left: -36px;
-            padding-left: 36px;
+            margin-left: -24px;
+            padding-left: 24px;
         }
 
         sui-input {
@@ -497,7 +464,7 @@ form {
 
             &+span {
                 position: absolute;
-                right: 0;
+                right: 8px;
             }
         }
     }
@@ -537,6 +504,42 @@ form {
         width: 6em;
     }
 
+    .toggle-advancedForm {
+        user-select: none;
+        display: flex;
+        gap: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        padding: 8px;
+        & hr {
+            flex-grow: 1;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        &>span {
+            &::after {
+                content: '';
+                display: inline-block;
+                width: 0;
+                height: 0;
+                vertical-align: middle;
+                margin-left: 16px;
+            }
+
+            &:not(.close)::after {
+                border-top: 5px solid rgba(255, 255, 255, 0.6);
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+            }
+
+            &.close::after {
+                border-bottom: 5px solid rgba(255, 255, 255, 0.6);
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+            }
+        }
+    }
     .advancedForm {
         position: absolute;
         margin-top: 8px;
@@ -551,10 +554,10 @@ form {
         @media @tablet {
             position: relative;
             margin-top: 1em;
-            border-radius: none;
+            border-radius: 0;
+            padding: 0 8px;
             width: 100%;
             border: none;
-            padding: 0;
             box-shadow: none;
             background-color: transparent;
             top: unset;

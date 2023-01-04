@@ -97,11 +97,12 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                         @click="()=>{ if(currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 ) currentSelectedTablePage++; else if(!recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1) getMoreTables() }") arrow_forward_ios
 
 .page-action.showOnTablet
-    sui-button.fab.open-menu(@click="isFabOpen = !isFabOpen" @blur="isFabOpen = false")
+    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen" @blur="isFabOpen = false")
         span.material-symbols-outlined more_vert
+
     Transition
         div(v-if="isFabOpen")
-            sui-button.fab(@click.stop="router.push({name: 'mobileSearch'})")
+            sui-button.fab(@click="router.push({name: 'mobileSearch'})")
                 span.material-symbols-outlined search
             sui-button.fab
                 span.material-symbols-outlined add
@@ -331,10 +332,9 @@ watch(currentSelectedTableBatch, n => {
     bottom: 76px;
     right: 16px;
     overflow: hidden;
-    z-index: 1;
 
     &>sui-button {
-        z-index: 1;
+        z-index: 2;
     }
 
     &,
