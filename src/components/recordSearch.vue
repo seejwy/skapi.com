@@ -58,9 +58,9 @@ form(
             br
             br
 
-        .toggle-advancedForm.showOnTablet(v-if="searchForm.type !== 'record'")
+        .toggle-advancedForm.showOnTablet(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
             hr
-            span(:class="{'close': searchForm.isAdvanced }" @click="searchForm.isAdvanced=!searchForm.isAdvanced") Advanced Search
+            span(:class="{'close': searchForm.isAdvanced }") Advanced Search
 
         // advanced search
         .advancedForm(v-if='searchForm.isAdvanced && searchForm.type !== "record"')
@@ -415,6 +415,7 @@ form {
     .mobileSearchType {
         width: 100%;
         padding: 8px;
+
         sui-select {
             width: 100%;
             background: rgba(255, 255, 255, 0.08);
@@ -511,6 +512,7 @@ form {
         color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
         padding: 8px;
+
         & hr {
             flex-grow: 1;
             border: none;
@@ -540,6 +542,7 @@ form {
             }
         }
     }
+
     .advancedForm {
         position: absolute;
         margin-top: 8px;
