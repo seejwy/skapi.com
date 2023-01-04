@@ -58,7 +58,7 @@ form(
             br
             br
 
-        .hideable-toggle.showOnTablet
+        .hideable-toggle.showOnTablet(v-if="searchForm.type !== 'record'")
             hr
             span(:class="{'close': searchForm.isAdvanced }" @click="searchForm.isAdvanced=!searchForm.isAdvanced") Advanced Search
 

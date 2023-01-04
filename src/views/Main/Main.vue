@@ -44,6 +44,7 @@ sui-button.signup {
 import NavBar from '@/components/navbar.vue';
 import { inject } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { state } from '@/main';
 
 let router = useRouter();
 let route = useRoute();
@@ -56,7 +57,7 @@ function bypassSameRoute(e) {
     let routeName = {
         'Dashboard': 'dashboard',
         'Login': 'login'
-    }[e.target.textContent.trim()]
+    }[e.target.textContent.trim()];
 
     if (routeName && route.name !== routeName) {
         e.stopPropagation();
