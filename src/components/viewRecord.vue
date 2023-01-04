@@ -31,15 +31,27 @@
 				span {{ props?.record?.index?.value || '-' }}
 			.grid-item.title(style="padding-top: 16px") Upload Datetime
 			.grid-item {{ dateFormat(props?.record?.uploaded) }}
-			//- below not dynamic yet
 			.grid-item.title.sub-grid(style="padding-top: 16px;") Reference
-			.grid-item.sub-grid(style="padding-top: 16px;") multiple reference allowed 
-			.grid-item.sub-grid
-			.grid-item.sub-grid reference limit: 14
-			.grid-item.title.span-2(style="padding-top: 16px;") Tags
-			.grid-item.span-2(style="padding-top: 4px;")
-				.tags-wrapper
-					.tag(v-for="tag in props?.record?.tags") {{ tag }}
+			.grid-item.sub-grid(style="padding-top: 16px;") 
+				div multiple reference
+					sui-input(type="checkbox" :checked="props?.record?.config?.allow_multiple_reference || null") 
+				div reference limit: {{ props?.record?.config?.reference_limit || '-' }}
+			template(v-if="props?.record?.tags.length")
+				.grid-item.title.span-2(style="padding-top: 16px;") Tags
+				.grid-item.span-2(style="padding-top: 4px;")
+					.tags-wrapper
+						.tag(v-for="tag in props?.record?.tags") {{ tag }}
+			template(v-else)
+				.grid-item.title Tags
+				.grid-item -
+			template(v-if="props?.record?.config?.private_access.length")
+				.grid-item.title.span-2(style="padding-top: 16px;") Access
+				.grid-item.span-2(style="padding-top: 4px;")
+					.tags-wrapper
+						.tag(v-for="userId in props?.record?.config?.private_access") {{ userId }}
+			template(v-else)
+				.grid-item.title Access
+				.grid-item -
 		template(v-else)
 			.data-row
 				.name
@@ -167,6 +179,20 @@ const deleteRecord = () => {
 			grid-template-columns: auto 1fr;
 			grid-template-rows: repeat(auto-fit);
 			grid-column-gap: 20px;
+
+			sui-input[type=checkbox],
+			sui-input[type=checkbox][disabled] {
+				filter: none;
+				margin-left: 8px;
+				border-color: rgba(255, 255, 255, 0.6);
+
+				&[checked] {
+					border: none;
+					color: rgba(0, 0, 0, 0.5);
+					background: rgba(255, 255, 255, 0.6);
+					box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
+				}
+			}
 		}
 
 		.grid-item {
