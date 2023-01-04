@@ -47,8 +47,10 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                                 span {{t.number_of_records}}
 
                             template(v-if='t.records')
-                                span.material-symbols-outlined.clickable(v-if="!t.opened") add_circle
-                                span.material-symbols-outlined.clickable(v-else) remove_circle
+                                template(v-if="viewport === 'desktop'")
+                                    span.material-symbols-outlined.clickable(v-if="!t.opened") add_circle
+                                    span.material-symbols-outlined.clickable(v-else) remove_circle
+                                span.material-symbols-outlined.clickable(style='opacity:0.4;' v-else) arrow_forward_ios
 
                             span.material-symbols-outlined.animation-rotation(v-else) cached
 
@@ -72,7 +74,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
                             .loadMore(v-if="!t.records.endOfList")
                                 span.material-symbols-outlined.animation-rotation cached
-                        
+
                 .paginator.hideOnTablet
                     span.material-symbols-outlined.arrow(
                         style="transform: rotate(180deg)"
@@ -99,7 +101,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
         span.material-symbols-outlined more_vert
     Transition
         div(v-if="isFabOpen")
-            sui-button.fab(@click="router.push({name: 'mobileSearch'})")
+            sui-button.fab(@click.stop="router.push({name: 'mobileSearch'})")
                 span.material-symbols-outlined search
             sui-button.fab
                 span.material-symbols-outlined add
@@ -329,9 +331,10 @@ watch(currentSelectedTableBatch, n => {
     bottom: 76px;
     right: 16px;
     overflow: hidden;
+    z-index: 1;
 
     &>sui-button {
-        z-index: 2;
+        z-index: 1;
     }
 
     &,
