@@ -44,7 +44,7 @@
 			template(v-else)
 				.grid-item.title Tags
 				.grid-item -
-			template(v-if="props?.record?.config?.private_access.length")
+			template(v-if="props?.record?.config?.private_access?.length")
 				.grid-item.title.span-2(style="padding-top: 16px;") Access
 				.grid-item.span-2(style="padding-top: 4px;")
 					.tags-wrapper
