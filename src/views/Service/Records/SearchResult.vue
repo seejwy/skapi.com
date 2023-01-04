@@ -103,7 +103,7 @@ RecordSearch#recordSearch.hideOnTablet
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onUnmounted } from 'vue';
+import { inject, ref, watch, computed, nextTick, onBeforeUnmount, onMounted } from 'vue';
 import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import RecordSearch from '@/components/recordSearch.vue';
@@ -126,16 +126,11 @@ function adjustBackgroundColor(n) {
         appStyle.mainPadding = null;
     }
 }
-adjustBackgroundColor(viewport.value);
+onMounted(() => {
+    adjustBackgroundColor(viewport.value);
+});
 watch(viewport, n => {
     adjustBackgroundColor(n);
-});
-
-watch(() => route.name, n => {
-    if (route.name !== 'recordList' && route.name !== 'recordSearch' && route.name !== 'mobileSearch') {
-        // set padding to original value
-        appStyle.mainPadding = null;
-    }
 });
 
 // flag
@@ -194,8 +189,10 @@ function scrollEventMobile(event) {
 
 window.addEventListener('scroll', scrollEventMobile);
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     window.removeEventListener('scroll', scrollEventMobile);
+    // set padding to original value
+    appStyle.mainPadding = null;
 });
 
 let promiseQueue = null;

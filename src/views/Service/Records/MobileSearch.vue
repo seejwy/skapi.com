@@ -2,30 +2,33 @@
 RecordSearch
 </template>
 <script setup>
-import { inject, watch } from 'vue';
+import { inject, watch, onBeforeUnmount, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import RecordSearch from '../../../components/recordSearch.vue';
 
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
+
 pageTitle.value = null;
-appStyle.background = 'rgb(51, 51, 51)';
-appStyle.mainPadding = '0';
 let viewport = inject('viewport');
 let router = useRouter();
 let route = useRoute();
 
+onMounted(() => {
+    appStyle.background = 'rgb(51, 51, 51)';
+    appStyle.mainPadding = '0';
+});
+
 // kick out desktop users
-if(viewport.value === 'desktop') {
+if (viewport.value === 'desktop') {
     router.replace({ name: 'records' });
 }
 watch(viewport, n => {
     if (n === 'desktop') {
         router.replace({ name: 'records' });
     }
-    if (route.name !== 'recordList' && route.name !== 'recordSearch' && route.name !== 'mobileSearch') {
-        // set padding to original value
-        appStyle.mainPadding = null;
-    }
+});
+onBeforeUnmount(() => {
+    appStyle.mainPadding = null;
 });
 </script>
