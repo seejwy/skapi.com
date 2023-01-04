@@ -11,22 +11,35 @@ router-view
 <!-- script below -->
 <script setup>
 import { provide, ref } from 'vue';
-
+import { state } from '@/main';
 let pageTitle = ref('skapi');
 provide('pageTitle', pageTitle);
+provide('navbarBackDestination', ref(null));
 
-provide('appColor', {
+let viewport = ref(state.viewport);
+provide('viewport', viewport);
+state.viewportOnChange = v => {
+  viewport.value = v;
+};
+
+provide('appStyle', {
   get background() {
-    document.body.style.getPropertyValue('--app-bg-color');
+    return document.body.style.getPropertyValue('--app-bg-color');
   },
   set background(v) {
     document.body.style.setProperty('--app-bg-color', v);
   },
   get color() {
-    document.body.style.getPropertyValue('--app-color');
+    return document.body.style.getPropertyValue('--app-color');
   },
   set color(v) {
     document.body.style.setProperty('--app-color', v);
+  },
+  get mainPadding() {
+    return document.getElementById('app-main').style.padding;
+  },
+  set mainPadding(v) {
+    document.getElementById('app-main').style.padding = v;
   }
 });
 

@@ -3,7 +3,7 @@ sui-nav#top-nav(auto-hide)
     .nav_align
         .title
             span.showOnTablet.material-symbols-outlined.clickable.backbutton(v-if='!props.isParentLevel' style='margin-left: -24px;padding-left: 24px;' @click='toParent') arrow_back_ios
-            span.titleText.iconText(:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null") {{ pageTitle }}
+            span.titleText.iconText(:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null" v-html="pageTitle || ''")
         .menu
             .hideOnTablet
                 slot
@@ -128,6 +128,7 @@ let pageTitle = inject('pageTitle');
 let navOverlay = ref(null);
 let route = useRoute();
 let router = useRouter();
+let navbarBackDestination = inject('navbarBackDestination');
 
 watch(() => route.name, () => {
     // always close on route change
@@ -135,9 +136,15 @@ watch(() => route.name, () => {
 });
 
 function toParent() {
-    let path = route.fullPath.split('/');
-    path.pop();
-    router.push(path.join('/'));
+    let p = navbarBackDestination.value;
+    if (p?.from && p?.to && route.name === p.from) {
+        router.push({ name: p.to });
+    }
+    else {
+        let path = route.fullPath.split('/');
+        path.pop();
+        router.push(path.join('/'));
+    }
 }
 
 function close(keepScrollPosition = false) {

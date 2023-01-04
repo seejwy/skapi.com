@@ -9,12 +9,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
       component: Main,
       children: [
         {
           path: '',
-          name: 'landingPage',
+          name: 'home',
           component: LandingPage
         },
         {
@@ -39,7 +38,6 @@ const router = createRouter({
       children: [
         {
           path: ':service',
-          name: 'servicePage',
           component: () => import('../views/Service/Main.vue'),
           children: [
             {
@@ -49,17 +47,27 @@ const router = createRouter({
             },
             {
               path: 'records',
-              component: () => import('../views/Service/Records.vue'),
+              component: () => import('../views/Service/Records/Main.vue'),
               children: [
                 {
                   path: '',
                   name: 'records',
-                  component: import('../views/Records/Tables.vue')
+                  component: ()=>import('../views/Service/Records/Tables.vue')
                 },
                 {
                   path: 'search',
                   name: 'recordSearch',
-                  component: import('../views/Records/SearchResult.vue')
+                  component: ()=>import('../views/Service/Records/SearchResult.vue')
+                },
+                {
+                  path: 'search-mobileform',
+                  name: 'mobileSearch',
+                  component: ()=>import('../views/Service/Records/MobileSearch.vue')
+                },
+                {
+                  path: 'list',
+                  name: 'recordList',
+                  component: ()=>import('../views/Service/Records/SearchResult.vue')
                 }
               ]
             }

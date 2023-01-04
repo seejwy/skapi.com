@@ -11,7 +11,8 @@ const state = reactive({
     viewport: 'desktop',
     connection: null,
     getServices: null,
-    services: null
+    services: null,
+    viewportOnChange: (v) => v
 });
 
 // init skapi
@@ -54,22 +55,23 @@ window.addEventListener("visibilitychange", storeServices);
 
 // init document (will use when necessary)
 
-// let desktopMedia = '(min-width: 1025px)';
-// let mobileMedia = '(max-width: 1024px)';
-// const desktopSize = window.matchMedia(desktopMedia);
-// const mobileSize = window.matchMedia(mobileMedia);
+let desktopMedia = '(min-width: 769px)';
+let mobileMedia = '(max-width: 768px)';
+const desktopSize = window.matchMedia(desktopMedia);
+const mobileSize = window.matchMedia(mobileMedia);
 
-// const setViewport = (e) => {
-//     if (e.matches) {
-//         state.viewport = e.media === desktopMedia ? "desktop" : 'mobile';
-//     }
-// };
+const setViewport = (e) => {
+    if (e.matches) {
+        state.viewport = e.media === desktopMedia ? "desktop" : 'mobile';
+        state.viewportOnChange(state.viewport);
+    }
+};
 
-// setViewport(desktopSize);
-// setViewport(mobileSize);
+setViewport(desktopSize);
+setViewport(mobileSize);
 
-// desktopSize.addEventListener('change', setViewport);
-// mobileSize.addEventListener('change', setViewport);
+desktopSize.addEventListener('change', setViewport);
+mobileSize.addEventListener('change', setViewport);
 
 // init vue
 const app = createApp(App);

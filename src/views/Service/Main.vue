@@ -1,7 +1,7 @@
 <template lang="pug">
 .servicePageShell
     .sideScreen
-        NavBar(style='background-color: #505050;z-index: 2;')
+        NavBar(v-if="pageTitle" style='background-color: #505050;z-index: 2;')
             ul.iconText
                 li
                     router-link(to="/" tag="li") Documentation
@@ -15,7 +15,7 @@
                 li
                     a.clickable(@click='()=>skapi.logout().then(() => state.user = null)') Logout
 
-        main(v-if='state.connection')
+        main#app-main(v-if='state.connection')
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
@@ -147,11 +147,12 @@ import Login from '../Main/Login.vue';
 import { provide, inject, watch, ref } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+
 let router = useRouter();
 
-let appColor = inject('appColor');
-appColor.background = '#595959';
-appColor.color = '#fff';
+let appStyle = inject('appStyle');
+appStyle.background = '#595959';
+appStyle.color = '#fff';
 
 // sets pageTitle for immediate effect
 // this does not trigger again when nested routes change
@@ -183,7 +184,6 @@ function getServices(gs) {
             console.log(s);
             if (s.service === serviceId) {
                 service.value = s;
-                
                 return s;
             }
         }

@@ -1,7 +1,18 @@
 <template lang="pug">
+.recordPageHead.hideOnTablet
+    h1 Record
+    span This is some text
+    br
+    sui-button(style="float:right;background-color:rgba(255 255 255 / 6%);color:white;box-shadow:none;border: 1px solid;") Read Doc
+    div(style="clear:both;")
+
+// search form
+RecordSearch#recordSearch.hideOnTablet
+.hideOnTablet(style="clear:both;")
+
 .record-container#data-container
-    .header
-        span.not-clickable {{ fetchingData ? "Searching" : "Result of"}} {{ route.query.search_type.replace('_', ' ') }}: "{{ route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type] }}" {{ fetchingData ? '...' : '' }}
+    .header.hideOnTablet
+        span.not-clickable {{ searchTitle }}
         span.material-symbols-outlined.not-clickable.animation-rotation(style='opacity:0.6;' v-if="fetchingData") cached
         .clickable(v-else @click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'records'})}")
             span(style="vertical-align:middle;") Clear
@@ -14,7 +25,13 @@
         span(v-if='route.query?.index_name') Index: {{ route.query.index_name }}, Value: {{ route.query.index_value }}, Condition: {{ route.query.index_condition }}
         span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
 
-    template(v-if='searchResult !== null')
+    // skeleton(mobile)
+    .recordWrapper.animation-skeleton.showOnTablet(v-if='searchResult === null')
+        .records.clickable(v-for="t in numberOfSkeletons()")
+            div
+                span &nbsp;
+
+    template(v-else)
         .noRecords(v-if='!searchResult.list.length')
             div
                 sui-flextext(min-size='16' max-size='32') No Records
@@ -23,18 +40,21 @@
 
         template(v-else-if="groupedRecordList && groupedRecordList[currentSelectedRecordBatch]")
             .recordWrapper
-                .records.clickable(v-for="r in groupedRecordList[currentSelectedRecordBatch][currentSelectedRecordPage]")
-                    div
-                        span.label RECORD: 
-                        span {{ r.record_id }}
-                    div
-                        span.label UPLOADED: 
-                        span {{ dateFormat(r.uploaded) }}
-                    div
-                        span.label USER: 
-                        span {{ r.user_id }}
+                template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedRecordBatch + 1] : groupedRecordList.length)")
+                    template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedRecordPage + 1] : groupedRecordList[batchIdx - 1].length)")
+                        // when v-for by number, it starts with 1
+                        .records.clickable(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]")
+                            div
+                                span.label USER: 
+                                span {{ r.user_id }}
+                            div
+                                span.label RECORD: 
+                                span {{ r.record_id }}
+                            div
+                                span.label UPLOADED: 
+                                span {{ dateFormat(r.uploaded) }}
 
-            .paginator
+            .paginator.hideOnTablet
                 span.material-symbols-outlined.arrow(
                     style="transform: rotate(180deg)"
                     :class="{active: currentSelectedRecordBatch || currentSelectedRecordPage}"
@@ -54,18 +74,62 @@
                 span.material-symbols-outlined.arrow(
                     :class="{active: currentSelectedRecordPage < groupedRecordList[currentSelectedRecordBatch].length - 1 || !searchResult.endOfList && currentSelectedRecordPage === groupedRecordList[currentSelectedRecordBatch].length - 1 }"
                     @click="()=>{ if(currentSelectedRecordPage < groupedRecordList[currentSelectedRecordBatch].length - 1 ) currentSelectedRecordPage++; else if(!searchResult.endOfList && currentSelectedRecordPage === groupedRecordList[currentSelectedRecordBatch].length - 1) fetchMoreRecords() }") arrow_forward_ios
+
 </template>
 <!-- script below -->
 <script setup>
 import { inject, ref, watch, computed, nextTick } from 'vue';
 import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+import RecordSearch from '@/components/recordSearch.vue';
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
 
+// record page has darker background in mobile mode
+let appStyle = inject('appStyle');
+let viewport = inject('viewport');
+
+function adjustBackgroundColor(n) {
+    if (n === 'mobile') {
+        appStyle.background = '#262626';
+        // remove padding for zebra list to extend to full width
+        appStyle.mainPadding = '0';
+    }
+    else {
+        appStyle.background = '#595959';
+        appStyle.mainPadding = null;
+    }
+}
+adjustBackgroundColor(viewport.value);
+watch(viewport, n => {
+    adjustBackgroundColor(n);
+});
+
+watch(() => route.name, n => {
+    if (route.name !== 'recordList' && route.name !== 'recordSearch') {
+        // set padding to original value
+        appStyle.mainPadding = null;
+    }
+});
+
 // flag
 let fetchingData = inject('fetchingData');
+
+// page title
+let searchTitle = computed(() => {
+    return `${fetchingData.value ? "Searching" : "Result of"} ${route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type]}" ${fetchingData.value ? '...' : ''}`;
+});
+
+let pageTitle = inject('pageTitle');
+if (route.name === 'recordList') {
+    // page title is table name
+    // route "recordList" is visited via mobile navigation
+    pageTitle.value = route.query.table;
+}
+else {
+    pageTitle.value = searchTitle.value;
+}
 
 // data
 let searchResult = inject('searchResult');
@@ -74,7 +138,6 @@ let searchResult = inject('searchResult');
 let fetchLimit = 50;
 let numberOfRecordPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfRecordPerPage;
-
 let currentSelectedRecordPage = ref(0);
 let currentSelectedRecordBatch = ref(0);
 
@@ -97,7 +160,11 @@ watch(currentSelectedRecordPage, n => {
     });
 });
 
-// event
+function numberOfSkeletons() {
+    // calculated by available vertical space
+    return parseInt(window.innerHeight / 2 / 48);
+}
+
 let promiseQueue = null;
 async function fetchMoreRecords() {
     if (searchResult.value.endOfList && groupedRecordList.value.length - 1 === currentSelectedRecordBatch.value) {
@@ -119,25 +186,41 @@ async function fetchMoreRecords() {
 
     fetchingData.value = true;
     promiseQueue = skapi.getRecords(searchResult.value.params, { refresh: false, limit: fetchLimit });
-    
+
     await promiseQueue;
 
     for (let rec of promiseQueue.list) {
         searchResult.value.list.push(rec);
     }
-    fetchingData.value = false;
 
+    fetchingData.value = false;
     searchResult.value.endOfList = promiseQueue.endOfList;
-    
     currentSelectedRecordBatch.value += 1;
     currentSelectedRecordPage.value = 0;
-
     fetchingData.value = false;
     promiseQueue = null;
 }
+
 </script>
 
 <style lang="less" scoped>
+@import '@/assets/variables.less';
+
+.recordPageHead {
+    padding: 50px 0;
+
+    @media @tablet {
+        padding: 24px 0;
+    }
+}
+
+#recordSearch {
+    z-index: 1;
+    display: inline-block;
+    position: relative;
+    max-width: 100%;
+}
+
 .record-container {
     sui-input {
         input::placeholder {
@@ -149,7 +232,6 @@ async function fetchMoreRecords() {
         color: white;
     }
 
-    clear: both;
     background-color: #434343;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -159,6 +241,52 @@ async function fetchMoreRecords() {
     margin: 0;
     margin-top: 36px;
     padding: 24px 20px;
+
+    @media @tablet {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+
+        .recordWrapper {
+            margin: 0 !important;
+            border-radius: 0 !important;
+
+            .records {
+                border-radius: 0 !important;
+                padding-right: 16px !important;
+                padding-left: 16px !important;
+                display: block !important;
+
+                div {
+                    &:not(:last-child) {
+                        margin-bottom: 2px !important;
+                    }
+
+                    margin-right: 0 !important;
+                    display: block;
+                }
+            }
+        }
+    }
+
+    @media @phone {
+        .recordWrapper {
+            .records {
+                div {
+                    &:not(:last-child) {
+                        margin-bottom: 4px !important;
+                    }
+
+                    span {
+                        display: block !important;
+                    }
+                }
+            }
+        }
+    }
 
     .searchPoints {
         padding-top: 16px;
@@ -220,6 +348,7 @@ async function fetchMoreRecords() {
 
                 span {
                     font-family: monospace;
+                    display: inline-block;
 
                     &.label {
                         color: rgba(255, 255, 255, 0.6);
@@ -263,7 +392,6 @@ async function fetchMoreRecords() {
             padding: 4px 8px;
             width: 24px;
             box-sizing: content-box;
-
 
             &.page {
                 cursor: pointer;

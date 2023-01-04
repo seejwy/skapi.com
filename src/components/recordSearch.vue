@@ -3,12 +3,50 @@
 form(
     :action="'/dashboard/' + serviceId + '/records/search'"
     @submit.prevent="submitSearch")
+    // navbar for mobile search
+    .mobileSearchNav(v-if='viewport === "mobile"')
+        span.showOnTablet.material-symbols-outlined.clickable.backbutton(@click='router.push({name: "records"})') arrow_back_ios
+        sui-input(
+            type="search"
+            :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
+            :placeholder="searchForm.type === 'table' ? 'Table name' : searchForm.type === 'user' ? 'User id' : 'Record id'"
+            :required='searchForm.isAdvanced ? "true" : null'
+            :value="searchForm.value"
+            @input="e=>{ searchForm.value = e.target.value; }"
+            @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
+            @mounted="focusMe"
+            autocomplete="off")
+        span.material-symbols-outlined.placeholder-icon(v-if="!searchForm.value") search
+
     // mask clicker for closing advanced search
-    .mask(v-if='searchForm.isAdvanced' @click='searchForm.isAdvanced = false')
-    .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
-        // main search
-        .select-field
-            sui-select(
+    .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='searchForm.isAdvanced = false')
+    .select-input.isMobile(style='width: 400px;margin: 8px 0;' @click.stop)
+        template(v-if="viewport === 'desktop'")
+            // main search
+            .select-field
+                sui-select(
+                    name='search_type'
+                    :value="searchForm.type"
+                    @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
+                    option(value="table" selected) Table Name
+                    option(value="user") User ID
+                    option(value="record") Record ID
+
+            .input-field
+                span.material-symbols-outlined.placeholder-icon(v-if="!searchForm.value") search
+                sui-input(
+                    type="search"
+                    :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
+                    :placeholder="searchForm.type === 'table' ? 'Table name' : searchForm.type === 'user' ? 'User id' : 'Record id'"
+                    :required='searchForm.isAdvanced ? "true" : null'
+                    :value="searchForm.value"
+                    @input="e=>{ searchForm.value = e.target.value; }"
+                    @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
+                    autocomplete="off")
+                span.material-symbols-outlined.clickable.optionButton(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") tune
+
+        template(v-else)
+            sui-select.mobileSearchType(
                 name='search_type'
                 :value="searchForm.type"
                 @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
@@ -16,21 +54,16 @@ form(
                 option(value="user") User ID
                 option(value="record") Record ID
 
-        .input-field
-            span.material-symbols-outlined.placeholder-icon(v-if="!searchForm.value") search
-            sui-input(
-                type="search"
-                :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
-                :placeholder="searchForm.type === 'table' ? 'Table name' : searchForm.type === 'user' ? 'User id' : 'Record id'"
-                :required='searchForm.isAdvanced ? "true" : null'
-                :value="searchForm.value"
-                @input="e=>{ searchForm.value = e.target.value; }"
-                @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
-                autocomplete="off")
-            span.material-symbols-outlined.clickable.optionButton(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") tune
+        .showOnTablet(style="display:block;")
+            br
+            br
+
+        .hideable-toggle.showOnTablet
+            hr
+            span(:class="{'close': searchForm.isAdvanced }" @click="searchForm.isAdvanced=!searchForm.isAdvanced") Advanced Search
 
         // advanced search
-        .floatBox(v-if='searchForm.isAdvanced && searchForm.type !== "record"')
+        .advancedForm(v-if='searchForm.isAdvanced && searchForm.type !== "record"')
             .formLabel Access Group
             .form
                 .labelRadio.clickable
@@ -157,7 +190,7 @@ form(
                         @input="e => advancedForm.reference = e.target.value")
 
             div(style='text-align:center;')
-                sui-input.line-button(style='margin: 8px .5em; width: 6em;' type='reset' @click.prevent="advancedForm = advancedFormInit()") Reset
+                sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()") Reset
                 sui-input(style='margin: 8px .5em;width: 6em;' type='submit') Search
 
 </template>
@@ -166,11 +199,11 @@ form(
 import { inject, reactive, ref, watch } from 'vue';
 import { skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+import NavBar from '@/components/navbar.vue';
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
-// let pageTitle = inject('pageTitle');
-// pageTitle.value = 'Records';
+let viewport = inject('viewport');
 
 function submitSearch(ev) {
     // using vue route instead of vanila get request to prevent browser refresh
@@ -195,7 +228,10 @@ let searchForm = reactive({
 });
 
 let indexValueFormElement = ref(null);
-
+function focusMe(e){
+    console.log({e})
+    e.target.focus();
+}
 function advancedFormInit() {
     // return fresh object
     return {
@@ -327,11 +363,14 @@ function search(searchParams, refresh = false) {
 
     fetchingData.value = true;
 
+    if (viewport.value === 'mobile') {
+        searchResult.value = null;
+    }
+
     skapi.getRecords(params, { refresh: true, limit: 50 })
         .then(r => {
             searchResult.value = r;
             searchResult.value.params = params;
-            console.log({ searchResult: searchResult.value });
             fetchingData.value = false;
         }).catch(err => {
             fetchingData.value = false;
@@ -354,25 +393,151 @@ watch(() => route.query, n => {
     }
 });
 
-if (route.name === 'recordSearch') {
-    search(route.query);
+switch (route.name) {
+    case 'recordSearch':
+        // always do new search
+        search(route.query);
+        break;
+    case 'recordList':
+        // always do new search if there is no fetched data
+        if (searchResult.value === null) {
+            search(route.query);
+        }
+        break;
 }
+
 </script>
 
 <style lang="less" scoped>
+@import '@/assets/variables.less';
+
 form {
+    .hideable-toggle {
+        user-select: none;
+        display: flex;
+        gap: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+
+        & hr {
+            flex-grow: 1;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        &>span {
+            &::after {
+                content: '';
+                display: inline-block;
+                width: 0;
+                height: 0;
+                vertical-align: middle;
+                margin-left: 16px;
+            }
+
+            &:not(.close)::after {
+                border-top: 5px solid rgba(255, 255, 255, 0.6);
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+            }
+
+            &.close::after {
+                border-bottom: 5px solid rgba(255, 255, 255, 0.6);
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+            }
+        }
+    }
+
+
+    sui-select.mobileSearchType {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 0.5px solid #8C8C8C;
+        box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
+    }
+
+    .mobileSearchNav {
+        position: sticky;
+        top: 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 28px;
+        background-color: #333;
+        z-index: 1;
+
+        &::after {
+            display: block;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            bottom: 0;
+            content: '';
+            height: 1px;
+            background-color: rgba(255 255 255 / 60%);
+            box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .backbutton {
+            display: inline;
+            font-size: 24px;
+            color: rgba(255, 255, 255, .4);
+            margin-left: -36px;
+            padding-left: 36px;
+        }
+
+        sui-input {
+            box-shadow: none;
+            width: 100%;
+
+            input:focus {
+                outline: none;
+            }
+
+            &+span {
+                position: absolute;
+                right: 0;
+            }
+        }
+    }
+
+    @media @tablet {
+        display: block;
+        width: 100%;
+        // position: relative;
+    }
+
+    .select-input.isMobile {
+        @media @tablet {
+            width: 100% !important;
+            margin: 0px;
+            background: none;
+            display: block;
+            box-shadow: none;
+            border-radius: 0;
+
+            &>*:first-child::after {
+                display: none;
+            }
+        }
+    }
+
     sui-input {
         input::placeholder {
             color: rgba(255, 255, 255, .6);
         }
     }
 
-    z-index: 1;
-    display: inline-block;
-    position: relative;
-    max-width: 100%;
+    .line-button {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        box-shadow: none;
+        margin: 8px .5em;
+        width: 6em;
+    }
 
-    .floatBox {
+    .advancedForm {
         position: absolute;
         margin-top: 8px;
         border-radius: 5px;
@@ -382,6 +547,18 @@ form {
         box-shadow: 4px 4px 12px rgba(0 0 0 / 25%);
         background-color: #333;
         top: 100%;
+
+        @media @tablet {
+            position: relative;
+            margin-top: 1em;
+            border-radius: none;
+            width: 100%;
+            border: none;
+            padding: 0;
+            box-shadow: none;
+            background-color: transparent;
+            top: unset;
+        }
 
         .formLabel {
             font-weight: 700;
