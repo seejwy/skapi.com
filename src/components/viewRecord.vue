@@ -195,8 +195,13 @@ const download = (url) => {
 	.content {
 		background-color: #333333;
 		padding: 30px 20px 20px 20px;
-		max-height: 740px;
+		height: 700px;
+		max-height: 700px;
 		overflow-y: scroll;
+
+		@media (max-height: 950px) {
+			max-height: calc(100vh - 250px);
+		}
 
 		.grid {
 			display: grid;
