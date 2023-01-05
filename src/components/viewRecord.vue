@@ -76,7 +76,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;")
 								div {{ file.filename }}
 								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 							span.material-symbols-outlined download
-					template(v-else-if="typeof data")
+					template(v-else-if="typeof data === 'object'")
 						pre.value {{ data }}
 					template(v-else)
 						.value {{ data }}
