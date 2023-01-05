@@ -3,7 +3,7 @@
     h1 Record
     span This is some text
     br
-    sui-button(style="float:right;background-color:rgba(255 255 255 / 6%);color:white;box-shadow:none;border: 1px solid;") Read Doc
+    sui-button.line-button(style="float:right") Read Doc
     div(style="clear:both;")
 
 // search form
