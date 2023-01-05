@@ -109,7 +109,6 @@ const overlay = ref(null);
 let view = ref('information');
 
 const deleteRecord = () => {
-	//perform non-awaiting delete here then close
 	overlay.value.close();
 }
 
