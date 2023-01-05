@@ -24,21 +24,21 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;")
 				.grid-item.title Subscription
 				.grid-item {{ props?.record?.subscription || '-' }}
 				.grid-item.title.span-2 Index
-				.grid-item.title.sub-grid(style="font-weight: normal") Index Name
-				.grid-item.sub-grid {{ props?.record?.index?.name || '-' }}
-				.grid-item.title.sub-grid(style="font-weight: normal") Index Value
-				.grid-item.sub-grid
+				.grid-item.title(style="font-weight: normal") Index Name
+				.grid-item {{ props?.record?.index?.name || '-' }}
+				.grid-item.title(style="font-weight: normal") Index Value
+				.grid-item
 					span.type(v-if="props?.record?.index?.value") {{ typeof props?.record?.index?.value }}
 					span {{ props?.record?.index?.value || '-' }}
-				.grid-item.title(style="padding-top: 16px") Upload Datetime
-				.grid-item(style="padding-top: 16px") {{ dateFormat(props?.record?.uploaded) }}
-				.grid-item.title.sub-grid(style="padding-top: 16px;") Reference
-				.grid-item.sub-grid(style="padding-top: 16px;")
-					div multiple reference
+				.grid-item.title Upload Datetime
+				.grid-item {{ dateFormat(props?.record?.uploaded) }}
+				.grid-item.title Reference
+				.grid-item
+					.sub-grid Multiple Reference
 						sui-input(type="checkbox" disabled :checked="props?.record?.config?.allow_multiple_reference || null")
-					div reference limit: {{ props?.record?.config?.reference_limit || '-' }}
+					.sub-grid Reference Limit: {{ props?.record?.config?.reference_limit || '-' }}
 				template(v-if="props?.record?.tags?.length")
-					.grid-item.title.span-2(style="padding-top: 16px;") Tags
+					.grid-item.title.span-2 Tags
 					.grid-item.span-2(style="padding-top: 4px;")
 						.tags-wrapper
 							.tag(v-for="tag in props?.record?.tags") {{ tag }}
@@ -46,7 +46,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;")
 					.grid-item.title Tags
 					.grid-item -
 				template(v-if="props?.record?.config?.private_access?.length")
-					.grid-item.title.span-2(style="padding-top: 16px;") Access
+					.grid-item.title.span-2 Access
 					.grid-item.span-2(style="padding-top: 4px;")
 						.tags-wrapper
 							.tag(v-for="userId in props?.record?.config?.private_access") {{ userId }}
@@ -151,8 +151,10 @@ const deleteRecord = () => {
 		}
 
 		&-item {
-			display: inline-block;
-			padding: 4px 20px 12px 20px;
+			display: inline-flex;
+			align-items: center;
+    		height: 40px;
+			padding: 0 20px;
 			border-radius: 8px 8px 0px 0px;
 			cursor: pointer;
 			
@@ -162,10 +164,10 @@ const deleteRecord = () => {
 		}
 
 		.action {
-			display: flex;
+			display: inline-flex;
 			align-items: center;
 			gap: 4px;
-			padding: 4px 20px 12px 20px;
+			padding: 0 20px;
 			cursor: pointer;
 			
 			.material-symbols-outlined {
@@ -203,14 +205,14 @@ const deleteRecord = () => {
 
 		.grid-item {
 			grid-column: span 1;
-			padding: 10px 0;
+			padding: 8px 0;
 
 			&.span-2 {
 				grid-column: span 2;
 			}
 
-			&.sub-grid {
-				padding: 4px 0;
+			.sub-grid:not(:last-child) {
+				margin-bottom: 12px;
 			}
 
 			&.title {
