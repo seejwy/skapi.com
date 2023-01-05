@@ -31,7 +31,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;")
 					span.type(v-if="props?.record?.index?.value") {{ typeof props?.record?.index?.value }}
 					span {{ props?.record?.index?.value || '-' }}
 				.grid-item.title(style="padding-top: 16px") Upload Datetime
-				.grid-item {{ dateFormat(props?.record?.uploaded) }}
+				.grid-item(style="padding-top: 16px") {{ dateFormat(props?.record?.uploaded) }}
 				.grid-item.title.sub-grid(style="padding-top: 16px;") Reference
 				.grid-item.sub-grid(style="padding-top: 16px;")
 					div multiple reference
