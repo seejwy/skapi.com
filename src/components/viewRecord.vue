@@ -152,7 +152,7 @@ const deleteRecord = () => {
 
 		&-item {
 			display: inline-block;
-			padding: 4px 20px;
+			padding: 4px 20px 12px 20px;
 			border-radius: 8px 8px 0px 0px;
 			cursor: pointer;
 			
@@ -165,7 +165,7 @@ const deleteRecord = () => {
 			display: flex;
 			align-items: center;
 			gap: 4px;
-			padding: 4px 20px;
+			padding: 4px 20px 12px 20px;
 			cursor: pointer;
 			
 			.material-symbols-outlined {
