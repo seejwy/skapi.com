@@ -294,6 +294,11 @@ const deleteRecord = () => {
 	
 	.title {
 		color: #FF8D3B;
+
+		& > div {
+			margin-top: 12px; 
+			font-size: 20px;
+		}
 	}
 	
 	.body {
