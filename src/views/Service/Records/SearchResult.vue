@@ -187,10 +187,10 @@ function scrollEventMobile(event) {
     }
 }
 
-window.addEventListener('scroll', scrollEventMobile);
+window.addEventListener('scroll', scrollEventMobile, { passive: true });
 
 onBeforeUnmount(() => {
-    window.removeEventListener('scroll', scrollEventMobile);
+    window.removeEventListener('scroll', scrollEventMobile, { passive: true });
     // set padding to original value
     appStyle.mainPadding = null;
 });

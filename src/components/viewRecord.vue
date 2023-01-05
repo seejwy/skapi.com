@@ -17,12 +17,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;")
 				.grid-item {{ props?.record?.record_id }}
 				.grid-item.title Table Name
 				.grid-item {{ props?.record?.table }}
-				.grid-item.title Reference 
-				.grid-item {{ props?.record?.reference || '-' }}
+				.grid-item.title Access Group
+				.grid-item {{ props?.record?.access_group === 'private' ? 'Private' : props?.record?.access_group ? 'Registered' : 'Public' }}
 				.grid-item.title User ID
 				.grid-item {{ props?.record?.user_id }}
 				.grid-item.title Subscription
 				.grid-item {{ props?.record?.subscription || '-' }}
+				.grid-item.title Reference 
+				.grid-item {{ props?.record?.reference || '-' }}
 				.grid-item.title.span-2 Index
 				.grid-item.title(style="font-weight: normal") Index Name
 				.grid-item {{ props?.record?.index?.name || '-' }}

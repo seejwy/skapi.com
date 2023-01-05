@@ -26,7 +26,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
     // table list
     template(v-else)
-        sui-overlay(ref='openRecord' @click='openRecord.close()')
+        sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
             ViewRecord(:record='recordToOpen' @close="openRecord.close()")
 
         .noTables(v-if='!recordTables.list.length')
@@ -54,7 +54,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
                             span.material-symbols-outlined.animation-rotation(v-else) cached
 
-                        div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll="(e)=>getMoreRecords(e, t)")
+                        div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t)")
                             .noRecords(v-if='!t.records.list.length')
                                 div
                                     sui-flextext(min-size='14' max-size='24') No Records
