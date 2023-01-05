@@ -61,7 +61,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                                     br
                                     p This table will be automatically removed.
 
-                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>{recordToOpen = r;openRecord.open()}")
+                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>{recordToOpen = r; openRecord.open();}")
                                 div
                                     span.labelHead RECORD: 
                                     span {{ r.record_id }}

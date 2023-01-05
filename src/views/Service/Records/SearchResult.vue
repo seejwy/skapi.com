@@ -10,6 +10,9 @@
 RecordSearch#recordSearch.hideOnTablet
 .hideOnTablet(style="clear:both;")
 
+sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
+    ViewRecord(:record='recordToOpen' @close="openRecord.close()")
+
 .record-container#data-container
     .header.hideOnTablet
         span.not-clickable(v-html="searchTitle")
@@ -68,7 +71,7 @@ RecordSearch#recordSearch.hideOnTablet
                 template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedRecordBatch + 1] : groupedRecordList.length)")
                     template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedRecordPage + 1] : groupedRecordList[batchIdx - 1].length)")
                         // when v-for by number, it starts with 1
-                        .records.clickable(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]")
+                        .records(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]" style="cursor:pointer;" @click="()=>{recordToOpen=r;openRecord.open();}")
                             div
                                 span.label USER: 
                                 span {{ r.user_id }}
@@ -107,6 +110,7 @@ import { inject, ref, watch, computed, nextTick, onBeforeUnmount, onMounted } fr
 import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import RecordSearch from '@/components/recordSearch.vue';
+import ViewRecord from '../../../components/viewRecord.vue';
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -194,6 +198,9 @@ onBeforeUnmount(() => {
     // set padding to original value
     appStyle.mainPadding = null;
 });
+
+let openRecord = ref(null);
+let recordToOpen = ref(null);
 
 let promiseQueue = null;
 async function fetchMoreRecords() {
