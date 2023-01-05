@@ -56,25 +56,30 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;")
 					.grid-item.title Access
 					.grid-item -
 			template(v-else)
-				.data-row
+				.data-row(v-for="(data, key) in props?.record?.data")
 					.name
-						span.type File
-						span Title
-					.value.file
-						span.material-symbols-outlined(style="font-size: 46px;") file_present
-						span
-							div Name of the file.jpg
-							div(style="font-size: 12px;") 1.23 KB
-					.value.file
-						span.material-symbols-outlined(style="font-size: 46px;") file_present
-						span
-							div Name of the file.jpg
-							div(style="font-size: 12px;") 123 KB
-				.data-row
-					.name
-						span.type Json
-						span Title
-					.value xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+						span.type(v-if="data?.type || data[0]?.type") File
+						span.type(v-else-if="typeof data === 'object'") JSON
+						span.type(v-else) {{ typeof data }}
+						span {{ key }}
+					template(v-if="data?.type")
+						.value.file(@click="download(data.url)")
+							span.material-symbols-outlined file_present
+							span
+								div {{ data.filename }}
+								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
+							span.material-symbols-outlined download
+					template(v-else-if="data[0]?.type")
+						.value.file(v-for="file in data" @click="download(file.url)")
+							span.material-symbols-outlined file_present
+							span
+								div {{ file.filename }}
+								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+							span.material-symbols-outlined download
+					template(v-else-if="typeof data === 'object'")
+						pre.value {{ data }}
+					template(v-else)
+						.value {{ data }}
 		.foot
 			sui-button.line-button Edit
 sui-overlay(ref="overlay")
@@ -89,13 +94,13 @@ sui-overlay(ref="overlay")
 </template>
 <script setup>
 import { ref } from 'vue';
-import { dateFormat } from '@/main'
+import { dateFormat, getSize } from '@/main'
 
 let props = defineProps({
-  record: {
-    type: Object,
-    default: () => ({}),
-  },
+	record: {
+		type: Object,
+		default: () => ({}),
+	},
 });
 
 let emit = defineEmits(['close']);
@@ -104,16 +109,24 @@ const overlay = ref(null);
 let view = ref('information');
 
 const deleteRecord = () => {
-	//perform non-awaiting delete here then close
 	overlay.value.close();
+}
+
+const download = (url) => {
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = url.substring(url.lastIndexOf('/') + 1);
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
 }
 </script>
 <style lang="less" scoped>
 .container {
-    background: #505050;
-    border: 1px solid #808080;
-    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
+	background: #505050;
+	border: 1px solid #808080;
+	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+	border-radius: 8px;
 	width: 500px;
 	max-width: 100%;
 
@@ -137,12 +150,12 @@ const deleteRecord = () => {
 		}
 	}
 
-    .title {
-        padding: 18px 20px 24px 20px;
+	.title {
+		padding: 18px 20px 24px 20px;
 		font-weight: bold;
-    }
+	}
 
-    .menu {
+	.menu {
 		display: flex;
 		justify-content: space-between;
 		font-weight: bold;
@@ -155,7 +168,7 @@ const deleteRecord = () => {
 		&-item {
 			display: inline-flex;
 			align-items: center;
-    		height: 40px;
+			height: 40px;
 			padding: 0 20px;
 			border-radius: 8px 8px 0px 0px;
 			cursor: pointer;
@@ -176,12 +189,13 @@ const deleteRecord = () => {
 				font-size: 20px;
 			}
 		}
-    }
+	}
 
 	.content {
 		background-color: #333333;
 		padding: 30px 20px 20px 20px;
-		max-height: 740px;
+		height: 700px;
+		max-height: calc(100vh - 250px);
 		overflow-y: scroll;
 
 		.grid {
@@ -238,7 +252,27 @@ const deleteRecord = () => {
 
 				&.file {
 					display: flex;
+					padding: 16px 20px 16px 12px;
 					gap: 16px;
+
+					
+					span:first-child,
+					span:last-child {
+						color: rgba(255, 255, 255, .6);
+					}
+
+					span:first-child {
+						font-size: 46px;
+					}
+
+					span:nth-child(2) {
+						flex-grow: 1;
+					}
+					span:last-child {
+						font-size: 24px;
+						align-self: center;
+						cursor: pointer;
+					}
 				}
 
 				.material-symbols-outlined {
@@ -288,6 +322,7 @@ const deleteRecord = () => {
 	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
 	border-radius: 8px;
 	padding: 60px 32px;
+	margin: 12px;
 	text-align: center;
 
 	.material-symbols-outlined {
@@ -314,6 +349,7 @@ const deleteRecord = () => {
 .type {
 	display: inline-flex;
 	align-items: center;
+	justify-content: center;
 	margin-right: 12px;
 	text-transform: capitalize;
 	border: 1px solid #FFFFFF;
@@ -321,5 +357,6 @@ const deleteRecord = () => {
 	height: 28px;
 	font-size: 14px;
 	padding: 0 8px;
+	min-width: 72px;
 }
 </style>
