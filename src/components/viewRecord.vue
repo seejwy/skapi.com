@@ -1,6 +1,6 @@
 <template lang="pug">
-div(style="padding: 16px; box-sizing: border-box; position: relative;")
-	.container
+div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="props?.record")
+	.container(v-if="!isEdit")
 		.close(@click="$emit('close')")
 			span.material-symbols-outlined close
 		.title {{ props?.record?.record_id }}
@@ -81,7 +81,72 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;")
 					template(v-else)
 						.value {{ data }}
 		.foot
-			sui-button.line-button Edit
+			sui-button.line-button(@click="editRecord") Edit
+	.container(v-else)
+		form(@submit.prevent="save")
+			.close(@click="$emit('close')")
+				span.material-symbols-outlined close
+			.title {{ form.record_id }}
+			.menu
+				ul
+					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
+					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Record
+				.action(@click="overlay.open") 
+					span.material-symbols-outlined delete
+					span delete
+			.content(v-show="view === 'information'")
+				.row
+					.section(style="width: 100%;")
+						.name Table Name
+						sui-input(:value="form.table" @input="(e) => form.table = e.target.value")
+				.row
+					.section
+						.name Reference ID
+							span(style="float: right;") ?
+						sui-input(:value="form.reference" @input="(e) => form.reference = e.target.value")
+					.section
+						.name Access Group
+						sui-select(:value="form.access_group" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
+							option(value="0") Everyone 
+							option(value="1") Registered Users
+				.row
+					.section(style="width: 100%;")
+						.name Tags 
+						TagsInput(:value="form.tags" @change="(value) => form.tags = value")
+				.row
+					.section(style="width: 100%;")
+						.name Index Name 
+						sui-input(:value="form?.index?.name" @input="(e)=> form.index.name = e.target.value")
+				.row
+					.section
+						.name Index Value
+						.row(style="row-gap: 16px;")
+							.section
+								sui-select(style="min-width: 100px;" :value="typeof form.index.value")
+									option(value="string") String
+									option(value="number") Number
+									option(value="boolean") Boolean
+							.section
+								sui-input(:value="form?.index?.value" @input="(e)=> form.index.value = e.target.value")
+				.row
+					.section
+						.name(style="display: flex; align-items: center;")
+							sui-input(type="checkbox" id="allow_reference" name="allow_reference" style="margin-right: 8px; vertical-align: middle;" @change="toggleAllowReference" :value="allowReference" @input="(e)=> allowReference = e.target.checked")
+							label(for="allow_reference") Allow Reference
+						.reference-container(v-if="allowReference")
+							div
+								label(for="allow_multiple_reference" style="margin-right: 8px;") Allow Multiple Reference
+								sui-input(type="checkbox" id="allow_multiple_reference" @input="(e)=>form.config.allow_multiple_reference = e.target.checked ? true : false")
+							div
+								span Reference Limit:
+								input.line-input(type="number" min="1" placeholder="Infitite" :value="form.config?.reference_limit" @input="(e) => form.config.reference_limit = e.target.value")
+				.row
+					.section(style="width: 100%;")
+						.name Access 
+						TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
+			.content(v-show="view === 'record'")
+			.foot
+				sui-input(type="submit").line-button Save
 sui-overlay(ref="overlay")
 	.popup
 		.title
@@ -95,21 +160,48 @@ sui-overlay(ref="overlay")
 <script setup>
 import { ref } from 'vue';
 import { dateFormat, getSize } from '@/main'
+import TagsInput from '@/components/TagsInput.vue';
 
-let props = defineProps({
+const props = defineProps({
 	record: {
 		type: Object,
 		default: () => ({}),
 	},
 });
-
-let emit = defineEmits(['close']);
+const isEdit = ref(false);
+const form = ref({});
+const emit = defineEmits(['close']);
 
 const overlay = ref(null);
-let view = ref('information');
+const view = ref('information');
 
+const allowReference = ref(true);
+if(form.config?.reference_limit === 0 || form.config?.reference_limit === '0') {
+	allowReference.value = false;
+}
+const toggleAllowReference = (e) => {
+	if(e.target.checked) {
+		form.value.config.reference_limit = 0;
+	} else {
+		form.value.config.reference_limit = '';
+		delete form.value.config.reference_limit;
+	}
+}
+
+const editRecord = () => {
+	form.value = props.record;
+	isEdit.value = true;
+}
 const deleteRecord = () => {
 	overlay.value.close();
+}
+
+const save = () => {
+	console.log("Saving form");
+
+	//do rthe saving then
+
+	isEdit.value = false;
 }
 
 const download = (url) => {
@@ -288,6 +380,86 @@ const download = (url) => {
 				height: 2px;
 				width: 100%;
 				background-color: rgba(255, 255, 255, 0.08);
+			}
+		}
+		.row {
+			display: flex;
+			width: 100%;
+			row-gap: 24px;
+			column-gap: 16px;
+			flex-wrap: wrap;
+
+			&:not(:last-child) {
+				margin-bottom: 25px;
+			}
+
+			sui-select,
+			sui-input:not([type=checkbox]) {
+				width: 100%;
+			}
+		}
+		.section {
+			display: inline-block;
+			flex-grow: 1;
+
+			.name {
+				margin-bottom: 8px;
+				font-weight: bold;
+			}
+
+			.reference-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 16px;
+				padding: 12px;
+				background: #434343;
+				border-radius: 4px;
+
+				& > div {
+					display: flex;
+					align-items: flex-end;
+					flex-basis: calc(50% - 16px);
+					white-space: nowrap;
+					flex-grow: 1;
+				}
+			}
+
+			sui-input {
+				background: rgba(255, 255, 255, 0.08);
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+				border-radius: 5px;
+
+				&[type=checkbox] {
+					filter: none;
+					border-radius: 2px;
+					border-width: 2px;
+					border-color: rgba(255, 255, 255, 1);
+					vertical-align: baseline;
+
+					&[checked] {
+						border: none;
+						color: rgba(0, 0, 0, 0.5);
+						background: rgba(255, 255, 255, 1);
+						box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
+					}
+				}
+			}
+			sui-select {
+				background: rgba(255, 255, 255, 0.08);
+				border: 0.5px solid #8C8C8C;
+				box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
+				border-radius: 4px;
+			}
+			
+			.line-input {
+				background-color: transparent;
+				color: #fff;
+				border: none;
+				border-radius: 0;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+				width: 100%;
+				margin-left: 8px;
 			}
 		}
 	}
