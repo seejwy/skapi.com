@@ -98,7 +98,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.row
 					.section(style="width: 100%;")
 						.name Table Name
-						sui-input(:value="form.table" @input="(e) => form.table = e.target.value")
+						sui-input(required :value="form.table" @input="(e) => form.table = e.target.value")
 				.row
 					.section
 						.name Reference ID
@@ -116,7 +116,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.row
 					.section(style="width: 100%;")
 						.name Index Name 
-						sui-input(:value="form?.index?.name" @input="(e)=> form.index.name = e.target.value")
+						sui-input(:required="form?.index?.value !== '' ? true : null" :value="form?.index?.name" @input="(e)=> form.index.name = e.target.value")
 				.row
 					.section
 						.name Index Value
@@ -127,7 +127,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									option(value="number") Number
 									option(value="boolean") Boolean
 							.section
-								sui-input(:value="form?.index?.value" @input="(e)=> form.index.value = e.target.value")
+								sui-input(:required="form?.index?.name !== '' ? true : null" :value="form?.index?.value" @input="(e)=> form.index.value = e.target.value")
 				.row
 					.section
 						.name(style="display: flex; align-items: center;")
