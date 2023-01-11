@@ -690,7 +690,6 @@ defineExpose({
 				display: flex;
 				align-items: center;
 				gap: 12px;
-
 				.select-input {
 					flex-grow: 1;
 					text-align: center;
@@ -699,7 +698,6 @@ defineExpose({
 						width: 6.5em;
 					}
 				}
-
 				.action {
 					cursor: pointer;
 
