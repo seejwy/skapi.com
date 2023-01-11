@@ -145,6 +145,52 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						.name Access 
 						TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 			.content(v-show="view === 'record'")
+				.data-row(v-for="(row, index) in data")
+					.data-name-action
+						.select-input
+							.select-field
+								sui-select(@change="(e) => data[index].type = e.target.value")
+									option(value="string" :selected="row.type === 'string' ? true : null") String
+									option(value="number" :selected="row.type === 'number' ? true : null") Number
+									option(value="boolean" :selected="row.type === 'boolean' ? true : null") Boolean
+									option(value="file" :selected="row.type === 'file'") File
+									option(value="json" :selected="row.type === 'json' ? true : null") JSON
+							.input-field
+								sui-input(type="text" :value="row.key" @input="(e)=>data[index].key = e.target.value")
+						.action(@click="data.splice(index, 1)")
+							span.material-symbols-outlined delete
+							span remove
+					.file-upload-area(v-if="row?.type === 'file'" @dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop")
+						div
+							span.material-symbols-outlined(style="font-size: 57px") file_present
+							span Drag and Drop OR  
+							sui-button.line-button(disabled) Upload
+					template(v-if="row.value?.type")
+						.value.file
+							span.material-symbols-outlined file_present
+							span
+								div {{ row.filename }}
+								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
+							span.material-symbols-outlined cancel
+					template(v-else-if="row.value[0]?.type")
+						.value.file(v-for="file in row.value")
+							span.material-symbols-outlined file_present
+							span
+								div {{ file.filename }}
+								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+							span.material-symbols-outlined cancel
+					.data-input-field(v-else-if="row.type === 'object'")
+						sui-input(:name="row.key" :value="row.value" @input="(e) => data[index].value = e.target.value")
+					.data-input-field.transparent(v-else-if="row.type === 'boolean'")
+						span Value:
+						label True
+						sui-input(type="radio" :name="row.key" value="true" :checked="row.value ? true : null" @input="e => data[index].value = true")
+						label False
+						sui-input(type="radio" :name="row.key" value="false" :checked="!row.value ? true : null" @input="e => data[index].value = false")
+					.data-input-field(v-else)
+						sui-input(:name="row.key" :value="row.value" @input="(e) => data[index].value = e.target.value")
+				div
+					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="data.push({key: '', type: 'string', value: ''})") Add Data
 			.foot
 				sui-input(type="submit").line-button Save
 sui-overlay(ref="overlay")
@@ -169,9 +215,10 @@ const props = defineProps({
 		default: () => ({}),
 	},
 });
+const emit = defineEmits(['close']);
 const isEdit = ref(false);
 const form = ref({});
-const emit = defineEmits(['close']);
+const data = ref([]);
 
 const overlay = ref(null);
 const view = ref('information');
@@ -179,7 +226,6 @@ const route = useRoute();
 const serviceId = route.params.service;
 
 const allowReference = computed(() => {
-	console.log(form.value.config?.reference_limit)
 	if(form.value.config?.reference_limit === 0) return false;
 	return true;
 });
@@ -193,7 +239,17 @@ const toggleAllowReference = (e) => {
 }
 
 const editRecord = () => {
-	form.value = JSON.parse(JSON.stringify(props.record));
+	form.value = JSON.parse(JSON.stringify(props?.record));
+	for(let key in form?.value?.data) {
+		data.value.push({
+			key: key,
+			type: (() => {
+				if(form?.value?.data[key].type || form?.value?.data[key][0]?.type) return 'file';
+				return typeof form?.value?.data[key];
+			})(),
+			value: form?.value?.data[key]
+		});
+	}
 	isEdit.value = true;
 }
 const deleteRecord = () => {
@@ -201,6 +257,25 @@ const deleteRecord = () => {
 }
 
 const save = () => {
+	const formData = {};
+
+	data.value.forEach(row => {
+		let value;
+
+		switch(row.type) {
+			case 'number':
+				value = Number(row.value);
+				break;
+			case 'boolean':
+				value = row.value == 'true' ? true : false;
+				break;
+			default:
+				value = row.value;
+		}
+
+		formData[row.key] = value;
+	});
+	
 	form.value.service = serviceId;
 
 	delete form.value.data;
@@ -217,7 +292,7 @@ const save = () => {
 	if(!form.value.index.name) {
 		delete form.value.index;
 	}
-	skapi.postRecord({}, form.value).then(() => {
+	skapi.postRecord(formData, form.value).then(() => {
 	});
 
 	isEdit.value = false;
@@ -351,10 +426,15 @@ const download = (url) => {
 		.data-row {
 			margin-bottom: 72px;
 
+			.action {
+				float: right;				
+			}
+
 			&:last-child {
 				margin-bottom: 36px;
 			}
 
+			.data-input-field,
 			.value {
 				margin-top: 20px;
 				padding: 16px 20px;
@@ -384,10 +464,35 @@ const download = (url) => {
 						align-self: center;
 						cursor: pointer;
 					}
+					.material-symbols-outlined:last-child {
+						font-size: 20px;
+					    font-variation-settings: 'FILL' 1;
+					}
 				}
 
 				.material-symbols-outlined {
 					user-select: none;
+				}
+
+				sui-input {
+					&:not([type=radio]) {
+						width: 100%;
+						box-shadow: none;
+						
+						& input:focus {
+							outline: none;
+						}
+					}
+
+					&[type=radio] {
+						cursor: pointer;
+						color: #fff;
+					}
+				}
+
+				&.transparent {
+					background: none;
+					padding: 0;
 				}
 			}
 
@@ -399,6 +504,38 @@ const download = (url) => {
 				height: 2px;
 				width: 100%;
 				background-color: rgba(255, 255, 255, 0.08);
+			}
+
+			.data-name-action {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				.select-input {
+					flex-grow: 1;
+					text-align: center;
+
+					sui-select {
+						width: 6.5em;
+					}
+				}
+				.action {
+					cursor: pointer;
+
+					.material-symbols-outlined {
+						font-size: 15px;
+						margin-right: 10px;
+					}
+				}
+			}
+
+			.file-upload-area {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 28px 0;
+				border: 1px dashed #FFFFFF;
+				border-radius: 8px;
+				height: 100px;
 			}
 		}
 		.row {
