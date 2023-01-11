@@ -131,7 +131,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.row
 					.section
 						.name(style="display: flex; align-items: center;")
-							sui-input(type="checkbox" id="allow_reference" name="allow_reference" style="margin-right: 8px; vertical-align: middle;" @change="toggleAllowReference" :value="allowReference" @input="(e)=> allowReference = e.target.checked")
+							sui-input(type="checkbox" id="allow_reference" name="allow_reference" style="margin-right: 8px; vertical-align: middle;" @change="toggleAllowReference" :value="allowReference" :checked="allowReference ? true : null")
 							label(for="allow_reference") Allow Reference
 						.reference-container(v-if="allowReference")
 							div
@@ -158,8 +158,7 @@ sui-overlay(ref="overlay")
 			sui-button.line-button(@click="deleteRecord") Yes
 </template>
 <script setup>
-import { ref } from 'vue';
-import { dateFormat, getSize } from '@/main'
+import { ref, computed } from 'vue';
 import TagsInput from '@/components/TagsInput.vue';
 
 const props = defineProps({
@@ -175,16 +174,17 @@ const emit = defineEmits(['close']);
 const overlay = ref(null);
 const view = ref('information');
 
-const allowReference = ref(true);
-if(form.config?.reference_limit === 0 || form.config?.reference_limit === '0') {
-	allowReference.value = false;
-}
+const allowReference = computed(() => {
+	console.log(form.value.config?.reference_limit)
+	if(form.value.config?.reference_limit === 0) return false;
+	return true;
+});
+
 const toggleAllowReference = (e) => {
 	if(e.target.checked) {
-		form.value.config.reference_limit = 0;
-	} else {
 		form.value.config.reference_limit = '';
-		delete form.value.config.reference_limit;
+	} else {
+		form.value.config.reference_limit = 0;
 	}
 }
 
