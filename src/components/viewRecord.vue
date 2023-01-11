@@ -131,7 +131,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.row
 					.section
 						.name(style="display: flex; align-items: center;")
-							sui-input(type="checkbox" id="allow_reference" name="allow_reference" style="margin-right: 8px; vertical-align: middle;" @change="toggleAllowReference" :value="allowReference" :checked="allowReference ? true : null")
+							sui-input(type="checkbox" id="allow_reference" style="margin-right: 8px; vertical-align: middle;" @change="toggleAllowReference" :value="allowReference" :checked="allowReference ? true : null")
 							label(for="allow_reference") Allow Reference
 						.reference-container(v-if="allowReference")
 							div
