@@ -106,7 +106,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						sui-input(:value="form.reference" @input="(e) => form.reference = e.target.value")
 					.section
 						.name Access Group
-						sui-select(:value="form.access_group" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
+						sui-select(:value="form.access_group.toString()" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
 							option(value="0") Everyone 
 							option(value="1") Registered Users
 				.row
