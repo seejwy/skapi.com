@@ -122,7 +122,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						.name Index Value
 						.row(style="row-gap: 16px;")
 							.section
-								sui-select(style="min-width: 100px;" :value="typeof form.index.value")
+								sui-select(style="min-width: 100px;" :value="(typeof form.index.value)")
 									option(value="string") String
 									option(value="number") Number
 									option(value="boolean") Boolean
