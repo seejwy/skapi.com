@@ -3,7 +3,7 @@ input(type="hidden" :value="tagArray?.join(',')")
 .tag-container(@click="input.focus()")
   span.tag(v-for="(tag, index) in tagArray" @click.stop="")
     span {{ tag }}
-    span.material-symbols-outlined.filled(@click="removeTag(index)") cancel
+    span.material-symbols-outlined(@click="removeTag(index)") cancel
     //- do not remove the extra space in .tag-input
   .tag-input(ref="input" contenteditable="true" tabindex="0" @keydown.enter.space.prevent="addTag" @keydown.delete="deleteTag" @blur="addTag")  
 </template>
