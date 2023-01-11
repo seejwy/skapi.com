@@ -239,6 +239,7 @@ const toggleAllowReference = (e) => {
 }
 
 const editRecord = () => {
+	data.value = [];
 	form.value = JSON.parse(JSON.stringify(props?.record));
 	for(let key in form?.value?.data) {
 		data.value.push({
