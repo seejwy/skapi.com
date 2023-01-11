@@ -269,8 +269,11 @@ sui-overlay(ref="exitEditOverlay")
 </template>
 <script setup>
 import { ref, computed } from 'vue';
+<<<<<<< HEAD
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
+=======
+>>>>>>> 6e4619b (Modify how allowReference works)
 import TagsInput from '@/components/TagsInput.vue';
 
 const route = useRoute();
@@ -286,9 +289,24 @@ const form = ref({});
 const data = ref([]);
 
 const allowReference = computed(() => {
+<<<<<<< HEAD
 	if(form.value.config?.reference_limit === 0) return false;
 	return true;
 });
+=======
+	console.log(form.value.config?.reference_limit)
+	if(form.value.config?.reference_limit === 0) return false;
+	return true;
+});
+
+const toggleAllowReference = (e) => {
+	if(e.target.checked) {
+		form.value.config.reference_limit = '';
+	} else {
+		form.value.config.reference_limit = 0;
+	}
+}
+>>>>>>> 6e4619b (Modify how allowReference works)
 
 const editRecord = () => {
 	if (!props?.record) {
