@@ -189,7 +189,7 @@ const toggleAllowReference = (e) => {
 }
 
 const editRecord = () => {
-	form.value = props.record;
+	form.value = JSON.parse(JSON.stringify(props.record));
 	isEdit.value = true;
 }
 const deleteRecord = () => {
