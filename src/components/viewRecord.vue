@@ -159,6 +159,8 @@ sui-overlay(ref="overlay")
 </template>
 <script setup>
 import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { skapi, dateFormat, getSize } from '@/main'
 import TagsInput from '@/components/TagsInput.vue';
 
 const props = defineProps({
@@ -173,6 +175,8 @@ const emit = defineEmits(['close']);
 
 const overlay = ref(null);
 const view = ref('information');
+const route = useRoute();
+const serviceId = route.params.service;
 
 const allowReference = computed(() => {
 	console.log(form.value.config?.reference_limit)
@@ -197,9 +201,24 @@ const deleteRecord = () => {
 }
 
 const save = () => {
-	console.log("Saving form");
+	form.value.service = serviceId;
 
-	//do rthe saving then
+	delete form.value.data;
+	delete form.value.ip;
+	delete form.value.updated;
+	delete form.value.uploaded;
+	delete form.value.user_id;
+	delete form.value.referenced_count;
+
+	if(form.value.config.reference_limit === '') {
+		delete form.value.config.reference_limit;
+	}
+
+	if(!form.value.index.name) {
+		delete form.value.index;
+	}
+	skapi.postRecord({}, form.value).then(() => {
+	});
 
 	isEdit.value = false;
 }
