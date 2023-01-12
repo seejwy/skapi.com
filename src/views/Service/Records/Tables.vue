@@ -26,8 +26,8 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
     // table list
     template(v-else)
-        sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
-            ViewRecord(:record='recordToOpen' @close="openRecord.close()")
+        sui-overlay(ref='openRecord' @click='viewRecord.close' style="background-color:rgba(0 0 0 / 60%)")
+            ViewRecord(ref="viewRecord" :record='recordToOpen' @close="openRecord.close()")
 
         .noTables(v-if='!recordTables.list.length')
             div
@@ -116,6 +116,7 @@ import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 let openRecord = ref(null);
 let recordToOpen = ref(null);
+const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
