@@ -62,14 +62,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						span.type(v-else-if="typeof data === 'object'") JSON
 						span.type(v-else) {{ typeof data }}
 						span {{ key }}
-					template(v-if="data?.type")
+					template(v-if="data?.__file_id__")
 						.value.file(@click="download(data.url)")
 							span.material-symbols-outlined file_present
 							span
 								div {{ data.filename }}
 								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
 							span.material-symbols-outlined download
-					template(v-else-if="data[0]?.type")
+					template(v-else-if="data[0]?.__file_id__")
 						.value.file(v-for="file in data" @click="download(file.url)")
 							span.material-symbols-outlined file_present
 							span
