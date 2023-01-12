@@ -357,6 +357,7 @@ const save = (e) => {
 
 const close = () => {
 	isEdit.value = false;
+	view.value = 'information';
 	emit('close');
 }
 
