@@ -364,7 +364,7 @@ const save = (e) => {
 		form.value.index = null; // set to null to remove index
 	}
 
-	skapi.postRecord(e.target, form.value).then(r => {
+	skapi.postRecord(data.value.length ? e.target : null, form.value).then(r => {
 		for(let k in r) {
 			props.record[k] = r[k];
 		}
