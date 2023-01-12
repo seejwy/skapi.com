@@ -111,6 +111,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					.section(style="width: 100%;")
 						.name Table Name
 						sui-input(required :value="form.table" @input="(e) => form.table = e.target.value")
+
 				.row
 					.section
 						.name Reference ID
