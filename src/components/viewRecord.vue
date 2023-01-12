@@ -154,6 +154,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 
 							label(for="allow_reference") Allow Reference
 
+						.reference-container(v-if="allowReference")
 							div
 								label(for="allow_multiple_reference" style="margin-right: 8px;") Allow Multiple Reference
 								sui-input#allow_multiple_reference(
@@ -238,24 +239,18 @@ sui-overlay(ref="overlay")
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { skapi, dateFormat, getSize } from '@/main'
+import { skapi, dateFormat, getSize } from '@/main';
 import TagsInput from '@/components/TagsInput.vue';
-
-const props = defineProps({
-	record: {
-		type: Object,
-		default: () => ({}),
-	},
-});
+const props = defineProps(['record']);
 const emit = defineEmits(['close']);
-const isEdit = ref(false);
-const form = ref({});
-const data = ref([]);
-
 const overlay = ref(null);
 const view = ref('information');
 const route = useRoute();
 const serviceId = route.params.service;
+
+const isEdit = ref(false);
+const form = ref({});
+const data = ref([]);
 
 const allowReference = computed(() => {
 	if(form.value.config?.reference_limit === 0) return false;
