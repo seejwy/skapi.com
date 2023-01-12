@@ -180,12 +180,12 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					.data-name-action
 						.select-input
 							.select-field
-								sui-select(@change="(e) => data[index].type = e.target.value")
-									option(value="string" :selected="row.type === 'string' ? true : null") String
-									option(value="number" :selected="row.type === 'number' ? true : null") Number
-									option(value="boolean" :selected="row.type === 'boolean' ? true : null") Boolean
-									option(value="file" :selected="row.type === 'file'") File
-									option(value="json" :selected="row.type === 'json' ? true : null") JSON
+								sui-select(:value="row.type" @change="(e) => row.type = e.target.value")
+									option(value="string") String
+									option(value="number") Number
+									option(value="boolean") Boolean
+									option(value="file") File
+									option(value="json") JSON
 							.input-field
 								sui-input(type="text" :value="row.key" @input="(e)=>data[index].key = e.target.value")
 						.action(@click="data.splice(index, 1)")
