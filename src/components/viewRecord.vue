@@ -60,18 +60,18 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 			template(v-else-if="view === 'record' && props.record?.data")
 				.data-row(v-for="(data, key) in props.record.data")
 					.name
-						span.type(v-if="data.type || data[0].type") File
+						span.type(v-if="data?.type || data?.[0]?.type") File
 						span.type(v-else-if="typeof data === 'object'") JSON
 						span.type(v-else) {{ typeof data }}
 						span {{ key }}
-					template(v-if="data.md5")
+					template(v-if="data?.md5")
 						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
 								div {{ data.filename }}
 								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
 							span.material-symbols-outlined download
-					template(v-else-if="data[0].md5")
+					template(v-else-if="data?.[0]?.md5")
 						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
