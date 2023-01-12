@@ -188,14 +188,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								sui-input(type="text" :value="row.key" @input="(e)=>row.key = e.target.value")
 						.action(@click="data.splice(index, 1)")
 							span.material-symbols-outlined delete
-							span remove
+							span.hideOnTablet remove
 					.data-values 
 						template(v-if="row.type === 'file'")
 							input(style="display: none;" type="file" :name="row.key"  @change="addFiles($event, index)" multiple)
 							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, index)" @click="openFileInput(index)")
 								div
 									span.material-symbols-outlined(style="font-size: 57px") file_present
-									span Drag and Drop OR  
+									span.hideOnTablet Drag and Drop OR  
 									sui-button.line-button(disabled) Upload
 							.value.file(v-for="(file, index) in row.value")
 								span.material-symbols-outlined file_present
@@ -633,7 +633,7 @@ defineExpose({
 					cursor: pointer;
 
 					.material-symbols-outlined {
-						font-size: 15px;
+						font-size: 20px;
 						margin-right: 10px;
 					}
 				}
