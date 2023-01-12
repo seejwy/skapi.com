@@ -36,9 +36,11 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.grid-item {{ dateFormat(props.record.uploaded) }}
 				.grid-item.title Reference
 				.grid-item
-					.sub-grid Multiple Reference
-						sui-input(type="checkbox" disabled :checked="props.record.config?.allow_multiple_reference || null")
-					.sub-grid Reference Limit: {{ (typeof props.record.config?.reference_limit === 'number') ? props.record.config.reference_limit : '-' }}
+					template(v-if="props.record.config?.reference_limit === 0")
+						.sub-grid Disabled
+					template(v-else)
+						.sub-grid Multiple Reference : {{props.record.config?.allow_multiple_reference ? 'Allowed' : 'Not Allowed'}}
+						.sub-grid Reference Limit : {{ (typeof props.record.config?.reference_limit === 'number') ? props.record.config.reference_limit : 'Infinite' }}
 				template(v-if="props.record.tags?.length")
 					.grid-item.title.span-2 Tags
 					.grid-item.span-2(style="padding-top: 4px;")
@@ -156,7 +158,8 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								label(for="allow_multiple_reference" style="margin-right: 8px;") Allow Multiple Reference
 								sui-input#allow_multiple_reference(
 									type="checkbox"
-									@input="(e)=>form.config.allow_multiple_reference = e.target.checked")
+									@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
+									:checked="form.config.allow_multiple_reference ? true : null")
 
 							div
 								span Reference Limit:
