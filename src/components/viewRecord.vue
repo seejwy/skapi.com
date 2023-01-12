@@ -185,7 +185,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									option(value="file") File
 									option(value="json") JSON
 							.input-field
-								sui-input(type="text" :value="row.key" @input="(e)=>row.key = e.target.value")
+								sui-input(type="text" :value="row.key" @input="(e)=>row.key = e.target.value" required)
 						.action(@click="data.splice(index, 1)")
 							span.material-symbols-outlined delete
 							span.hideOnTablet remove
