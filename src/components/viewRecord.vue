@@ -47,6 +47,16 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				template(v-else)
 					.grid-item.title Tags
 					.grid-item -
+				
+				// private_access temporarily removed. will be brought back with better scalable structure
+				//- template(v-if="props.record.config?.private_access?.length")
+				//- 	.grid-item.title.span-2 Access
+				//- 	.grid-item.span-2(style="padding-top: 4px;")
+				//- 		.tags-wrapper
+				//- 			.tag(v-for="userId in props.record.config?.private_access") {{ userId }}
+				//- template(v-else)
+				//- 	.grid-item.title Access
+				//- 	.grid-item -
 			template(v-else-if="view === 'record' && props.record?.data")
 				.data-row(v-for="(data, key) in props.record.data")
 					.name
@@ -158,6 +168,12 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									placeholder="Infitite"
 									:value="form.config.reference_limit === null ? '' : form.config.reference_limit.toString()"
 									@input="(e) => form.config.reference_limit = e.target.value ? parseInt(e.target.value) : null")
+
+				// private_access temporarily removed. will be brought back with better scalable structure
+				//- .row
+				//- 	.section(style="width: 100%;")
+				//- 		.name Access 
+				//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
 			.content(v-show="view === 'record'")
 				.data-row(v-for="(row, index) in data")
