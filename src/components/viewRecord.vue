@@ -199,12 +199,12 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									span.material-symbols-outlined(style="font-size: 57px") file_present
 									span Drag and Drop OR  
 									sui-button.line-button(disabled) Upload
-							.value.file(v-for="file in row.value")
+							.value.file(v-for="(file, index) in row.value")
 								span.material-symbols-outlined file_present
 								span
 									div {{ file.filename }}
 									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-								span.material-symbols-outlined cancel
+								span.material-symbols-outlined(@click="row.value.splice(index, 1)") cancel
 
 						.data-input-field(v-else-if="row.type === 'json'")
 							sui-input(:value="row.value" @input='e=>row.value = e.target.value')
