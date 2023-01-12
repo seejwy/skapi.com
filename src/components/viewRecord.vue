@@ -191,19 +191,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						.action(@click="data.splice(index, 1)")
 							span.material-symbols-outlined delete
 							span remove
-					.file-upload-area(v-if="row?.type === 'file'" @dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop")
-						div
-							span.material-symbols-outlined(style="font-size: 57px") file_present
+					template(v-if="row.type === 'file'")
+						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop")
+							div
+								span.material-symbols-outlined(style="font-size: 57px") file_present
+								span Drag and Drop OR  
 							span Drag and Drop OR  
-							sui-button.line-button(disabled) Upload
-					template(v-if="row.value?.type")
-						.value.file
-							span.material-symbols-outlined file_present
-							span
-								div {{ row.filename }}
-								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
-							span.material-symbols-outlined cancel
-					template(v-else-if="row.value[0]?.type")
+								span Drag and Drop OR  
+								sui-button.line-button(disabled) Upload
 						.value.file(v-for="file in row.value")
 							span.material-symbols-outlined file_present
 							span
