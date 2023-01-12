@@ -63,14 +63,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						span.type(v-else) {{ typeof data }}
 						span {{ key }}
 					template(v-if="data?.__file_id__")
-						.value.file(@click="download(data.url)")
+						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
 								div {{ data.filename }}
 								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
 							span.material-symbols-outlined download
 					template(v-else-if="data[0]?.__file_id__")
-						.value.file(v-for="file in data" @click="download(file.url)")
+						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
 								div {{ file.filename }}
@@ -299,14 +299,7 @@ const save = () => {
 	isEdit.value = false;
 }
 
-const download = (url) => {
-	const link = document.createElement('a');
-	link.href = url;
-	link.download = url.substring(url.lastIndexOf('/') + 1);
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
-}
+
 </script>
 <style lang="less" scoped>
 .container {
