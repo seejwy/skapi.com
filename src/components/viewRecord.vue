@@ -353,6 +353,7 @@ const save = (e) => {
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
+<<<<<<< HEAD
 			data.value.forEach(record => {
 				record.data.forEach(field => {
 					if(field.type === 'json') {
@@ -365,13 +366,39 @@ const save = (e) => {
 								form.append(record.key, file);
 							} else {
 								form.append(record.key, new Blob([JSON.stringify(file)], {
+=======
+			for (let item of data.value) {
+				if (item.type === 'json') {
+					// append json data as binary
+					form.append(item.key, new Blob([item.value], {
+						type: 'application/json'
+					}));
+				} else if(item.type === 'file' && item.value) {
+					if(Array.isArray(item.value)) {
+						item.value.forEach(file => {
+							if(file instanceof File) {
+								form.append(item.key, file);
+							} else {
+								form.append(item.key, new Blob([JSON.stringify(file)], {
+>>>>>>> 05d3afe (Check if file or json and if file needs blobbing)
 									type: 'application/json'
 								}));
 							}
 						});
+<<<<<<< HEAD
 					}
 				})
 			})
+=======
+					} else {
+						form.append(item.key, new Blob([JSON.stringify(item.value)], {
+							type: 'application/json'
+						}));
+					}
+				}
+			}
+
+>>>>>>> 05d3afe (Check if file or json and if file needs blobbing)
 			return form;
 		}
 
