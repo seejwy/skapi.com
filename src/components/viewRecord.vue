@@ -78,19 +78,22 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 		form(@submit.prevent="save")
 			.close(@click="$emit('close')")
 				span.material-symbols-outlined close
+
 			.title {{ form.record_id }}
 			.menu
 				ul
 					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
 					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Record
-				.action(@click="overlay.open") 
+				.action(@click="overlay.open")
 					span.material-symbols-outlined delete
 					span delete
+
 			.content(v-show="view === 'information'")
 				.row
 					.section(style="width: 100%;")
 						.name Table Name
 						sui-input(required :value="form.table" @input="(e) => form.table = e.target.value")
+
 				.row
 					.section
 						.name Reference ID
@@ -101,14 +104,20 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						sui-select(:value="form.access_group.toString()" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
 							option(value="0") Everyone 
 							option(value="1") Registered Users
+
 				.row
 					.section(style="width: 100%;")
 						.name Tags 
 						TagsInput(:value="form.tags" @change="(value) => form.tags = value")
+
 				.row
 					.section(style="width: 100%;")
 						.name Index Name 
-						sui-input(:required="form?.index?.value !== '' ? true : null" :value="form?.index?.name" @input="(e)=> form.index.name = e.target.value")
+						sui-input(
+							:required="form.index.value !== '' ? true : null"
+							:value="form.index.name"
+							@input="(e)=> form.index.name = e.target.value")
+
 				.row
 					.section
 						.name Index Value
@@ -119,23 +128,37 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									option(value="number") Number
 									option(value="boolean") Boolean
 							.section
-								sui-input(:required="form?.index?.name !== '' ? true : null" :value="form?.index?.value" @input="(e)=> form.index.value = e.target.value")
+								sui-input(
+									:required="form.index.name !== '' ? true : null"
+									:value="form.index.value"
+									@input="(e)=> form.index.value = e.target.value")
+
 				.row
 					.section
 						.name(style="display: flex; align-items: center;")
-							sui-input(type="checkbox" id="allow_reference" style="margin-right: 8px; vertical-align: middle;" @change="toggleAllowReference" :value="allowReference" :checked="allowReference ? true : null")
+							sui-input#allow_reference(
+								type="checkbox" 
+								style="margin-right: 8px; vertical-align: middle;"
+								@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
+								:checked="form.config.reference_limit !== 0 ? true : null")
+
 							label(for="allow_reference") Allow Reference
-						.reference-container(v-if="allowReference")
+
 							div
 								label(for="allow_multiple_reference" style="margin-right: 8px;") Allow Multiple Reference
-								sui-input(type="checkbox" id="allow_multiple_reference" @input="(e)=>form.config.allow_multiple_reference = e.target.checked ? true : false")
+								sui-input#allow_multiple_reference(
+									type="checkbox"
+									@input="(e)=>form.config.allow_multiple_reference = e.target.checked")
+
 							div
 								span Reference Limit:
-								input.line-input(type="number" min="1" placeholder="Infitite" :value="form.config?.reference_limit" @input="(e) => form.config.reference_limit = e.target.value")
-				.row
-					.section(style="width: 100%;")
-						.name Access 
-						TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
+								input.line-input(
+									type="number"
+									min="1"
+									placeholder="Infitite"
+									:value="form.config.reference_limit === null ? '' : form.config.reference_limit.toString()"
+									@input="(e) => form.config.reference_limit = e.target.value ? parseInt(e.target.value) : null")
+
 			.content(v-show="view === 'record'")
 				.data-row(v-for="(row, index) in data")
 					.data-name-action
@@ -171,20 +194,22 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								div {{ file.filename }}
 								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 							span.material-symbols-outlined cancel
-					.data-input-field(v-else-if="row.type === 'object'")
-						sui-input(:name="row.key" :value="row.value" @input="(e) => data[index].value = e.target.value")
+
+
 					.data-input-field.transparent(v-else-if="row.type === 'boolean'")
 						span Value:
 						label True
 						sui-input(type="radio" :name="row.key" value="true" :checked="row.value ? true : null" @input="e => data[index].value = true")
 						label False
-						sui-input(type="radio" :name="row.key" value="false" :checked="!row.value ? true : null" @input="e => data[index].value = false")
+
 					.data-input-field(v-else)
 						sui-input(:name="row.key" :value="row.value" @input="(e) => data[index].value = e.target.value")
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="data.push({key: '', type: 'string', value: ''})") Add Data
+
 			.foot
 				sui-input(type="submit").line-button Save
+
 sui-overlay(ref="overlay")
 	.popup
 		.title
