@@ -196,7 +196,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								div
 									span.material-symbols-outlined(style="font-size: 57px") file_present
 									span.hideOnTablet Drag and Drop OR  
-									sui-button.line-button(disabled) Upload
+									sui-button.line-button(@click.prevent.stop="" type="button") Upload
 							.value.file(v-for="(file, index) in row.value")
 								span.material-symbols-outlined file_present
 								span
