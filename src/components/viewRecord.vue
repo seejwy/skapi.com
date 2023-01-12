@@ -195,6 +195,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					.data-values 
 						template(v-if="row.type === 'file'")
 							input(style="display: none;" type="file" :name="row.key"  @change="addFiles($event, index)" multiple)
+							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, index)" @click="openFileInput(index)")
 								div
 									span.material-symbols-outlined(style="font-size: 57px") file_present
 									span Drag and Drop OR  
