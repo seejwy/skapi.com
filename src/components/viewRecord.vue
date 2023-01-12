@@ -205,7 +205,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								span.material-symbols-outlined(@click="row.value.splice(index, 1)") cancel
 
 						.data-input-field(v-else-if="row.type === 'json'")
-							sui-input(:value="row.value" @input='e=>row.value = e.target.value')
+							sui-input(:value="row.value" @input='e => row.value = e.target.value' required @change="validateJson")
 
 						.data-input-field.transparent.boolean(v-else-if="row.type === 'boolean'")
 							div Value:
@@ -392,6 +392,16 @@ const addFiles = (event, index) => {
 
 const openFileInput = (index) => {
 	document.getElementsByName(data.value[index].key)[0].click();
+}
+
+const validateJson = (event) => {
+	if(event.target.value === '') event.target.setCustomValidity('');
+	try {
+		JSON.parse(event.target.value);
+		event.target.setCustomValidity('');
+	} catch (e) {
+		event.target.setCustomValidity('Invalid JSON');
+	}
 }
 
 const close = () => {
