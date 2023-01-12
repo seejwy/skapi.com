@@ -324,19 +324,35 @@ const editRecord = () => {
 	isEdit.value = true;
 };
 
-	if(form.value.config.reference_limit === '') {
-		delete form.value.config.reference_limit;
-	}
+const save = (e) => {
+	Object.assign(form.value, {
+		service: serviceId,
+		formData: f => {
+			for (let item of data.value) {
+				if (item.type === 'json' || item.type === 'file') {
+					// append json data as binary
+					f.set(item.key, new Blob([item.value], {
+						type: 'application/json'
+					}));
+				}
+			}
 
-	if(!form.value.index.name) {
-		delete form.value.index;
-	}
-	skapi.postRecord(formData, form.value).then(() => {
+			return f;
+		}
+
 	});
 
-	isEdit.value = false;
-}
+	if (!form.value.index?.name) {
+		form.value.index = null; // set to null to remove index
+	}
 
+	skapi.postRecord(e.target, form.value).then(r => {
+		for(let k in r) {
+			props.record[k] = r[k];
+		}
+		isEdit.value = false;
+	});
+};
 
 </script>
 <style lang="less" scoped>
