@@ -241,7 +241,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								span.material-symbols-outlined(@click="row.value.splice(index, 1)") cancel
 
 						.data-input-field(v-else-if="row.type === 'json'")
-							sui-input(:value="row.value" @input='e => row.value = e.target.value' required @change="validateJson")
+							sui-input(:value="row.value" @input="e => { row.value = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
 
 						.data-input-field.transparent.boolean(v-else-if="row.type === 'boolean'")
 							div Value:
