@@ -194,7 +194,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 							span remove
 					.data-values 
 						template(v-if="row.type === 'file'")
-							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop")
+							input(style="display: none;" type="file" :name="row.key"  @change="addFiles($event, index)" multiple)
 								div
 									span.material-symbols-outlined(style="font-size: 57px") file_present
 									span Drag and Drop OR  
@@ -371,6 +371,27 @@ const save = (e) => {
 		isEdit.value = false;
 	});
 };
+
+const onDrop = (event, index) => {
+	const files = event.dataTransfer.files;
+	for (let i = 0; i < files.length; i++) {
+		const file = files[i];
+	}
+	data.value[index].value = [...data.value[index].value, ...files];
+}
+
+const addFiles = (event, index) => {
+	const files = event.target.files;
+	for (let i = 0; i < files.length; i++) {
+		const file = files[i];
+	}
+	data.value[index].value = [...data.value[index].value, ...files];
+	event.target.value = '';
+}
+
+const openFileInput = (index) => {
+	document.getElementsByName(data.value[index].key)[0].click();
+}
 
 const close = () => {
 	isEdit.value = false;
