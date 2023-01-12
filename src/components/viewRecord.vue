@@ -225,7 +225,8 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="data.push({key: '', type: 'string', value: ''})") Add Data
 
 			.foot
-				sui-input(type="submit").line-button Save
+				sui-button(type="button" @click="isEdit = false" style="margin-right: 16px;").line-button Cancel
+				sui-input(type="submit") Save
 
 sui-overlay(ref="overlay")
 	.popup
