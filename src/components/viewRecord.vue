@@ -64,14 +64,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						span.type(v-else-if="typeof data === 'object'") JSON
 						span.type(v-else) {{ typeof data }}
 						span {{ key }}
-					template(v-if="data.__file_id__")
+					template(v-if="data.md5")
 						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
 								div {{ data.filename }}
 								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
 							span.material-symbols-outlined download
-					template(v-else-if="data[0].__file_id__")
+					template(v-else-if="data[0].md5")
 						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
@@ -299,7 +299,7 @@ const editRecord = () => {
 			let keyValue = record.data[key];
 			let value = keyValue;
 			let type = (() => {
-				if (keyValue?.__file_id__ || keyValue?.[0]?.__file_id__) {
+				if (keyValue?.md5 || keyValue?.[0]?.md5) {
 					value = Array.isArray(keyValue) ? keyValue : [keyValue];
 					return 'file';
 				}
