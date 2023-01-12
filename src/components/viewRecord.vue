@@ -223,35 +223,11 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 								div Value:
 								div
-<<<<<<< HEAD
 									label True
 									sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
 								div
 									label False
 									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
-=======
-									span.material-symbols-outlined(style="font-size: 57px") file_present
-									span.hideOnTablet Drag and Drop OR  
-									sui-button.line-button(@click.prevent.stop="" type="button") Upload
-							.value.file(v-for="(file, index) in row.value")
-								span.material-symbols-outlined file_present
-								span
-									div {{ file.name || file.filename }}
-									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-								span.material-symbols-outlined(@click="row.value.splice(index, 1)") cancel
-
-						.data-input-field(v-else-if="row.type === 'json'")
-							sui-input(:value="row.value" @input="e => { row.value = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
-
-						.data-input-field.transparent.boolean(v-else-if="row.type === 'boolean'")
-							div Value:
-							div
-								label True
-								sui-input(type="radio" :name="row.key" value="true" :checked="row.value === true ? true : null")
-							div
-								label False
-								sui-input(type="radio" :name="row.key" value="false" :checked="row.value !== true ? true : null")
->>>>>>> cf0702f (Stop button from opening second file input)
 
 							.data-input-field(v-else-if="record.type === 'number'")
 								sui-input(type='number' :name="keyData.key" :value="record.data")
