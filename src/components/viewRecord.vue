@@ -207,12 +207,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						.data-input-field(v-else-if="row.type === 'json'")
 							sui-input(:value="row.value" @input='e=>row.value = e.target.value')
 
-						.data-input-field.transparent(v-else-if="row.type === 'boolean'")
-							span Value:
-							label True
-							sui-input(type="radio" :name="row.key" value="true" :checked="row.value === true ? true : null")
-							label False
-							sui-input(type="radio" :name="row.key" value="false" :checked="row.value !== true ? true : null")
+						.data-input-field.transparent.boolean(v-else-if="row.type === 'boolean'")
+							div Value:
+							div
+								label True
+								sui-input(type="radio" :name="row.key" value="true" :checked="row.value === true ? true : null")
+							div
+								label False
+								sui-input(type="radio" :name="row.key" value="false" :checked="row.value !== true ? true : null")
 
 						.data-input-field(v-else-if="row.type === 'number'")
 							sui-input(type='number' :name="row.key" :value="row.value")
@@ -572,7 +574,7 @@ defineExpose({
 
 				sui-input {
 					padding: 0;
-					
+
 					&:not([type=radio]) {
 						width: 100%;
 						box-shadow: none;
@@ -591,6 +593,15 @@ defineExpose({
 				&.transparent {
 					background: none;
 					padding: 0;
+				}
+
+				&.boolean {
+					display: flex;
+					gap: 20px;
+
+					label {
+						margin-right: 8px;
+					}
 				}
 			}
 
