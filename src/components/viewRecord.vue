@@ -192,34 +192,35 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						.action(@click="data.splice(index, 1)")
 							span.material-symbols-outlined delete
 							span remove
-					template(v-if="row.type === 'file'")
-						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop")
-							div
-								span.material-symbols-outlined(style="font-size: 57px") file_present
-								span Drag and Drop OR  
-								sui-button.line-button(disabled) Upload
-						.value.file(v-for="file in row.value")
-							span.material-symbols-outlined file_present
-							span
-								div {{ file.filename }}
-								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-							span.material-symbols-outlined cancel
+					.data-values 
+						template(v-if="row.type === 'file'")
+							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop")
+								div
+									span.material-symbols-outlined(style="font-size: 57px") file_present
+									span Drag and Drop OR  
+									sui-button.line-button(disabled) Upload
+							.value.file(v-for="file in row.value")
+								span.material-symbols-outlined file_present
+								span
+									div {{ file.filename }}
+									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+								span.material-symbols-outlined cancel
 
-					.data-input-field(v-else-if="row.type === 'json'")
-						sui-input(:value="row.value" @input='e=>row.value = e.target.value')
+						.data-input-field(v-else-if="row.type === 'json'")
+							sui-input(:value="row.value" @input='e=>row.value = e.target.value')
 
-					.data-input-field.transparent(v-else-if="row.type === 'boolean'")
-						span Value:
-						label True
-						sui-input(type="radio" :name="row.key" value="true" :checked="row.value === true ? true : null")
-						label False
-						sui-input(type="radio" :name="row.key" value="false" :checked="row.value !== true ? true : null")
+						.data-input-field.transparent(v-else-if="row.type === 'boolean'")
+							span Value:
+							label True
+							sui-input(type="radio" :name="row.key" value="true" :checked="row.value === true ? true : null")
+							label False
+							sui-input(type="radio" :name="row.key" value="false" :checked="row.value !== true ? true : null")
 
-					.data-input-field(v-else-if="row.type === 'number'")
-						sui-input(type='number' :name="row.key" :value="row.value")
+						.data-input-field(v-else-if="row.type === 'number'")
+							sui-input(type='number' :name="row.key" :value="row.value")
 
-					.data-input-field(v-else)
-						sui-input(:name="row.key" :value="row.value")
+						.data-input-field(v-else)
+							sui-input(:name="row.key" :value="row.value")
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="data.push({key: '', type: 'string', value: ''})") Add Data
 
@@ -598,6 +599,10 @@ defineExpose({
 				border: 1px dashed #FFFFFF;
 				border-radius: 8px;
 				height: 100px;
+
+				&:only-child {
+					margin-bottom: 0;
+				}
 			}
 		}
 
