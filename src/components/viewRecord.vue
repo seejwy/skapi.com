@@ -94,9 +94,6 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				ul
 					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
 					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Record
-				.action(@click="overlay.open")
-					span.material-symbols-outlined delete
-					span delete
 
 			.content(v-show="view === 'information'")
 				.row
