@@ -202,7 +202,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 							.value.file(v-for="(file, index) in row.value")
 								span.material-symbols-outlined file_present
 								span
-									div {{ file.filename }}
+									div {{ file.name || file.filename }}
 									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 								span.material-symbols-outlined(@click="row.value.splice(index, 1)") cancel
 
