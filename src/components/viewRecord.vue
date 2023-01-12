@@ -389,6 +389,7 @@ const save = (e) => {
 	});
 };
 
+<<<<<<< HEAD
 const onDrop = (event, keyIndex, index) => {
 	const files = event.dataTransfer.files;
 	let fileData = data.value[keyIndex].data[index].data;
@@ -467,12 +468,20 @@ const close = () => {
 	}
 	isEdit.value = false;
 	view.value = 'information';
+=======
+const close = () => {
+	isEdit.value = false;
+>>>>>>> 13f7e6e (Close edit when closing viewRecord window)
 	emit('close');
 }
 
 defineExpose({
 	close
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 13f7e6e (Close edit when closing viewRecord window)
 </script>
 <style lang="less" scoped>
 .container {
