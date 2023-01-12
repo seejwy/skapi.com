@@ -186,6 +186,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
 			.content(v-show="view === 'record'")
+<<<<<<< HEAD
 				template(v-for="(keyData, keyIndex) in data")
 					.data-row(v-for="(record, index) in keyData.data")
 						.data-name-action
@@ -234,6 +235,51 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 
 							.data-input-field(v-else)
 								sui-input(:name="keyData.key" :value="record.data")
+=======
+				.data-row(v-for="(row, index) in data")
+					.data-name-action
+						.select-input
+							.select-field
+								sui-select(:value="row.type" @change="(e) => row.type = e.target.value")
+									option(value="string") String
+									option(value="number") Number
+									option(value="boolean") Boolean
+									option(value="file") File
+									option(value="json") JSON
+							.input-field
+								sui-input(type="text" :value="row.key" @input="(e)=>row.key = e.target.value")
+						.action(@click="data.splice(index, 1)")
+							span.material-symbols-outlined delete
+							span remove
+					template(v-if="row.type === 'file'")
+						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop")
+							div
+								span.material-symbols-outlined(style="font-size: 57px") file_present
+								span Drag and Drop OR  
+								sui-button.line-button(disabled) Upload
+						.value.file(v-for="file in row.value")
+							span.material-symbols-outlined file_present
+							span
+								div {{ file.filename }}
+								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+							span.material-symbols-outlined cancel
+
+					.data-input-field(v-else-if="row.type === 'json'")
+						sui-input(:value="row.value" @input='e=>row.value = e.target.value')
+
+					.data-input-field.transparent(v-else-if="row.type === 'boolean'")
+						span Value:
+						label True
+						sui-input(type="radio" :name="row.key" value="true" :checked="row.value === true ? true : null")
+						label False
+						sui-input(type="radio" :name="row.key" value="false" :checked="row.value !== true ? true : null")
+
+					.data-input-field(v-else-if="row.type === 'number'")
+						sui-input(type='number' :name="row.key" :value="row.value")
+
+					.data-input-field(v-else)
+						sui-input(:name="row.key" :value="row.value")
+>>>>>>> a314dc0 (Update input fields)
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
