@@ -241,13 +241,14 @@ import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
 import TagsInput from '@/components/TagsInput.vue';
+
+const route = useRoute();
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const overlay = ref(null);
-const view = ref('information');
-const route = useRoute();
-const serviceId = route.params.service;
 
+const serviceId = route.params.service;
+const view = ref('information');
 const isEdit = ref(false);
 const form = ref({});
 const data = ref([]);
