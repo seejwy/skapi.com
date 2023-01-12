@@ -574,6 +574,8 @@ defineExpose({
 				}
 
 				sui-input {
+					padding: 0;
+					
 					&:not([type=radio]) {
 						width: 100%;
 						box-shadow: none;
