@@ -49,6 +49,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				template(v-else)
 					.grid-item.title Tags
 					.grid-item -
+<<<<<<< HEAD
 				
 				// private_access temporarily removed. will be brought back with better scalable structure
 				//- template(v-if="props.record.config?.private_access?.length")
@@ -93,6 +94,41 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								span {{ key }}
 
 							pre.value {{ record.primitive }}
+=======
+				template(v-if="props?.record?.config?.private_access?.length")
+					.grid-item.title.span-2 Access
+					.grid-item.span-2(style="padding-top: 4px;")
+						.tags-wrapper
+							.tag(v-for="userId in props?.record?.config?.private_access") {{ userId }}
+				template(v-else)
+					.grid-item.title Access
+					.grid-item -
+			template(v-else)
+				.data-row(v-for="(data, key) in props?.record?.data")
+					.name
+						span.type(v-if="data?.type || data[0]?.type") File
+						span.type(v-else-if="typeof data === 'object'") JSON
+						span.type(v-else) {{ typeof data }}
+						span {{ key }}
+					template(v-if="data?.__file_id__")
+						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
+							span.material-symbols-outlined file_present
+							span
+								div {{ data.filename }}
+								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
+							span.material-symbols-outlined download
+					template(v-else-if="data[0]?.__file_id__")
+						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
+							span.material-symbols-outlined file_present
+							span
+								div {{ file.filename }}
+								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+							span.material-symbols-outlined download
+					template(v-else-if="typeof data === 'object'")
+						pre.value {{ data }}
+					template(v-else)
+						.value {{ data }}
+>>>>>>> 113cf09 (Modify how file download happens)
 		.foot
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
@@ -459,6 +495,7 @@ const confirmClose = () => {
 	emit('close');
 }
 
+<<<<<<< HEAD
 const close = () => {
 	if(isEdit.value) {
 		exitEditOverlay.value.open();
@@ -472,6 +509,9 @@ const close = () => {
 defineExpose({
 	close
 });
+=======
+
+>>>>>>> 113cf09 (Modify how file download happens)
 </script>
 <style lang="less" scoped>
 .container {
