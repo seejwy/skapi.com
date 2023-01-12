@@ -674,6 +674,15 @@ defineExpose({
 						margin-right: 8px;
 					}
 				}
+
+				&.boolean {
+					display: flex;
+					gap: 20px;
+
+					label {
+						margin-right: 8px;
+					}
+				}
 			}
 
 			&:not(:last-child)::after {
