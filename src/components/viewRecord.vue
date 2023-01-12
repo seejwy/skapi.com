@@ -359,7 +359,7 @@ const download = (url) => {
 			padding: 0 20px;
 			border-radius: 8px 8px 0px 0px;
 			cursor: pointer;
-			
+
 			&.active {
 				background-color: #333333;
 			}
@@ -371,7 +371,7 @@ const download = (url) => {
 			gap: 4px;
 			padding: 0 20px;
 			cursor: pointer;
-			
+
 			.material-symbols-outlined {
 				font-size: 20px;
 			}
@@ -420,7 +420,7 @@ const download = (url) => {
 
 			&.title {
 				font-weight: bold;
-				color: rgba(255,255,255,.6);
+				color: rgba(255, 255, 255, .6);
 			}
 		}
 
@@ -428,7 +428,7 @@ const download = (url) => {
 			margin-bottom: 72px;
 
 			.action {
-				float: right;				
+				float: right;
 			}
 
 			&:last-child {
@@ -447,7 +447,6 @@ const download = (url) => {
 					padding: 16px 20px 16px 12px;
 					gap: 16px;
 
-					
 					span:first-child,
 					span:last-child {
 						color: rgba(255, 255, 255, .6);
@@ -460,14 +459,16 @@ const download = (url) => {
 					span:nth-child(2) {
 						flex-grow: 1;
 					}
+
 					span:last-child {
 						font-size: 24px;
 						align-self: center;
 						cursor: pointer;
 					}
+
 					.material-symbols-outlined:last-child {
 						font-size: 20px;
-					    font-variation-settings: 'FILL' 1;
+						font-variation-settings: 'FILL' 1;
 					}
 				}
 
@@ -479,7 +480,7 @@ const download = (url) => {
 					&:not([type=radio]) {
 						width: 100%;
 						box-shadow: none;
-						
+
 						& input:focus {
 							outline: none;
 						}
@@ -511,6 +512,7 @@ const download = (url) => {
 				display: flex;
 				align-items: center;
 				gap: 12px;
+
 				.select-input {
 					flex-grow: 1;
 					text-align: center;
@@ -519,6 +521,7 @@ const download = (url) => {
 						width: 6.5em;
 					}
 				}
+
 				.action {
 					cursor: pointer;
 
@@ -539,6 +542,7 @@ const download = (url) => {
 				height: 100px;
 			}
 		}
+
 		.row {
 			display: flex;
 			width: 100%;
@@ -555,6 +559,7 @@ const download = (url) => {
 				width: 100%;
 			}
 		}
+
 		.section {
 			display: inline-block;
 			flex-grow: 1;
@@ -602,13 +607,14 @@ const download = (url) => {
 					}
 				}
 			}
+
 			sui-select {
 				background: rgba(255, 255, 255, 0.08);
 				border: 0.5px solid #8C8C8C;
 				box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
 				border-radius: 4px;
 			}
-			
+
 			.line-input {
 				background-color: transparent;
 				color: #fff;
@@ -645,6 +651,7 @@ const download = (url) => {
 		}
 	}
 }
+
 .popup {
 	background: #333333;
 	border: 1px solid #808080;
@@ -657,16 +664,16 @@ const download = (url) => {
 	.material-symbols-outlined {
 		font-size: 38px;
 	}
-	
+
 	.title {
 		color: #FF8D3B;
 
 		& > div {
-			margin-top: 12px; 
+			margin-top: 12px;
 			font-size: 20px;
 		}
 	}
-	
+
 	.body {
 		padding: 20px 0 28px 0;
 	}
@@ -675,6 +682,7 @@ const download = (url) => {
 		margin-right: 12px;
 	}
 }
+
 .type {
 	display: inline-flex;
 	align-items: center;
