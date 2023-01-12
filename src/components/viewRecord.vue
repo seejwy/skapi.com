@@ -38,7 +38,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.grid-item
 					.sub-grid Multiple Reference
 						sui-input(type="checkbox" disabled :checked="props?.record?.config?.allow_multiple_reference || null")
-					.sub-grid Reference Limit: {{ props?.record?.config?.reference_limit || '-' }}
+					.sub-grid Reference Limit: {{ (typeof props.record.config?.reference_limit === 'number') ? props.record.config.reference_limit : '-' }}
 				template(v-if="props?.record?.tags?.length")
 					.grid-item.title.span-2 Tags
 					.grid-item.span-2(style="padding-top: 4px;")
