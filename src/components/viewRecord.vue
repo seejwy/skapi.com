@@ -263,61 +263,72 @@ const allowReference = computed(() => {
 	return true;
 });
 
-const toggleAllowReference = (e) => {
-	if(e.target.checked) {
-		form.value.config.reference_limit = '';
-	} else {
-		form.value.config.reference_limit = 0;
-	}
-}
-
 const editRecord = () => {
-	data.value = [];
-	form.value = JSON.parse(JSON.stringify(props?.record));
-	for(let key in form?.value?.data) {
-		data.value.push({
-			key: key,
-			type: (() => {
-				if(form?.value?.data[key].type || form?.value?.data[key][0]?.type) return 'file';
-				return typeof form?.value?.data[key];
-			})(),
-			value: form?.value?.data[key]
-		});
+	if (!props?.record) {
+		return;
 	}
-	isEdit.value = true;
-}
-const deleteRecord = () => {
-	overlay.value.close();
-}
 
-const save = () => {
-	const formData = {};
+	let record = JSON.parse(JSON.stringify(props.record));
+	form.value = {};
 
-	data.value.forEach(row => {
-		let value;
+	for (let k of [
+		'record_id',
+		'access_group',
+		'table',
+		// 'subscription_group', (not for admin)
+		'reference',
+		'index',
+		'tags',
+		'config'
+	]) {
+		if (record.hasOwnProperty(k)) {
+			form.value[k] = record[k];
 
-		switch(row.type) {
-			case 'number':
-				value = Number(row.value);
-				break;
-			case 'boolean':
-				value = row.value == 'true' ? true : false;
-				break;
-			default:
-				value = row.value;
+			if (k === 'config') {
+				if (!record.config.hasOwnProperty('reference_limit')) {
+					form.value.config.reference_limit = null;
+				}
+			}
+		} else if (k === 'index') {
+			form.value.index = {
+				name: '',
+				value: ''
+			};
 		}
+	}
 
-		formData[row.key] = value;
-	});
-	
-	form.value.service = serviceId;
+	if (record?.data) {
+		data.value = Object.keys(record.data).map(key => {
+			let keyValue = record.data[key];
+			let value = keyValue;
+			let type = (() => {
+				if (keyValue?.__file_id__ || keyValue?.[0]?.__file_id__) {
+					value = Array.isArray(keyValue) ? keyValue : [keyValue];
+					return 'file';
+				}
 
-	delete form.value.data;
-	delete form.value.ip;
-	delete form.value.updated;
-	delete form.value.uploaded;
-	delete form.value.user_id;
-	delete form.value.referenced_count;
+				let dataType = typeof keyValue;
+				if (dataType === 'object') {
+					value = JSON.stringify(value, null, 2);
+					return 'json';
+				}
+
+				value = value.toString();
+				return dataType;
+			})();
+
+			return { key, type, value };
+		});
+		
+		console.log({data: data.value});
+	}
+
+	else {
+		data.value = [];
+	}
+
+	isEdit.value = true;
+};
 
 	if(form.value.config.reference_limit === '') {
 		delete form.value.config.reference_limit;
