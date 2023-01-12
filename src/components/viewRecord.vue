@@ -652,6 +652,18 @@ defineExpose({
 				&:only-child {
 					margin-bottom: 0;
 				}
+
+				& > div > * {
+					display: inline-block;
+
+					&:first-child {
+						margin-right: 6px;
+					}
+
+					&:last-child {
+						margin-left: 6px;
+					}
+				}
 			}
 		}
 
