@@ -15,8 +15,8 @@ export default{
 </script>
 <style scoped>
 svg {
-  fill: inherit;
-  width: 18px;
-  height: 18px;
+  fill: currentColor;
+  width: 24px;
+  height: 24px;
 }
 </style>
