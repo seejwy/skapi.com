@@ -68,14 +68,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
-								div {{ data.filename }}
+								.filename {{ data.filename }}
 								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
 							span.material-symbols-outlined download
 					template(v-else-if="data?.[0]?.md5")
 						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
-								div {{ file.filename }}
+								.filename {{ file.filename }}
 								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 							span.material-symbols-outlined download
 					template(v-else-if="typeof data === 'object'")
@@ -195,12 +195,12 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, index)" @click="openFileInput(index)")
 								div
 									span.material-symbols-outlined(style="font-size: 57px") file_present
-									span.hideOnTablet Drag and Drop OR  
+									span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
 									sui-button.line-button(@click.prevent.stop="" type="button") Upload
 							.value.file(v-for="(file, index) in row.value")
 								span.material-symbols-outlined file_present
 								span
-									div {{ file.name || file.filename }}
+									.filename {{ file.name || file.filename }}
 									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 								span.material-symbols-outlined(@click="row.value.splice(index, 1)") cancel
 
@@ -553,7 +553,9 @@ defineExpose({
 					display: flex;
 					padding: 16px 20px 16px 12px;
 					gap: 16px;
-
+					.filename {
+						margin-bottom: 8px;
+					}
 					span:first-child,
 					span:last-child {
 						color: rgba(255, 255, 255, .6);
