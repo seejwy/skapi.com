@@ -60,7 +60,6 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				//- 	.grid-item.title Access
 				//- 	.grid-item -
 			template(v-else-if="view === 'record' && props.record?.data")
-<<<<<<< HEAD
 				template(v-for="(record, key) in props.record.data")
 					template(v-for="record in getDataByTypes(record)")
 						template(v-if="record.files.length")
@@ -94,32 +93,6 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								span {{ key }}
 
 							pre.value {{ record.primitive }}
-=======
-				.data-row(v-for="(data, key) in props.record.data")
-					.name
-						span.type(v-if="data?.type || data?.[0]?.type") File
-						span.type(v-else-if="typeof data === 'object'") JSON
-						span.type(v-else) {{ typeof data }}
-						span {{ key }}
-					template(v-if="data?.md5")
-						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
-							span.material-symbols-outlined file_present
-							span
-								div {{ data.filename }}
-								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
-							span.material-symbols-outlined download
-					template(v-else-if="data?.[0]?.md5")
-						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
-							span.material-symbols-outlined file_present
-							span
-								div {{ file.filename }}
-								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-							span.material-symbols-outlined download
-					template(v-else-if="typeof data === 'object'")
-						pre.value {{ data }}
-					template(v-else)
-						.value {{ data }}
->>>>>>> ad99205 (Fix an issue where data type is not detected)
 		.foot
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
@@ -673,7 +646,6 @@ defineExpose({
 
 				sui-input {
 					padding: 0;
-
 					&:not([type=radio]) {
 						width: 100%;
 						box-shadow: none;
