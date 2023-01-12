@@ -3,7 +3,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 	.container(v-if="!isEdit")
 		.close(@click="$emit('close')")
 			span.material-symbols-outlined close
-		.title {{ props?.record?.record_id }}
+		.title {{ props.record.record_id }}
 		.menu
 			ul
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
@@ -14,62 +14,54 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 		.content
 			.grid(v-if="view === 'information'")
 				.grid-item.title Record ID 
-				.grid-item {{ props?.record?.record_id }}
+				.grid-item {{ props.record.record_id }}
 				.grid-item.title Table Name
-				.grid-item {{ props?.record?.table }}
+				.grid-item {{ props.record.table }}
 				.grid-item.title Access Group
-				.grid-item {{ props?.record?.access_group === 'private' ? 'Private' : props?.record?.access_group ? 'Registered' : 'Public' }}
+				.grid-item {{ props.record.access_group === 'private' ? 'Private' : props.record.access_group ? 'Registered' : 'Public' }}
 				.grid-item.title User ID
-				.grid-item {{ props?.record?.user_id }}
+				.grid-item {{ props.record.user_id }}
 				.grid-item.title Subscription
-				.grid-item {{ props?.record?.subscription || '-' }}
+				.grid-item {{ props.record.subscription || '-' }}
 				.grid-item.title Reference 
-				.grid-item {{ props?.record?.reference || '-' }}
+				.grid-item {{ props.record.reference || '-' }}
 				.grid-item.title.span-2 Index
 				.grid-item.title(style="font-weight: normal") Index Name
-				.grid-item {{ props?.record?.index?.name || '-' }}
+				.grid-item {{ props.record.index?.name || '-' }}
 				.grid-item.title(style="font-weight: normal") Index Value
 				.grid-item
-					span.type(v-if="props?.record?.index?.value") {{ typeof props?.record?.index?.value }}
-					span {{ props?.record?.index?.value || '-' }}
+					span.type(v-if="props.record.index?.value") {{ typeof props.record.index.value }}
+					span {{ props.record.index.value || '-' }}
 				.grid-item.title Upload Datetime
-				.grid-item {{ dateFormat(props?.record?.uploaded) }}
+				.grid-item {{ dateFormat(props.record.uploaded) }}
 				.grid-item.title Reference
 				.grid-item
 					.sub-grid Multiple Reference
-						sui-input(type="checkbox" disabled :checked="props?.record?.config?.allow_multiple_reference || null")
+						sui-input(type="checkbox" disabled :checked="props.record.config?.allow_multiple_reference || null")
 					.sub-grid Reference Limit: {{ (typeof props.record.config?.reference_limit === 'number') ? props.record.config.reference_limit : '-' }}
-				template(v-if="props?.record?.tags?.length")
+				template(v-if="props.record.tags?.length")
 					.grid-item.title.span-2 Tags
 					.grid-item.span-2(style="padding-top: 4px;")
 						.tags-wrapper
-							.tag(v-for="tag in props?.record?.tags") {{ tag }}
+							.tag(v-for="tag in props.record?.tags") {{ tag }}
 				template(v-else)
 					.grid-item.title Tags
 					.grid-item -
-				template(v-if="props?.record?.config?.private_access?.length")
-					.grid-item.title.span-2 Access
-					.grid-item.span-2(style="padding-top: 4px;")
-						.tags-wrapper
-							.tag(v-for="userId in props?.record?.config?.private_access") {{ userId }}
-				template(v-else)
-					.grid-item.title Access
-					.grid-item -
-			template(v-else)
-				.data-row(v-for="(data, key) in props?.record?.data")
+			template(v-else-if="view === 'record' && props.record?.data")
+				.data-row(v-for="(data, key) in props.record.data")
 					.name
-						span.type(v-if="data?.type || data[0]?.type") File
+						span.type(v-if="data.type || data[0].type") File
 						span.type(v-else-if="typeof data === 'object'") JSON
 						span.type(v-else) {{ typeof data }}
 						span {{ key }}
-					template(v-if="data?.__file_id__")
+					template(v-if="data.__file_id__")
 						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
 								div {{ data.filename }}
 								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
 							span.material-symbols-outlined download
-					template(v-else-if="data[0]?.__file_id__")
+					template(v-else-if="data[0].__file_id__")
 						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
 							span.material-symbols-outlined file_present
 							span
