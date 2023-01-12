@@ -1,7 +1,7 @@
 <template lang="pug">
 div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="props?.record")
 	.container(v-if="!isEdit")
-		.close(@click="$emit('close')")
+		.close(@click="close")
 			span.material-symbols-outlined close
 		.title {{ props.record.record_id }}
 		.menu
@@ -86,7 +86,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
 		form(@submit.prevent="save")
-			.close(@click="$emit('close')")
+			.close(@click="close")
 				span.material-symbols-outlined close
 
 			.title {{ form.record_id }}
@@ -354,6 +354,15 @@ const save = (e) => {
 		isEdit.value = false;
 	});
 };
+
+const close = () => {
+	isEdit.value = false;
+	emit('close');
+}
+
+defineExpose({
+	close
+});
 
 </script>
 <style lang="less" scoped>
