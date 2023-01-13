@@ -1,12 +1,13 @@
 <template lang="pug">
 h1 This is user page
 h2 Don't worry about pagination
-h3 Lets do the CSS first
+h3 Lets do the desktop CSS first
 h4 List of service users is in serviceUsers.list
 
 template(v-if="serviceUsers")
+    h5 These are your users:
     pre {{ serviceUsers.list }}
-    
+
 </template>
 <!-- script below -->
 <script setup>
