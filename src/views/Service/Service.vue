@@ -6,6 +6,8 @@ div
     ul
         li
             router-link(:to="{name:'records'}") Records
+        li
+            router-link(:to="{name:'users'}") Users
 
 </template>
 <script setup>

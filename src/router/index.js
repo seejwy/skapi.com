@@ -70,7 +70,18 @@ const router = createRouter({
                   component: ()=>import('../views/Service/Records/SearchResult.vue')
                 }
               ]
-            }
+            },
+            {
+              path: 'users',
+              component: () => import('../views/Service/Users/Main.vue'),
+              children: [
+                {
+                  path: '',
+                  name: 'users',
+                  component: ()=>import('../views/Service/Users/Users.vue')
+                }
+              ]
+            },
           ]
         }
       ]
