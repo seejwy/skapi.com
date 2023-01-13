@@ -251,3 +251,16 @@ sui-button {
   box-shadow: none; 
   border: 1px solid;
 }
+
+.rotate {
+  animation: rotation 1s infinite cubic-bezier(0.09, 0.43, 0.94, 0.59);
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
