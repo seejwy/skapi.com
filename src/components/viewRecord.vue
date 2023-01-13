@@ -470,6 +470,13 @@ const validateJson = (event) => {
 	}
 }
 
+const confirmClose = () => {
+	exitEditOverlay.value.close();
+	isEdit.value = false;
+	view.value = 'information';
+	emit('close');
+}
+
 const close = () => {
 	if(isEdit.value) {
 		exitEditOverlay.value.open();
