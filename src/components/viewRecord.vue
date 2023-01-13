@@ -240,6 +240,15 @@ sui-overlay(ref="overlay")
 		.foot
 			sui-button(@click="overlay.close") No 
 			sui-button.line-button(@click="deleteRecord") Yes
+sui-overlay(ref="exitEditOverlay")
+	.popup
+		.title
+			span.material-symbols-outlined error
+			div Are you sure?
+		.body Are you sure you want to close? You are still editing.
+		.foot
+			sui-button(@click="exitEditOverlay.close") No 
+			sui-button.line-button(@click="confirmClose") Yes
 </template>
 <script setup>
 import { ref, computed } from 'vue';
@@ -251,6 +260,7 @@ const route = useRoute();
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const overlay = ref(null);
+const exitEditOverlay = ref(null);
 
 const serviceId = route.params.service;
 const view = ref('information');
@@ -407,7 +417,18 @@ const validateJson = (event) => {
 	}
 }
 
+const confirmClose = () => {
+	exitEditOverlay.value.close();
+	isEdit.value = false;
+	view.value = 'information';
+	emit('close');
+}
+
 const close = () => {
+	if(isEdit.value) {
+		exitEditOverlay.value.open();
+		return false;
+	}
 	isEdit.value = false;
 	view.value = 'information';
 	emit('close');
