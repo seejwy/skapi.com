@@ -192,13 +192,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 							.select-input
 								.select-field
 									sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
+										option(disabled) Key Value Type
 										option(value="string") String
 										option(value="number") Number
 										option(value="boolean") Boolean
 										option(value="file") File
 										option(value="json") JSON
 								.input-field
-									sui-input(type="text" :value="keyData.key" @input="(e) => keyData.key = e.target.value" required)
+									sui-input(type="text" :value="keyData.key" placeholder="Key Name" @input="(e) => keyData.key = e.target.value" required)
 							.action(@click="removeField(keyData, keyIndex, index)")
 								span.material-symbols-outlined delete
 								span.hideOnTablet remove
@@ -217,7 +218,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 									span.material-symbols-outlined(@click="record.data.splice(index, 1)") cancel
 
-							sui-input.data-input-field(v-else-if="record.type === 'json'" :value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
+							sui-input.data-input-field(v-else-if="record.type === 'json'" placeholder="Key Value" :value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
 							
 							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 								div Value:
@@ -228,9 +229,9 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									label False
 									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
 
-							sui-input.data-input-field(v-else-if="record.type === 'number'" type='number' :name="keyData.key" :value="record.data.toString()")
+							sui-input.data-input-field(v-else-if="record.type === 'number'" placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
-							sui-input.data-input-field(v-else :name="keyData.key" :value="record.data")
+							sui-input.data-input-field(v-else :name="keyData.key" placeholder="Key Value" :value="record.data")
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
