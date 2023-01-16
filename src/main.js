@@ -19,7 +19,7 @@ const state = reactive({
 import Admin from './admin';
 let skapi = new Admin();
 
-skapi.awaitConnection().then(c => {
+skapi.getConnection().then(c => {
     console.log(skapi);
     state.connection = c;
     state.user = skapi.user;

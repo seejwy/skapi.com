@@ -45,9 +45,9 @@ export default class Admin extends Skapi {
         'me51': 'me-south-1',
         'sa31': 'sa-east-1'
     };
-    
+
     constructor(service_id = 'us31ebid30xkr83mrn$kp1', owner = 'skapi') {
-        super(service_id, owner, window.localStorage.getItem('remember') === 'true');
+        super(service_id, owner, { autoLogin: window.localStorage.getItem('remember') === 'true' });
     }
 
     static async connect(service_id = 'us31ebid30xkr83mrn$kp1', owner = 'skapi') {
