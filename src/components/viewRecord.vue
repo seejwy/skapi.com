@@ -60,30 +60,39 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				//- 	.grid-item.title Access
 				//- 	.grid-item -
 			template(v-else-if="view === 'record' && props.record?.data")
-				.data-row(v-for="(data, key) in props.record.data")
-					.name
-						span.type(v-if="data?.type || data?.[0]?.type") File
-						span.type(v-else-if="typeof data === 'object'") JSON
-						span.type(v-else) {{ typeof data }}
-						span {{ key }}
-					template(v-if="data?.md5")
-						a.value.file(:href="data.url" style="text-decoration: none;color: unset;")
-							span.material-symbols-outlined file_present
-							span
-								.filename {{ data.filename }}
-								div(v-if="data.size" style="font-size: 12px;") {{ getSize(data.size) }}
-							span.material-symbols-outlined download
-					template(v-else-if="data?.[0]?.md5")
-						a.value.file(v-for="file in data" :href="file.url" style="text-decoration: none;color: unset;")
-							span.material-symbols-outlined file_present
-							span
-								.filename {{ file.filename }}
-								div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-							span.material-symbols-outlined download
-					template(v-else-if="typeof data === 'object'")
-						pre.value {{ data }}
-					template(v-else)
-						.value {{ data }}
+				template(v-for="(record, key) in props.record.data")
+					template(v-for="record in getDataByTypes(record)")
+						template(v-if="record.files.length")
+							.data-row
+								.name
+									span.type File
+									span {{ key }}
+
+								a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
+									span.material-symbols-outlined file_present
+									span
+										.filename {{ file.filename }}
+										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+									span.material-symbols-outlined download
+							.data-row(v-for="data in record.json")
+								.name
+									span.type(v-if="typeof data === 'object'") JSON
+									span.type(v-else) {{ typeof data }}
+									span {{ key }}
+
+								.value {{ data }}
+						.data-row(v-else-if="record.json.length")
+							.name
+								span.type JSON
+								span {{ key }}
+
+							pre.value {{ record.json }}
+						.data-row(v-else)
+							.name
+								span.type {{ typeof record.primitive }}
+								span {{ key }}
+
+							pre.value {{ record.primitive }}
 		.foot
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
@@ -177,55 +186,56 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
 			.content(v-show="view === 'record'")
-				.data-row(v-for="(row, index) in data")
-					.data-name-action
-						.select-input
-							.select-field
-								sui-select(:value="row.type" @change="(e) => row.type = e.target.value")
-									option(value="string") String
-									option(value="number") Number
-									option(value="boolean") Boolean
-									option(value="file") File
-									option(value="json") JSON
-							.input-field
-								sui-input(type="text" :value="row.key" @input="(e)=>row.key = e.target.value" required)
-						.action(@click="data.splice(index, 1)")
-							span.material-symbols-outlined delete
-							span.hideOnTablet remove
-					.data-values 
-						template(v-if="row.type === 'file'")
-							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, index)" @click="openFileInput(index)")
-								input(style="display: none;" type="file" :name="row.key"  @change="addFiles($event, index)" multiple)
+				template(v-for="(keyData, keyIndex) in data")
+					.data-row(v-for="(record, index) in keyData.data")
+						.data-name-action
+							.select-input
+								.select-field
+									sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
+										option(value="string") String
+										option(value="number") Number
+										option(value="boolean") Boolean
+										option(value="file") File
+										option(value="json") JSON
+								.input-field
+									sui-input(type="text" :value="keyData.key" @input="(e) => keyData.key = e.target.value" required)
+							.action(@click="removeField(keyData, keyIndex, index)")
+								span.material-symbols-outlined delete
+								span.hideOnTablet remove
+						.data-values 
+							template(v-if="record.type === 'file'")
+								.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, keyIndex, index)" @click="openFileInput($event)")
+									input(style="display: none;" type="file" @change="addFiles($event, keyIndex, index)" multiple)
+									div
+										span.material-symbols-outlined(style="font-size: 57px") file_present
+										span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
+										sui-button.line-button(@click.prevent.stop="" type="button") Upload
+								.value.file(v-for="(file, index) in record.data")
+									span.material-symbols-outlined file_present
+									span
+										.filename {{ file.name || file.filename }}
+										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+									span.material-symbols-outlined(@click="record.data.splice(index, 1)") cancel
+
+							.data-input-field(v-else-if="record.type === 'json'")
+								sui-input(:value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
+							
+							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
+								div Value:
 								div
-									span.material-symbols-outlined(style="font-size: 57px") file_present
-									span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
-									sui-button.line-button(@click.prevent.stop="" type="button") Upload
-							.value.file(v-for="(file, index) in row.value")
-								span.material-symbols-outlined file_present
-								span
-									.filename {{ file.name || file.filename }}
-									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-								span.material-symbols-outlined(@click="row.value.splice(index, 1)") cancel
+									label True
+									sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
+								div
+									label False
+									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
 
-						.data-input-field(v-else-if="row.type === 'json'")
-							sui-input(:value="row.value" @input="e => { row.value = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
+							.data-input-field(v-else-if="record.type === 'number'")
+								sui-input(type='number' :name="keyData.key" :value="record.data")
 
-						.data-input-field.transparent.boolean(v-else-if="row.type === 'boolean'")
-							div Value:
-							div
-								label True
-								sui-input(type="radio" :name="row.key" value="true" :checked="row.value === true ? true : null")
-							div
-								label False
-								sui-input(type="radio" :name="row.key" value="false" :checked="row.value !== true ? true : null")
-
-						.data-input-field(v-else-if="row.type === 'number'")
-							sui-input(type='number' :name="row.key" :value="row.value")
-
-						.data-input-field(v-else)
-							sui-input(:name="row.key" :value="row.value")
+							.data-input-field(v-else)
+								sui-input(:name="keyData.key" :value="record.data")
 				div
-					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="data.push({key: '', type: 'string', value: ''})") Add Data
+					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
 			.foot
 				sui-button(type="button" @click="isEdit = false" style="margin-right: 16px;").line-button Cancel
@@ -278,6 +288,7 @@ const editRecord = () => {
 		return;
 	}
 
+	data.value = [];
 	let record = JSON.parse(JSON.stringify(props.record));
 	form.value = {};
 
@@ -308,33 +319,29 @@ const editRecord = () => {
 	}
 
 	if (record?.data) {
-		data.value = Object.keys(record.data).map(key => {
-			let keyValue = record.data[key];
-			let value = keyValue;
-			let type = (() => {
-				if (keyValue?.md5 || keyValue?.[0]?.md5) {
-					value = Array.isArray(keyValue) ? keyValue : [keyValue];
-					return 'file';
+		let recordData = record.data;
+		for(let key in recordData) {
+			let keyObj = {key, data:[]}
+			let typeSplitFiles = getDataByTypes(recordData[key]).data;
+			if(typeSplitFiles.files.length) {
+				keyObj.data.push({type: 'file', data: typeSplitFiles.files});
+				typeSplitFiles.json.forEach(value => {
+					if(Array.isArray(value)) {
+						keyObj.data.push({type: 'json', data:  JSON.stringify(value)});
+					} else {
+						keyObj.data.push({type: typeof value, data: value});
+					}
+				});
+			} else {
+				if(typeSplitFiles.primitive !== null) {
+					keyObj.data.push({type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive});
+				} else {
+					keyObj.data.push({type:'json', data: JSON.stringify(typeSplitFiles.json)});
 				}
+			}
 
-				let dataType = typeof keyValue;
-				if (dataType === 'object') {
-					value = JSON.stringify(value, null, 2);
-					return 'json';
-				}
-
-				value = value.toString();
-				return dataType;
-			})();
-
-			return { key, type, value };
-		});
-		
-		console.log({data: data.value});
-	}
-
-	else {
-		data.value = [];
+			data.value.push(keyObj);
+		}
 	}
 
 	isEdit.value = true;
@@ -344,31 +351,25 @@ const save = (e) => {
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
-			for (let item of data.value) {
-				if (item.type === 'json') {
-					// append json data as binary
-					form.append(item.key, new Blob([item.value], {
-						type: 'application/json'
-					}));
-				} else if(item.type === 'file' && item.value) {
-					if(Array.isArray(item.value)) {
-						item.value.forEach(file => {
+			data.value.forEach(record => {
+				record.data.forEach(field => {
+					if(field.type === 'json') {
+						form.append(record.key, new Blob([field.data], {
+							type: 'application/json'
+						}));
+					} else if(field.type === 'file') {
+						field.data.forEach(file => {
 							if(file instanceof File) {
-								form.append(item.key, file);
+								form.append(record.key, file);
 							} else {
-								form.append(item.key, new Blob([JSON.stringify(file)], {
+								form.append(record.key, new Blob([JSON.stringify(file)], {
 									type: 'application/json'
 								}));
 							}
 						});
-					} else {
-						form.append(item.key, new Blob([JSON.stringify(item.value)], {
-							type: 'application/json'
-						}));
 					}
-				}
-			}
-
+				})
+			})
 			return form;
 		}
 
@@ -378,7 +379,7 @@ const save = (e) => {
 		form.value.index = null; // set to null to remove index
 	}
 
-	skapi.postRecord(data.value.length ? e.target : null, form.value).then(r => {
+	skapi.postRecord(Object.keys(data.value).length ? e.target : null, form.value).then(r => {
 		for(let k in r) {
 			props.record[k] = r[k];
 		}
@@ -386,25 +387,33 @@ const save = (e) => {
 	});
 };
 
-const onDrop = (event, index) => {
+const onDrop = (event, keyIndex, index) => {
 	const files = event.dataTransfer.files;
-	for (let i = 0; i < files.length; i++) {
-		const file = files[i];
-	}
-	data.value[index].value = [...data.value[index].value, ...files];
+	let fileData = data.value[keyIndex].data[index].data;
+	data.value[keyIndex].data[index].data = [...fileData, ...files];
 }
 
-const addFiles = (event, index) => {
+const addFiles = (event, keyIndex, index) => {
 	const files = event.target.files;
-	for (let i = 0; i < files.length; i++) {
-		const file = files[i];
-	}
-	data.value[index].value = [...data.value[index].value, ...files];
+	let fileData = data.value[keyIndex].data[index].data;
+	data.value[keyIndex].data[index].data = [...fileData, ...files];
 	event.target.value = '';
 }
 
-const openFileInput = (index) => {
-	document.getElementsByName(data.value[index].key)[0].click();
+const addField = () => {
+	data.value.push({key: '', data: [{type: 'string', data: []}]});
+}
+
+const removeField = (keyData, keyIndex, index) => {
+	keyData.data.splice(index, 1);
+	if(!keyData.data.length) {
+		data.value.splice(keyIndex, 1);
+	}
+}
+
+const openFileInput = (event, index) => {
+	const parent = event.target.closest('.file-upload-area');
+	parent.querySelector('input[type="file"]').click();
 }
 
 const validateJson = (event) => {
@@ -415,6 +424,31 @@ const validateJson = (event) => {
 	} catch (e) {
 		event.target.setCustomValidity('Invalid JSON');
 	}
+}
+
+const getDataByTypes = (record) => {
+	let files = [];
+	let json = [];
+	let primitive = null;
+	if(Array.isArray(record)) {
+		for(let key in record) {
+			if(record[key].md5) {
+				files.push(record[key]);
+			} else {
+				json.push(record[key]);
+			}
+		}
+	} else if(typeof record === 'object') {
+		if(record?.md5) {
+			files.push(record);
+		} else {
+			json.push(record);
+		}
+	} else {
+		primitive = record;
+	}
+	
+	return {data: {files, json, primitive}};
 }
 
 const confirmClose = () => {
@@ -437,7 +471,6 @@ const close = () => {
 defineExpose({
 	close
 });
-
 </script>
 <style lang="less" scoped>
 .container {
@@ -629,7 +662,7 @@ defineExpose({
 
 				&.transparent {
 					background: none;
-					padding: 0;
+					padding: 0 20px;
 				}
 
 				&.boolean {
@@ -671,7 +704,7 @@ defineExpose({
 
 					.material-symbols-outlined {
 						font-size: 20px;
-						margin-right: 10px;
+						margin-right: 4px;
 					}
 				}
 			}
