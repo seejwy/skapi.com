@@ -831,8 +831,9 @@ defineExpose({
 		text-align: center;
 		padding: 20px;
 
-		& > * {
-			vertical-align: middle;
+		sui-button[disabled] {
+			filter: none;
+			box-shadow: rgb(255 255 255 / 50%) 1px 1px 2px inset, rgb(0 0 0 / 25%) -1px -1px 2px inset, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
 		}
 	}
 
