@@ -217,8 +217,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 									span.material-symbols-outlined(@click="record.data.splice(index, 1)") cancel
 
-							.data-input-field(v-else-if="record.type === 'json'")
-								sui-input(:value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
+							sui-input.data-input-field(v-else-if="record.type === 'json'" :value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
 							
 							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 								div Value:
@@ -229,11 +228,9 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									label False
 									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
 
-							.data-input-field(v-else-if="record.type === 'number'")
-								sui-input(type='number' :name="keyData.key" :value="record.data.toString()")
+							sui-input.data-input-field(v-else-if="record.type === 'number'" type='number' :name="keyData.key" :value="record.data.toString()")
 
-							.data-input-field(v-else)
-								sui-input(:name="keyData.key" :value="record.data")
+							sui-input.data-input-field(v-else :name="keyData.key" :value="record.data")
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
@@ -597,6 +594,14 @@ defineExpose({
 				margin-bottom: 36px;
 			}
 
+			.data-input-field {
+				width: 100%;
+				box-shadow: none;
+
+				& input:focus {
+					outline: none;
+				}
+			}
 			.data-input-field,
 			.value {
 				margin-top: 20px;
