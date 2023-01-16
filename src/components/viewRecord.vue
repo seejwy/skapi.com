@@ -142,6 +142,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						.row(style="row-gap: 16px;")
 							.section
 								sui-select(style="min-width: 100px;" :value="(typeof form.index.value)")
+									option(disabled) Value Type
 									option(value="string") String
 									option(value="number") Number
 									option(value="boolean") Boolean
@@ -192,7 +193,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 							.select-input
 								.select-field
 									sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
-										option(disabled) Key Value Type
+										option(disabled) Value Type
 										option(value="string") String
 										option(value="number") Number
 										option(value="boolean") Boolean
