@@ -416,6 +416,7 @@ const removeField = (keyData, keyIndex, index) => {
 const openFileInput = (event, index) => {
 	const parent = event.target.closest('.file-upload-area');
 	parent.querySelector('input[type="file"]').click();
+<<<<<<< HEAD
 }
 
 const validateJson = (event) => {
@@ -458,6 +459,8 @@ const confirmClose = () => {
 	isEdit.value = false;
 	view.value = 'information';
 	emit('close');
+=======
+>>>>>>> 4c061a3 (Modify viewRecord data to ungroup file arrays)
 }
 
 const validateJson = (event) => {
@@ -468,6 +471,31 @@ const validateJson = (event) => {
 	} catch (e) {
 		event.target.setCustomValidity('Invalid JSON');
 	}
+}
+
+const getDataByTypes = (record) => {
+	let files = [];
+	let json = [];
+	let primitive = null;
+	if(Array.isArray(record)) {
+		for(let key in record) {
+			if(record[key].md5) {
+				files.push(record[key]);
+			} else {
+				json.push(record[key]);
+			}
+		}
+	} else if(typeof record === 'object') {
+		if(record?.md5) {
+			files.push(record);
+		} else {
+			json.push(record);
+		}
+	} else {
+		primitive = record;
+	}
+	
+	return {data: {files, json, primitive}};
 }
 
 const confirmClose = () => {
@@ -681,6 +709,7 @@ defineExpose({
 				&.transparent {
 					background: none;
 					padding: 0 20px;
+<<<<<<< HEAD
 				}
 
 				&.boolean {
@@ -690,6 +719,8 @@ defineExpose({
 					label {
 						margin-right: 8px;
 					}
+=======
+>>>>>>> 4c061a3 (Modify viewRecord data to ungroup file arrays)
 				}
 
 				&.boolean {
