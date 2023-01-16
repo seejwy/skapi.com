@@ -93,7 +93,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								span {{ key }}
 
 							pre.value {{ record.primitive }}
-		.foot
+		.foot.hideOnTablet
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
 		form(@submit.prevent="save")
@@ -237,7 +237,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
-			.foot
+			.foot.hideOnTablet
 				sui-button(type="button" @click="isEdit = false" style="margin-right: 16px;").line-button Cancel
 				div(style="display: inline-block")
 					sui-button(v-if="isSaving" type="button" disabled)
