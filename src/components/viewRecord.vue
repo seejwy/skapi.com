@@ -241,9 +241,9 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				sui-button(type="button" @click="isEdit = false" style="margin-right: 16px;").line-button Cancel
 				div(style="display: inline-block")
 					sui-button(v-if="isSaving" type="button" disabled)
-						span(style="visibility: hidden;") Submit
+						span(style="visibility: hidden;") Save
 						Icon.animation-rotation--slow-in-out(style=" position: absolute; height: 19px; width: 19px;") loading
-					sui-input(v-else type="submit") Save
+					sui-input(v-else type="submit" value="Save")
 
 sui-overlay(ref="overlay")
 	.popup
