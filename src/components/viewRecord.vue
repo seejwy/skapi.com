@@ -239,7 +239,11 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 
 			.foot
 				sui-button(type="button" @click="isEdit = false" style="margin-right: 16px;").line-button Cancel
-				sui-input(type="submit") Save
+				div(style="display: inline-block")
+					sui-button(v-if="isSaving" type="button" disabled)
+						span(style="visibility: hidden;") Submit
+						Icon.animation-rotation--slow-in-out(style=" position: absolute; height: 19px; width: 19px;") loading
+					sui-input(v-else type="submit") Save
 
 sui-overlay(ref="overlay")
 	.popup
@@ -265,6 +269,7 @@ import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
 import TagsInput from '@/components/TagsInput.vue';
+import Icon from '@/components/Icon.vue';
 
 const route = useRoute();
 const props = defineProps(['record']);
@@ -275,6 +280,7 @@ const exitEditOverlay = ref(null);
 const serviceId = route.params.service;
 const view = ref('information');
 const isEdit = ref(false);
+const isSaving = ref(false);
 const form = ref({});
 const data = ref([]);
 
@@ -348,6 +354,7 @@ const editRecord = () => {
 };
 
 const save = (e) => {
+	isSaving.value = true;
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
@@ -383,6 +390,7 @@ const save = (e) => {
 		for(let k in r) {
 			props.record[k] = r[k];
 		}
+		isSaving.value = false;
 		isEdit.value = false;
 	});
 };
@@ -822,6 +830,10 @@ defineExpose({
 	.foot {
 		text-align: center;
 		padding: 20px;
+
+		& > * {
+			vertical-align: middle;
+		}
 	}
 
 	.tags-wrapper {
