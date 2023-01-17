@@ -141,7 +141,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 						.name Index Value
 						.row(style="row-gap: 16px;")
 							.section
-								sui-select(style="min-width: 100px;" :value="(typeof props.record?.index.value)")
+								sui-select(style="min-width: 100px;" index-type :value="(typeof props.record?.index.value)")
 									option(disabled) Value Type
 									option(value="string") String
 									option(value="number") Number
@@ -383,9 +383,23 @@ const save = (e) => {
 
 	if (!form.value.index?.name) {
 		form.value.index = null; // set to null to remove index
+	} else {
+		form.value.index.value = (() => {
+			let value = form.value.index.value;
+			switch(document.querySelector('sui-select[index-type]').value) {
+				case 'number':
+					value = Number(value);
+					break;
+				case 'boolean':
+					value = value == 'true' ? true : false;
+					break;
+			}
+
+			return value;
+		})();
 	}
 
-	skapi.postRecord(Object.keys(data.value).length ? e.target : null, form.value).then(r => {
+	skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value).then(r => {
 		for(let k in r) {
 			props.record[k] = r[k];
 		}
