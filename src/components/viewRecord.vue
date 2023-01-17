@@ -418,14 +418,17 @@ const save = async () => {
 			return value;
 		})();
 	}
-
-	skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value).then(r => {
-		for(let k in r) {
-			props.record[k] = r[k];
-		}
+	try {
+		skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value).then(r => {
+			for(let k in r) {
+				props.record[k] = r[k];
+			}
+			isSaving.value = false;
+			isEdit.value = false;
+		});
+	} catch(e) {
 		isSaving.value = false;
-		isEdit.value = false;
-	});
+	}
 };
 
 const onDrop = (event, keyIndex, index) => {
