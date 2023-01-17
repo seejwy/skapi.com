@@ -96,7 +96,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 		.foot.hideOnTablet
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
-		form(@submit.prevent="save")
+		form(ref="formEl" @keypress.enter="save")
 			.close(@click="close")
 				span.material-symbols-outlined close
 
@@ -106,7 +106,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
 					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Record
 
-			.content(v-show="view === 'information'")
+			.content#setting(v-show="view === 'information'")
 				.row
 					.section(style="width: 100%;")
 						.name Table Name
@@ -186,7 +186,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				//- 		.name Access 
 				//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
-			.content(v-show="view === 'record'")
+			.content#record(v-show="view === 'record'")
 				template(v-for="(keyData, keyIndex) in data")
 					.data-row(v-for="(record, index) in keyData.data")
 						.data-name-action
@@ -242,7 +242,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					sui-button(v-if="isSaving" type="button" disabled)
 						span(style="visibility: hidden;") Save
 						Icon.animation-rotation--slow-in-out(style=" position: absolute; height: 19px; width: 19px;") loading
-					sui-input(v-else type="submit" value="Save")
+					sui-button(v-else type="button" @click="save") Save
 
 sui-overlay(ref="overlay")
 	.popup
@@ -264,7 +264,7 @@ sui-overlay(ref="exitEditOverlay")
 			sui-button.line-button(@click="confirmClose") Yes
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
 import TagsInput from '@/components/TagsInput.vue';
@@ -280,6 +280,7 @@ const serviceId = route.params.service;
 const view = ref('information');
 const isEdit = ref(false);
 const isSaving = ref(false);
+const formEl = ref(null);
 const form = ref({});
 const data = ref([]);
 
@@ -352,8 +353,27 @@ const editRecord = () => {
 	isEdit.value = true;
 };
 
-const save = (e) => {
+const save = async () => {
 	isSaving.value = true;
+	if(!formEl.value.checkValidity()) {
+		let currentPageIsValid = true;
+		
+		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input`).forEach((el) => {
+			if(currentPageIsValid && !el.reportValidity()) {
+				currentPageIsValid = false;
+			}
+        });
+
+		if(currentPageIsValid) {
+			view.value = view.value === 'information' ? 'record' : 'information';
+			await nextTick();
+			formEl.value.reportValidity();
+		}
+
+		isSaving.value = false;
+		return false;
+	}
+
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
