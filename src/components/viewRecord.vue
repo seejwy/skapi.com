@@ -30,8 +30,8 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.grid-item {{ props.record.index?.name || '-' }}
 				.grid-item.title(style="font-weight: normal") Index Value
 				.grid-item
-					span.type(v-if="props.record.index?.value") {{ typeof props.record.index.value }}
-					span {{ props.record.index.value || '-' }}
+					span.type(v-if="props.record.index.hasOwnProperty('value')") {{ typeof props.record.index.value }}
+					span {{ props.record.index.hasOwnProperty('value') ? props.record.index.value : '-' }}
 				.grid-item.title Upload Datetime
 				.grid-item {{ dateFormat(props.record.uploaded) }}
 				.grid-item.title Reference
@@ -140,14 +140,20 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					.section
 						.name Index Value
 						.row(style="row-gap: 16px;")
-							.section
-								sui-select(style="min-width: 100px;" index-type :value="(typeof props.record?.index.value)")
+							.section(style="flex-grow: 0")
+								sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => indexValueType = e.target.value")
 									option(disabled) Value Type
 									option(value="string") String
 									option(value="number") Number
 									option(value="boolean") Boolean
 							.section
+								.radio-container(v-if="indexValueType === 'boolean'")
+									label(@click="e => form.index.value = true") True
+										sui-input(type="radio" :checked="form.index.value === true || null")
+									label(@click="e => form.index.value = false") False
+										sui-input(type="radio" :checked="form.index.value === false || null")
 								sui-input(
+									v-else
 									:required="form.index.name !== '' ? true : null"
 									:value="form.index.value"
 									@input="(e)=> form.index.value = e.target.value")
@@ -264,7 +270,7 @@ sui-overlay(ref="exitEditOverlay")
 			sui-button.line-button(@click="confirmClose") Yes
 </template>
 <script setup>
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
 import TagsInput from '@/components/TagsInput.vue';
@@ -283,10 +289,15 @@ const isSaving = ref(false);
 const formEl = ref(null);
 const form = ref({});
 const data = ref([]);
+const indexValueType = ref('string');
 
 const allowReference = computed(() => {
 	if(form.value.config?.reference_limit === 0) return false;
 	return true;
+});
+
+watch(() => props.record, ()=> {
+	indexValueType.value = typeof props.record.index.value;
 });
 
 const editRecord = () => {
@@ -411,7 +422,7 @@ const save = async () => {
 					value = Number(value);
 					break;
 				case 'boolean':
-					value = value == 'true' ? true : false;
+					value = value === true ? true : false;
 					break;
 			}
 
@@ -799,8 +810,13 @@ defineExpose({
 			}
 
 			sui-select,
-			sui-input:not([type=checkbox]) {
+			sui-input:not([type=checkbox]):not([type=radio]) {
 				width: 100%;
+			}
+
+			sui-input[type=radio] {
+				cursor: pointer;
+				color: rgba(255, 255, 255, .6);
 			}
 		}
 
@@ -830,7 +846,22 @@ defineExpose({
 				}
 			}
 
-			sui-input {
+			.radio-container {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				gap: 24px;
+				
+				label {
+					cursor: pointer;
+				}
+
+				sui-input {
+					margin-left: 10px;
+				}
+			}
+
+			sui-input:not([type=radio]) {
 				background: rgba(255, 255, 255, 0.08);
 				border: 1px solid rgba(255, 255, 255, 0.2);
 				box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
