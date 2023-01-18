@@ -154,6 +154,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 										sui-input(type="radio" :checked="form.index.value === false || null")
 								sui-input(
 									v-else
+									:type="indexValueType === 'number' ? 'number' : 'text'"
 									:required="form.index.name !== '' ? true : null"
 									:value="form.index.value"
 									@input="(e)=> form.index.value = e.target.value")
