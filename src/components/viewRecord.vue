@@ -662,6 +662,8 @@ defineExpose({
 				padding: 16px 20px;
 				background: #434343;
 				border-radius: 8px;
+				white-space: pre-wrap;
+				word-break: break-word;
 
 				&.file {
 					display: flex;
