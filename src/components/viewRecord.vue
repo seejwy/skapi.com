@@ -120,8 +120,8 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					.section
 						.name Access Group
 						sui-select(:value="form.access_group.toString()" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
-							option(value="0") Everyone 
-							option(value="1") Registered Users
+							option(value="0") Public 
+							option(value="1") Registered
 
 				.row
 					.section(style="width: 100%;")
