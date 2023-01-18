@@ -191,7 +191,7 @@ form(
 
             div(style='text-align:center;')
                 sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()") Reset
-                sui-input(style='margin: 8px .5em;width: 6em;' type='submit') Search
+                sui-input(style='margin: 8px .5em;width: 6em;' type='submit' value="Search")
 
 </template>
 <!-- script below -->
