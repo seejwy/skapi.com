@@ -96,7 +96,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 		.foot.hideOnTablet
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
-		form(ref="formEl" @keypress.enter="save")
+		form(ref="formEl")
 			.close(@click="close")
 				span.material-symbols-outlined close
 
