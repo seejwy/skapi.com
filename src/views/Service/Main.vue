@@ -135,6 +135,10 @@ watch(() => state.user, u => {
     .sidebar {
         background: var(--primary-color);
 
+        @media @tablet {        
+            box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
+        }
+
         @media @ipad {
             height: unset;
             width: 100%;
@@ -176,9 +180,10 @@ watch(() => state.user, u => {
             @media @ipad {
                 width: 36px;
                 height: 36px;
-                border-radius: 4px;
                 margin: 12px 16px;
             }
+            
+            border-radius: 4px;
 
             &.router-link-exact-active,
             &:hover {
