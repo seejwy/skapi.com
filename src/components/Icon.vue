@@ -16,8 +16,8 @@ export default{
 <style scoped>
 svg {
   fill: currentColor;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   vertical-align: middle;
 }
 </style>

@@ -582,6 +582,12 @@ defineExpose({
 			gap: 4px;
 			padding: 0 20px;
 			cursor: pointer;
+			color: rgba(255, 255, 255, .6);
+
+			svg {
+				width: 20px;
+				height: 20px;
+			}
 		}
 	}
 
@@ -754,9 +760,11 @@ defineExpose({
 				.action {
 					cursor: pointer;
 					font-weight: bold;
+					color: rgba(255, 255, 255, .6);
 					
 					svg {
-						font-size: 20px;
+						width: 20px;
+						height: 20px;
 					}
 				}
 			}

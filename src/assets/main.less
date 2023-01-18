@@ -60,11 +60,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.material-symbols-outlined {
-  vertical-align: middle;
-  font-weight: normal;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -180,21 +175,6 @@ main {
       vertical-align: middle;
     }
 
-    .placeholder-icon:first-child {
-      opacity: 0.6;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;
-      left: 10px;
-
-      &+sui-input {
-        input::placeholder {
-          padding: 24px;
-        }
-      }
-    }
-
     sui-input {
       input {
         color: #fff;
@@ -204,11 +184,6 @@ main {
           outline: none;
         }
       }
-    }
-
-    .optionButton:last-child {
-      opacity: 0.6;
-      padding-right: 16px;
     }
   }
 }
@@ -229,18 +204,16 @@ sui-button {
     height: 48px;
     border-radius: 50%;
     margin: 0;
+    padding: 0;
     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
 
-    &.open-menu .material-symbols-outlined {
-      font-size: 32px;
+    &.open-menu svg {
+      height: 28px;
+      width: 28px;
     }
 
     & span[class*="material-symbols-"] {
       margin-right: 0;
-    }
-
-    .material-symbols-outlined {
-      font-size: 24px;
     }
   }
 }
