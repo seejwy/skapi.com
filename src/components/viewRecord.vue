@@ -429,6 +429,9 @@ const save = async () => {
 			return value;
 		})();
 	}
+
+	form.value.access_group = Number(form.value.access_group);
+	
 	try {
 		skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value).then(r => {
 			for(let k in r) {
