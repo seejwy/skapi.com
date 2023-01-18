@@ -2,14 +2,14 @@
 div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="props?.record")
 	.container(v-if="!isEdit")
 		.close(@click="close")
-			span.material-symbols-outlined close
+			Icon X2
 		.title {{ props.record.record_id }}
 		.menu
 			ul
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
 				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Record
 			.action(@click="overlay.open")
-				span.material-symbols-outlined delete
+				Icon trash
 				span delete
 		.content
 			.grid(v-if="view === 'information'")
@@ -69,11 +69,11 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									span {{ key }}
 
 								a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
-									span.material-symbols-outlined file_present
+									Icon attached
 									span
 										.filename {{ file.filename }}
 										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									span.material-symbols-outlined download
+									Icon download
 							.data-row(v-for="data in record.json")
 								.name
 									span.type(v-if="typeof data === 'object'") JSON
@@ -98,8 +98,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 	.container(v-else)
 		form(ref="formEl")
 			.close(@click="close")
-				span.material-symbols-outlined close
-
+				Icon X2
 			.title {{ form.record_id }}
 			.menu
 				ul
@@ -209,22 +208,21 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								.input-field
 									sui-input(type="text" :value="keyData.key" placeholder="Key Name" @input="(e) => keyData.key = e.target.value" required)
 							.action(@click="removeField(keyData, keyIndex, index)")
-								span.material-symbols-outlined delete
-								span.hideOnTablet remove
+								Icon trash
 						.data-values 
 							template(v-if="record.type === 'file'")
 								.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, keyIndex, index)" @click="openFileInput($event)")
 									input(style="display: none;" type="file" @change="addFiles($event, keyIndex, index)" multiple)
 									div
-										span.material-symbols-outlined(style="font-size: 57px") file_present
+										Icon attached
 										span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
 										sui-button.line-button(@click.prevent.stop="" type="button") Upload
 								.value.file(v-for="(file, index) in record.data")
-									span.material-symbols-outlined file_present
+									Icon attached
 									span
 										.filename {{ file.name || file.filename }}
 										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									span.material-symbols-outlined(@click="record.data.splice(index, 1)") cancel
+									Icon(@click="record.data.splice(index, 1)") X
 
 							sui-input.data-input-field(v-else-if="record.type === 'json'" placeholder="Key Value" :value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
 							
@@ -254,7 +252,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 sui-overlay(ref="overlay")
 	.popup
 		.title
-			span.material-symbols-outlined error
+			Icon warning
 			div Are you sure?
 		.body Are you sure you want to delete the record?
 		.foot
@@ -263,7 +261,7 @@ sui-overlay(ref="overlay")
 sui-overlay(ref="exitEditOverlay")
 	.popup
 		.title
-			span.material-symbols-outlined error
+			Icon warning
 			div Are you sure?
 		.body Are you sure you want to close? You are still editing.
 		.foot
@@ -541,7 +539,7 @@ defineExpose({
 		color: #434343;
 		cursor: pointer;
 
-		.material-symbols-outlined {
+		svg {
 			user-select: none;
 			position: absolute;
 			top: 50%;
@@ -584,10 +582,6 @@ defineExpose({
 			gap: 4px;
 			padding: 0 20px;
 			cursor: pointer;
-
-			.material-symbols-outlined {
-				font-size: 20px;
-			}
 		}
 	}
 
@@ -675,28 +669,20 @@ defineExpose({
 						color: rgba(255, 255, 255, .6);
 					}
 
-					span:first-child {
-						font-size: 46px;
+					svg:first-child {
+						height: 46px;
+						width: 46px;
 					}
 
 					span:nth-child(2) {
 						flex-grow: 1;
 					}
 
-					span:last-child {
-						font-size: 24px;
+					svg {
+						color: rgba(255, 255, 255, 0.6);
 						align-self: center;
 						cursor: pointer;
 					}
-
-					.material-symbols-outlined:last-child {
-						font-size: 20px;
-						font-variation-settings: 'FILL' 1;
-					}
-				}
-
-				.material-symbols-outlined {
-					user-select: none;
 				}
 
 				sui-input {
@@ -767,10 +753,10 @@ defineExpose({
 
 				.action {
 					cursor: pointer;
-
-					.material-symbols-outlined {
+					font-weight: bold;
+					
+					svg {
 						font-size: 20px;
-						margin-right: 4px;
 					}
 				}
 			}
@@ -798,6 +784,12 @@ defineExpose({
 					&:last-child {
 						margin-left: 6px;
 					}
+				}
+
+				svg {
+					height: 57px;
+					width: 57px;
+					color: rgba(255, 255, 255, .6);
 				}
 			}
 		}
@@ -946,8 +938,9 @@ defineExpose({
 	margin: 12px;
 	text-align: center;
 
-	.material-symbols-outlined {
-		font-size: 38px;
+	svg {
+		height: 38px;
+		width: 38px;
 	}
 
 	.title {
@@ -981,4 +974,9 @@ defineExpose({
 	padding: 0 8px;
 	min-width: 72px;
 }
+
+input::placeholder {
+  color: rgba(255, 255, 255, .4);
+}
+
 </style>

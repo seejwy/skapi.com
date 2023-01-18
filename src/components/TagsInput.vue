@@ -3,12 +3,13 @@ input(type="hidden" :value="tagArray?.join(',')")
 .tag-container(@click="input.focus()")
   span.tag(v-for="(tag, index) in tagArray" @click.stop="")
     span {{ tag }}
-    span.material-symbols-outlined(@click="removeTag(index)") cancel
+    Icon(@click="removeTag(index)") X
     //- do not remove the extra space in .tag-input
   .tag-input(ref="input" contenteditable="true" tabindex="0" @keydown.enter.space.prevent="addTag" @keydown.delete="deleteTag" @blur="addTag")  
 </template>
 <script setup>
 import { reactive, ref } from 'vue';
+import Icon from './Icon.vue';
 
 const props = defineProps(['value']);
 const emits = defineEmits(['change']);
@@ -69,9 +70,8 @@ const removeTag = (index) => {
   border-radius: 4px;
   height: 30px;
 
-  .material-symbols-outlined {
-    font-size: 16px;
-    font-variation-settings: 'FILL' 1;
+  svg {
+    width: 16px;
     margin-left: 4px;
     cursor: pointer;
   }
