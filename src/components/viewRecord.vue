@@ -237,7 +237,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									label False
 									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
 
-							sui-input.data-input-field(v-else-if="record.type === 'number'" placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
+							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
 							sui-input.data-input-field(v-else :name="keyData.key" placeholder="Key Value" :value="record.data")
 				div
