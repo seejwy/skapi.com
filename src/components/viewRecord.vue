@@ -898,6 +898,7 @@ defineExpose({
 				border-bottom: 1px solid rgba(255, 255, 255, 0.6);
 				width: 100%;
 				margin-left: 8px;
+				font-size: 16px;
 			}
 		}
 	}
