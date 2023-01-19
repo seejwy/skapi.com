@@ -13,9 +13,8 @@
                 option(value="name") Name
 
         .input-field
-            //- span.material-symbols-outlined.placeholder-icon(v-if="!searchForm.value") search
-            span.material-symbols-outlined.placeholder-icon search
-            sui-input(type="search" autocomplete="off")
+            span.material-symbols-outlined.placeholder-icon(v-if="!searchValue") search
+            sui-input(type="search" autocomplete="off" :value="searchValue" @input="(e) => searchValue = e.target.value")
     
     .actions
         sui-button.text-button(@click="")
@@ -23,10 +22,13 @@
             span block
         sui-button.text-button(@click="")
             Icon trash
-            span ublock
+            span unblock
         sui-button.text-button(@click="")
             Icon trash
             span delete
+.table-header
+    span(v-for="(value, key) in visibleFields") {{  key }}
+    Icon refresh
 
 template(v-if="serviceUsers")
     h5 These are your users:
@@ -43,6 +45,17 @@ import Icon from '@/components/Icon.vue';
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
+let searchValue = ref('');
+let visibleFields = {
+    'User ID': true,
+    'Name': true,
+    'Block': true,
+    'Status': true,
+    'Email': true,
+    'Address': true,
+    'Gender': true,
+    'Birthdate': true
+}
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
@@ -111,6 +124,7 @@ getUsers();
     .actions {
         & > * { 
             display: inline-block;
+            margin-left: 16px;
         }
 
         svg {
@@ -119,6 +133,25 @@ getUsers();
             margin-right: 4px;
         }
 
+    }
+}
+
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 36px;
+    padding: 0 18px;
+    background: #434343;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    height: 58px;
+
+    svg {
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
     }
 }
 </style>
