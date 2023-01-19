@@ -79,7 +79,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                     span.material-symbols-outlined.arrow(
                         style="transform: rotate(180deg)"
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
-                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") arrow_forward_ios
+                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTablePage) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") arrow_forward_ios
                     span.morePage(
                         :class="{active: currentSelectedTableBatch}"
                         @click="()=>{ if(currentSelectedTableBatch > 0) {currentSelectedTableBatch--; currentSelectedTablePage = numberOfPagePerBatch - 1} }") ...
