@@ -1,5 +1,5 @@
 <template lang="pug">
-.recordPageHead
+.page-header
     h1 Record
     span This is some text
     br
@@ -363,7 +363,7 @@ watch(currentSelectedTableBatch, n => {
     }
 }
 
-.recordPageHead {
+.page-header {
     padding: 50px 0;
 
     @media @tablet {

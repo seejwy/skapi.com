@@ -1,19 +1,44 @@
 <template lang="pug">
-h1 This is user page
-h2 Don't worry about pagination
-h3 Lets do the desktop CSS first
-h4 List of service users is in serviceUsers.list
+.page-header
+    h1 Users
+    p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
+    sui-button.line-button(style="float: right") Read Doc
+    div(style="clear:both;")
+.actions-wrapper
+    .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
+        .select-field
+            sui-select(name='search_type')
+                option(value="id" selected) User ID
+                option(value="email") Email
+                option(value="name") Name
+
+        .input-field
+            //- span.material-symbols-outlined.placeholder-icon(v-if="!searchForm.value") search
+            span.material-symbols-outlined.placeholder-icon search
+            sui-input(type="search" autocomplete="off")
+    
+    .actions
+        sui-button.text-button(@click="")
+            Icon trash
+            span block
+        sui-button.text-button(@click="")
+            Icon trash
+            span ublock
+        sui-button.text-button(@click="")
+            Icon trash
+            span delete
 
 template(v-if="serviceUsers")
     h5 These are your users:
     pre {{ serviceUsers.list }}
 
 </template>
-<!-- script below -->
 <script setup>
 import { inject, ref, watch, computed, nextTick } from 'vue';
 import { skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+
+import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
 let router = useRouter();
@@ -69,7 +94,31 @@ function getUsers(refresh = false) {
 // get users on created
 getUsers();
 </script>
-
 <style lang="less" scoped>
+@import '@/assets/variables.less';
+.page-header {
+    padding: 50px 0;
 
+    @media @tablet {
+        padding: 24px 0;
+    }
+}
+.actions-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .actions {
+        & > * { 
+            display: inline-block;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 4px;
+        }
+
+    }
+}
 </style>
