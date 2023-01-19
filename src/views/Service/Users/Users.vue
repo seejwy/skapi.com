@@ -644,4 +644,23 @@ getUsers();
             }
         }
 }
+
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 36px;
+    padding: 0 18px;
+    background: #434343;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    height: 58px;
+
+    svg {
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+    }
+}
 </style>
