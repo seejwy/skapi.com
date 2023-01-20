@@ -1,5 +1,5 @@
 <template lang="pug">
-div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="props?.record" tabindex="0" autofocus @keydown.esc="close")
+div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="props?.record")
 	.container(v-if="!isEdit")
 		.close(@click="close")
 			Icon X2
