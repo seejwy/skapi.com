@@ -473,6 +473,17 @@ const openFileInput = (event, index) => {
 	parent.querySelector('input[type="file"]').click();
 }
 
+const validateJson = (event) => {
+	if(event.target.value === '') event.target.setCustomValidity('');
+	try {
+		JSON.parse(event.target.value);
+		event.target.setCustomValidity('');
+	} catch (e) {
+		event.target.setCustomValidity('Invalid JSON');
+		event.target.reportValidity();
+	}
+}
+
 const getDataByTypes = (record) => {
 	let files = [];
 	let json = [];
