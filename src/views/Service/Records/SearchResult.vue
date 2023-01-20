@@ -73,11 +73,11 @@ sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color
                         // when v-for by number, it starts with 1
                         .records(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]" style="cursor:pointer;" @click="()=>{recordToOpen=r;openRecord.open();}")
                             div
-                                span.label USER: 
-                                span {{ r.user_id }}
-                            div
-                                span.label RECORD: 
+                                span.label RECORD:
                                 span {{ r.record_id }}
+                            div
+                                span.label USER:
+                                span {{ r.user_id }}
                             div
                                 span.label UPLOADED: 
                                 span {{ dateFormat(r.uploaded) }}
@@ -298,7 +298,6 @@ async function fetchMoreRecords() {
                 border-radius: 0 !important;
                 padding-right: 16px !important;
                 padding-left: 16px !important;
-                display: block !important;
 
                 div {
                     &:not(:last-child) {
@@ -366,8 +365,13 @@ async function fetchMoreRecords() {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            flex-direction: column;
             font-size: 14px;
             padding: 16px 20px;
+
+            @media screen and (min-width: 945px) {
+                flex-direction: row;
+            }
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -387,7 +391,7 @@ async function fetchMoreRecords() {
                 }
 
                 span {
-                    font-family: monospace;
+                    font-family: Courier;
                     display: inline-block;
 
                     &.label {

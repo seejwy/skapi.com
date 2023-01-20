@@ -64,14 +64,14 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
                             .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>{recordToOpen = r; openRecord.open();}")
                                 div
-                                    span.label-head RECORD: 
+                                    span.label-head RECORD:
                                     span {{ r.record_id }}
                                 div
-                                    span.label-head UPLOADED: 
-                                    span {{ dateFormat(r.uploaded) }}
-                                div
-                                    span.label-head USER: 
+                                    span.label-head USER:
                                     span {{ r.user_id }}
+                                div
+                                    span.label-head UPLOADED:
+                                    span {{ dateFormat(r.uploaded) }}
 
                             .load-more(v-if="!t.records.endOfList")
                                 Icon.animation-rotation refresh
@@ -420,9 +420,14 @@ watch(currentSelectedTableBatch, n => {
         .records {
             display: flex;
             flex-wrap: wrap;
+            flex-direction: column;
             justify-content: space-between;
             font-size: 14px;
             padding: 16px 20px;
+
+            @media screen and (min-width: 945px) {
+                flex-direction: row;
+            }
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -442,7 +447,7 @@ watch(currentSelectedTableBatch, n => {
                 }
 
                 span {
-                    font-family: monospace;
+                    font-family: Courier;
 
                     &.label-head {
                         color: rgba(255, 255, 255, 0.6);
