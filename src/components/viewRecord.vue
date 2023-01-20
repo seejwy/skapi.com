@@ -7,7 +7,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 		.menu
 			ul
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
-				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Record
+				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
 			.action(@click="overlay.open")
 				Icon trash
 				span delete
@@ -59,40 +59,44 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				//- template(v-else)
 				//- 	.grid-item.title Access
 				//- 	.grid-item -
-			template(v-else-if="view === 'record' && props.record?.data")
-				template(v-for="(record, key) in props.record.data")
-					template(v-for="record in getDataByTypes(record)")
-						template(v-if="record.files.length")
-							.data-row
+			template(v-else-if="view === 'record'")
+				template(v-if="props.record.data")
+					template(v-for="(record, key) in props.record.data")
+						template(v-for="record in getDataByTypes(record)")
+							template(v-if="record.files.length")
+								.data-row
+									.name
+										span.type File
+										span {{ key }}
+
+									a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
+										Icon attached
+										span
+											.filename {{ file.filename }}
+											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+										Icon download
+								.data-row(v-for="data in record.json")
+									.name
+										span.type(v-if="typeof data === 'object'") JSON
+										span.type(v-else) {{ typeof data }}
+										span {{ key }}
+
+									.value {{ data }}
+							.data-row(v-else-if="record.json.length")
 								.name
-									span.type File
+									span.type JSON
 									span {{ key }}
 
-								a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
-									Icon attached
-									span
-										.filename {{ file.filename }}
-										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon download
-							.data-row(v-for="data in record.json")
+								pre.value {{ record.json }}
+							.data-row(v-else)
 								.name
-									span.type(v-if="typeof data === 'object'") JSON
-									span.type(v-else) {{ typeof data }}
+									span.type {{ typeof record.primitive }}
 									span {{ key }}
 
-								.value {{ data }}
-						.data-row(v-else-if="record.json.length")
-							.name
-								span.type JSON
-								span {{ key }}
-
-							pre.value {{ record.json }}
-						.data-row(v-else)
-							.name
-								span.type {{ typeof record.primitive }}
-								span {{ key }}
-
-							pre.value {{ record.primitive }}
+								pre.value {{ record.primitive }}
+				.no-data(v-else)
+					Icon(style="height: 72px; width: 72px;") no_record
+					p No Data
 		.foot.hideOnTablet
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
@@ -103,7 +107,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 			.menu
 				ul
 					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
-					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Record
+					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
 
 			.content#setting(v-show="view === 'information'")
 				.row
@@ -812,6 +816,22 @@ defineExpose({
 					width: 57px;
 					color: rgba(255, 255, 255, .6);
 				}
+			}
+		}
+
+		.no-data {
+			text-align: center;
+			color: rgba(255, 255, 255, .4);
+			font-size: 36px;
+			margin-top: 65px;
+
+			p {
+				margin: 12px 0 0 0;
+			}
+
+			svg {
+				width: 72px;
+				height: 72px;
 			}
 		}
 
