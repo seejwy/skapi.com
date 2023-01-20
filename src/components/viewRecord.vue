@@ -490,10 +490,10 @@ const getDataByTypes = (record) => {
 	let primitive = null;
 	if(Array.isArray(record)) {
 		for(let key in record) {
-			if(record[key].md5) {
+			if(record[key]?.md5) {
 				files.push(record[key]);
 			} else {
-				json.push(record[key]);
+				json.push(JSON.stringify(record[key]));
 			}
 		}
 	} else if(typeof record === 'object') {
