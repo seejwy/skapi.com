@@ -115,7 +115,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 					.section
 						.name Reference ID
 							span(style="float: right;") ?
-						sui-input(:value="form.reference" @input="(e) => form.reference = e.target.value")
+						sui-input(:value="form.reference" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference = e.target.value")
 					.section
 						.name Access Group
 						sui-select(:value="form.access_group.toString()" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
