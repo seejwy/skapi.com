@@ -158,6 +158,7 @@ sui-nav#top-nav {
             text-overflow: ellipsis;
 
             .back-button {
+                flex-shrink: 0;
                 height: 32px;
                 width: 32px;
                 color: rgba(255, 255, 255, .4);
@@ -173,6 +174,8 @@ sui-nav#top-nav {
                     user-select: none;
                     font-size: 24px;
                     line-height: 1.2;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
             }
         }
