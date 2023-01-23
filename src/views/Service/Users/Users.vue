@@ -27,7 +27,7 @@
             Icon trash
             span delete
 pre {{ visibleFields }}
-.table-outer-wrapper
+.table-outer-wrapper(v-if="serviceUsers")
     .table-actions
         Icon(@click="showSetting = !showSetting") setting
         Icon(:class="{'animation-rotation': fetchingData}") refresh
@@ -76,7 +76,7 @@ import Icon from '@/components/Icon.vue';
 //     // })
 //     console.log({x});
 // })();
-
+const viewport = inject('viewport');
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -93,15 +93,15 @@ let visibleFields = reactive({
     },
     block: {
         text: 'Block',
-        show: true,
+        show: viewport.value === 'desktop' ? true : false,
     },
     status: {
         text: 'Status',
-        show: true,
+        show: viewport.value === 'desktop' ? true : false,
     },
     email: {
         text: 'Email',
-        show: true,
+        show: viewport.value === 'desktop' ? true : false,
     },
     address: {
         text: 'Address',
