@@ -26,7 +26,7 @@
         sui-button.text-button(@click="")
             Icon trash
             span delete
-pre {{ visibleFields }}
+
 .table-outer-wrapper(v-if="serviceUsers")
     .table-actions
         Icon(@click="showSetting = !showSetting") setting
@@ -49,10 +49,6 @@ pre {{ visibleFields }}
                     td.fixed
                         sui-input(type="checkbox")
                     td(v-for="(key, index) in computedVisibleFields") {{ user['user_id'] || '-' }}
-template(v-if="serviceUsers")
-    h5 These are your users:
-    pre {{ serviceUsers.list }}
-
 </template>
 <script setup>
 import { inject, ref, reactive, computed } from 'vue';
