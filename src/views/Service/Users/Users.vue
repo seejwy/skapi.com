@@ -203,6 +203,7 @@ function getUsers(refresh = false) {
 
 // get users on created
 getUsers();
+
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
@@ -450,23 +451,124 @@ getUsers();
             }
         }
 }
-
-.table-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 36px;
-    padding: 0 18px;
-    background: #434343;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+.table-outer-wrapper {
+    position: relative;
+    margin-top: 45px;
+    background-color: #434343;
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.4);
-    height: 58px;
+    overflow: hidden;
 
-    svg {
-        color: rgba(255, 255, 255, 0.6);
-        cursor: pointer;
+    .table-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #434343;
+        height: 52px;
+        padding: 0 14px 0 20px;
+
+        svg {
+            cursor: pointer;
+        }
+    }
+
+    .filter {
+        position: absolute;
+        padding: 12px;
+        left: 14px;
+        background: #595959;
+        min-width: 200px;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 4px;
+        z-index: 2;
+
+        .label:not(:last-child) {
+            margin-bottom: 16px;
+        }
+
+        label {
+            cursor: pointer;
+            span {
+                
+                margin-left: 12px;
+            }
+        }
+        
+        sui-input {
+            color: #fff;
+            cursor: pointer;
+        }
+    }
+}
+.table-wrapper {
+    overflow-x: scroll;
+    margin-left: 64px;
+    height: 676px;
+
+    table {
+        min-width: 100%;
+        border-collapse: collapse;
+
+        sui-input {
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 50%;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        thead,
+        tbody {
+            tr,
+            tr .fixed {
+                background-color: #434343;
+
+                td {                
+                    height: 52px;
+                }
+            }
+        }
+
+        thead {
+
+            .actions {
+                cursor: pointer;
+                text-align: right;
+
+                svg {                
+                    margin-left: 4px;
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                &:nth-child(odd),
+                &:nth-child(odd) .fixed {
+                    background: #4a4a4a;
+                }
+            }
+        }
+
+        tr {
+            height: 52px;
+            td {
+                white-space: nowrap;
+                &.fixed {
+                    position: absolute;
+                    margin-left: -64px;
+                    width: 64px;
+                    height: 52px;
+                    text-align: center;
+
+                    & > input {
+                        position: relative;
+                        top: 19px;
+                        transform: translateY(-50%);
+                    }
+                    
+                }
+            }
+        }
     }
 }
 </style>
