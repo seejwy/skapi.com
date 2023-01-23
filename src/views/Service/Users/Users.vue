@@ -29,14 +29,19 @@
 
 .table-outer-wrapper(v-if="serviceUsers")
     .table-actions
-        Icon(@click="showSetting = !showSetting") setting
+        .header-actions--before(v-if="showSetting" @click="showSetting = false")
+        .header-actions(@click="showSetting = true")
+            div.dropdown
+                span Headers
+                Icon down2
+            .filter-wrapper
+                .filter(v-if="showSetting")
+                    .label(v-for="(field, key) in visibleFields")
+                        label
+                            // sui-input no longer clickable when in label
+                            input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
+                            span {{  field.text }}
         Icon(:class="{'animation-rotation': fetchingData}") refresh
-    .filter(v-if="showSetting")
-        .label(v-for="(field, key) in visibleFields")
-            label
-                // sui-input no longer clickable when in label
-                input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
-                span {{  field.text }}
     .table-wrapper
         table
             thead
@@ -184,9 +189,15 @@ getUsers();
     justify-content: space-between;
 
     .actions {
+        flex-shrink: 0;
+
         & > * { 
             display: inline-block;
             margin-left: 16px;
+
+            @media @tablet {
+                margin-left: 0;
+            }
         }
 
         svg {
@@ -212,20 +223,36 @@ getUsers();
         height: 52px;
         padding: 0 14px 0 20px;
 
-        svg {
+        & > * {
             cursor: pointer;
+        }
+
+        .header-actions {
+            &--before {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                z-index: 8;
+            }
+            .dropdown > * {
+                vertical-align: middle;
+            }
         }
     }
 
     .filter {
         position: absolute;
+        z-index: 9;
         padding: 12px;
         left: 14px;
         background: #595959;
         min-width: 200px;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
         border-radius: 4px;
-        z-index: 2;
+        z-index: 9;
+        margin-top: 12px;
 
         .label:not(:last-child) {
             margin-bottom: 16px;
