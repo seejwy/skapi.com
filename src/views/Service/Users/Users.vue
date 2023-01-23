@@ -466,20 +466,36 @@ getUsers();
         height: 52px;
         padding: 0 14px 0 20px;
 
-        svg {
+        & > * {
             cursor: pointer;
+        }
+
+        .header-actions {
+            &--before {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                z-index: 8;
+            }
+            .dropdown > * {
+                vertical-align: middle;
+            }
         }
     }
 
     .filter {
         position: absolute;
+        z-index: 9;
         padding: 12px;
         left: 14px;
         background: #595959;
         min-width: 200px;
         box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
         border-radius: 4px;
-        z-index: 2;
+        z-index: 9;
+        margin-top: 12px;
 
         .label:not(:last-child) {
             margin-bottom: 16px;
