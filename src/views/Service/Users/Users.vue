@@ -26,9 +26,21 @@
             span.hideOnTablet unblock
         sui-button.text-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
             Icon trash
+<<<<<<< HEAD
             span.hideOnTablet delete
 
 .table-outer-wrapper(v-if="groupedUserList?.length")
+=======
+            span block
+        sui-button.text-button(@click="")
+            Icon trash
+            span unblock
+        sui-button.text-button(@click="")
+            Icon trash
+            span delete
+
+.table-outer-wrapper(v-if="serviceUsers")
+>>>>>>> b711ef5 (Remove tracing code)
     .table-actions
         .header-actions--before(v-if="showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
@@ -51,6 +63,7 @@
                         sui-input(type="checkbox")
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
             tbody
+<<<<<<< HEAD
                 tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                     td
                         sui-input(type="checkbox" :value="user.user_id" @change="userSelectionHandler")
@@ -77,6 +90,12 @@
             :class="{active: idx === currentSelectedUsersPage}") {{ i }}
         span.more-page ...
         Icon right
+=======
+                tr(v-for="(user, userIndex) in serviceUsers?.list")
+                    td.fixed
+                        sui-input(type="checkbox")
+                    td(v-for="(key, index) in computedVisibleFields") {{ user['user_id'] || '-' }}
+>>>>>>> b711ef5 (Remove tracing code)
 </template>
 <script setup>
 import { inject, ref, reactive, computed } from 'vue';
