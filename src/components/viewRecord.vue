@@ -301,6 +301,7 @@ const allowReference = computed(() => {
 
 watch(() => props.record, ()=> {
 	indexValueType.value = typeof props.record.index.value;
+	console.log(props.record);
 });
 
 const editRecord = () => {
@@ -391,8 +392,11 @@ const save = async () => {
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
+			console.log("DATA", data.value)
 			data.value.forEach(record => {
+				console.log({record});
 				record.data.forEach(field => {
+					console.log({field})
 					if(field.type === 'json') {
 						form.append(record.key, new Blob([field.data], {
 							type: 'application/json'
@@ -494,7 +498,7 @@ const getDataByTypes = (record) => {
 			if(record[key]?.md5) {
 				files.push(record[key]);
 			} else {
-				json.push(JSON.stringify(record[key]));
+				json.push(record[key]);
 			}
 		}
 	} else if(typeof record === 'object') {
