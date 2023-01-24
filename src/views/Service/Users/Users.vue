@@ -711,35 +711,48 @@ getUsers();
     }
 }
 .table-wrapper {
-    overflow-x: scroll;
-    margin-left: 64px;
-    height: 676px;
+    max-height: calc(52px * 11 + 52px);
+    overflow: auto;
+    border-radius: 8px;
 
     table {
         min-width: 100%;
         border-collapse: collapse;
 
         sui-input {
-            transform: translate(-50%, -50%);
-            position: absolute;
-            top: 50%;
             color: #fff;
             cursor: pointer;
         }
 
         thead,
         tbody {
-            tr,
-            tr .fixed {
+            tr {
                 background-color: #434343;
 
-                td {                
+                td,
+                th {          
+                    padding: 12px;      
                     height: 52px;
+
+                    &:first-child {
+                        padding-left: 20px;
+                        width: 48px;
+                    }
+
+                    sui-input {
+                        font-size: 16px;
+                    }
                 }
             }
         }
 
         thead {
+            th {
+                position: sticky;
+                background-color: #434343;
+                top: 0;
+                text-align: left;
+            }
 
             .actions {
                 cursor: pointer;
@@ -753,9 +766,17 @@ getUsers();
 
         tbody {
             tr {
-                &:nth-child(odd),
-                &:nth-child(odd) .fixed {
+                &:nth-child(odd) {
                     background: #4a4a4a;
+                }
+
+                td {
+                    font-size: 14px;
+
+                    &.icon-td {
+                        width: 48px;
+                        text-align: center;
+                    }
                 }
             }
         }
@@ -764,20 +785,6 @@ getUsers();
             height: 52px;
             td {
                 white-space: nowrap;
-                &.fixed {
-                    position: absolute;
-                    margin-left: -64px;
-                    width: 64px;
-                    height: 52px;
-                    text-align: center;
-
-                    & > input {
-                        position: relative;
-                        top: 19px;
-                        transform: translateY(-50%);
-                    }
-                    
-                }
             }
         }
     }
