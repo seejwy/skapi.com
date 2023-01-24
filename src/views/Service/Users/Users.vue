@@ -17,15 +17,15 @@
             sui-input(type="search" autocomplete="off" :value="searchValue" @input="(e) => searchValue = e.target.value")
     
     .actions
-        sui-button.text-button(@click="")
+        sui-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
+            Icon block
+            span.hideOnTablet block
+        sui-button.text-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
+            Icon unblock
+            span.hideOnTablet unblock
+        sui-button.text-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
             Icon trash
-            span block
-        sui-button.text-button(@click="")
-            Icon trash
-            span unblock
-        sui-button.text-button(@click="")
-            Icon trash
-            span delete
+            span.hideOnTablet delete
 
 .table-outer-wrapper(v-if="serviceUsers")
     .table-actions
