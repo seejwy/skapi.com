@@ -126,7 +126,7 @@ let visibleFields = reactive({
     },
     email: {
         text: 'Email',
-        show: viewport.value === 'desktop' ? true : false,
+        show: false,
     },
     address: {
         text: 'Address',
