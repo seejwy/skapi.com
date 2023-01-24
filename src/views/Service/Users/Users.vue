@@ -90,7 +90,7 @@ let visibleFields = reactive({
     },
     name: {
         text: 'Name',
-        show: true,
+        show: viewport.value === 'desktop' ? true : false,
     },
     block: {
         text: 'Block',
@@ -102,7 +102,7 @@ let visibleFields = reactive({
     },
     email: {
         text: 'Email',
-        show: viewport.value === 'desktop' ? true : false,
+        show: false,
     },
     address: {
         text: 'Address',
