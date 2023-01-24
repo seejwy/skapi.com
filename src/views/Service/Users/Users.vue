@@ -214,6 +214,7 @@ getUsers();
     background-color: #434343;
     border-radius: 8px;
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 
     .table-actions {
         display: flex;
