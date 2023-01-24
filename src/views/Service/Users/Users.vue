@@ -213,7 +213,6 @@ getUsers();
     margin-top: 45px;
     background-color: #434343;
     border-radius: 8px;
-    overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.2);
 
     .table-actions {
@@ -223,6 +222,7 @@ getUsers();
         background: #434343;
         height: 52px;
         padding: 0 14px 0 20px;
+        border-radius: 8px;
 
         & > * {
             cursor: pointer;
