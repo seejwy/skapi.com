@@ -152,13 +152,13 @@ sui-nav#top-nav {
         }
 
         .title {
-            display: flex;
             flex-grow: 1;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 24px;
 
             .back-button {
-                flex-shrink: 0;
                 height: 32px;
                 width: 32px;
                 color: rgba(255, 255, 255, .4);
@@ -172,10 +172,7 @@ sui-nav#top-nav {
                     display: inline;
                     font-weight: 700;
                     user-select: none;
-                    font-size: 24px;
-                    line-height: 1.2;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+                    vertical-align: middle;
                 }
             }
         }
