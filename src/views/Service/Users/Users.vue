@@ -99,14 +99,6 @@ const groupedUserList = computed(() => {
     return groupArray(serviceUsers.value.list, numberOfUsersPerPage, numberOfPagePerBatch);
 });
 let visibleFields = reactive({
-    user_id: {
-        text: 'User ID',
-        show: true,
-    },
-    name: {
-        text: 'Name',
-        show: viewport.value === 'desktop' ? true : false,
-    },
     block: {
         text: 'Block',
         show: viewport.value === 'desktop' ? true : false,
@@ -115,9 +107,17 @@ let visibleFields = reactive({
         text: 'Status',
         show: viewport.value === 'desktop' ? true : false,
     },
+    user_id: {
+        text: 'User ID',
+        show: true,
+    },
+    name: {
+        text: 'Name',
+        show: viewport.value === 'desktop' ? true : false,
+    },
     email: {
         text: 'Email',
-        show: false,
+        show: viewport.value === 'desktop' ? true : false,
     },
     address: {
         text: 'Address',
