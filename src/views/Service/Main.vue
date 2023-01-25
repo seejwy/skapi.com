@@ -45,73 +45,7 @@
             Icon mail
 
 </template>
-<script setup>
-import NavBar from '@/components/navbar.vue';
-import NotExists from '@/views/Main/404.vue';
-import Login from '../Main/Login.vue';
-import Icon from '@/components/Icon.vue';
 
-import { provide, inject, watch, ref } from 'vue';
-import { skapi, state } from '@/main';
-import { useRoute, useRouter } from 'vue-router';
-
-let router = useRouter();
-
-let appStyle = inject('appStyle');
-appStyle.background = '#595959';
-appStyle.color = '#fff';
-
-// sets pageTitle for immediate effect
-// this does not trigger again when nested routes change
-let route = useRoute();
-let serviceId = route.params.service;
-let service = ref(null);
-
-provide('service', service);
-provide('recordTables', ref(null));
-provide('serviceUsers', ref(null));
-provide('fetchingData', ref(false));
-
-let pageTitle = inject('pageTitle');
-pageTitle.value = 'Service';
-
-function getServices(gs) {
-    if (!(gs instanceof Promise)) {
-        return;
-    }
-
-    gs.then(services => {
-        let region = skapi.region_list?.[serviceId.substring(0, 4)];
-        if (!region) {
-            // region does not exists
-            service.value = 404
-            return;
-        }
-
-        for (let s of services[region]) {
-            console.log(s);
-            if (s.service === serviceId) {
-                service.value = s;
-                return s;
-            }
-        }
-
-        // no matching service id
-        service.value = 404;
-    });
-}
-
-getServices(state.getServices);
-
-// watch is for users visiting the page directly
-watch(() => state.getServices, getServices);
-watch(() => state.user, u => {
-    if (!u) {
-        // throw user to login page if not logged in
-        router.replace('/login');
-    }
-});
-</script>
 <style lang="less">
 @import '@/assets/variables.less';
 
@@ -208,3 +142,70 @@ watch(() => state.user, u => {
     }
 }
 </style>
+<script setup>
+import NavBar from '@/components/navbar.vue';
+import NotExists from '@/views/Main/404.vue';
+import Login from '../Main/Login.vue';
+import Icon from '@/components/Icon.vue';
+
+import { provide, inject, watch, ref } from 'vue';
+import { skapi, state } from '@/main';
+import { useRoute, useRouter } from 'vue-router';
+
+let router = useRouter();
+
+let appStyle = inject('appStyle');
+appStyle.background = '#595959';
+appStyle.color = '#fff';
+
+// sets pageTitle for immediate effect
+// this does not trigger again when nested routes change
+let route = useRoute();
+let serviceId = route.params.service;
+let service = ref(null);
+
+provide('service', service);
+provide('recordTables', ref(null));
+provide('serviceUsers', ref(null));
+provide('fetchingData', ref(false));
+
+let pageTitle = inject('pageTitle');
+pageTitle.value = 'Service';
+
+function getServices(gs) {
+    if (!(gs instanceof Promise)) {
+        return;
+    }
+
+    gs.then(services => {
+        let region = skapi.region_list?.[serviceId.substring(0, 4)];
+        if (!region) {
+            // region does not exists
+            service.value = 404
+            return;
+        }
+
+        for (let s of services[region]) {
+            console.log(s);
+            if (s.service === serviceId) {
+                service.value = s;
+                return s;
+            }
+        }
+
+        // no matching service id
+        service.value = 404;
+    });
+}
+
+getServices(state.getServices);
+
+// watch is for users visiting the page directly
+watch(() => state.getServices, getServices);
+watch(() => state.user, u => {
+    if (!u) {
+        // throw user to login page if not logged in
+        router.replace('/login');
+    }
+});
+</script>

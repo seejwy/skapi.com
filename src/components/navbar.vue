@@ -15,63 +15,6 @@ sui-nav#top-nav(auto-hide)
             slot
 
 </template>
-<script setup>
-import { inject, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import Icon from '@/components/Icon.vue';
-
-const props = defineProps(['isParentLevel']);
-
-let pageTitle = inject('pageTitle');
-let navOverlay = ref(null);
-let route = useRoute();
-let router = useRouter();
-let navbarBackDestination = inject('navbarBackDestination');
-
-watch(() => route.name, () => {
-    // always close on route change
-    close();
-});
-
-function toParent() {
-    let p = navbarBackDestination.value;
-    if (p?.from && p?.to && route.name === p.from) {
-        router.push({ name: p.to });
-    }
-    else {
-        let path = route.fullPath.split('/');
-        path.pop();
-        router.push(path.join('/'));
-    }
-}
-
-function close(keepScrollPosition = false) {
-    let scrollY = document.body.style.top;
-    let isFixed = document.body.style.position === 'fixed';
-    if (isFixed) {
-        // revert fixed background
-        document.body.style.position = '';
-        document.body.style.top = '';
-
-        if (keepScrollPosition) {
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
-        }
-    }
-
-    if (navOverlay.value) {
-        navOverlay.value.close();
-    }
-}
-
-function open() {
-    // fix background position when menu is opened
-    navOverlay.value.open(() => {
-        document.body.style.top = `-${window.scrollY}px`;
-        document.body.style.position = 'fixed';
-    });
-}
-
-</script>
 <style lang="less">
 @import '@/assets/variables.less';
 
@@ -179,3 +122,60 @@ sui-nav#top-nav {
     }
 }
 </style>
+<script setup>
+import { inject, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import Icon from '@/components/Icon.vue';
+
+const props = defineProps(['isParentLevel']);
+
+let pageTitle = inject('pageTitle');
+let navOverlay = ref(null);
+let route = useRoute();
+let router = useRouter();
+let navbarBackDestination = inject('navbarBackDestination');
+
+watch(() => route.name, () => {
+    // always close on route change
+    close();
+});
+
+function toParent() {
+    let p = navbarBackDestination.value;
+    if (p?.from && p?.to && route.name === p.from) {
+        router.push({ name: p.to });
+    }
+    else {
+        let path = route.fullPath.split('/');
+        path.pop();
+        router.push(path.join('/'));
+    }
+}
+
+function close(keepScrollPosition = false) {
+    let scrollY = document.body.style.top;
+    let isFixed = document.body.style.position === 'fixed';
+    if (isFixed) {
+        // revert fixed background
+        document.body.style.position = '';
+        document.body.style.top = '';
+
+        if (keepScrollPosition) {
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+    }
+
+    if (navOverlay.value) {
+        navOverlay.value.close();
+    }
+}
+
+function open() {
+    // fix background position when menu is opened
+    navOverlay.value.open(() => {
+        document.body.style.top = `-${window.scrollY}px`;
+        document.body.style.position = 'fixed';
+    });
+}
+
+</script>
