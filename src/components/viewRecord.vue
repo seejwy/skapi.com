@@ -612,7 +612,7 @@ defineExpose({
 		padding: 30px 20px 20px 20px;
 		height: 700px;
 		max-height: calc(100vh - 250px);
-		overflow-y: scroll;
+		overflow-y: auto;
 
 		.grid {
 			display: grid;
