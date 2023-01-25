@@ -558,6 +558,14 @@ getUsers();
                 background-color: #434343;
                 top: 0;
                 text-align: left;
+
+                &.icon-td {
+                    text-align: center;
+                }
+
+                &.user-id {
+                    min-width: 330px;
+                }
             }
 
             .actions {
@@ -582,6 +590,10 @@ getUsers();
                     &.icon-td {
                         width: 48px;
                         text-align: center;
+                    }
+
+                    &:last-child:not(.icon-td) {
+                        width: 100%;
                     }
                 }
             }
