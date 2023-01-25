@@ -607,4 +607,42 @@ getUsers();
         }
     }
 }
+.paginator {
+    margin: 24px auto;
+    text-align: center;
+    color: rgba(255 255 255 / 60%);
+    user-select: none;
+
+    span {
+        padding: 4px 8px;
+        box-sizing: content-box;
+
+        &.page {
+            cursor: pointer;
+
+            &.active {
+                cursor: default;
+                color: #fff;
+                font-weight: bold;
+            }
+        }
+
+        &.more-page {
+            visibility: hidden;
+
+            &.active {
+                cursor: pointer;
+                visibility: visible;
+            }
+        }
+    }
+    svg {
+            color: rgba(255, 255, 255, .15);
+            vertical-align: middle;
+            &.active {
+                cursor: pointer;
+                color: #fff;
+            }
+        }
+}
 </style>
