@@ -27,24 +27,25 @@
     .sidebar
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
 
-        router-link(to="/dashboard")
-            span.material-symbols-outlined storage
-
         router-link(:to="{name: 'service'}")
-            span.material-symbols-outlined settings
+            Icon home
+
+        router-link(to="/")
+            Icon setting
 
         router-link(to='/')
             //(:to="{name: 'users'}") 
-            span.material-symbols-outlined photo_camera_front
+            Icon users
 
         router-link(:to="{name: 'records'}")
-            span.material-symbols-outlined folder_copy
+            Icon folder_open
 
         router-link(to='/')
             //(:to="{name: 'mail'}")
-            span.material-symbols-outlined mail
+            Icon mail
 
 </template>
+
 <style lang="less">
 @import '@/assets/variables.less';
 
@@ -68,6 +69,10 @@
     .sidebar {
         background: var(--primary-color);
 
+        @media @tablet {        
+            box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
+        }
+
         @media @ipad {
             height: unset;
             width: 100%;
@@ -89,6 +94,7 @@
 
         &>* {
             display: inline-block;
+            color: #fff;
         }
 
         & .logo {
@@ -108,19 +114,17 @@
             @media @ipad {
                 width: 36px;
                 height: 36px;
-                border-radius: 4px;
                 margin: 12px 16px;
             }
+            
+            border-radius: 4px;
 
             &.router-link-exact-active,
             &:hover {
                 background: rgba(255, 255, 255, 0.2);
             }
 
-            & span {
-                display: inline-block;
-                font-size: 24px;
-                color: #fff;
+            svg {
                 margin: 6px;
             }
         }
@@ -138,12 +142,12 @@
     }
 }
 </style>
-
-<!-- script below -->
 <script setup>
 import NavBar from '@/components/navbar.vue';
 import NotExists from '@/views/Main/404.vue';
 import Login from '../Main/Login.vue';
+import Icon from '@/components/Icon.vue';
+
 import { provide, inject, watch, ref } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';

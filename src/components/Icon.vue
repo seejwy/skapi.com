@@ -18,5 +18,6 @@ svg {
   fill: currentColor;
   width: 24px;
   height: 24px;
+  vertical-align: middle;
 }
 </style>

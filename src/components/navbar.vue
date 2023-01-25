@@ -2,12 +2,12 @@
 sui-nav#top-nav(auto-hide)
     .nav_align
         .title
-            span.showOnTablet.material-symbols-outlined.clickable.backbutton(v-if='!props.isParentLevel' style='margin-left: -24px;padding-left: 24px;' @click='toParent') arrow_back_ios
-            span.titleText.iconText(:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null" v-html="pageTitle || ''")
+            Icon.showOnTablet.clickable.back-button(v-if='!props.isParentLevel' @click="toParent") left
+            span.title-text(:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null" v-html="pageTitle || ''")
         .menu
             .hideOnTablet
                 slot
-            .material-symbols-outlined.more-button.showOnTablet.clickable(style='margin-right: -24px;padding-right: 24px;' @click='open') more_horiz
+            Icon.showOnTablet.clickable(style="height: 28px; width: 28px;" @click='open') menu_horizontal
 
     sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' style='background-color: rgba(31, 31, 31, .6); color:white;' position="right")
         // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
@@ -61,6 +61,10 @@ sui-nav#top-nav {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
     }
 
+    @media @phone {
+        padding: 0 8px;
+    }
+
     &>.nav_align {
         display: flex;
         max-width: 1000px;
@@ -88,42 +92,41 @@ sui-nav#top-nav {
                     }
                 }
             }
-
-            .more-button {
-                font-size: 32px;
-            }
         }
 
         .title {
             flex-grow: 1;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 24px;
 
+            .back-button {
+                height: 32px;
+                width: 32px;
+                color: rgba(255, 255, 255, .4);
+                margin-right: 4px;
+            }
+            
             span {
                 white-space: nowrap;
 
-                &.backbutton {
-                    display: inline;
-                    font-size: 24px;
-                    color: rgba(255, 255, 255, .4);
-                    margin-right: 4px;
-                }
-
-                &.titleText {
+                &.title-text {
                     display: inline;
                     font-weight: 700;
                     user-select: none;
-                    font-size: 24px;
+                    vertical-align: middle;
                 }
             }
         }
     }
 }
 </style>
-
 <script setup>
 import { inject, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import Icon from '@/components/Icon.vue';
+
 const props = defineProps(['isParentLevel']);
 
 let pageTitle = inject('pageTitle');

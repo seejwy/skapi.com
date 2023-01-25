@@ -4,8 +4,8 @@ form(
     :action="'/dashboard/' + serviceId + '/records/search'"
     @submit.prevent="submitSearch")
     // navbar for mobile search
-    .mobileSearchNav(v-if='viewport === "mobile"')
-        span.showOnTablet.material-symbols-outlined.clickable.backbutton(@click='router.push({name: "records"})') arrow_back_ios
+    .mobile-search-nav(v-if='viewport === "mobile"')
+        Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'records'})") left
         sui-input(
             type="search"
             :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -16,7 +16,7 @@ form(
             @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
             @mounted="focusMe"
             autocomplete="off")
-        span.material-symbols-outlined.placeholder-icon(v-if="!searchForm.value") search
+        Icon.showOnTablet.placeholder-icon(v-if="!searchForm.value") search
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='searchForm.isAdvanced = false')
@@ -33,17 +33,17 @@ form(
                     option(value="record") Record ID
 
             .input-field
-                span.material-symbols-outlined.placeholder-icon(v-if="!searchForm.value") search
+                Icon.placeholder-icon(v-if="!searchForm.value" style="margin-left: 12px;") search
                 sui-input(
                     type="search"
                     :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
-                    :placeholder="searchForm.type === 'table' ? 'Table name' : searchForm.type === 'user' ? 'User id' : 'Record id'"
+                    placeholder="Search"
                     :required='searchForm.isAdvanced ? "true" : null'
                     :value="searchForm.value"
                     @input="e=>{ searchForm.value = e.target.value; }"
                     @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
                     autocomplete="off")
-                span.material-symbols-outlined.clickable.optionButton(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") tune
+                Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") filter
 
         .mobileSearchType(v-else)
             sui-select(
@@ -54,16 +54,13 @@ form(
                 option(value="user") User ID
                 option(value="record") Record ID
 
-        .showOnTablet(style="display:block;")
-            br
-            br
-
-        .toggle-advancedForm.showOnTablet(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
+        .toggle-advanced-form.showOnTablet(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
             hr
             span(:class="{'close': searchForm.isAdvanced }") Advanced Search
+            Icon.showOnTablet down2
 
         // advanced search
-        .advancedForm(v-if='searchForm.isAdvanced && searchForm.type !== "record"')
+        .advanced-form(v-if='searchForm.isAdvanced && searchForm.type !== "record"')
             .formLabel Access Group
             .form
                 .labelRadio.clickable
@@ -191,7 +188,7 @@ form(
 
             div(style='text-align:center;')
                 sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()") Reset
-                sui-input(style='margin: 8px .5em;width: 6em;' type='submit') Search
+                sui-input(style='margin: 8px .5em;width: 6em;' type='submit' value="Search")
 
 </template>
 <!-- script below -->
@@ -200,6 +197,8 @@ import { inject, reactive, ref, watch } from 'vue';
 import { skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import NavBar from '@/components/navbar.vue';
+import Icon from '@/components/Icon.vue';
+
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -424,7 +423,7 @@ form {
         }
     }
 
-    .mobileSearchNav {
+    .mobile-search-nav {
         position: sticky;
         top: 0;
         height: 60px;
@@ -434,6 +433,10 @@ form {
         background-color: #333;
         z-index: 1;
         padding-left: 24px;
+
+        @media @phone {
+            padding: 0 8px;
+        }
 
         &::after {
             display: block;
@@ -447,12 +450,11 @@ form {
             box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
         }
 
-        .backbutton {
+        .back-button {
             display: inline;
-            font-size: 24px;
+            height: 32px;
+            width: 32px;
             color: rgba(255, 255, 255, .4);
-            margin-left: -24px;
-            padding-left: 24px;
         }
 
         sui-input {
@@ -505,45 +507,26 @@ form {
         width: 6em;
     }
 
-    .toggle-advancedForm {
+    .toggle-advanced-form {
         user-select: none;
         display: flex;
-        gap: 16px;
+        align-items: center;
         color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
         padding: 8px;
 
-        & hr {
+        hr {
             flex-grow: 1;
             border: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            margin-right: 16px;
         }
-
-        &>span {
-            &::after {
-                content: '';
-                display: inline-block;
-                width: 0;
-                height: 0;
-                vertical-align: middle;
-                margin-left: 16px;
-            }
-
-            &:not(.close)::after {
-                border-top: 5px solid rgba(255, 255, 255, 0.6);
-                border-left: 6px solid transparent;
-                border-right: 6px solid transparent;
-            }
-
-            &.close::after {
-                border-bottom: 5px solid rgba(255, 255, 255, 0.6);
-                border-left: 6px solid transparent;
-                border-right: 6px solid transparent;
-            }
+        span {
+            margin-right: 12px;
         }
     }
 
-    .advancedForm {
+    .advanced-form {
         position: absolute;
         margin-top: 8px;
         border-radius: 5px;
@@ -606,5 +589,15 @@ form {
             }
         }
     }
+}
+.placeholder-icon {
+    opacity: 0.6;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+.option-button {
+    flex-shrink: 0;
+    margin-right: 12px;
+    color: rgba(255, 255, 255, .6);
 }
 </style>
