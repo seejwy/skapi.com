@@ -65,17 +65,31 @@
                         template(v-else) {{ user[key] || '-' }}
                 //- Below code needs to change to page list not full users list
                 template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                    tr(v-for="num in 10 - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                    tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
                         td                  
                         td(v-for="(key, index) in computedVisibleFields")
     .paginator
-        Icon left
-        span.more-page ...
+        Icon(
+            :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
+            @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
+            ) left
+        span.more-page(        
+            :class="{active: currentSelectedUsersBatch}"
+            @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
+            ) ...
         span.page(
             v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
-            :class="{active: idx === currentSelectedUsersPage}") {{ i }}
-        span.more-page ...
-        Icon right
+            :class="{active: idx === currentSelectedUsersPage}"
+            @click="currentSelectedUsersPage = idx"
+            ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
+        span.more-page(
+            :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
+            @click="getMoreUsers") ...
+            
+        Icon(
+            :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
+            @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
+            ) right
 </template>
 <script setup>
 import { inject, ref, reactive, computed } from 'vue';
@@ -95,7 +109,7 @@ let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const currentSelectedUsersBatch = ref(0);
-const currentSelectedUsersPage = ref(2);
+const currentSelectedUsersPage = ref(0);
 
 
 const groupedUserList = computed(() => {
@@ -106,6 +120,7 @@ const groupedUserList = computed(() => {
 
     return groupArray(serviceUsers.value.list, numberOfUsersPerPage, numberOfPagePerBatch);
 });
+
 let visibleFields = reactive({
     block: {
         text: 'Block',
@@ -163,6 +178,46 @@ let fetchingData = inject('fetchingData');
 // data
 let serviceUsers = inject('serviceUsers');
 let searchResult = inject('searchResult');
+
+let getMoreUsersQueue = null;
+async function getMoreUsers() {
+    fetchingData.value = true;
+
+    if (groupedUserList.value.length - 1 > currentSelectedUsersBatch.value) {
+        currentSelectedUsersBatch.value += 1;
+        currentSelectedUsersPage.value = 0;
+        fetchingData.value = false;
+        return;
+    }
+
+    if (getMoreUsersQueue instanceof Promise) {
+        return;
+    }
+
+
+    getMoreUsersQueue = skapi.getUsers(
+        {
+            service: serviceId,
+            searchFor: 'timestamp',
+            condition: '>',
+            value: 0
+        }, { limit: fetchLimit }).catch(err => {
+            fetchingData.value = false;
+            throw err;
+        });
+
+    let result = await getMoreUsersQueue;
+    serviceUsers.value.endOfList = result.endOfList;
+
+    result.list.map(user => {
+        serviceUsers.value.list.push(user);
+    });
+
+    getMoreUsersQueue = null;
+    currentSelectedUsersBatch.value++;
+    currentSelectedUsersPage.value = 0;
+    fetchingData.value = false;
+}
 
 function getUsers(refresh = false) {
     // initial table fetch
