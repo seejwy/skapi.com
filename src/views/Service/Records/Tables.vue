@@ -79,7 +79,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                 .paginator.hideOnTablet
                     Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
-                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
+                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTablePage) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
                     span.morePage(
                         :class="{active: currentSelectedTableBatch}"
                         @click="()=>{ if(currentSelectedTableBatch > 0) {currentSelectedTableBatch--; currentSelectedTablePage = numberOfPagePerBatch - 1} }") ...
