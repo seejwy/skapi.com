@@ -27,7 +27,7 @@
             Icon trash
             span.hideOnTablet delete
 
-.table-outer-wrapper(v-if="serviceUsers")
+.table-outer-wrapper(v-if="groupedUserList?.length")
     .table-actions
         .header-actions--before(v-if="showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
@@ -48,44 +48,56 @@
                 tr
                     th
                         sui-input(type="checkbox")
-                    th(v-for="key in computedVisibleFields") {{ visibleFields[key].text }}
+                    th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
             tbody
-                tr(v-for="(user, userIndex) in serviceUsers?.list")
+                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                     td
-                        sui-input(type="checkbox")
-                    td(v-for="(key, index) in computedVisibleFields") {{ user['user_id'] || '-' }}
-                tr(v-for="num in 10 - serviceUsers?.list.length")
-                    td                  
-                    td(v-for="(key, index) in computedVisibleFields")
+                        input(type="checkbox")
+                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                        //To add actual conditions to determine which icon to show
+                        template(v-if="key === 'block'")
+                            template(v-if="user[key]")                        
+                                Icon block
+                            template(v-else)
+                                Icon unblock
+                        template(v-else-if="key === 'status'")                  
+                            Icon check_circle
+                        template(v-else) {{ user[key] || '-' }}
+                //- Below code needs to change to page list not full users list
+                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                    tr(v-for="num in 10 - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                        td                  
+                        td(v-for="(key, index) in computedVisibleFields")
 </template>
 <script setup>
 import { inject, ref, reactive, computed } from 'vue';
-import { skapi } from '@/main';
+import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 
-// import {Skapi} from 'skapi-js';
-
-// let skapi = new Skapi('ap22TP6h6dSLezsRQO8T', '5c7798b2-dfee-43a6-aef9-d8c508238193');
-
-// (async () => {
-//     let x = await skapi.signup({
-//         email: 'jinyoon+user3@broadwayinc.com',
-//         password: 'Bwq14321!!'
-//     }, {login: true});
-//     // let x = await skapi.login({
-//     //     email: 'jinyoon+user3@broadwayinc.com',
-//     //     password: 'Bwq14321!!'
-//     // })
-//     console.log({x});
-// })();
 const viewport = inject('viewport');
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
 let searchValue = ref('');
 
+let fetchLimit = 50;
+let numberOfUsersPerPage = 10;
+let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
+
+const currentSelectedUsersBatch = ref(0);
+const currentSelectedUsersPage = ref(2);
+
+
+const groupedUserList = computed(() => {
+    if (!serviceUsers.value || !serviceUsers.value.list.length) {
+        currentSelectedUsersBatch.value = 0;
+        return null;
+    }
+
+    return groupArray(serviceUsers.value.list, numberOfUsersPerPage, numberOfPagePerBatch);
+});
 let visibleFields = reactive({
     user_id: {
         text: 'User ID',
@@ -136,7 +148,6 @@ let fetchingData = inject('fetchingData');
 let serviceUsers = inject('serviceUsers');
 let searchResult = inject('searchResult');
 
-let fetchLimit = 50;
 function getUsers(refresh = false) {
     // initial table fetch
 
@@ -318,6 +329,14 @@ getUsers();
                 background-color: #434343;
                 top: 0;
                 text-align: left;
+
+                &.icon-td {
+                    text-align: center;
+                }
+
+                &.user-id {
+                    min-width: 330px;
+                }
             }
 
             .actions {
@@ -342,6 +361,10 @@ getUsers();
                     &.icon-td {
                         width: 48px;
                         text-align: center;
+                    }
+
+                    &:last-child:not(.icon-td) {
+                        width: 100%;
                     }
                 }
             }
