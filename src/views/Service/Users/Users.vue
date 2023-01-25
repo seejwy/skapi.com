@@ -13,8 +13,9 @@
                 option(value="name") Name
 
         .input-field
-            span.material-symbols-outlined.placeholder-icon(v-if="!searchValue") search
-            sui-input(type="search" autocomplete="off" :value="searchValue" @input="(e) => searchValue = e.target.value")
+            .icon(v-if="!searchValue")
+                Icon search
+            sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value")
     
     .actions
         sui-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
@@ -236,6 +237,24 @@ getUsers();
             margin-right: 4px;
         }
 
+    }
+
+    .input-field {
+        margin-left: 12px;
+
+        .icon {
+            padding-right: 12px;
+            svg {
+                color: rgba(255, 255, 255, 0.4);
+            }
+        }
+        sui-input {
+            padding: 0;
+            
+            input::placeholder {
+                color: rgba(255, 255, 255, .4);
+            }
+        }
     }
 }
 .table-outer-wrapper {
