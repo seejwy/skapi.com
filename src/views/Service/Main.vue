@@ -2,7 +2,7 @@
 .servicePageShell
     .sideScreen
         NavBar(v-if="pageTitle" style='background-color: #505050;z-index: 2;')
-            ul.iconText
+            ul.inline-vertical-middle
                 li
                     router-link(to="/" tag="li") Documentation
 

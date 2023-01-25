@@ -23,7 +23,7 @@
             .title
                 .material-symbols-outlined dns
                 | &nbsp;
-                h3.iconText Database
+                h3.inline-vertical-middle Database
             p.
                 Auto indexed scalable database.#[br]
                 Skapi's database combines the best of both 
@@ -32,7 +32,7 @@
             .title
                 .material-symbols-outlined manage_accounts
                 | &nbsp;
-                h3.iconText Authentication
+                h3.inline-vertical-middle Authentication
             p.
                 From general user login features to complex verifications ,#[br]
                 Skapi provides the simplest way to set up authentication for your web services.
@@ -40,7 +40,7 @@
             .title
                 .material-symbols-outlined sync_alt
                 | &nbsp;
-                h3.iconText HTML Friendly
+                h3.inline-vertical-middle HTML Friendly
             p.
                 Compatible on both vanilla HTML projects and SPA frameworks.#[br]
                 Skapi is focused on getting the basics right without any additional setups or installations.
@@ -48,7 +48,7 @@
             .title
                 .material-symbols-outlined exit_to_app
                 | &nbsp;
-                h3.iconText Cloud storage
+                h3.inline-vertical-middle Cloud storage
             p.
                 Highly accessible cloud storage.#[br]
                 Intergrated with Skapi's database,#[br]
@@ -57,7 +57,7 @@
             .title
                 .material-symbols-outlined mark_as_unread
                 | &nbsp;
-                h3.iconText E-Mail Service
+                h3.inline-vertical-middle E-Mail Service
             p.
                 Skapi's e-mail endpoint addresses makes sending newsletters and setting up welcome e-mails easier.
         div
