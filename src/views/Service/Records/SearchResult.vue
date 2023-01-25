@@ -16,10 +16,10 @@ sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color
 .record-container#data-container
     .header.hideOnTablet
         span.not-clickable(v-html="searchTitle")
-        span.material-symbols-outlined.not-clickable.animation-rotation(style='opacity:0.6;' v-if="fetchingData") cached
+        Icon.not-clickable.animation-rotation(style='opacity:0.6;' v-if="fetchingData") refresh
         .clickable(v-else @click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'records'})}")
             span(style="vertical-align:middle;") Clear
-            span.material-symbols-outlined close
+            Icon X2
 
     .searchPoints.hideOnTablet(v-if="route.query?.access_group")
         span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
@@ -73,20 +73,19 @@ sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color
                         // when v-for by number, it starts with 1
                         .records(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]" style="cursor:pointer;" @click="()=>{recordToOpen=r;openRecord.open();}")
                             div
-                                span.label USER: 
-                                span {{ r.user_id }}
-                            div
-                                span.label RECORD: 
+                                span.label RECORD:
                                 span {{ r.record_id }}
+                            div
+                                span.label USER:
+                                span {{ r.user_id }}
                             div
                                 span.label UPLOADED: 
                                 span {{ dateFormat(r.uploaded) }}
 
             .paginator.hideOnTablet
-                span.material-symbols-outlined.arrow(
-                    style="transform: rotate(180deg)"
+                Icon.arrow(
                     :class="{active: currentSelectedRecordBatch || currentSelectedRecordPage}"
-                    @click="()=>{ if(currentSelectedRecordPage) currentSelectedRecordPage--; else { currentSelectedRecordPage = numberOfPagePerBatch - 1; currentSelectedRecordBatch--; } }") arrow_forward_ios
+                    @click="()=>{ if(currentSelectedRecordPage) currentSelectedRecordPage--; else { currentSelectedRecordPage = numberOfPagePerBatch - 1; currentSelectedRecordBatch--; } }") left
                 span.morePage(
                     :class="{active: currentSelectedRecordBatch}"
                     @click="()=>{ if(currentSelectedRecordBatch > 0) {currentSelectedRecordBatch--; currentSelectedRecordPage = numberOfPagePerBatch - 1} }") ...
@@ -99,9 +98,10 @@ sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color
                 span.morePage(
                     :class="{active: !searchResult.endOfList || groupedRecordList.length - 1 > currentSelectedRecordBatch }"
                     @click="fetchMoreRecords") ...
-                span.material-symbols-outlined.arrow(
+                    
+                Icon.arrow(
                     :class="{active: currentSelectedRecordPage < groupedRecordList[currentSelectedRecordBatch].length - 1 || !searchResult.endOfList && currentSelectedRecordPage === groupedRecordList[currentSelectedRecordBatch].length - 1 }"
-                    @click="()=>{ if(currentSelectedRecordPage < groupedRecordList[currentSelectedRecordBatch].length - 1 ) currentSelectedRecordPage++; else if(!searchResult.endOfList && currentSelectedRecordPage === groupedRecordList[currentSelectedRecordBatch].length - 1) fetchMoreRecords() }") arrow_forward_ios
+                    @click="()=>{ if(currentSelectedRecordPage < groupedRecordList[currentSelectedRecordBatch].length - 1 ) currentSelectedRecordPage++; else if(!searchResult.endOfList && currentSelectedRecordPage === groupedRecordList[currentSelectedRecordBatch].length - 1) fetchMoreRecords() }") right
 
 </template>
 <!-- script below -->
@@ -111,6 +111,8 @@ import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
+import Icon from '@/components/Icon.vue';
+
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -265,8 +267,9 @@ async function fetchMoreRecords() {
         }
     }
 
-    .material-symbols-outlined {
+    svg {
         color: white;
+        margin-left: 4px;
     }
 
     background-color: #434343;
@@ -295,7 +298,6 @@ async function fetchMoreRecords() {
                 border-radius: 0 !important;
                 padding-right: 16px !important;
                 padding-left: 16px !important;
-                display: block !important;
 
                 div {
                     &:not(:last-child) {
@@ -341,7 +343,7 @@ async function fetchMoreRecords() {
 
     .header {
         padding: 0 16px;
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 0.6);
         display: flex;
         align-items: center;
         flex-wrap: wrap;
@@ -363,8 +365,13 @@ async function fetchMoreRecords() {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            flex-direction: column;
             font-size: 14px;
             padding: 16px 20px;
+
+            @media screen and (min-width: 945px) {
+                flex-direction: row;
+            }
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -384,7 +391,7 @@ async function fetchMoreRecords() {
                 }
 
                 span {
-                    font-family: monospace;
+                    font-family: Courier;
                     display: inline-block;
 
                     &.label {
@@ -440,15 +447,6 @@ async function fetchMoreRecords() {
                 }
             }
 
-            &.arrow {
-                color: rgba(255, 255, 255, .15);
-
-                &.active {
-                    cursor: pointer;
-                    color: #fff;
-                }
-            }
-
             &.morePage {
                 visibility: hidden;
 
@@ -456,6 +454,15 @@ async function fetchMoreRecords() {
                     cursor: pointer;
                     visibility: visible;
                 }
+            }
+        }
+
+        .arrow {
+            color: rgba(255, 255, 255, .15);
+
+            &.active {
+                cursor: pointer;
+                color: #fff;
             }
         }
     }

@@ -13,12 +13,12 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 .hideOnTablet(style="clear:both;")
 
 .table-container#data-container
-    .header.labelHead
+    .header.label-head
         span.not-clickable Table name
         div.not-clickable
             span Size
             span # of records
-        span.material-symbols-outlined.clickable.hideOnTablet(:class="{'animation-rotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(true); }") cached
+        Icon.clickable.hideOnTablet(:class="{'animation-rotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(true); }") refresh
 
     // skeleton(mobile)
     .tableHead.animation-skeleton.showOnTablet(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
@@ -26,8 +26,8 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
     // table list
     template(v-else)
-        sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
-            ViewRecord(:record='recordToOpen' @close="openRecord.close()")
+        sui-overlay(ref='openRecord' @click='viewRecord.close' style="background-color:rgba(0 0 0 / 60%)")
+            ViewRecord(ref="viewRecord" :record='recordToOpen' @close="openRecord.close()")
 
         .noTables(v-if='!recordTables.list.length')
             div
@@ -40,7 +40,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                 template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1].length)")
                     // when v-for by number, it starts with 1
                     .tableWrapper(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
-                        .tableHead.labelHead.clickable(@click='()=>{viewRecordList(t)}')
+                        .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
                             span {{ t.table }}
                             div
                                 span {{getSize(t.size)}}
@@ -48,11 +48,12 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
                             template(v-if='t.records')
                                 template(v-if="viewport === 'desktop'")
-                                    span.material-symbols-outlined.clickable(v-if="!t.opened") add_circle
-                                    span.material-symbols-outlined.clickable(v-else) remove_circle
-                                span.material-symbols-outlined.clickable(style='opacity:0.4;' v-else) arrow_forward_ios
-
-                            span.material-symbols-outlined.animation-rotation(v-else) cached
+                                    Icon.clickable(v-if="!t.opened") plus
+                                    Icon.clickable(v-else) minus
+                                
+                                Icon.clickable(v-else style="color: rgba(255, 255, 255, .6)") right
+                            
+                            Icon.animation-rotation(v-else) refresh
 
                         div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t)")
                             .noRecords(v-if='!t.records.list.length')
@@ -63,23 +64,22 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
                             .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>{recordToOpen = r; openRecord.open();}")
                                 div
-                                    span.labelHead RECORD: 
+                                    span.label-head RECORD:
                                     span {{ r.record_id }}
                                 div
-                                    span.labelHead UPLOADED: 
-                                    span {{ dateFormat(r.uploaded) }}
-                                div
-                                    span.labelHead USER: 
+                                    span.label-head USER:
                                     span {{ r.user_id }}
+                                div
+                                    span.label-head UPLOADED:
+                                    span {{ dateFormat(r.uploaded) }}
 
-                            .loadMore(v-if="!t.records.endOfList")
-                                span.material-symbols-outlined.animation-rotation cached
+                            .load-more(v-if="!t.records.endOfList")
+                                Icon.animation-rotation refresh
 
                 .paginator.hideOnTablet
-                    span.material-symbols-outlined.arrow(
-                        style="transform: rotate(180deg)"
+                    Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
-                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTablePage) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") arrow_forward_ios
+                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTablePage) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
                     span.morePage(
                         :class="{active: currentSelectedTableBatch}"
                         @click="()=>{ if(currentSelectedTableBatch > 0) {currentSelectedTableBatch--; currentSelectedTablePage = numberOfPagePerBatch - 1} }") ...
@@ -92,20 +92,20 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                     span.morePage(
                         :class="{active: !recordTables.endOfList || groupedTableList.length - 1 > currentSelectedTableBatch }"
                         @click="getMoreTables") ...
-                    span.material-symbols-outlined.arrow(
+                    Icon.arrow(
                         :class="{active: currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 || !recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1 }"
-                        @click="()=>{ if(currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 ) currentSelectedTablePage++; else if(!recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1) getMoreTables() }") arrow_forward_ios
-
+                        @click="()=>{ if(currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 ) currentSelectedTablePage++; else if(!recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1) getMoreTables() }") right
+                    
 .page-action.showOnTablet
     sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen" @blur="isFabOpen = false")
-        span.material-symbols-outlined more_vert
+        Icon menu_vertical
 
     Transition
         div(v-if="isFabOpen")
             sui-button.fab(@click="router.push({name: 'mobileSearch'})")
-                span.material-symbols-outlined search
+                Icon search
             sui-button.fab
-                span.material-symbols-outlined add
+                Icon plus2
 </template>
 <!-- script below -->
 <script setup>
@@ -114,8 +114,11 @@ import { skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
+import Icon from '@/components/Icon.vue';
+
 let openRecord = ref(null);
 let recordToOpen = ref(null);
+const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -398,7 +401,7 @@ watch(currentSelectedTableBatch, n => {
         border: none;
     }
 
-    .material-symbols-outlined {
+    svg {
         color: white;
     }
 
@@ -417,9 +420,14 @@ watch(currentSelectedTableBatch, n => {
         .records {
             display: flex;
             flex-wrap: wrap;
+            flex-direction: column;
             justify-content: space-between;
             font-size: 14px;
             padding: 16px 20px;
+
+            @media screen and (min-width: 945px) {
+                flex-direction: row;
+            }
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -439,24 +447,24 @@ watch(currentSelectedTableBatch, n => {
                 }
 
                 span {
-                    font-family: monospace;
+                    font-family: Courier;
 
-                    &.labelHead {
+                    &.label-head {
                         color: rgba(255, 255, 255, 0.6);
                     }
                 }
             }
         }
 
-        .loadMore {
+        .load-more {
             text-align: center;
             padding: 8px;
         }
     }
 
 
-    .labelHead {
-        &>span:not(.material-symbols-outlined) {
+    .label-head {
+        & > span {
             display: inline-block;
             text-align: left;
             max-width: 50%;
@@ -471,11 +479,11 @@ watch(currentSelectedTableBatch, n => {
             }
         }
 
-        &>div {
+        & > div {
             position: relative;
             min-width: calc(50% - 24px);
 
-            &>span {
+            & > span {
                 display: inline-block;
                 width: 50%;
                 white-space: nowrap;
@@ -553,15 +561,6 @@ watch(currentSelectedTableBatch, n => {
                 }
             }
 
-            &.arrow {
-                color: rgba(255, 255, 255, .15);
-
-                &.active {
-                    cursor: pointer;
-                    color: #fff;
-                }
-            }
-
             &.morePage {
                 visibility: hidden;
 
@@ -569,6 +568,14 @@ watch(currentSelectedTableBatch, n => {
                     cursor: pointer;
                     visibility: visible;
                 }
+            }
+        }
+        .arrow {
+            color: rgba(255, 255, 255, .15);
+
+            &.active {
+                cursor: pointer;
+                color: #fff;
             }
         }
     }
