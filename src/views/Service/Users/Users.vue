@@ -52,7 +52,7 @@
             tbody
                 tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                     td
-                        input(type="checkbox")
+                        input(type="checkbox" :value="user.user_id" @change="userSelectionHandler")
                     td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
                         //To add actual conditions to determine which icon to show
                         template(v-if="key === 'block'")
@@ -137,6 +137,14 @@ let showSetting = ref(false);
 const computedVisibleFields = computed(() => {
     return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
 });
+const selectedUsers = ref([]);
+const userSelectionHandler = (e) => {
+    if(e.target.checked) {
+        selectedUsers.value.push(e.target.value);
+    } else {
+        selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
+    }
+}
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
