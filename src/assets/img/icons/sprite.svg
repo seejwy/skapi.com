@@ -224,14 +224,14 @@
 				18.45,7.22 12,13.67 			"/>
 </symbol>
 <symbol id="down2" viewBox="0 0 24 24">
-<polygon points="12,16 18,8 6,8 			"/> 
+	<polygon points="12,17.33 17,10.67 7,10.67             "/>
 </symbol>
 <symbol id="up" viewBox="0 0 24 24">
 <polygon points="18.45,16.78 20,15.22 13.55,8.78 13.55,8.78 12,7.22 12,7.22 12,7.22 10.45,8.78 10.45,8.78 4,15.22 5.55,16.78 
 				12,10.33 			"/>
 </symbol>
 <symbol id="up2" viewBox="0 0 24 24">
-		<polygon points="12,8 6,16 18,16 			"/>
+	<polygon points="12,8.67 7,15.33 17,15.33"/>
 </symbol>
 <symbol id="arrow_left" viewBox="0 0 24 24">
 	<path d="M12,20l-8-8l8-8l1.37,1.35l-5.64,5.67H20v1.96H7.73l5.64,5.64L12,20z"/>
