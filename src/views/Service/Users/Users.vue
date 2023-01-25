@@ -68,6 +68,14 @@
                     tr(v-for="num in 10 - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
                         td                  
                         td(v-for="(key, index) in computedVisibleFields")
+    .paginator
+        Icon left
+        span.more-page ...
+        span.page(
+            v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
+            :class="{active: idx === currentSelectedUsersPage}") {{ i }}
+        span.more-page ...
+        Icon right
 </template>
 <script setup>
 import { inject, ref, reactive, computed } from 'vue';
@@ -385,5 +393,43 @@ getUsers();
             }
         }
     }
+}
+.paginator {
+    margin: 24px auto;
+    text-align: center;
+    color: rgba(255 255 255 / 60%);
+    user-select: none;
+
+    span {
+        padding: 4px 8px;
+        box-sizing: content-box;
+
+        &.page {
+            cursor: pointer;
+
+            &.active {
+                cursor: default;
+                color: #fff;
+                font-weight: bold;
+            }
+        }
+
+        &.more-page {
+            visibility: hidden;
+
+            &.active {
+                cursor: pointer;
+                visibility: visible;
+            }
+        }
+    }
+    svg {
+            color: rgba(255, 255, 255, .15);
+            vertical-align: middle;
+            &.active {
+                cursor: pointer;
+                color: #fff;
+            }
+        }
 }
 </style>
