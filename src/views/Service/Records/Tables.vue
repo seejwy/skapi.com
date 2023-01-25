@@ -50,9 +50,9 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                                 template(v-if="viewport === 'desktop'")
                                     Icon.clickable(v-if="!t.opened") plus
                                     Icon.clickable(v-else) minus
-                                
+
                                 Icon.clickable(v-else style="color: rgba(255, 255, 255, .6)") right
-                            
+
                             Icon.animation-rotation(v-else) refresh
 
                         div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t)")
@@ -79,7 +79,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                 .paginator.hideOnTablet
                     Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
-                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTablePage) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
+                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTableBatch) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
                     span.morePage(
                         :class="{active: currentSelectedTableBatch}"
                         @click="()=>{ if(currentSelectedTableBatch > 0) {currentSelectedTableBatch--; currentSelectedTablePage = numberOfPagePerBatch - 1} }") ...
@@ -95,7 +95,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                     Icon.arrow(
                         :class="{active: currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 || !recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1 }"
                         @click="()=>{ if(currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 ) currentSelectedTablePage++; else if(!recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1) getMoreTables() }") right
-                    
+
 .page-action.showOnTablet
     sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen" @blur="isFabOpen = false")
         Icon menu_vertical
@@ -201,6 +201,7 @@ async function getMoreTables() {
     currentSelectedTablePage.value = 0;
 
     fetchingData.value = false;
+    getMoreTablesQueue = null;
 }
 
 function getTables(refresh = false) {
@@ -464,7 +465,7 @@ watch(currentSelectedTableBatch, n => {
 
 
     .label-head {
-        & > span {
+        &>span {
             display: inline-block;
             text-align: left;
             max-width: 50%;
@@ -479,11 +480,11 @@ watch(currentSelectedTableBatch, n => {
             }
         }
 
-        & > div {
+        &>div {
             position: relative;
             min-width: calc(50% - 24px);
 
-            & > span {
+            &>span {
                 display: inline-block;
                 width: 50%;
                 white-space: nowrap;
@@ -570,6 +571,7 @@ watch(currentSelectedTableBatch, n => {
                 }
             }
         }
+
         .arrow {
             color: rgba(255, 255, 255, .15);
 
