@@ -39,8 +39,7 @@
                 .filter(v-if="showSetting")
                     .label(v-for="(field, key) in visibleFields")
                         label
-                            // sui-input no longer clickable when in label
-                            input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
+                            sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
                             span {{  field.text }}
         Icon(:class="{'animation-rotation': fetchingData}") refresh
     .table-wrapper
