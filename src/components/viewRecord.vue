@@ -226,7 +226,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									span
 										.filename {{ file.name || file.filename }}
 										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon(@click="record.data.splice(index, 1)") X
+									Icon.remove(@click="record.data.splice(index, 1)") X
 
 							sui-input.data-input-field(v-else-if="record.type === 'json'" placeholder="Key Value" :value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
 							
@@ -705,7 +705,10 @@ defineExpose({
 					svg {
 						color: rgba(255, 255, 255, 0.6);
 						align-self: center;
-						cursor: pointer;
+
+						&.remove {
+							cursor: pointer;
+						}
 					}
 				}
 
