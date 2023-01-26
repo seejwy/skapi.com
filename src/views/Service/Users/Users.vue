@@ -712,6 +712,13 @@ getUsers();
         sui-input {
             color: #fff;
             cursor: pointer;
+
+            &[disabled] {
+                &,
+                & + span {
+                    color: rgba(255, 255, 255, 0.6);
+                }
+            }
         }
     }
 }
