@@ -126,6 +126,7 @@
                             template(v-else) {{ user[key] || '-' }}
                         td(v-if="computedVisibleFields.length <= 2")
         Icon(:class="{'animation-rotation': fetchingData}") refresh
+        Icon(:class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
     template(v-if="groupedUserList?.length")
         .table-wrapper
             table
