@@ -100,6 +100,56 @@
             :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
             ) right
+        Icon(:class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
+    template(v-if="groupedUserList?.length")
+        .table-wrapper
+            table
+                thead
+                    tr
+                        th
+                            sui-input(type="checkbox")
+                        th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+                tbody
+                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
+                        td
+                            sui-input(type="checkbox" :value="user.user_id" @change="userSelectionHandler")
+                        td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                            //To add actual conditions to determine which icon to show
+                            template(v-if="key === 'block'")
+                                template(v-if="user[key]")                        
+                                    Icon block
+                                template(v-else)
+                                    Icon unblock
+                            template(v-else-if="key === 'status'")                  
+                                Icon check_circle
+                            template(v-else) {{ user[key] || '-' }}
+                    //- Below code needs to change to page list not full users list
+                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                            td                  
+                            td(v-for="(key, index) in computedVisibleFields")
+        .paginator
+            Icon(
+                :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
+                @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
+                ) left
+            span.more-page(        
+                :class="{active: currentSelectedUsersBatch}"
+                @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
+                ) ...
+            span.page(
+                v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
+                :class="{active: idx === currentSelectedUsersPage}"
+                @click="currentSelectedUsersPage = idx"
+                ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
+            span.more-page(
+                :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
+                @click="getMoreUsers") ...
+                
+            Icon(
+                :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
+                @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
+                ) right
 </template>
 <script setup>
 import { inject, ref, reactive, computed } from 'vue';
