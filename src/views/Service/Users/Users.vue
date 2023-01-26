@@ -348,8 +348,7 @@ getUsers();
         justify-content: space-between;
         align-items: center;
         background: #434343;
-        height: 52px;
-        padding: 0 14px 0 20px;
+        padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
 
         & > * {
@@ -357,6 +356,8 @@ getUsers();
         }
 
         .header-actions {
+            line-height: 1;
+
             &--before {
                 position: fixed;
                 top: 0;
@@ -546,6 +547,10 @@ getUsers();
         .table-actions {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 0;
+
+            .actions {
+                margin: -14px 0;
+            }
         }
     }
 }
