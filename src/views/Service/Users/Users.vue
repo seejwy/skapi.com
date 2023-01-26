@@ -48,13 +48,13 @@
                 thead
                     tr
                         th
-                            sui-input(type="checkbox")
+                            sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
                         th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                         th(v-if="computedVisibleFields.length <= 2")
                 tbody
                     tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                         td
-                            sui-input(type="checkbox" :value="user.user_id" @change="userSelectionHandler")
+                            sui-input(type="checkbox" :value="user.user_id" v-model="selectedUsers")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
                             //To add actual conditions to determine which icon to show
                             template(v-if="key === 'block'")
@@ -96,7 +96,7 @@
                 ) right
 </template>
 <script setup>
-import { inject, ref, reactive, computed } from 'vue';
+import { inject, ref, reactive, computed, watch } from 'vue';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -115,6 +115,13 @@ let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
 
+watch(currentSelectedUsersBatch, () => {
+    selectedUsers.value = [];
+});
+
+watch(currentSelectedUsersPage, () => {
+    selectedUsers.value = [];
+});
 
 const groupedUserList = computed(() => {
     if (!serviceUsers.value || !serviceUsers.value.list.length) {
@@ -172,7 +179,14 @@ const userSelectionHandler = (e) => {
         selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
     }
 }
-
+const selectAllHandler = (e) => {
+    selectedUsers.value = [];
+    if(e.target.checked) {
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].map(user => {
+            selectedUsers.value.push(user.user_id);
+        })
+    }
+}
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
 
