@@ -41,6 +41,7 @@
                         label
                             sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
                             span {{  field.text }}
+<<<<<<< HEAD
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="")
@@ -100,6 +101,8 @@
             :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
             ) right
+=======
+>>>>>>> 630aa93 (Add fetch users button feature)
         Icon(:class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
     template(v-if="groupedUserList?.length")
         .table-wrapper
