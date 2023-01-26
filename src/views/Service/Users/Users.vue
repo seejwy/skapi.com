@@ -116,7 +116,7 @@
                 tbody
                     tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                         td
-                            sui-input(type="checkbox" :value="user.user_id" v-model="selectedUsers")
+                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
                             //To add actual conditions to determine which icon to show
                             template(v-if="key === 'block'")
