@@ -160,7 +160,7 @@
                             td                  
                             td(v-for="(key, index) in computedVisibleFields")
                             td(v-if="computedVisibleFields.length <= 2")
-        .paginator
+        .paginator.hideOnTablet
             Icon(
                 :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
                 @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
