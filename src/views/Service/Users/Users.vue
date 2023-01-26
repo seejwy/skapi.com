@@ -49,6 +49,7 @@
                     th
                         sui-input(type="checkbox")
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+                    th(v-if="computedVisibleFields.length <= 2")
             tbody
                 tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                     td
@@ -63,11 +64,13 @@
                         template(v-else-if="key === 'status'")                  
                             Icon check_circle
                         template(v-else) {{ user[key] || '-' }}
+                    td(v-if="computedVisibleFields.length <= 2")
                 //- Below code needs to change to page list not full users list
                 template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
                     tr(v-for="num in 10 - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
                         td                  
                         td(v-for="(key, index) in computedVisibleFields")
+                        td(v-if="computedVisibleFields.length <= 2")
     .paginator
         Icon left
         span.more-page ...
