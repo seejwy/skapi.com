@@ -41,7 +41,7 @@
                         label
                             sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
                             span {{  field.text }}
-        Icon(:class="{'animation-rotation': fetchingData}") refresh
+        Icon(:class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
     template(v-if="groupedUserList?.length")
         .table-wrapper
             table
