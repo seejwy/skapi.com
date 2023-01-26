@@ -28,7 +28,7 @@
             Icon trash
             span.hideOnTablet delete
 
-.table-outer-wrapper(v-if="groupedUserList?.length")
+.table-outer-wrapper
     .table-actions
         .header-actions--before(v-if="showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
