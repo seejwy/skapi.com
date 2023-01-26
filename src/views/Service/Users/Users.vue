@@ -265,7 +265,6 @@ getUsers();
             }
         }
     }
-<<<<<<< HEAD
 }
 .table-outer-wrapper {
     position: relative;
@@ -654,8 +653,6 @@ getUsers();
                 color: #fff;
             }
         }
-=======
->>>>>>> 5f17864 (Fix placeholder icon and colors)
 }
 .table-outer-wrapper {
     position: relative;
