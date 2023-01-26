@@ -41,6 +41,7 @@
                         label
                             sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
                             span {{  field.text }}
+<<<<<<< HEAD
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="")
@@ -100,6 +101,8 @@
             :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
             ) right
+=======
+>>>>>>> acc7b21 (Improve the user loading process)
         Icon(:class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
     template(v-if="groupedUserList?.length")
         .table-wrapper
@@ -109,7 +112,10 @@
                         th
                             sui-input(type="checkbox")
                         th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+<<<<<<< HEAD
                         th(v-if="computedVisibleFields.length <= 2")
+=======
+>>>>>>> acc7b21 (Improve the user loading process)
                 tbody
                     tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                         td
@@ -124,6 +130,7 @@
                             template(v-else-if="key === 'status'")                  
                                 Icon check_circle
                             template(v-else) {{ user[key] || '-' }}
+<<<<<<< HEAD
                         td(v-if="computedVisibleFields.length <= 2")
         Icon(:class="{'animation-rotation': fetchingData}") refresh
         Icon(:class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
@@ -151,12 +158,17 @@
                                 Icon check_circle
                             template(v-else) {{ user[key] || '-' }}
                         td(v-if="computedVisibleFields.length <= 2")
+=======
+>>>>>>> acc7b21 (Improve the user loading process)
                     //- Below code needs to change to page list not full users list
                     template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
                         tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
                             td                  
                             td(v-for="(key, index) in computedVisibleFields")
+<<<<<<< HEAD
                             td(v-if="computedVisibleFields.length <= 2")
+=======
+>>>>>>> acc7b21 (Improve the user loading process)
         .paginator
             Icon(
                 :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
