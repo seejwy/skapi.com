@@ -49,7 +49,7 @@ import { state } from '@/main';
 let router = useRouter();
 let route = useRoute();
 let appStyle = inject('appStyle');
-appStyle.background = '#F5F5F5';
+appStyle.background = '#FFF';
 appStyle.color = 'rgba(0 0 0 / 85%)';
 
 function bypassSameRoute(e) {
