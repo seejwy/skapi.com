@@ -4,7 +4,7 @@
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     sui-button.line-button(style="float: right") Read Doc
     div(style="clear:both;")
-.actions-wrapper
+.actions-wrapper(v-if="viewport === 'desktop'")
     .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
         .select-field
             sui-select(name='search_type')
@@ -18,13 +18,13 @@
             sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value")
     
     .actions
-        sui-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
+        sui-button.text-button(@click="")
             Icon block
             span.hideOnTablet block
-        sui-button.text-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
+        sui-button.text-button(@click="")
             Icon unblock
             span.hideOnTablet unblock
-        sui-button.text-button(@click="" :class="[viewport === 'desktop' ? 'text-button' : 'icon-button']")
+        sui-button.text-button(@click="")
             Icon trash
             span.hideOnTablet delete
 
@@ -41,7 +41,14 @@
                         label
                             sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
                             span {{  field.text }}
-        Icon(:class="{'animation-rotation': fetchingData}") refresh
+        Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}") refresh
+        .actions(v-if="viewport === 'mobile'")
+            sui-button.icon-button(@click="")
+                Icon block
+            sui-button.icon-button(@click="")
+                Icon unblock
+            sui-button.icon-button(@click="")
+                Icon trash
     .table-wrapper
         table
             thead
@@ -71,7 +78,7 @@
                         td                  
                         td(v-for="(key, index) in computedVisibleFields")
                         td(v-if="computedVisibleFields.length <= 2")
-    .paginator
+    .paginator.hideOnTablet
         Icon left
         span.more-page ...
         span.page(
@@ -273,7 +280,7 @@ getUsers();
         background: #434343;
         height: 52px;
         padding: 0 14px 0 20px;
-        border-radius: 8px;
+        border-radius: 8px 8px 0 0;
 
         & > * {
             cursor: pointer;
@@ -459,5 +466,23 @@ getUsers();
                 color: #fff;
             }
         }
+}
+@media @tablet {
+    .table-outer-wrapper {
+        margin: auto -16px;
+        border-radius: 0;
+        border: none;
+
+        .table-actions {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 0;
+        }
+    }
+}
+
+@media @phone {
+    .table-outer-wrapper {
+        margin: auto -8px;
+    }
 }
 </style>
