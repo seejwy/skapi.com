@@ -44,7 +44,7 @@ sui-button.signup {
 import NavBar from '@/components/navbar.vue';
 import { inject } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { state } from '@/main';
+import { skapi, state } from '@/main';
 
 let router = useRouter();
 let route = useRoute();
