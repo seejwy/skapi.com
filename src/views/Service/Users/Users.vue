@@ -110,13 +110,13 @@
                 thead
                     tr
                         th
-                            sui-input(type="checkbox")
+                            sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
                         th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                         th(v-if="computedVisibleFields.length <= 2")
                 tbody
                     tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                         td
-                            sui-input(type="checkbox" :value="user.user_id" @change="userSelectionHandler")
+                            sui-input(type="checkbox" :value="user.user_id" v-model="selectedUsers")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
                             //To add actual conditions to determine which icon to show
                             template(v-if="key === 'block'")
