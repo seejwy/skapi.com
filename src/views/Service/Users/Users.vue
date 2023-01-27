@@ -488,6 +488,7 @@ getUsers();
                 right: 0;
                 left: 0;
                 z-index: 8;
+                cursor: default;
             }
             .dropdown > * {
                 vertical-align: middle;
