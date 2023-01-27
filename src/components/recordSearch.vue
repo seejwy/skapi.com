@@ -64,15 +64,15 @@ form(
             .formLabel Access Group
             .form
                 .labelRadio.clickable
-                    label.iconText(for='ag-reg') Registered
+                    label.inline-vertical-middle(for='ag-reg') Registered
                     sui-input#ag-reg(type='radio' value='1' name='access_group' @change='advancedForm.access_group = 1' :checked='advancedForm.access_group === 1 ? true : null')
 
                 .labelRadio.clickable
-                    label.iconText(for='ag-pub') Public
+                    label.inline-vertical-middle(for='ag-pub') Public
                     sui-input#ag-pub(type='radio' value='0' name='access_group' @change='advancedForm.access_group = 0' :checked='advancedForm.access_group === 0 ? true : null')
 
                 .labelRadio.clickable
-                    label.iconText(for='ag-prv') Private
+                    label.inline-vertical-middle(for='ag-prv') Private
                     sui-input#ag-prv(type='radio' value='private' name='access_group' @change='advancedForm.access_group = "private"' :checked='advancedForm.access_group === "private" ? true : null')
 
             template(v-if='searchForm.type === "user"')
@@ -89,18 +89,18 @@ form(
 
                 .formLabel Table Subscription
                 .form
-                    .iconText(style='vertical-align: middle;width: 100%;display:inline-block;')
+                    .inline-vertical-middle(style='vertical-align: middle;width: 100%;display:inline-block;')
                         // subscription
                         .labelRadio.clickable
-                            label.iconText(for='subscription-none') None
+                            label.inline-vertical-middle(for='subscription-none') None
                             sui-input#subscription-none(type='radio' name='subscription' value='null' @change='e=>{advancedForm.subscription = null; parseIndexType()}' :checked="advancedForm.subscription === null || null")
 
                         .labelRadio.clickable
-                            label.iconText(for='subscription-public') Public
+                            label.inline-vertical-middle(for='subscription-public') Public
                             sui-input#subscription-public(type='radio' name='subscription' value='false' @change='e=>{advancedForm.subscription = false; parseIndexType()}' :checked="advancedForm.subscription === false || null")
 
                         .labelRadio.clickable
-                            label.iconText(for='subscription-sub') Subscribed
+                            label.inline-vertical-middle(for='subscription-sub') Subscribed
                             sui-input#subscription-sub(type='radio' name='subscription' value='true' @change='e=>{advancedForm.subscription = true; parseIndexType()}' :checked="advancedForm.subscription === true || null")
 
             .formLabel Index
@@ -128,14 +128,14 @@ form(
                     option(value="number") Number
                     option(value="boolean") Boolean
 
-                .iconText(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
+                .inline-vertical-middle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
                     // index value (boolean)
                     .labelRadio.clickable
-                        label.iconText(for='typ-bool-false') False
+                        label.inline-vertical-middle(for='typ-bool-false') False
                         sui-input#typ-bool-false(type='radio' name='index_value' @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
 
                     .labelRadio.clickable
-                        label.iconText(for='typ-bool-true') True
+                        label.inline-vertical-middle(for='typ-bool-true') True
                         sui-input#typ-bool-true(type='radio' name='index_value' @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
 
                 .select-input(v-else style='width: calc(100% - 100px - 1em);')
@@ -151,7 +151,7 @@ form(
                             :value='advancedForm.index_value === undefined || (typeof advancedForm.index_value === "boolean") ? "" : advancedForm.index_value.toString()'
                             @input="()=>parseIndexType()")
 
-                    .select-field(style='overflow:hidden;')
+                    .select-field(style='overflow:hidden;flex-shrink: 0;')
                         // index value condition
                         sui-select(
                             style='width:60px'
@@ -521,6 +521,7 @@ form {
             border-bottom: 1px solid rgba(255, 255, 255, 0.6);
             margin-right: 16px;
         }
+
         span {
             margin-right: 12px;
         }
@@ -590,11 +591,13 @@ form {
         }
     }
 }
+
 .placeholder-icon {
     opacity: 0.6;
     margin-right: 4px;
     flex-shrink: 0;
 }
+
 .option-button {
     flex-shrink: 0;
     margin-right: 12px;

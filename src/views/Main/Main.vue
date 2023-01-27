@@ -1,6 +1,6 @@
 <template lang="pug">
 NavBar(:is-parent-level='true' style='z-index: 2;background-color: var(--primary-color);')
-    ul.iconText(@click='bypassSameRoute')
+    ul.inline-vertical-middle(@click='bypassSameRoute')
         li
             router-link(to="/") Documentation
 
@@ -49,7 +49,7 @@ import { skapi, state } from '@/main';
 let router = useRouter();
 let route = useRoute();
 let appStyle = inject('appStyle');
-appStyle.background = '#F5F5F5';
+appStyle.background = '#FFF';
 appStyle.color = 'rgba(0 0 0 / 85%)';
 
 function bypassSameRoute(e) {
