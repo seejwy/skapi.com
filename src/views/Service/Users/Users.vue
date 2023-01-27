@@ -13,8 +13,6 @@
                 option(value="name") Name
 
         .input-field
-            .icon(v-if="!searchValue")
-                Icon search
             sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value")
     
     .actions
@@ -261,7 +259,12 @@ getUsers();
             padding: 0;
             
             input::placeholder {
+                background-image: url(../../../assets/img/icons/sprite.svg#trash);
                 color: rgba(255, 255, 255, .4);
+                background-size: contain;
+                background-position:  1px center;
+                background-repeat: no-repeat;
+                text-indent: 20px;
             }
         }
     }
@@ -488,6 +491,7 @@ getUsers();
                 right: 0;
                 left: 0;
                 z-index: 8;
+                cursor: default;
             }
             .dropdown > * {
                 vertical-align: middle;

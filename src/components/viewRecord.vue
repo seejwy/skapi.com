@@ -93,7 +93,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									span.type {{ typeof record.primitive }}
 									span {{ key }}
 
-								pre.value {{ record.primitive }}
+								.value {{ record.primitive }}
 				.no-data(v-else)
 					Icon(style="height: 72px; width: 72px;") no_record
 					p No Data
@@ -230,8 +230,9 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 
 							sui-textarea.data-input-field(
 								v-else-if="record.type === 'json'"
-								style='height: auto; white-space:pre;'
+								style="height: auto; white-space:pre;"
 								placeholder="Key Value"
+								spellcheck="false"
 								:value="record.data"
 								@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
 								@change="validateJson")
@@ -247,7 +248,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 
 							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
-							sui-textarea.data-input-field(v-else style='height: auto;' :name="keyData.key" placeholder="Key Value" :value="record.data")
+							sui-textarea.data-input-field(v-else style="height: auto;" :name="keyData.key" spellcheck="false" placeholder="Key Value" :value="record.data")
 							
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
