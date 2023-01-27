@@ -93,7 +93,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									span.type {{ typeof record.primitive }}
 									span {{ key }}
 
-								pre.value {{ record.primitive }}
+								.value {{ record.primitive }}
 				.no-data(v-else)
 					Icon(style="height: 72px; width: 72px;") no_record
 					p No Data
