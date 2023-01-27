@@ -29,7 +29,7 @@
             span.hideOnTablet delete
 
 .table-outer-wrapper
-    .table-actions
+    .table-actions(:class="{rounded: fetchingData || null}")
         .header-actions--before(v-if="showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
@@ -343,6 +343,7 @@ getUsers();
     background-color: #434343;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 
     .table-actions {
         display: flex;
@@ -351,8 +352,11 @@ getUsers();
         background: #434343;
         height: 52px;
         padding: 0 14px 0 20px;
-        border-radius: 8px;
+        border-radius: 8px 8px 0 0;
         
+        &.rounded {
+            border-radius: 8px;
+        }
 
         & > * {
             cursor: pointer;
@@ -415,7 +419,6 @@ getUsers();
 .table-wrapper {
     max-height: calc(52px * 11 + 52px);
     overflow: auto;
-    border-radius: 8px;
 
     table {
         min-width: 100%;
@@ -504,10 +507,13 @@ getUsers();
     }
 }
 .paginator {
-    margin: 24px auto;
+    margin: 0 auto;
+    padding: 24px 0;
     text-align: center;
     color: rgba(255 255 255 / 60%);
     user-select: none;
+    background-color: #434343;
+    border-radius: 0 0 8px 8px;
 
     span {
         padding: 4px 8px;
@@ -545,6 +551,7 @@ getUsers();
     .table-outer-wrapper {
         margin: auto -16px;
         border-radius: 0;
+        box-shadow: none;
         border: none;
 
         .table-actions {
