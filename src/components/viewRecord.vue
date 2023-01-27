@@ -49,7 +49,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				template(v-else)
 					.grid-item.title Tags
 					.grid-item -
-				
+
 				// private_access temporarily removed. will be brought back with better scalable structure
 				//- template(v-if="props.record.config?.private_access?.length")
 				//- 	.grid-item.title.span-2 Access
@@ -228,8 +228,14 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 									Icon.remove(@click="record.data.splice(index, 1)") X
 
-							sui-input.data-input-field(v-else-if="record.type === 'json'" placeholder="Key Value" :value="record.data" @input="e => { record.data = e.target.value; e.target.setCustomValidity('')}" @change="validateJson")
-							
+							sui-textarea.data-input-field(
+								v-else-if="record.type === 'json'"
+								style='height: auto; white-space:pre;'
+								placeholder="Key Value"
+								:value="record.data"
+								@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+								@change="validateJson")
+
 							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 								div Value:
 								div
@@ -241,7 +247,8 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 
 							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
-							sui-input.data-input-field(v-else :name="keyData.key" placeholder="Key Value" :value="record.data")
+							sui-textarea.data-input-field(v-else style='height: auto;' :name="keyData.key" placeholder="Key Value" :value="record.data")
+							
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
@@ -295,11 +302,11 @@ const data = ref([]);
 const indexValueType = ref('string');
 
 const allowReference = computed(() => {
-	if(form.value.config?.reference_limit === 0) return false;
+	if (form.value.config?.reference_limit === 0) return false;
 	return true;
 });
 
-watch(() => props.record, ()=> {
+watch(() => props.record, () => {
 	indexValueType.value = typeof props.record.index.value;
 	console.log(props.record);
 });
@@ -341,23 +348,23 @@ const editRecord = () => {
 
 	if (record?.data) {
 		let recordData = record.data;
-		for(let key in recordData) {
-			let keyObj = {key, data:[]}
+		for (let key in recordData) {
+			let keyObj = { key, data: [] };
 			let typeSplitFiles = getDataByTypes(recordData[key]).data;
-			if(typeSplitFiles.files.length) {
-				keyObj.data.push({type: 'file', data: typeSplitFiles.files});
+			if (typeSplitFiles.files.length) {
+				keyObj.data.push({ type: 'file', data: typeSplitFiles.files });
 				typeSplitFiles.json.forEach(value => {
-					if(Array.isArray(value)) {
-						keyObj.data.push({type: 'json', data:  JSON.stringify(value)});
+					if (Array.isArray(value)) {
+						keyObj.data.push({ type: 'json', data: JSON.stringify(value, null, 2) });
 					} else {
-						keyObj.data.push({type: typeof value, data: value});
+						keyObj.data.push({ type: typeof value, data: value });
 					}
 				});
 			} else {
-				if(typeSplitFiles.primitive !== null) {
-					keyObj.data.push({type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive});
+				if (typeSplitFiles.primitive !== null) {
+					keyObj.data.push({ type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive });
 				} else {
-					keyObj.data.push({type:'json', data: JSON.stringify(typeSplitFiles.json)});
+					keyObj.data.push({ type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2) });
 				}
 			}
 
@@ -370,16 +377,16 @@ const editRecord = () => {
 
 const save = async () => {
 	isSaving.value = true;
-	if(!formEl.value.checkValidity()) {
+	if (!formEl.value.checkValidity()) {
 		let currentPageIsValid = true;
-		
+
 		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input`).forEach((el) => {
-			if(currentPageIsValid && !el.reportValidity()) {
+			if (currentPageIsValid && !el.reportValidity()) {
 				currentPageIsValid = false;
 			}
-        });
+		});
 
-		if(currentPageIsValid) {
+		if (currentPageIsValid) {
 			view.value = view.value === 'information' ? 'record' : 'information';
 			await nextTick();
 			formEl.value.reportValidity();
@@ -392,18 +399,18 @@ const save = async () => {
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
-			console.log("DATA", data.value)
+			console.log("DATA", data.value);
 			data.value.forEach(record => {
-				console.log({record});
+				console.log({ record });
 				record.data.forEach(field => {
-					console.log({field})
-					if(field.type === 'json') {
+					console.log({ field });
+					if (field.type === 'json') {
 						form.append(record.key, new Blob([field.data], {
 							type: 'application/json'
 						}));
-					} else if(field.type === 'file') {
+					} else if (field.type === 'file') {
 						field.data.forEach(file => {
-							if(file instanceof File) {
+							if (file instanceof File) {
 								form.append(record.key, file);
 							} else {
 								form.append(record.key, new Blob([JSON.stringify(file)], {
@@ -412,8 +419,8 @@ const save = async () => {
 							}
 						});
 					}
-				})
-			})
+				});
+			});
 			return form;
 		}
 
@@ -424,7 +431,7 @@ const save = async () => {
 	} else {
 		form.value.index.value = (() => {
 			let value = form.value.index.value;
-			switch(document.querySelector('sui-select[index-type]').value) {
+			switch (document.querySelector('sui-select[index-type]').value) {
 				case 'number':
 					value = Number(value);
 					break;
@@ -439,7 +446,7 @@ const save = async () => {
 
 	form.value.access_group = Number(form.value.access_group);
 	skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value).then(r => {
-		for(let k in r) {
+		for (let k in r) {
 			props.record[k] = r[k];
 		}
 		isSaving.value = false;
@@ -453,33 +460,33 @@ const onDrop = (event, keyIndex, index) => {
 	const files = event.dataTransfer.files;
 	let fileData = data.value[keyIndex].data[index].data;
 	data.value[keyIndex].data[index].data = [...fileData, ...files];
-}
+};
 
 const addFiles = (event, keyIndex, index) => {
 	const files = event.target.files;
 	let fileData = data.value[keyIndex].data[index].data;
 	data.value[keyIndex].data[index].data = [...fileData, ...files];
 	event.target.value = '';
-}
+};
 
 const addField = () => {
-	data.value.push({key: '', data: [{type: 'string', data: []}]});
-}
+	data.value.push({ key: '', data: [{ type: 'string', data: [] }] });
+};
 
 const removeField = (keyData, keyIndex, index) => {
 	keyData.data.splice(index, 1);
-	if(!keyData.data.length) {
+	if (!keyData.data.length) {
 		data.value.splice(keyIndex, 1);
 	}
-}
+};
 
 const openFileInput = (event, index) => {
 	const parent = event.target.closest('.file-upload-area');
 	parent.querySelector('input[type="file"]').click();
-}
+};
 
 const validateJson = (event) => {
-	if(event.target.value === '') event.target.setCustomValidity('');
+	if (event.target.value === '') event.target.setCustomValidity('');
 	try {
 		JSON.parse(event.target.value);
 		event.target.setCustomValidity('');
@@ -487,22 +494,22 @@ const validateJson = (event) => {
 		event.target.setCustomValidity('Invalid JSON');
 		event.target.reportValidity();
 	}
-}
+};
 
 const getDataByTypes = (record) => {
 	let files = [];
 	let json = [];
 	let primitive = null;
-	if(Array.isArray(record)) {
-		for(let key in record) {
-			if(record[key]?.md5) {
+	if (Array.isArray(record)) {
+		for (let key in record) {
+			if (record[key]?.md5) {
 				files.push(record[key]);
 			} else {
 				json.push(record[key]);
 			}
 		}
-	} else if(typeof record === 'object') {
-		if(record?.md5) {
+	} else if (typeof record === 'object') {
+		if (record?.md5) {
 			files.push(record);
 		} else {
 			json.push(record);
@@ -510,26 +517,26 @@ const getDataByTypes = (record) => {
 	} else {
 		primitive = record;
 	}
-	
-	return {data: {files, json, primitive}};
-}
+
+	return { data: { files, json, primitive } };
+};
 
 const confirmClose = () => {
 	exitEditOverlay.value.close();
 	isEdit.value = false;
 	view.value = 'information';
 	emit('close');
-}
+};
 
 const close = () => {
-	if(isEdit.value) {
+	if (isEdit.value) {
 		exitEditOverlay.value.open();
 		return false;
 	}
 	isEdit.value = false;
 	view.value = 'information';
 	emit('close');
-}
+};
 
 defineExpose({
 	close
@@ -672,6 +679,7 @@ defineExpose({
 					outline: none;
 				}
 			}
+
 			.data-input-field,
 			.value {
 				margin-top: 20px;
@@ -685,9 +693,11 @@ defineExpose({
 					display: flex;
 					padding: 16px 20px 16px 12px;
 					gap: 16px;
+
 					.filename {
 						margin-bottom: 8px;
 					}
+
 					span:first-child,
 					span:last-child {
 						color: rgba(255, 255, 255, .6);
@@ -714,6 +724,7 @@ defineExpose({
 
 				sui-input {
 					padding: 0;
+
 					&:not([type=radio]) {
 						width: 100%;
 						box-shadow: none;
@@ -782,7 +793,7 @@ defineExpose({
 					cursor: pointer;
 					font-weight: bold;
 					color: rgba(255, 255, 255, .6);
-					
+
 					svg {
 						width: 20px;
 						height: 20px;
@@ -803,7 +814,7 @@ defineExpose({
 					margin-bottom: 0;
 				}
 
-				& > div > * {
+				&>div>* {
 					display: inline-block;
 
 					&:first-child {
@@ -878,7 +889,7 @@ defineExpose({
 				background: #434343;
 				border-radius: 4px;
 
-				& > div {
+				&>div {
 					display: flex;
 					align-items: flex-end;
 					flex-basis: calc(50% - 16px);
@@ -892,7 +903,7 @@ defineExpose({
 				display: flex;
 				align-items: center;
 				gap: 24px;
-				
+
 				label {
 					cursor: pointer;
 				}
@@ -991,7 +1002,7 @@ defineExpose({
 	.title {
 		color: #FF8D3B;
 
-		& > div {
+		&>div {
 			margin-top: 12px;
 			font-size: 20px;
 		}
@@ -1021,7 +1032,6 @@ defineExpose({
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, .4);
+	color: rgba(255, 255, 255, .4);
 }
-
 </style>
