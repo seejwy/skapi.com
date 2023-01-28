@@ -228,7 +228,7 @@ async function fetchMoreRecords() {
     }
 
     fetchingData.value = true;
-    promiseQueue = skapi.getRecords(searchResult.value.params, { refresh: false, limit: fetchLimit });
+    promiseQueue = skapi.getRecords(searchResult.value.params, { fetchMore: true, limit: fetchLimit });
 
     await promiseQueue;
 

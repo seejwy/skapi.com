@@ -202,7 +202,7 @@ async function getMoreTables() {
         return;
     }
 
-    getMoreTablesQueue = skapi.getTable({ service: serviceId }, { limit: fetchLimit }).catch(err => {
+    getMoreTablesQueue = skapi.getTable({ service: serviceId }, { fetchMore: true, limit: fetchLimit }).catch(err => {
         fetchingData.value = false;
         throw err;
     });
@@ -217,7 +217,7 @@ async function getMoreTables() {
         skapi.getRecords({
             service: serviceId,
             table: m.table
-        }, { refresh: true, limit: fetchLimit }).then(r => m.records.value = r);
+        }, { limit: fetchLimit }).then(r => m.records.value = r);
 
         recordTables.value.list.push(m);
     });
@@ -244,7 +244,7 @@ function getTables(refresh = false) {
     recordTables.value = null;
     fetchingData.value = true;
 
-    skapi.getTable({ service: serviceId }, { refresh: true, limit: fetchLimit })
+    skapi.getTable({ service: serviceId }, { limit: fetchLimit })
         .then(t => {
             recordTables.value = {
                 endOfList: t.endOfList,
@@ -255,7 +255,7 @@ function getTables(refresh = false) {
                     skapi.getRecords({
                         service: serviceId,
                         table: m.table
-                    }, { refresh: true, limit: 50 }).then(r => m.records.value = r);
+                    }, { limit: 50 }).then(r => m.records.value = r);
 
                     return m;
                 }),
