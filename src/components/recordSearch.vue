@@ -365,7 +365,7 @@ function search(searchParams, refresh = false) {
         searchResult.value = null;
     }
 
-    skapi.getRecords(params, { refresh: true, limit: 50 })
+    skapi.getRecords(params, { fetchMore: !refresh, limit: 50 })
         .then(r => {
             searchResult.value = r;
             searchResult.value.params = params;

@@ -288,7 +288,7 @@ async function getMoreRecords(event, table) {
         getMoreRecordsQueue[table.table] = await skapi.getRecords({
             service: serviceId,
             table: table.table
-        }, { refresh: false, limit: fetchLimit });
+        }, { fetchMore: true, limit: fetchLimit });
 
         let r = getMoreRecordsQueue[table.table];
         for (let rec of r.list) {

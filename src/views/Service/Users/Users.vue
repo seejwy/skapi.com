@@ -227,7 +227,7 @@ async function getMoreUsers() {
             searchFor: 'timestamp',
             condition: '>',
             value: 0
-        }, { limit: fetchLimit }).catch(err => {
+        }, { fetchMore: true, limit: fetchLimit }).catch(err => {
             fetchingData.value = false;
             throw err;
         });
@@ -264,7 +264,7 @@ function getUsers(refresh = false) {
         value: 0
     };
 
-    skapi.getUsers(params, { refresh: true, limit: fetchLimit })
+    skapi.getUsers(params, { limit: fetchLimit })
         .then(t => {
             serviceUsers.value = {
                 endOfList: t.endOfList,
