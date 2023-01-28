@@ -2,8 +2,8 @@ import { createApp, reactive, watch } from 'vue';
 import App from './App.vue';
 import router from './router';
 import './assets/main.less';
-// import { defineCustomElements } from 'skateui/loader';
-// defineCustomElements(window);
+import { defineCustomElements } from 'skateui/loader';
+defineCustomElements(window);
 
 // init state
 const state = reactive({
@@ -20,7 +20,6 @@ import Admin from './admin';
 let skapi = new Admin();
 
 skapi.getConnection().then(c => {
-    console.log(skapi);
     state.connection = c;
     state.user = skapi.user;
 });

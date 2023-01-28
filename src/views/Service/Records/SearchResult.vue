@@ -11,7 +11,10 @@ RecordSearch#recordSearch.hideOnTablet
 .hideOnTablet(style="clear:both;")
 
 sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
-    ViewRecord(:record='recordToOpen' @close="openRecord.close()")
+    .close-record-overlay(@click="viewRecord.close")
+        Icon X2
+    .view-record-overlay
+        ViewRecord(:record='recordToOpen' ref='viewRecord' @close="openRecord.close()")
 
 .record-container#data-container
     .header.hideOnTablet
@@ -46,7 +49,7 @@ sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color
             div
                 sui-flextext(min-size='16' max-size='32') No Records
                 br
-                p There was no record matching the query.
+                p There was no record matching the query:
                 .showOnTablet(v-if='route.query?.access_group' style="text-align: left")
                     br
                     span Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
@@ -71,7 +74,7 @@ sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color
                 template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedRecordBatch + 1] : groupedRecordList.length)")
                     template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedRecordPage + 1] : groupedRecordList[batchIdx - 1].length)")
                         // when v-for by number, it starts with 1
-                        .records(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]" style="cursor:pointer;" @click="()=>{recordToOpen=r;openRecord.open();}")
+                        .records(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]" style="cursor:pointer;" @click="()=>displayRecord(r)")
                             div
                                 span.label RECORD:
                                 span {{ r.record_id }}
@@ -98,7 +101,7 @@ sui-overlay(ref='openRecord' @click='openRecord.close()' style="background-color
                 span.morePage(
                     :class="{active: !searchResult.endOfList || groupedRecordList.length - 1 > currentSelectedRecordBatch }"
                     @click="fetchMoreRecords") ...
-                    
+
                 Icon.arrow(
                     :class="{active: currentSelectedRecordPage < groupedRecordList[currentSelectedRecordBatch].length - 1 || !searchResult.endOfList && currentSelectedRecordPage === groupedRecordList[currentSelectedRecordBatch].length - 1 }"
                     @click="()=>{ if(currentSelectedRecordPage < groupedRecordList[currentSelectedRecordBatch].length - 1 ) currentSelectedRecordPage++; else if(!searchResult.endOfList && currentSelectedRecordPage === groupedRecordList[currentSelectedRecordBatch].length - 1) fetchMoreRecords() }") right
@@ -116,6 +119,7 @@ import Icon from '@/components/Icon.vue';
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
+let viewRecord = ref(null);
 
 // record page has darker background in mobile mode
 let appStyle = inject('appStyle');
@@ -148,7 +152,8 @@ let pageTitle = inject('pageTitle');
 let searchTitle = computed(() => {
     let s = `${fetchingData.value ? "Searching" : viewport.value === 'desktop' ? "Result of" : ''}${fetchingData.value ? '' : ' ' + route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type]}"${fetchingData.value ? ' ...' : ''}`;
     let capitalized = s.trim().replace(/^\w/, c => c.toUpperCase());
-    pageTitle.value = capitalized;
+    pageTitle.value = viewport.value === 'desktop' ? 'Records' : capitalized;
+
     return capitalized;
 });
 
@@ -202,7 +207,6 @@ onBeforeUnmount(() => {
 });
 
 let openRecord = ref(null);
-let recordToOpen = ref(null);
 
 let promiseQueue = null;
 async function fetchMoreRecords() {
@@ -238,6 +242,22 @@ async function fetchMoreRecords() {
     currentSelectedRecordPage.value = 0;
     fetchingData.value = false;
     promiseQueue = null;
+}
+
+let recordToOpen = inject('recordToOpen');
+function displayRecord(r) {
+    recordToOpen.value = r;
+    if (viewport.value === 'mobile') {
+        router.push({
+            name: 'mobileRecordView',
+            query: {
+                id: r.record_id
+            }
+        });
+    }
+    else {
+        openRecord.open();
+    }
 }
 
 </script>

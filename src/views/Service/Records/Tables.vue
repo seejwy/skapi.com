@@ -27,7 +27,10 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
     // table list
     template(v-else)
         sui-overlay(ref='openRecord' @click='viewRecord.close' style="background-color:rgba(0 0 0 / 60%)")
-            ViewRecord(ref="viewRecord" :record='recordToOpen' @close="openRecord.close()")
+            .close-record-overlay(@click="viewRecord.close")
+                Icon X2
+            .view-record-overlay
+                ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="openRecord.close()")
 
         .noTables(v-if='!recordTables.list.length')
             div
@@ -62,7 +65,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                                     br
                                     p This table will be automatically removed.
 
-                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>{recordToOpen = r; openRecord.open();}")
+                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)")
                                 div
                                     span.label-head RECORD:
                                     span {{ r.record_id }}
@@ -96,20 +99,21 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
                         :class="{active: currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 || !recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1 }"
                         @click="()=>{ if(currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 ) currentSelectedTablePage++; else if(!recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1) getMoreTables() }") right
 
-.page-action.showOnTablet
-    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen" @blur="isFabOpen = false")
+.page-action.showOnTablet(@blur="isFabOpen = false")
+    // @blur should be at the parent div
+    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen")
         Icon menu_vertical
 
     Transition
-        div(v-if="isFabOpen")
-            sui-button.fab(@click="router.push({name: 'mobileSearch'})")
+        div(v-if="isFabOpen" @click.stop)
+            sui-button.fab(@click="router.push({name: 'mobileSearchRecord'})")
                 Icon search
             sui-button.fab
                 Icon plus2
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick } from 'vue';
+import { inject, ref, watch, computed, nextTick, onMounted } from 'vue';
 import { skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import RecordSearch from '@/components/recordSearch.vue';
@@ -117,7 +121,7 @@ import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let openRecord = ref(null);
-let recordToOpen = ref(null);
+let recordToOpen = inject('recordToOpen');
 const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
@@ -155,6 +159,27 @@ if (groupedTableList.value) {
     for (let t of groupedTableList.value[0][0]) {
         // close all opened
         t.opened = false;
+    }
+}
+
+onMounted(() => {
+    if (recordToOpen.value) {
+        displayRecord(recordToOpen.value);
+    }
+});
+
+async function displayRecord(r) {
+    if (typeof r === 'string') {
+        let rec = await skapi.getRecords({
+            service: serviceId,
+            record_id: r
+        });
+        recordToOpen.value = rec.list[0];
+        openRecord.value.open();
+    }
+    else {
+        recordToOpen.value = r;
+        openRecord.value.open();
     }
 }
 
@@ -316,6 +341,7 @@ watch(currentSelectedTablePage, n => {
         window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
+
 watch(currentSelectedTableBatch, n => {
     // close opened table on batch change
     for (let t of groupedTableList.value[n][currentSelectedTablePage.value]) {
@@ -325,7 +351,6 @@ watch(currentSelectedTableBatch, n => {
         window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
-
 </script>
 
 <style lang="less" scoped>

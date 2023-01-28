@@ -14,6 +14,7 @@ import { provide, ref } from 'vue';
 import { state } from '@/main';
 let pageTitle = ref('skapi');
 provide('pageTitle', pageTitle);
+provide('navbarMobileRightButton', ref(null));
 provide('navbarBackDestination', ref(null));
 
 let viewport = ref(state.viewport);
