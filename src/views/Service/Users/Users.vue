@@ -26,8 +26,8 @@
             Icon trash
             span.hideOnTablet delete
 
-.table-outer-wrapper(v-if="groupedUserList?.length")
-    .table-actions
+.table-outer-wrapper
+    .table-actions(:class="{rounded: fetchingData || null}")
         .header-actions--before(v-if="showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
@@ -39,7 +39,7 @@
                         label
                             sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
                             span {{  field.text }}
-        Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}") refresh
+        Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="")
                 Icon block
@@ -47,46 +47,62 @@
                 Icon unblock
             sui-button.icon-button(@click="")
                 Icon trash
-    .table-wrapper
-        table
-            thead
-                tr
-                    th
-                        sui-input(type="checkbox")
-                    th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
-                    th(v-if="computedVisibleFields.length <= 2")
-            tbody
-                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
-                    td
-                        sui-input(type="checkbox" :value="user.user_id" @change="userSelectionHandler")
-                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                        //To add actual conditions to determine which icon to show
-                        template(v-if="key === 'block'")
-                            template(v-if="user[key]")                        
-                                Icon block
-                            template(v-else)
-                                Icon unblock
-                        template(v-else-if="key === 'status'")                  
-                            Icon check_circle
-                        template(v-else) {{ user[key] || '-' }}
-                    td(v-if="computedVisibleFields.length <= 2")
-                //- Below code needs to change to page list not full users list
-                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                    tr(v-for="num in 10 - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
-                        td                  
-                        td(v-for="(key, index) in computedVisibleFields")
+    
+    template(v-if="groupedUserList?.length")
+        .table-wrapper
+            table
+                thead
+                    tr
+                        th
+                            sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                        th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+                        th(v-if="computedVisibleFields.length <= 2")
+                tbody
+                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
+                        td
+                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                        td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                            //To add actual conditions to determine which icon to show
+                            template(v-if="key === 'block'")
+                                template(v-if="user[key]")                        
+                                    Icon block
+                                template(v-else)
+                                    Icon unblock
+                            template(v-else-if="key === 'status'")                  
+                                Icon check_circle
+                            template(v-else) {{ user[key] || '-' }}
                         td(v-if="computedVisibleFields.length <= 2")
-    .paginator.hideOnTablet
-        Icon left
-        span.more-page ...
-        span.page(
-            v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
-            :class="{active: idx === currentSelectedUsersPage}") {{ i }}
-        span.more-page ...
-        Icon right
+                    //- Below code needs to change to page list not full users list
+                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                            td  
+                            td(v-for="(key, index) in computedVisibleFields")
+                            td(v-if="computedVisibleFields.length <= 2")
+        .paginator.hideOnTablet
+            Icon(
+                :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
+                @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
+                ) left
+            span.more-page(
+                :class="{active: currentSelectedUsersBatch}"
+                @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
+                ) ...
+            span.page(
+                v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
+                :class="{active: idx === currentSelectedUsersPage}"
+                @click="currentSelectedUsersPage = idx"
+                ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
+            span.more-page(
+                :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
+                @click="getMoreUsers") ...
+                
+            Icon(
+                :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
+                @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
+                ) right
 </template>
 <script setup>
-import { inject, ref, reactive, computed } from 'vue';
+import { inject, ref, reactive, computed, watch } from 'vue';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -114,6 +130,7 @@ const groupedUserList = computed(() => {
 
     return groupArray(serviceUsers.value.list, numberOfUsersPerPage, numberOfPagePerBatch);
 });
+
 let visibleFields = reactive({
     block: {
         text: 'Block',
@@ -161,7 +178,14 @@ const userSelectionHandler = (e) => {
         selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
     }
 }
-
+const selectAllHandler = (e) => {
+    selectedUsers.value = [];
+    if(e.target.checked) {
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].map(user => {
+            selectedUsers.value.push(user.user_id);
+        })
+    }
+}
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
 
@@ -171,6 +195,46 @@ let fetchingData = inject('fetchingData');
 // data
 let serviceUsers = inject('serviceUsers');
 let searchResult = inject('searchResult');
+
+let getMoreUsersQueue = null;
+async function getMoreUsers() {
+    fetchingData.value = true;
+
+    if (groupedUserList.value.length - 1 > currentSelectedUsersBatch.value) {
+        currentSelectedUsersBatch.value += 1;
+        currentSelectedUsersPage.value = 0;
+        fetchingData.value = false;
+        return;
+    }
+
+    if (getMoreUsersQueue instanceof Promise) {
+        return;
+    }
+
+
+    getMoreUsersQueue = skapi.getUsers(
+        {
+            service: serviceId,
+            searchFor: 'timestamp',
+            condition: '>',
+            value: 0
+        }, { fetchMore: true, limit: fetchLimit }).catch(err => {
+            fetchingData.value = false;
+            throw err;
+        });
+
+    let result = await getMoreUsersQueue;
+    serviceUsers.value.endOfList = result.endOfList;
+
+    result.list.map(user => {
+        serviceUsers.value.list.push(user);
+    });
+
+    getMoreUsersQueue = null;
+    currentSelectedUsersBatch.value++;
+    currentSelectedUsersPage.value = 0;
+    fetchingData.value = false;
+}
 
 function getUsers(refresh = false) {
     // initial table fetch
@@ -191,7 +255,7 @@ function getUsers(refresh = false) {
         value: 0
     };
 
-    skapi.getUsers(params, { refresh: true, limit: fetchLimit })
+    skapi.getUsers(params, { limit: fetchLimit })
         .then(t => {
             serviceUsers.value = {
                 endOfList: t.endOfList,
@@ -275,6 +339,7 @@ getUsers();
     background-color: #434343;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 
     .table-actions {
         display: flex;
@@ -733,7 +798,6 @@ getUsers();
 .table-wrapper {
     max-height: calc(52px * 11 + 52px);
     overflow: auto;
-    border-radius: 8px;
 
     table {
         min-width: 100%;
@@ -822,10 +886,13 @@ getUsers();
     }
 }
 .paginator {
-    margin: 24px auto;
+    margin: 0 auto;
+    padding: 24px 0;
     text-align: center;
     color: rgba(255 255 255 / 60%);
     user-select: none;
+    background-color: #434343;
+    border-radius: 0 0 8px 8px;
 
     span {
         padding: 4px 8px;
@@ -863,11 +930,16 @@ getUsers();
     .table-outer-wrapper {
         margin: auto -16px;
         border-radius: 0;
+        box-shadow: none;
         border: none;
 
         .table-actions {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 0;
+
+            .actions {
+                margin: -14px 0;
+            }
         }
     }
 }

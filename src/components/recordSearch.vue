@@ -16,7 +16,7 @@ form(
             @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
             @mounted="focusMe"
             autocomplete="off")
-        Icon.showOnTablet.placeholder-icon(v-if="!searchForm.value") search
+        Icon.showOnTablet.placeholder-icon(v-if="!searchForm.value" style='width:32px;') search
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='searchForm.isAdvanced = false')
@@ -228,7 +228,6 @@ let searchForm = reactive({
 
 let indexValueFormElement = ref(null);
 function focusMe(e) {
-    console.log({ e });
     e.target.focus();
 }
 function advancedFormInit() {
@@ -366,7 +365,7 @@ function search(searchParams, refresh = false) {
         searchResult.value = null;
     }
 
-    skapi.getRecords(params, { refresh: true, limit: 50 })
+    skapi.getRecords(params, { fetchMore: !refresh, limit: 50 })
         .then(r => {
             searchResult.value = r;
             searchResult.value.params = params;
@@ -420,55 +419,6 @@ form {
             background: rgba(255, 255, 255, 0.08);
             border: 0.5px solid #8C8C8C;
             box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
-        }
-    }
-
-    .mobile-search-nav {
-        position: sticky;
-        top: 0;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        margin-bottom: 28px;
-        background-color: #333;
-        z-index: 1;
-        padding-left: 24px;
-
-        @media @phone {
-            padding: 0 8px;
-        }
-
-        &::after {
-            display: block;
-            position: absolute;
-            width: 100%;
-            left: 0;
-            bottom: 0;
-            content: '';
-            height: 1px;
-            background-color: rgba(255 255 255 / 60%);
-            box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .back-button {
-            display: inline;
-            height: 32px;
-            width: 32px;
-            color: rgba(255, 255, 255, .4);
-        }
-
-        sui-input {
-            box-shadow: none;
-            width: 100%;
-
-            input:focus {
-                outline: none;
-            }
-
-            &+span {
-                position: absolute;
-                right: 8px;
-            }
         }
     }
 
@@ -594,7 +544,6 @@ form {
 
 .placeholder-icon {
     opacity: 0.6;
-    margin-right: 4px;
     flex-shrink: 0;
 }
 
