@@ -124,6 +124,8 @@ let viewRecord = ref(null);
 // record page has darker background in mobile mode
 let appStyle = inject('appStyle');
 let viewport = inject('viewport');
+let record = inject('recordToOpen');
+record.value = null;
 
 function adjustBackgroundColor(n) {
     if (n === 'mobile') {
@@ -159,6 +161,8 @@ let searchTitle = computed(() => {
 
 // data
 let searchResult = inject('searchResult');
+
+
 
 // for paginators
 let fetchLimit = 50;

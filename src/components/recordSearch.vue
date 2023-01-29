@@ -268,7 +268,7 @@ let fetchingData = inject('fetchingData');
 // data
 let searchResult = inject('searchResult');
 
-function search(searchParams, refresh = false) {
+function search(searchParams) {
     // search query
     let params = {
         service: serviceId
@@ -365,7 +365,7 @@ function search(searchParams, refresh = false) {
         searchResult.value = null;
     }
 
-    skapi.getRecords(params, { fetchMore: !refresh, limit: 50 })
+    skapi.getRecords(params, { limit: 50 })
         .then(r => {
             searchResult.value = r;
             searchResult.value.params = params;
@@ -382,8 +382,7 @@ function search(searchParams, refresh = false) {
 
 watch(() => route.query, n => {
     if (route.name === 'recordSearch') {
-        // prevent route triggering when getting out of the page
-        search(n, true);
+        search(n);
     }
     else if (route.name === 'records') {
         advancedForm.value = advancedFormInit();
