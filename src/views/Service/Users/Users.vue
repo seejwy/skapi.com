@@ -328,7 +328,7 @@ getUsers();
                 background-size: contain;
                 background-position:  1px center;
                 background-repeat: no-repeat;
-                text-indent: 20px;
+                text-indent: 26px;
             }
         }
     }
