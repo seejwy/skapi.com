@@ -335,7 +335,7 @@ getUsers();
 }
 .table-outer-wrapper {
     position: relative;
-    margin-top: 45px;
+    margin-top: 36px;
     background-color: #434343;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
