@@ -249,7 +249,7 @@ template(v-if="props.record?.record_id")
 							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
 							sui-textarea.data-input-field(v-else style="height: auto;" :name="keyData.key" spellcheck="false" placeholder="Key Value" :value="record.data")
-							
+
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
@@ -310,8 +310,7 @@ const allowReference = computed(() => {
 const isMobileUrl = route.query?.id;
 
 watch(() => props.record, () => {
-	indexValueType.value = typeof props.record.index.value;
-	console.log(props.record);
+	indexValueType.value = typeof props.record?.index?.value || 'string';
 });
 
 const editRecord = () => {
@@ -398,15 +397,12 @@ const save = async () => {
 		isSaving.value = false;
 		return false;
 	}
-	console.log("DATA", data.value);
 
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
 			data.value.forEach(record => {
-				console.log({ record });
 				record.data.forEach(field => {
-					console.log({ field });
 					if (field.type === 'json') {
 						form.append(record.key, new Blob([field.data], {
 							type: 'application/json'
@@ -426,7 +422,6 @@ const save = async () => {
 			});
 			return form;
 		}
-
 	});
 
 	if (!form.value.index?.name) {
@@ -458,6 +453,7 @@ const save = async () => {
 	} catch (e) {
 		// do some error message
 		isSaving.value = false;
+		throw e;
 	};
 };
 

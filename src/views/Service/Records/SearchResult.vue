@@ -162,8 +162,6 @@ let searchTitle = computed(() => {
 // data
 let searchResult = inject('searchResult');
 
-
-
 // for paginators
 let fetchLimit = 50;
 let numberOfRecordPerPage = 10;
@@ -260,7 +258,7 @@ function displayRecord(r) {
         });
     }
     else {
-        openRecord.open();
+        openRecord.value.open();
     }
 }
 
