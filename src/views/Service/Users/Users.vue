@@ -323,7 +323,7 @@ getUsers();
             padding: 0;
             
             input::placeholder {
-                background-image: url(../../../assets/img/icons/sprite.svg#trash);
+                background-image: url(/src/assets/img/icons/search.svg);
                 color: rgba(255, 255, 255, .4);
                 background-size: contain;
                 background-position:  1px center;
