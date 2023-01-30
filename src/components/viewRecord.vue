@@ -164,22 +164,24 @@ template(v-if="props.record?.record_id")
 				.row
 					.section
 						.name(style="display: flex; align-items: center;")
-							sui-input#allow_reference(
-								type="checkbox" 
-								style="margin-right: 8px; vertical-align: middle;color:white;"
-								@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
-								:checked="form.config.reference_limit !== 0 ? true : null")
+							label
+								sui-input(
+									type="checkbox" 
+									style="margin-right: 8px; color:white;"
+									@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
+									:checked="form.config.reference_limit !== 0 ? true : null")
 
-							label(for="allow_reference") Allow Reference
+								span Allow Reference
 
 						.reference-container(v-if="allowReference")
 							div
-								label(for="allow_multiple_reference" style="margin-right: 8px;") Allow Multiple Reference
-								sui-input#allow_multiple_reference(
-									style="color:white;"
-									type="checkbox"
-									@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
-									:checked="form.config.allow_multiple_reference ? true : null")
+								label
+									span Allow Multiple Reference
+									sui-input#allow_multiple_reference(
+										style="color:white; margin-left: 8px"
+										type="checkbox"
+										@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
+										:checked="form.config.allow_multiple_reference ? true : null")
 
 							div
 								span Reference Limit:
@@ -240,11 +242,13 @@ template(v-if="props.record?.record_id")
 							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 								div Value:
 								div
-									label True
-									sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
+									label
+										span True
+										sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
 								div
-									label False
-									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
+									label 
+										span False
+										sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
 
 							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
@@ -749,8 +753,8 @@ defineExpose({
 					display: flex;
 					gap: 20px;
 
-					label {
-						margin-right: 8px;
+					label sui-input {
+						margin-left: 8px;
 					}
 				}
 
@@ -923,7 +927,6 @@ defineExpose({
 					border-radius: 2px;
 					border-width: 2px;
 					border-color: rgba(255, 255, 255, 1);
-					vertical-align: baseline;
 
 					&[checked] {
 						border: none;
@@ -951,6 +954,17 @@ defineExpose({
 				margin-left: 8px;
 				font-size: 16px;
 			}
+		}
+	}
+
+	
+
+	label {
+		cursor: pointer;
+
+		span {	
+			line-height: 1;
+		    vertical-align: middle;
 		}
 	}
 
