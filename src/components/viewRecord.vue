@@ -227,12 +227,13 @@ template(v-if="props.record?.record_id")
 										Icon attached
 										span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
 										sui-button.line-button(@click.prevent.stop="" type="button") Upload
-								.value.file(v-for="(file, index) in record.data")
-									Icon attached
-									span
-										.filename {{ file.name || file.filename }}
-										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon.remove(@click="record.data.splice(index, 1)") X
+								template(v-for="(file, index) in record.data")
+									.value.file(v-if="file.md5")
+										Icon attached
+										span
+											.filename {{ file.name || file.filename }}
+											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+										Icon.remove(@click="record.data.splice(index, 1)") X
 
 							sui-textarea.data-input-field(
 								v-else-if="record.type === 'json'"
