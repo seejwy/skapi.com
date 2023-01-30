@@ -116,8 +116,12 @@ template(v-if="props.record?.record_id")
 
 				.row
 					.section
-						.name Reference ID
-							span(style="float: right;") ?
+						.name 
+							span Reference ID
+							sui-tooltip
+								Icon(slot="tool") question
+								div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
+					
 						sui-input(:value="form.reference" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference = e.target.value")
 					.section
 						.name Access Group
@@ -882,6 +886,21 @@ defineExpose({
 			.name {
 				margin-bottom: 8px;
 				font-weight: bold;
+				
+				sui-tooltip {
+					float: right;
+					vertical-align: middle;
+
+					svg {
+						color: rgba(255, 255, 255, 0.6);
+					}
+
+					div {
+						background: #D9D9D9;
+						color: rgba(0, 0, 0, 0.85);
+						padding: 16px;
+					}
+				}
 			}
 
 			.reference-container {
