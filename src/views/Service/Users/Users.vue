@@ -450,11 +450,16 @@ getUsers();
                 text-align: left;
 
                 &.icon-td {
+                    width: 48px;
                     text-align: center;
                 }
 
                 &.user-id {
                     min-width: 330px;
+                }
+
+                &:last-child:not(.icon-td) {
+                    width: 100%;
                 }
             }
 
