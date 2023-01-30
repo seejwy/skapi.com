@@ -27,7 +27,7 @@
             span.hideOnTablet delete
 
 .table-outer-wrapper
-    .table-actions(:class="{rounded: fetchingData || null}")
+    .table-actions
         .header-actions--before(v-if="showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
@@ -47,59 +47,58 @@
                 Icon unblock
             sui-button.icon-button(@click="")
                 Icon trash
-    
-    template(v-if="groupedUserList?.length")
-        .table-wrapper
-            table
-                thead
-                    tr
-                        th
-                            sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
-                        th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
-                        th(v-if="computedVisibleFields.length <= 2")
-                tbody
-                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
-                        td
-                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                        td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                            //To add actual conditions to determine which icon to show
-                            template(v-if="key === 'block'")
-                                template(v-if="user[key]")                        
-                                    Icon block
-                                template(v-else)
-                                    Icon unblock
-                            template(v-else-if="key === 'status'")                  
-                                Icon check_circle
-                            template(v-else) {{ user[key] || '-' }}
+
+    .table-wrapper
+        table
+            thead
+                tr(:class="{rounded: fetchingData || null}")
+                    th
+                        sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                    th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+                    th(v-if="computedVisibleFields.length <= 2")
+            tbody(v-if="groupedUserList?.length")
+                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
+                    td
+                        sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                        //To add actual conditions to determine which icon to show
+                        template(v-if="key === 'block'")
+                            template(v-if="user[key]")                        
+                                Icon block
+                            template(v-else)
+                                Icon unblock
+                        template(v-else-if="key === 'status'")                  
+                            Icon check_circle
+                        template(v-else) {{ user[key] || '-' }}
+                    td(v-if="computedVisibleFields.length <= 2")
+                //- Below code needs to change to page list not full users list
+                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                    tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                        td  
+                        td(v-for="(key, index) in computedVisibleFields")
                         td(v-if="computedVisibleFields.length <= 2")
-                    //- Below code needs to change to page list not full users list
-                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
-                            td  
-                            td(v-for="(key, index) in computedVisibleFields")
-                            td(v-if="computedVisibleFields.length <= 2")
-        .paginator.hideOnTablet
-            Icon(
-                :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
-                @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
-                ) left
-            span.more-page(
-                :class="{active: currentSelectedUsersBatch}"
-                @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
-                ) ...
-            span.page(
-                v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
-                :class="{active: idx === currentSelectedUsersPage}"
-                @click="currentSelectedUsersPage = idx"
-                ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
-            span.more-page(
-                :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
-                @click="getMoreUsers") ...
-                
-            Icon(
-                :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
-                @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
-                ) right
+    .paginator.hideOnTablet(v-if="groupedUserList?.length")
+        Icon(
+            :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
+            @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
+            ) left
+        span.more-page(
+            :class="{active: currentSelectedUsersBatch}"
+            @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
+            ) ...
+        span.page(
+            v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
+            :class="{active: idx === currentSelectedUsersPage}"
+            @click="currentSelectedUsersPage = idx"
+            ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
+        span.more-page(
+            :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
+            @click="getMoreUsers") ...
+            
+        Icon(
+            :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
+            @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
+            ) right
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch } from 'vue';
@@ -354,10 +353,6 @@ getUsers();
         padding: 0 14px 0 20px;
         border-radius: 8px 8px 0 0;
 
-        &.rounded {
-            border-radius: 8px;
-        }
-
         & > * {
             cursor: pointer;
         }
@@ -438,6 +433,11 @@ getUsers();
                     sui-input {
                         font-size: 16px;
                     }
+                }
+
+                &.rounded,
+                &.rounded th {
+                    border-radius: 0 0 8px 8px;
                 }
             }
         }
