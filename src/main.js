@@ -121,5 +121,16 @@ const groupArray = (arr, cg, pg) => {
 
     return final;
 };
+const localeName = (locale) => {
+    let name = '';
 
-export { skapi, state, getSize, dateFormat, log, groupArray };
+    switch(locale) {
+        case 'ap-northeast-2':
+            name = 'South Korea';
+            break;
+    }
+
+    return name;
+}
+
+export { skapi, state, getSize, dateFormat, log, groupArray, localeName };
