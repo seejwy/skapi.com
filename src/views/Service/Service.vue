@@ -25,13 +25,13 @@
     .service-grid 
         .service-grid-item
             .title
-                Icon user_setting
+                Icon users
                 span Authentication
             div Users are data that your service user's will store and read from your service database. 
             RouterLink(:to="{name: 'users'}") Go to Users >
         .service-grid-item  
             .title
-                Icon service
+                Icon folder_open
                 span Record
             div Users are data that your service user's will store and read from your service database. 
             RouterLink(:to="{name: 'records'}") Go to Records >
