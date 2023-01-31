@@ -349,8 +349,7 @@ getUsers();
         justify-content: space-between;
         align-items: center;
         background: #434343;
-        height: 52px;
-        padding: 0 14px 0 20px;
+        padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
 
         & > * {
