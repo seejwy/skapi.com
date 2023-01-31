@@ -118,7 +118,7 @@ let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const currentSelectedUsersBatch = ref(0);
-const currentSelectedUsersPage = ref(2);
+const currentSelectedUsersPage = ref(0);
 
 
 const groupedUserList = computed(() => {
