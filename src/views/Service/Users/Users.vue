@@ -27,7 +27,7 @@
             span.hideOnTablet delete
 
 .table-outer-wrapper
-    .table-actions(:class="{rounded: fetchingData || null}")
+    .table-actions
         .header-actions--before(v-if="showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
@@ -47,59 +47,58 @@
                 Icon unblock
             sui-button.icon-button(@click="")
                 Icon trash
-    
-    template(v-if="groupedUserList?.length")
-        .table-wrapper
-            table
-                thead
-                    tr
-                        th
-                            sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
-                        th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
-                        th(v-if="computedVisibleFields.length <= 2")
-                tbody
-                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
-                        td
-                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                        td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                            //To add actual conditions to determine which icon to show
-                            template(v-if="key === 'block'")
-                                template(v-if="user[key]")                        
-                                    Icon block
-                                template(v-else)
-                                    Icon unblock
-                            template(v-else-if="key === 'status'")                  
-                                Icon check_circle
-                            template(v-else) {{ user[key] || '-' }}
+
+    .table-wrapper
+        table
+            thead
+                tr(:class="{rounded: fetchingData || null}")
+                    th
+                        sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                    th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+                    th(v-if="computedVisibleFields.length <= 2")
+            tbody(v-if="groupedUserList?.length")
+                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
+                    td
+                        sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                        //To add actual conditions to determine which icon to show
+                        template(v-if="key === 'block'")
+                            template(v-if="user[key]")                        
+                                Icon block
+                            template(v-else)
+                                Icon unblock
+                        template(v-else-if="key === 'status'")                  
+                            Icon check_circle
+                        template(v-else) {{ user[key] || '-' }}
+                    td(v-if="computedVisibleFields.length <= 2")
+                //- Below code needs to change to page list not full users list
+                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                    tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                        td  
+                        td(v-for="(key, index) in computedVisibleFields")
                         td(v-if="computedVisibleFields.length <= 2")
-                    //- Below code needs to change to page list not full users list
-                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
-                            td  
-                            td(v-for="(key, index) in computedVisibleFields")
-                            td(v-if="computedVisibleFields.length <= 2")
-        .paginator.hideOnTablet
-            Icon(
-                :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
-                @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
-                ) left
-            span.more-page(
-                :class="{active: currentSelectedUsersBatch}"
-                @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
-                ) ...
-            span.page(
-                v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
-                :class="{active: idx === currentSelectedUsersPage}"
-                @click="currentSelectedUsersPage = idx"
-                ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
-            span.more-page(
-                :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
-                @click="getMoreUsers") ...
-                
-            Icon(
-                :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
-                @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
-                ) right
+    .paginator.hideOnTablet(v-if="groupedUserList?.length")
+        Icon(
+            :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
+            @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
+            ) left
+        span.more-page(
+            :class="{active: currentSelectedUsersBatch}"
+            @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
+            ) ...
+        span.page(
+            v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
+            :class="{active: idx === currentSelectedUsersPage}"
+            @click="currentSelectedUsersPage = idx"
+            ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
+        span.more-page(
+            :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
+            @click="getMoreUsers") ...
+            
+        Icon(
+            :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
+            @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
+            ) right
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch } from 'vue';
@@ -119,7 +118,7 @@ let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const currentSelectedUsersBatch = ref(0);
-const currentSelectedUsersPage = ref(2);
+const currentSelectedUsersPage = ref(0);
 
 
 const groupedUserList = computed(() => {
@@ -281,6 +280,10 @@ getUsers();
 .page-header {
     padding: 50px 0;
 
+    p {
+        line-height: 1.5;
+    }
+    
     @media @tablet {
         padding: 24px 0;
     }
@@ -323,19 +326,19 @@ getUsers();
             padding: 0;
             
             input::placeholder {
-                background-image: url(../../../assets/img/icons/sprite.svg#trash);
+                background-image: url(/src/assets/img/icons/search.svg);
                 color: rgba(255, 255, 255, .4);
                 background-size: contain;
                 background-position:  1px center;
                 background-repeat: no-repeat;
-                text-indent: 20px;
+                text-indent: 26px;
             }
         }
     }
 }
 .table-outer-wrapper {
     position: relative;
-    margin-top: 45px;
+    margin-top: 36px;
     background-color: #434343;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -346,397 +349,7 @@ getUsers();
         justify-content: space-between;
         align-items: center;
         background: #434343;
-        height: 52px;
-        padding: 0 14px 0 20px;
-        border-radius: 8px;
-
-        & > * {
-            cursor: pointer;
-        }
-
-        .header-actions {
-            &--before {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                z-index: 8;
-            }
-            .dropdown > * {
-                vertical-align: middle;
-            }
-        }
-    }
-
-    .filter {
-        position: absolute;
-        z-index: 9;
-        padding: 12px;
-        left: 14px;
-        background: #595959;
-        min-width: 200px;
-        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-        border-radius: 4px;
-        z-index: 9;
-        margin-top: 12px;
-
-        .label:not(:last-child) {
-            margin-bottom: 16px;
-        }
-
-        label {
-            cursor: pointer;
-            span {
-                
-                margin-left: 12px;
-            }
-        }
-        
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
-    }
-}
-.table-wrapper {
-    max-height: calc(52px * 11 + 52px);
-    overflow: auto;
-    border-radius: 8px;
-
-    table {
-        min-width: 100%;
-        border-collapse: collapse;
-
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
-
-        thead,
-        tbody {
-            tr {
-                background-color: #434343;
-
-                td,
-                th {          
-                    padding: 12px;      
-                    height: 52px;
-
-                    &:first-child {
-                        padding-left: 20px;
-                        width: 48px;
-                    }
-
-                    sui-input {
-                        font-size: 16px;
-                    }
-                }
-            }
-        }
-
-        thead {
-            th {
-                position: sticky;
-                background-color: #434343;
-                top: 0;
-                text-align: left;
-
-                &.icon-td {
-                    text-align: center;
-                }
-
-                &.user-id {
-                    min-width: 330px;
-                }
-            }
-
-            .actions {
-                cursor: pointer;
-                text-align: right;
-
-                svg {                
-                    margin-left: 4px;
-                }
-            }
-        }
-
-        tbody {
-            tr {
-                &:nth-child(odd) {
-                    background: #4a4a4a;
-                }
-
-                td {
-                    font-size: 14px;
-
-                    &.icon-td {
-                        width: 48px;
-                        text-align: center;
-                    }
-
-                    &:last-child:not(.icon-td) {
-                        width: 100%;
-                    }
-                }
-            }
-        }
-
-        tr {
-            height: 52px;
-            td {
-                white-space: nowrap;
-            }
-        }
-    }
-}
-.paginator {
-    margin: 24px auto;
-    text-align: center;
-    color: rgba(255 255 255 / 60%);
-    user-select: none;
-
-    span {
-        padding: 4px 8px;
-        box-sizing: content-box;
-
-        &.page {
-            cursor: pointer;
-
-            &.active {
-                cursor: default;
-                color: #fff;
-                font-weight: bold;
-            }
-        }
-
-        &.more-page {
-            visibility: hidden;
-
-            &.active {
-                cursor: pointer;
-                visibility: visible;
-            }
-        }
-    }
-    svg {
-            color: rgba(255, 255, 255, .15);
-            vertical-align: middle;
-            &.active {
-                cursor: pointer;
-                color: #fff;
-            }
-        }
-}
-.table-outer-wrapper {
-    position: relative;
-    margin-top: 45px;
-    background-color: #434343;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-
-    .table-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #434343;
-        height: 52px;
-        padding: 0 14px 0 20px;
-        border-radius: 8px;
-
-        & > * {
-            cursor: pointer;
-        }
-
-        .header-actions {
-            &--before {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                z-index: 8;
-                cursor: default;
-            }
-            .dropdown > * {
-                vertical-align: middle;
-            }
-        }
-    }
-
-    .filter {
-        position: absolute;
-        z-index: 9;
-        padding: 12px;
-        left: 14px;
-        background: #595959;
-        min-width: 200px;
-        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-        border-radius: 4px;
-        z-index: 9;
-        margin-top: 12px;
-
-        .label:not(:last-child) {
-            margin-bottom: 16px;
-        }
-
-        label {
-            cursor: pointer;
-            span {
-                
-                margin-left: 12px;
-            }
-        }
-        
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
-    }
-}
-.table-wrapper {
-    max-height: calc(52px * 11 + 52px);
-    overflow: auto;
-    border-radius: 8px;
-
-    table {
-        min-width: 100%;
-        border-collapse: collapse;
-
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
-
-        thead,
-        tbody {
-            tr {
-                background-color: #434343;
-
-                td,
-                th {          
-                    padding: 12px;      
-                    height: 52px;
-
-                    &:first-child {
-                        padding-left: 20px;
-                        width: 48px;
-                    }
-
-                    sui-input {
-                        font-size: 16px;
-                    }
-                }
-            }
-        }
-
-        thead {
-            th {
-                position: sticky;
-                background-color: #434343;
-                top: 0;
-                text-align: left;
-
-                &.icon-td {
-                    text-align: center;
-                }
-
-                &.user-id {
-                    min-width: 330px;
-                }
-            }
-
-            .actions {
-                cursor: pointer;
-                text-align: right;
-
-                svg {                
-                    margin-left: 4px;
-                }
-            }
-        }
-
-        tbody {
-            tr {
-                &:nth-child(odd) {
-                    background: #4a4a4a;
-                }
-
-                td {
-                    font-size: 14px;
-
-                    &.icon-td {
-                        width: 48px;
-                        text-align: center;
-                    }
-
-                    &:last-child:not(.icon-td) {
-                        width: 100%;
-                    }
-                }
-            }
-        }
-
-        tr {
-            height: 52px;
-            td {
-                white-space: nowrap;
-            }
-        }
-    }
-}
-.paginator {
-    margin: 24px auto;
-    text-align: center;
-    color: rgba(255 255 255 / 60%);
-    user-select: none;
-
-    span {
-        padding: 4px 8px;
-        box-sizing: content-box;
-
-        &.page {
-            cursor: pointer;
-
-            &.active {
-                cursor: default;
-                color: #fff;
-                font-weight: bold;
-            }
-        }
-
-        &.more-page {
-            visibility: hidden;
-
-            &.active {
-                cursor: pointer;
-                visibility: visible;
-            }
-        }
-    }
-    svg {
-            color: rgba(255, 255, 255, .15);
-            vertical-align: middle;
-            &.active {
-                cursor: pointer;
-                color: #fff;
-            }
-        }
-}
-.table-outer-wrapper {
-    position: relative;
-    margin-top: 45px;
-    background-color: #434343;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-
-    .table-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #434343;
-        height: 52px;
-        padding: 0 14px 0 20px;
+        padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
 
         & > * {
@@ -785,13 +398,6 @@ getUsers();
         sui-input {
             color: #fff;
             cursor: pointer;
-
-            &[disabled] {
-                &,
-                & + span {
-                    color: rgba(255, 255, 255, 0.6);
-                }
-            }
         }
     }
 }
@@ -827,6 +433,11 @@ getUsers();
                         font-size: 16px;
                     }
                 }
+
+                &.rounded,
+                &.rounded th {
+                    border-radius: 0 0 8px 8px;
+                }
             }
         }
 
@@ -838,11 +449,16 @@ getUsers();
                 text-align: left;
 
                 &.icon-td {
+                    width: 48px;
                     text-align: center;
                 }
 
                 &.user-id {
                     min-width: 330px;
+                }
+
+                &:last-child:not(.icon-td) {
+                    width: 100%;
                 }
             }
 
@@ -886,12 +502,11 @@ getUsers();
     }
 }
 .paginator {
-    margin: 0 auto;
     padding: 24px 0;
     text-align: center;
     color: rgba(255 255 255 / 60%);
+    background: #434343;
     user-select: none;
-    background-color: #434343;
     border-radius: 0 0 8px 8px;
 
     span {
@@ -926,6 +541,7 @@ getUsers();
             }
         }
 }
+
 @media @tablet {
     .table-outer-wrapper {
         margin: auto -16px;
