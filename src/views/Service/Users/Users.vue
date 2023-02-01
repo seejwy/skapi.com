@@ -15,13 +15,13 @@
             sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value" @keypress.enter="search")
     
     .actions
-        sui-button.text-button(@click="")
+        sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon block
             span.hideOnTablet block
-        sui-button.text-button(@click="")
+        sui-button.text-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon unblock
             span.hideOnTablet unblock
-        sui-button.text-button(@click="")
+        sui-button.text-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
             Icon trash
             span.hideOnTablet delete
 
@@ -40,11 +40,11 @@
                             span {{  field.text }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}") refresh
         .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(@click="")
+            sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
-            sui-button.icon-button(@click="")
+            sui-button.icon-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon unblock
-            sui-button.icon-button(@click="")
+            sui-button.icon-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
     .table-wrapper
         table
@@ -103,6 +103,30 @@ let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
+
+const blockUsers = async () => {
+    let blockPromise = selectedUsers.value.map((user) => {
+        return Promise; //change this to a block user function
+    })
+
+    await Promise.all(blockPromise);
+}
+
+const unblockUsers = async () => {
+    let unblockPromise = selectedUsers.value.map((user) => {
+        return Promise; //change this to a unblock user function
+    })
+
+    await Promise.all(unblockPromise);
+}
+
+const deleteUsers = async () => {
+    let deletePromise = selectedUsers.value.map((user) => {
+        return Promise; //change this to a delete user function
+    })
+
+    await Promise.all(deletePromise);
+}
 
 const groupedUserList = computed(() => {
     if (!serviceUsers.value || !serviceUsers.value.list.length) {
