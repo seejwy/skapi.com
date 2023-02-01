@@ -391,6 +391,10 @@ watch(currentSelectedTableBatch, n => {
 .page-header {
     padding: 50px 0;
 
+    p {
+        line-height: 1.5;
+    }
+    
     @media @tablet {
         padding: 24px 0;
     }

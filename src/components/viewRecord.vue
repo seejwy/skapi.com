@@ -117,8 +117,12 @@ template(v-if="props.record?.record_id")
 
 				.row
 					.section
-						.name Reference ID
-							span(style="float: right;") ?
+						.name 
+							span Reference ID
+							sui-tooltip
+								Icon(slot="tool") question
+								div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
+					
 						sui-input(:value="form.reference" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference = e.target.value")
 					.section
 						.name Access Group
@@ -165,22 +169,24 @@ template(v-if="props.record?.record_id")
 				.row
 					.section
 						.name(style="display: flex; align-items: center;")
-							sui-input#allow_reference(
-								type="checkbox" 
-								style="margin-right: 8px; vertical-align: middle;color:white;"
-								@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
-								:checked="form.config.reference_limit !== 0 ? true : null")
+							label
+								sui-input(
+									type="checkbox" 
+									style="margin-right: 8px; color:white;"
+									@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
+									:checked="form.config.reference_limit !== 0 ? true : null")
 
-							label(for="allow_reference") Allow Reference
+								span Allow Reference
 
 						.reference-container(v-if="allowReference")
 							div
-								label(for="allow_multiple_reference" style="margin-right: 8px;") Allow Multiple Reference
-								sui-input#allow_multiple_reference(
-									style="color:white;"
-									type="checkbox"
-									@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
-									:checked="form.config.allow_multiple_reference ? true : null")
+								label
+									span Allow Multiple Reference
+									sui-input#allow_multiple_reference(
+										style="color:white; margin-left: 8px"
+										type="checkbox"
+										@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
+										:checked="form.config.allow_multiple_reference ? true : null")
 
 							div
 								span Reference Limit:
@@ -222,12 +228,13 @@ template(v-if="props.record?.record_id")
 										Icon attached
 										span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
 										sui-button.line-button(@click.prevent.stop="" type="button") Upload
-								.value.file(v-for="(file, index) in record.data")
-									Icon attached
-									span
-										.filename {{ file.name || file.filename }}
-										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon.remove(@click="record.data.splice(index, 1)") X
+								template(v-for="(file, index) in record.data")
+									.value.file(v-if="file.md5")
+										Icon attached
+										span
+											.filename {{ file.name || file.filename }}
+											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+										Icon.remove(@click="record.data.splice(index, 1)") X
 
 							sui-textarea.data-input-field(
 								v-else-if="record.type === 'json'"
@@ -241,11 +248,13 @@ template(v-if="props.record?.record_id")
 							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 								div Value:
 								div
-									label True
-									sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
+									label
+										span True
+										sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
 								div
-									label False
-									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
+									label 
+										span False
+										sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
 
 							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
@@ -749,8 +758,8 @@ defineExpose({
 					display: flex;
 					gap: 20px;
 
-					label {
-						margin-right: 8px;
+					label sui-input {
+						margin-left: 8px;
 					}
 				}
 
@@ -878,6 +887,21 @@ defineExpose({
 			.name {
 				margin-bottom: 8px;
 				font-weight: bold;
+				
+				sui-tooltip {
+					float: right;
+					vertical-align: middle;
+
+					svg {
+						color: rgba(255, 255, 255, 0.6);
+					}
+
+					div {
+						background: #D9D9D9;
+						color: rgba(0, 0, 0, 0.85);
+						padding: 16px;
+					}
+				}
 			}
 
 			.reference-container {
@@ -923,7 +947,6 @@ defineExpose({
 					border-radius: 2px;
 					border-width: 2px;
 					border-color: rgba(255, 255, 255, 1);
-					vertical-align: baseline;
 
 					&[checked] {
 						border: none;
@@ -951,6 +974,17 @@ defineExpose({
 				margin-left: 8px;
 				font-size: 16px;
 			}
+		}
+	}
+
+	
+
+	label {
+		cursor: pointer;
+
+		span {	
+			line-height: 1;
+		    vertical-align: middle;
 		}
 	}
 
