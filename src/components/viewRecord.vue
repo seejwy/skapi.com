@@ -75,19 +75,20 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 											.filename {{ file.filename }}
 											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 										Icon download
-								.data-row(v-for="data in record.json")
+								.data-row(v-for="value in record.json")
 									.name
-										span.type(v-if="typeof data === 'object'") JSON
-										span.type(v-else) {{ typeof data }}
+										span.type(v-if="typeof value === 'object'") JSON
+										span.type(v-else) {{ typeof value }}
 										span {{ key }}
 
-									.value {{ data }}
-							.data-row(v-else-if="record.json.length")
+									.value(v-if="value === null") null
+									.value(v-else) {{ value }}
+							.data-row(v-else-if="record.json !== undefined")
 								.name
 									span.type JSON
 									span {{ key }}
-
-								pre.value {{ record.json }}
+								.value(v-if="record.json === null") null
+								.value(v-else) {{ record.json }}
 							.data-row(v-else)
 								.name
 									span.type {{ typeof record.primitive }}
@@ -213,7 +214,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 									sui-input(type="text" :value="keyData.key" placeholder="Key Name" @input="(e) => keyData.key = e.target.value" required)
 							.action(@click="removeField(keyData, keyIndex, index)")
 								Icon trash
-						.data-values 
+						.data-values
 							template(v-if="record.type === 'file'")
 								.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, keyIndex, index)" @click="openFileInput($event)")
 									input(style="display: none;" type="file" @change="addFiles($event, keyIndex, index)" multiple)
@@ -358,7 +359,7 @@ const editRecord = () => {
 					if (Array.isArray(value)) {
 						keyObj.data.push({ type: 'json', data: JSON.stringify(value, null, 2) });
 					} else {
-						keyObj.data.push({ type: typeof value, data: value });
+						keyObj.data.push({ type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
 					}
 				});
 			} else {
@@ -499,21 +500,24 @@ const validateJson = (event) => {
 
 const getDataByTypes = (record) => {
 	let files = [];
-	let json = [];
+	let json;
 	let primitive = null;
 	if (Array.isArray(record)) {
+		let newArr = [];
 		for (let key in record) {
 			if (record[key]?.md5) {
 				files.push(record[key]);
 			} else {
-				json.push(record[key]);
+				newArr.push(record[key]);
 			}
 		}
+		
+		json = newArr;
 	} else if (typeof record === 'object') {
 		if (record?.md5) {
 			files.push(record);
 		} else {
-			json.push(record);
+			json = record;
 		}
 	} else {
 		primitive = record;
