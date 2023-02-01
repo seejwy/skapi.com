@@ -240,8 +240,9 @@ template(v-if="props.record?.record_id")
 							style="height: auto; white-space:pre;"
 							placeholder="Key Value"
 							spellcheck="false"
+							:value="record.data"
 							@input="e => { record.data = e.target.value; log({record: record.data, e:e.target.value}); e.target.setCustomValidity('')}"
-							@change="validateJson") {{  record.data  }}
+							@change="validateJson")
 
 						.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 							div Value:
