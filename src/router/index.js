@@ -60,9 +60,14 @@ const router = createRouter({
                   component: ()=>import('../views/Service/Records/SearchResult.vue')
                 },
                 {
-                  path: 'search-mobileform',
-                  name: 'mobileSearch',
+                  path: 'mobile-search',
+                  name: 'mobileSearchRecord',
                   component: ()=>import('../views/Service/Records/MobileSearch.vue')
+                },
+                {
+                  path: 'mobile-view',
+                  name: 'mobileRecordView',
+                  component: ()=>import('../views/Service/Records/MobileViewRecord.vue')
                 },
                 {
                   path: 'list',

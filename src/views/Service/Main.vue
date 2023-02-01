@@ -22,7 +22,7 @@
 
             Login(v-else)
             
-            .padBlock.showOnIpad
+            .padBlock
 
     .sidebar
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
@@ -136,7 +136,7 @@
         main {
             .padBlock {
                 width: 100%;
-                height: 120px;
+                height: 100px;
             }
         }
     }
