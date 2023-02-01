@@ -241,7 +241,7 @@ template(v-if="props.record?.record_id")
 							placeholder="Key Value"
 							spellcheck="false"
 							:value="record.data"
-							@input="e => { record.data = e.target.value; log({record: record.data, e:e.target.value}); e.target.setCustomValidity('')}"
+							@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
 							@change="validateJson")
 
 						.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
@@ -292,7 +292,7 @@ sui-overlay(ref="exitEditOverlay")
 <script setup>
 import { ref, computed, watch, nextTick, inject } from 'vue';
 import { useRoute } from 'vue-router';
-import { skapi, dateFormat, getSize, log } from '@/main';
+import { skapi, dateFormat, getSize } from '@/main';
 import TagsInput from '@/components/TagsInput.vue';
 import Icon from '@/components/Icon.vue';
 
