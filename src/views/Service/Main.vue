@@ -30,11 +30,7 @@
         router-link(:to="{name: 'service'}")
             Icon home
 
-        router-link(to="/")
-            Icon setting
-
-        router-link(to='/')
-            //(:to="{name: 'users'}") 
+        router-link(:to="{name: 'users'}") 
             Icon users
 
         router-link(:to="{name: 'records'}")
