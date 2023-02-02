@@ -360,34 +360,24 @@ const editRecord = () => {
 	if (record?.data) {
 		let recordData = record.data;
 		for (let key in recordData) {
-			console.log({recordData})
 			let typeSplitFiles = getDataByTypes(recordData[key]).data;
-			console.log({typeSplitFiles});
 			if (typeSplitFiles.files.length) {
 				data.value.push({key, type: 'file', data: typeSplitFiles.files});
 				typeSplitFiles.json.forEach(value => {
 
 					if (Array.isArray(value)) {				
 						data.value.push({key, type: 'json', data: JSON.stringify(value, null, 2)});
-						// keyObj.data.push({ type: 'json', data: JSON.stringify(value, null, 2) });
 					} else {
-						
 						data.value.push({key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
-						// keyObj.data.push({ type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
 					}
 				});
 			} else {
 				if (typeSplitFiles.primitive !== null) {
 					data.value.push({key, type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive});
-					// keyObj.data.push({ type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive });
 				} else {
 					data.value.push({key, type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2)});
-					// keyObj.data.push({ type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2) });
 				}
 			}
-
-			// data.value.push(keyObj);
-			console.log({data: data.value});
 		}
 	}
 
