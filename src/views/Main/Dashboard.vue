@@ -1,29 +1,72 @@
 <template lang="pug">
-div(v-if='!state.connection')
+div(v-if='!state?.connection')
     // is loading...
 
-div(v-else-if='state.user')
-    h1 The Dashboard
-    template(v-if="serviceList")
-        template(v-for="(srvc, reg) in serviceList")
-            p {{ reg }}
-            ul
-                li(v-for='s in srvc')
-                    router-link(:to='"/dashboard/" + s.service') {{ s.service }}
+div(v-else-if='state?.user')
+    .header
+        h1 Services
+        div
+            p Description of what service is.Description of what service is. Description of what service is.Description of what service is. Description of what service is.Description of what service is. Description of what service is.Description of what service is.
+            sui-button(type="button" @click="newServiceWindow.open()")
+                Icon plus2
+                span New Service
+    .container(v-if="serviceList")
+        template(v-for="(services, region) in serviceList")
+            template(v-for='service in services')
+                router-link.service(:to='"/dashboard/" + service.service') 
+                    .settings
+                        .name 
+                            .indicator(:class="{'active': service.active > 0}")
+                            span {{ service.name }}
+                        Icon right
+                    .details
+                        .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
+                            span.title {{  key }}
+                            span.value {{ value || '-' }}
+    .container.empty(v-else)
+        .title No Services
+        span Get started by creating a new service. 
+    Transition
+        .toast(v-if="true")
+            Icon warning_bell
+            .title Email Verfication is Needed
+            div
+            div Something to tell you
+            Icon.close(@click="isOpen = false") X2
+    sui-overlay(style="background: rgba(0, 0, 0, 0.6)" ref="newServiceWindow" @click="newServiceWindow.close()")
+        div.overlay
+            .close(@click="newServiceWindow.close()")
+                Icon X2
+            .overlay-container
+                .overlay-container-title Create a New Service
+                .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
+                sui-input(type="text" placeholder="Name of Service")
+                sui-button Create a Service
+
 Login(v-else)
 </template>
-<!-- script below -->
 <script setup>
 import { inject, ref, watch } from 'vue';
-import { state } from '@/main';
+import { state, dateFormat } from '@/main';
 import Login from './Login.vue';
 import { useRouter } from 'vue-router';
+import Icon from '@/components/Icon.vue';
+
 let router = useRouter();
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
+const newServiceWindow = ref(null);
+
+const filterServiceDetails = (service) => {
+    return {
+        'Locale': service.region,
+        'CORS': service.cors,
+        'Date Created': dateFormat(service.timestamp).split(' ')[0] + '12123123123123123123'
+    }
+}
 
 async function getServices(gs) {
     if (!(gs instanceof Promise) || !state.user) {
@@ -54,3 +97,281 @@ getServices(state.getServices);
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
 </script>
+
+<style lang="less" scoped>
+@import '@/assets/variables.less';
+.header {
+    margin-top: 28px; 
+
+    * {
+        margin: 0;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    & > div {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        column-gap: 30px;
+        row-gap: 24px;
+        margin-bottom: 36px;
+    }
+
+    p {
+        color: rgba(0, 0, 0, 0.45);
+    }
+    sui-button {    
+        flex-shrink: 0;
+    }
+    sui-button svg {
+        margin-right: 4px;
+    }
+}
+.container {
+    margin-top: 40px;
+
+    &.empty {
+        background: #F5F5F5;
+        padding: 84px 0;
+        border-radius: 8px;
+        text-align: center;
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 12px;
+        }
+    }
+
+    .service {
+        display: block;
+        background: #595959;
+        padding: 24px;
+        border-radius: 8px;
+        color: unset;
+        text-decoration: unset;
+        
+        &:not(:last-child) {
+            margin-bottom: 24px;
+        }
+
+        .settings {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .name span {
+            margin-left: 12px;
+            color: rgba(255, 255, 255, .8);
+        }
+
+        .details {
+            display: flex;
+            justify-content: flex-start;
+            column-gap: 33px;
+            flex-wrap: wrap;
+            height: 21px;
+            overflow: hidden;
+
+            .title {
+                display: inline-block;
+                font-size: 14px;
+                font-weight: bold;
+                color: rgba(255, 255, 255, .4);
+                margin-right: 12px;
+            }
+
+            .value {
+                color: rgba(255, 255, 255, .8);
+            }
+        }
+    }
+}
+.indicator {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #D9D9D9;
+    border: 0.3px solid #595959;
+    box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
+    
+    &.active {
+        background: #5AD858;
+    }
+}
+
+/* @media @desktop {
+    .header {
+        margin-top: 56px;
+
+        & > div {        
+            flex-direction: row;
+            align-items: flex-end;
+            margin-bottom: 60px;
+        }
+    }
+
+    .container {
+        .service {
+            padding: 30px 40px;
+
+            &:not(:last-child) {
+                margin-bottom: 32px;
+            }
+
+            .settings {                
+                margin-bottom: 36px;
+            }
+
+            .name span {
+                font-size: 24px;
+                vertical-align: middle;
+            }
+
+            .details {
+                height: 52px;
+
+                .item {
+                    flex-shrink: 1;
+                    flex-grow: 1;
+                    max-width: 200px;
+                }
+
+                .title {
+                    display: block;
+                    margin-bottom: 12px;
+                }
+
+                .value {
+                    display: block;
+                    max-width: 200px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+} */
+
+.overlay {
+    padding: 16px;
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 32px;
+        height: 32px;
+        background-color: #BFBFBF;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        svg {
+            color: #434343;
+        }
+    }
+
+    .overlay-container {
+        background-color: #505050;
+        border: 1px solid #808080;
+        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+        color: #fff;
+        text-align: center;
+        padding: 36px 24px;
+        width: 500px;
+        max-width: 100%;
+        border-radius: 8px;
+
+        &-title {
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 1.2;
+        }
+
+        &-text {
+            margin: 40px 0 30px 0;
+        }
+
+        sui-input {
+            display: block;
+            width: 100%;
+            margin-bottom: 28px;
+        }
+    }
+}
+
+.toast {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: grid;
+        grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 10px;
+    padding: 20px 50px 28px 20px;
+    background: #FAFAFA;
+    color: rgba(0,0,0,.8);
+    filter: drop-shadow(4px 4px 12px rgba(0, 0, 0, 0.25));
+
+    .close {
+        position: absolute;
+        top: 11px;
+        right: 11px;
+        cursor: pointer;
+    }
+
+    .title {
+        display: inline-block;
+        font-weight: bold;
+        color: #293FE6;
+    }
+
+    svg:not(.close) {
+        height: 32px;
+        width: 32px;
+        color: #293FE6;
+    }
+
+    // @media @desktop {
+    //     bottom: 40px;
+    //     right: 95px;
+    //     left: unset;
+    //     column-gap: 24px;
+    //     row-gap: 0px;
+    //     border-radius: 8px;
+    //     padding: 24px 50px 24px 24px;
+    //     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    //     filter: none;
+
+    //     svg:not(.close) {
+    //         height: 40px;
+    //         width: 40px;
+    //     }
+    // }
+}
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease, bottom 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+        bottom: -10px;
+}
+</style>
