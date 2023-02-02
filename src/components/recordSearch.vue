@@ -16,7 +16,7 @@ form(
             @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
             @mounted="focusMe"
             autocomplete="off")
-        Icon.showOnTablet.placeholder-icon(v-if="!searchForm.value") search
+        Icon.showOnTablet.placeholder-icon(v-if="!searchForm.value" style='width:32px;') search
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='searchForm.isAdvanced = false')
@@ -32,8 +32,7 @@ form(
                     option(value="user") User ID
                     option(value="record") Record ID
 
-            .input-field
-                Icon.placeholder-icon(v-if="!searchForm.value" style="margin-left: 12px;") search
+            .input-field.search
                 sui-input(
                     type="search"
                     :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -228,7 +227,6 @@ let searchForm = reactive({
 
 let indexValueFormElement = ref(null);
 function focusMe(e) {
-    console.log({ e });
     e.target.focus();
 }
 function advancedFormInit() {
@@ -269,7 +267,7 @@ let fetchingData = inject('fetchingData');
 // data
 let searchResult = inject('searchResult');
 
-function search(searchParams, refresh = false) {
+function search(searchParams) {
     // search query
     let params = {
         service: serviceId
@@ -366,7 +364,7 @@ function search(searchParams, refresh = false) {
         searchResult.value = null;
     }
 
-    skapi.getRecords(params, { refresh: true, limit: 50 })
+    skapi.getRecords(params, { limit: 50 })
         .then(r => {
             searchResult.value = r;
             searchResult.value.params = params;
@@ -383,8 +381,7 @@ function search(searchParams, refresh = false) {
 
 watch(() => route.query, n => {
     if (route.name === 'recordSearch') {
-        // prevent route triggering when getting out of the page
-        search(n, true);
+        search(n);
     }
     else if (route.name === 'records') {
         advancedForm.value = advancedFormInit();
@@ -423,55 +420,6 @@ form {
         }
     }
 
-    .mobile-search-nav {
-        position: sticky;
-        top: 0;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        margin-bottom: 28px;
-        background-color: #333;
-        z-index: 1;
-        padding-left: 24px;
-
-        @media @phone {
-            padding: 0 8px;
-        }
-
-        &::after {
-            display: block;
-            position: absolute;
-            width: 100%;
-            left: 0;
-            bottom: 0;
-            content: '';
-            height: 1px;
-            background-color: rgba(255 255 255 / 60%);
-            box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .back-button {
-            display: inline;
-            height: 32px;
-            width: 32px;
-            color: rgba(255, 255, 255, .4);
-        }
-
-        sui-input {
-            box-shadow: none;
-            width: 100%;
-
-            input:focus {
-                outline: none;
-            }
-
-            &+span {
-                position: absolute;
-                right: 8px;
-            }
-        }
-    }
-
     @media @tablet {
         display: block;
         width: 100%;
@@ -496,6 +444,17 @@ form {
     sui-input {
         input::placeholder {
             color: rgba(255, 255, 255, .6);
+        }
+    }
+
+    .input-field.search {
+        input::placeholder {
+            background-image: url(/src/assets/img/icons/search.svg);
+            color: rgba(255, 255, 255, .4);
+            background-size: contain;
+            background-position:  1px center;
+            background-repeat: no-repeat;
+            text-indent: 26px;
         }
     }
 
@@ -594,7 +553,6 @@ form {
 
 .placeholder-icon {
     opacity: 0.6;
-    margin-right: 4px;
     flex-shrink: 0;
 }
 

@@ -22,7 +22,7 @@
 
             Login(v-else)
             
-            .padBlock.showOnIpad
+            .padBlock
 
     .sidebar
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
@@ -30,11 +30,7 @@
         router-link(:to="{name: 'service'}")
             Icon home
 
-        router-link(to="/")
-            Icon setting
-
-        router-link(to='/')
-            //(:to="{name: 'users'}") 
+        router-link(:to="{name: 'users'}") 
             Icon users
 
         router-link(:to="{name: 'records'}")
@@ -136,7 +132,7 @@
         main {
             .padBlock {
                 width: 100%;
-                height: 120px;
+                height: 100px;
             }
         }
     }

@@ -7,7 +7,18 @@ sui-nav#top-nav(auto-hide)
         .menu
             .hideOnTablet
                 slot
-            Icon.showOnTablet.clickable(style="height: 28px; width: 28px;" @click='open') menu_horizontal
+            template(v-if='navbarMobileRightButton')
+                Icon.showOnTablet.clickable(
+                    v-if="navbarMobileRightButton.type === 'icon'"
+                    :class="navbarMobileRightButton?.cssClass || null"
+                    style="height: 28px; width: 28px;"
+                    @click='navbarMobileRightButton?.callback') {{ navbarMobileRightButton.val }}
+                span.showOnTablet.clickable(
+                    v-if="navbarMobileRightButton.type === 'text'"
+                    style="height: 28px;"
+                    :class="navbarMobileRightButton?.cssClass || null"
+                    @click='navbarMobileRightButton?.callback') {{ navbarMobileRightButton.val }}
+            Icon.showOnTablet.clickable(v-else style="height: 28px; width: 28px;" @click='open') menu_horizontal
 
     sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' style='background-color: rgba(31, 31, 31, .6); color:white;' position="right")
         // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
@@ -59,9 +70,6 @@ sui-nav#top-nav {
 
     @media @tablet {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    @media @phone {
         padding: 0 8px;
     }
 
@@ -75,6 +83,7 @@ sui-nav#top-nav {
 
         .menu {
             flex-shrink: 0;
+            padding-right: 8px;
 
             ul {
                 margin: 0;
@@ -107,7 +116,7 @@ sui-nav#top-nav {
                 color: rgba(255, 255, 255, .4);
                 margin-right: 4px;
             }
-            
+
             span {
                 white-space: nowrap;
 
@@ -130,6 +139,7 @@ import Icon from '@/components/Icon.vue';
 const props = defineProps(['isParentLevel']);
 
 let pageTitle = inject('pageTitle');
+let navbarMobileRightButton = inject('navbarMobileRightButton');
 let navOverlay = ref(null);
 let route = useRoute();
 let router = useRouter();
@@ -142,7 +152,13 @@ watch(() => route.name, () => {
 
 function toParent() {
     let p = navbarBackDestination.value;
-    if (p?.from && p?.to && route.name === p.from) {
+    if (p === 'back') {
+        router.go(-1);
+    }
+    else if (typeof p === 'function') {
+        p();
+    }
+    else if (p?.from && p?.to && route.name === p.from) {
         router.push({ name: p.to });
     }
     else {

@@ -1,17 +1,17 @@
 <template lang="pug">
-div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="props?.record")
+template(v-if="props.record?.record_id")
 	.container(v-if="!isEdit")
-		.close(@click="close")
-			Icon X2
-		.title {{ props.record.record_id }}
-		.menu
-			ul
-				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
-				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
-			.action(@click="overlay.open")
-				Icon trash
-				span delete
-		.content
+		.head(:class="{'mobile-head': isMobileUrl}")
+			.title {{ !isMobileUrl ? props.record.record_id : '' }}
+			.menu
+				ul
+					li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
+					li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
+
+				.action(v-if='!isMobileUrl' @click="overlay.open")
+					Icon trash
+					span delete
+		.content(:class="{desktop:!isMobileUrl}")
 			.grid(v-if="view === 'information'")
 				.grid-item.title Record ID 
 				.grid-item {{ props.record.record_id }}
@@ -97,19 +97,18 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.no-data(v-else)
 					Icon(style="height: 72px; width: 72px;") no_record
 					p No Data
-		.foot.hideOnTablet
+		.foot(v-if='!isMobileUrl')
 			sui-button.line-button(@click="editRecord") Edit
 	.container(v-else)
 		form(ref="formEl")
-			.close(@click="close")
-				Icon X2
-			.title {{ form.record_id }}
-			.menu
-				ul
-					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
-					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
+			.head(:class="{'mobile-head': isMobileUrl}")
+				.title {{ !isMobileUrl ? form.record_id : ''}}
+				.menu
+					ul
+						li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
+						li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
 
-			.content#setting(v-show="view === 'information'")
+			.content#setting(:class="{desktop:!isMobileUrl}" v-show="view === 'information'")
 				.row
 					.section(style="width: 100%;")
 						.name Table Name
@@ -117,8 +116,12 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 
 				.row
 					.section
-						.name Reference ID
-							span(style="float: right;") ?
+						.name 
+							span Reference ID
+							sui-tooltip
+								Icon(slot="tool") question
+								div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
+					
 						sui-input(:value="form.reference" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference = e.target.value")
 					.section
 						.name Access Group
@@ -165,21 +168,24 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				.row
 					.section
 						.name(style="display: flex; align-items: center;")
-							sui-input#allow_reference(
-								type="checkbox" 
-								style="margin-right: 8px; vertical-align: middle;"
-								@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
-								:checked="form.config.reference_limit !== 0 ? true : null")
+							label
+								sui-input(
+									type="checkbox" 
+									style="margin-right: 8px; color:white;"
+									@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
+									:checked="form.config.reference_limit !== 0 ? true : null")
 
-							label(for="allow_reference") Allow Reference
+								span Allow Reference
 
 						.reference-container(v-if="allowReference")
 							div
-								label(for="allow_multiple_reference" style="margin-right: 8px;") Allow Multiple Reference
-								sui-input#allow_multiple_reference(
-									type="checkbox"
-									@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
-									:checked="form.config.allow_multiple_reference ? true : null")
+								label
+									span Allow Multiple Reference
+									sui-input#allow_multiple_reference(
+										style="color:white; margin-left: 8px"
+										type="checkbox"
+										@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
+										:checked="form.config.allow_multiple_reference ? true : null")
 
 							div
 								span Reference Limit:
@@ -196,7 +202,7 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 				//- 		.name Access 
 				//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
-			.content#record(v-show="view === 'record'")
+			.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
 				template(v-for="(keyData, keyIndex) in data")
 					.data-row(v-for="(record, index) in keyData.data")
 						.data-name-action
@@ -215,18 +221,19 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 								Icon trash
 						.data-values 
 							template(v-if="record.type === 'file'")
-								.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="onDrop($event, keyIndex, index)" @click="openFileInput($event)")
-									input(style="display: none;" type="file" @change="addFiles($event, keyIndex, index)" multiple)
+								.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
+									input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
 									div
 										Icon attached
 										span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
 										sui-button.line-button(@click.prevent.stop="" type="button") Upload
-								.value.file(v-for="(file, index) in record.data")
-									Icon attached
-									span
-										.filename {{ file.name || file.filename }}
-										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon.remove(@click="record.data.splice(index, 1)") X
+								template(v-for="(file, index) in record.data")
+									.value.file(v-if="file.md5")
+										Icon attached
+										span
+											.filename {{ file.name || file.filename }}
+											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+										Icon.remove(@click="record.data.splice(index, 1)") X
 
 							sui-textarea.data-input-field(
 								v-else-if="record.type === 'json'"
@@ -240,20 +247,22 @@ div(style="padding: 16px; box-sizing: border-box; position: relative;" v-if="pro
 							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 								div Value:
 								div
-									label True
-									sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
+									label
+										span True
+										sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
 								div
-									label False
-									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
+									label 
+										span False
+										sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
 
 							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
 							sui-textarea.data-input-field(v-else style="height: auto;" :name="keyData.key" spellcheck="false" placeholder="Key Value" :value="record.data")
-							
+
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
-			.foot.hideOnTablet
+			.foot(v-if='!isMobileUrl')
 				sui-button(type="button" @click="isEdit = false" style="margin-right: 16px;").line-button Cancel
 				div(style="display: inline-block")
 					sui-button(v-if="isSaving" type="button" disabled)
@@ -281,7 +290,7 @@ sui-overlay(ref="exitEditOverlay")
 			sui-button.line-button(@click="confirmClose") Yes
 </template>
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
 import TagsInput from '@/components/TagsInput.vue';
@@ -307,9 +316,10 @@ const allowReference = computed(() => {
 	return true;
 });
 
+const isMobileUrl = route.query?.id;
+
 watch(() => props.record, () => {
-	indexValueType.value = typeof props.record.index.value;
-	console.log(props.record);
+	indexValueType.value = typeof props.record?.index?.value || 'string';
 });
 
 const editRecord = () => {
@@ -400,11 +410,8 @@ const save = async () => {
 	Object.assign(form.value, {
 		service: serviceId,
 		formData: form => {
-			console.log("DATA", data.value);
 			data.value.forEach(record => {
-				console.log({ record });
 				record.data.forEach(field => {
-					console.log({ field });
 					if (field.type === 'json') {
 						form.append(record.key, new Blob([field.data], {
 							type: 'application/json'
@@ -424,7 +431,6 @@ const save = async () => {
 			});
 			return form;
 		}
-
 	});
 
 	if (!form.value.index?.name) {
@@ -446,15 +452,18 @@ const save = async () => {
 	}
 
 	form.value.access_group = Number(form.value.access_group);
-	skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value).then(r => {
+	try {
+		let r = await skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value);
 		for (let k in r) {
 			props.record[k] = r[k];
 		}
 		isSaving.value = false;
 		isEdit.value = false;
-	}).catch(e => {
+	} catch (e) {
+		// do some error message
 		isSaving.value = false;
-	});
+		throw e;
+	};
 };
 
 const onDrop = (event, keyIndex, index) => {
@@ -529,6 +538,8 @@ const confirmClose = () => {
 	emit('close');
 };
 
+let recordToOpen = inject('recordToOpen');
+
 const close = () => {
 	if (isEdit.value) {
 		exitEditOverlay.value.open();
@@ -537,38 +548,27 @@ const close = () => {
 	isEdit.value = false;
 	view.value = 'information';
 	emit('close');
+	recordToOpen.value = null;
 };
 
 defineExpose({
-	close
+	close,
+	editRecord,
+	save
 });
 </script>
 <style lang="less" scoped>
 .container {
 	background: #505050;
-	border: 1px solid #808080;
-	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
-	border-radius: 8px;
-	width: 500px;
-	max-width: 100%;
+	position: relative;
 
-	.close {
-		position: absolute;
-		right: 0;
-		top: 0;
-		background-color: #D9D9D9;
-		width: 32px;
-		height: 32px;
-		border-radius: 50%;
-		color: #434343;
-		cursor: pointer;
+	.head {
+		background-color: #505050;
+	}
 
-		svg {
-			user-select: none;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
+	.head.mobile-head {
+		.title {
+			padding: 8px 0;
 		}
 	}
 
@@ -615,12 +615,15 @@ defineExpose({
 		}
 	}
 
+	.content.desktop {
+		max-height: calc(100vh - 250px);
+		overflow-y: auto;
+		height: 700px;
+	}
+
 	.content {
 		background-color: #333333;
 		padding: 30px 20px 20px 20px;
-		height: 700px;
-		max-height: calc(100vh - 250px);
-		overflow-y: auto;
 
 		.grid {
 			display: grid;
@@ -751,8 +754,8 @@ defineExpose({
 					display: flex;
 					gap: 20px;
 
-					label {
-						margin-right: 8px;
+					label sui-input {
+						margin-left: 8px;
 					}
 				}
 
@@ -880,6 +883,21 @@ defineExpose({
 			.name {
 				margin-bottom: 8px;
 				font-weight: bold;
+				
+				sui-tooltip {
+					float: right;
+					vertical-align: middle;
+
+					svg {
+						color: rgba(255, 255, 255, 0.6);
+					}
+
+					div {
+						background: #D9D9D9;
+						color: rgba(0, 0, 0, 0.85);
+						padding: 16px;
+					}
+				}
 			}
 
 			.reference-container {
@@ -925,7 +943,6 @@ defineExpose({
 					border-radius: 2px;
 					border-width: 2px;
 					border-color: rgba(255, 255, 255, 1);
-					vertical-align: baseline;
 
 					&[checked] {
 						border: none;
@@ -953,6 +970,17 @@ defineExpose({
 				margin-left: 8px;
 				font-size: 16px;
 			}
+		}
+	}
+
+	
+
+	label {
+		cursor: pointer;
+
+		span {	
+			line-height: 1;
+		    vertical-align: middle;
 		}
 	}
 

@@ -20,7 +20,6 @@ import Admin from './admin';
 let skapi = new Admin();
 
 skapi.getConnection().then(c => {
-    console.log(skapi);
     state.connection = c;
     state.user = skapi.user;
 });
