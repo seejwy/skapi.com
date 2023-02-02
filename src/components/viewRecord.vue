@@ -257,7 +257,7 @@ template(v-if="props.record?.record_id")
 
 							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
 
-							sui-textarea.data-input-field(v-else style="height: auto;" :name="keyData.key" spellcheck="false" placeholder="Key Value" :value="record.data")
+							sui-textarea.data-input-field(v-else style="height: auto;" :name="keyData.key" spellcheck="false" placeholder="Key Value") {{ record.data }}
 
 				div
 					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
@@ -277,7 +277,7 @@ sui-overlay(ref="overlay")
 			div Are you sure?
 		.body Are you sure you want to delete the record?
 		.foot
-			sui-button(@click="overlay.close") No 
+			sui-button(@click="()=>overlay.close()") No 
 			sui-button.line-button(@click="deleteRecord") Yes
 sui-overlay(ref="exitEditOverlay")
 	.popup
@@ -286,7 +286,7 @@ sui-overlay(ref="exitEditOverlay")
 			div Are you sure?
 		.body Are you sure you want to close? You are still editing.
 		.foot
-			sui-button(@click="exitEditOverlay.close") No 
+			sui-button(@click="()=>exitEditOverlay.close()") No 
 			sui-button.line-button(@click="confirmClose") Yes
 </template>
 <script setup>

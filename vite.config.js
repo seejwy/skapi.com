@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [vue({
     template: {
       compilerOptions: {
-        isCustomElement: tag => /^sui-/.test(tag),
+        // isCustomElement: tag => /^sui-/.test(tag),   
       }
     }
   })],
