@@ -27,19 +27,19 @@
             .title
                 Icon users
                 span Authentication
-            div Users are data that your service user's will store and read from your service database. 
+            .body Users are data that your service user's will store and read from your service database. 
             RouterLink(:to="{name: 'users'}") Go to Users >
         .service-grid-item  
             .title
                 Icon folder_open
                 span Record
-            div Users are data that your service user's will store and read from your service database. 
+            .body Users are data that your service user's will store and read from your service database. 
             RouterLink(:to="{name: 'records'}") Go to Records >
         .service-grid-item 
             .title
                 Icon mail
                 span Email System
-            div Users are data that your service user's will store and read from your service database. 
+            .body Users are data that your service user's will store and read from your service database. 
             RouterLink(to="/") Go to Mail >
 
 </template>
@@ -126,14 +126,22 @@ const settingGrid = reactive([
     border-radius: 12px;
     margin: 40px 0;
 
+    &:first-child {
+        margin-top: 60px;
+    }
     h2,
     p {
+        color: rgba(255, 255, 255, .85);
         margin: 0;
     }
 
     h2 {
         font-size: 20px;
         margin-bottom: 40px;
+    }
+
+    p {
+        line-height: 1.5;
     }
 
     .action {
@@ -196,7 +204,11 @@ const settingGrid = reactive([
 .service-grid {
     display: flex;
     justify-content: space-between;
-    gap: 100px;
+    gap: 20px;
+
+    @media screen and (max-width: 825px) {
+        flex-direction: column;
+    }
 
     &-item {
         display: flex;
@@ -209,8 +221,8 @@ const settingGrid = reactive([
 
         .title {
             display: inline-block;
-            color: rgba(255, 255, 255, 0.85);
             margin-bottom: 28px;
+            font-size: 20px;
 
             span {        
                 margin-left: 8px;    
@@ -218,11 +230,15 @@ const settingGrid = reactive([
             }
         }
 
+        .body {    
+            color: rgba(255, 255, 255, 0.85);
+        }
+
         a {
             text-align: left;
             margin-top: 40px;
             color: rgba(255, 255, 255, 0.6);
-            font-size: 12px;
+            font-size: 14px;
             text-decoration: none;
         }
     }

@@ -6,7 +6,7 @@ div(v-else-if='state?.user')
     .header
         h1 Services
         div
-            p Description of what service is.Description of what service is. Description of what service is.Description of what service is. Description of what service is.Description of what service is. Description of what service is.Description of what service is.
+            p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
             sui-button(type="button" @click="newServiceWindow.open()")
                 Icon plus2
                 span New Service
@@ -21,8 +21,8 @@ div(v-else-if='state?.user')
                         Icon right
                     .details
                         .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
-                            span.title {{  key }}
-                            span.value {{ value || '-' }}
+                            .title {{  key }}
+                            .value {{ value || '-' }}
     .container.empty(v-else)
         .title No Services
         span Get started by creating a new service. 
@@ -31,7 +31,7 @@ div(v-else-if='state?.user')
             Icon warning_bell
             .title Email Verfication is Needed
             div
-            div Something to tell you
+            .body Something to tell you
             Icon.close(@click="isOpen = false") X2
     sui-overlay(style="background: rgba(0, 0, 0, 0.6)" ref="newServiceWindow" @click="newServiceWindow.close()")
         div.overlay
@@ -101,7 +101,7 @@ watch(() => state.getServices, getServices);
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 .header {
-    margin-top: 28px; 
+    margin-top: 60px; 
 
     * {
         margin: 0;
@@ -109,24 +109,27 @@ watch(() => state.getServices, getServices);
 
     h1 {
         font-size: 28px;
-        margin-bottom: 12px;
+        margin-bottom: 20px;
     }
 
     & > div {
         display: flex;
         align-items: flex-start;
-        flex-direction: column;
+        align-items: flex-end;
         column-gap: 30px;
         row-gap: 24px;
         margin-bottom: 36px;
+        line-height: 1.5;
     }
 
     p {
-        color: rgba(0, 0, 0, 0.45);
+        color: rgba(0, 0, 0, 0.85);
     }
+
     sui-button {    
         flex-shrink: 0;
     }
+    
     sui-button svg {
         margin-right: 4px;
     }
@@ -151,7 +154,7 @@ watch(() => state.getServices, getServices);
     .service {
         display: block;
         background: #595959;
-        padding: 24px;
+        padding: 32px 40px;
         border-radius: 8px;
         color: unset;
         text-decoration: unset;
@@ -165,12 +168,14 @@ watch(() => state.getServices, getServices);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 32px;
         }
 
         .name span {
             margin-left: 12px;
             color: rgba(255, 255, 255, .8);
+            font-size: 24px;
+            vertical-align: middle;
         }
 
         .details {
@@ -178,19 +183,26 @@ watch(() => state.getServices, getServices);
             justify-content: flex-start;
             column-gap: 33px;
             flex-wrap: wrap;
-            height: 21px;
             overflow: hidden;
 
+            @media screen and (max-width: 825px) {
+                .hide-mobile {
+                    display: none;
+                }
+            }
+
             .title {
-                display: inline-block;
                 font-size: 14px;
                 font-weight: bold;
                 color: rgba(255, 255, 255, .4);
-                margin-right: 12px;
+                margin-bottom: 12px;
             }
 
             .value {
                 color: rgba(255, 255, 255, .8);
+                width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
     }
@@ -210,59 +222,6 @@ watch(() => state.getServices, getServices);
         background: #5AD858;
     }
 }
-
-/* @media @desktop {
-    .header {
-        margin-top: 56px;
-
-        & > div {        
-            flex-direction: row;
-            align-items: flex-end;
-            margin-bottom: 60px;
-        }
-    }
-
-    .container {
-        .service {
-            padding: 30px 40px;
-
-            &:not(:last-child) {
-                margin-bottom: 32px;
-            }
-
-            .settings {                
-                margin-bottom: 36px;
-            }
-
-            .name span {
-                font-size: 24px;
-                vertical-align: middle;
-            }
-
-            .details {
-                height: 52px;
-
-                .item {
-                    flex-shrink: 1;
-                    flex-grow: 1;
-                    max-width: 200px;
-                }
-
-                .title {
-                    display: block;
-                    margin-bottom: 12px;
-                }
-
-                .value {
-                    display: block;
-                    max-width: 200px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-            }
-        }
-    }
-} */
 
 .overlay {
     padding: 16px;
@@ -315,19 +274,25 @@ watch(() => state.getServices, getServices);
 
 .toast {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     display: grid;
-        grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr;
     align-items: center;
-    column-gap: 12px;
-    row-gap: 10px;
-    padding: 20px 50px 28px 20px;
+    bottom: 40px;
+    right: 95px;
+    left: unset;
+    column-gap: 24px;
+    row-gap: 0px;
+    border-radius: 8px;
+    padding: 24px 60px 40px 24px;
     background: #FAFAFA;
-    color: rgba(0,0,0,.8);
-    filter: drop-shadow(4px 4px 12px rgba(0, 0, 0, 0.25));
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
 
+    svg:not(.close) {
+        height: 40px;
+        width: 40px;
+        color: #293FE6;    
+    }
+    
     .close {
         position: absolute;
         top: 11px;
@@ -341,28 +306,48 @@ watch(() => state.getServices, getServices);
         color: #293FE6;
     }
 
-    svg:not(.close) {
-        height: 32px;
-        width: 32px;
-        color: #293FE6;
+
+    @media @tablet {
+        column-gap: 12px;
+        row-gap: 10px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 50px 28px 20px;
+        color: rgba(0,0,0,.8);
+        border-radius: 0;
+        filter: drop-shadow(0px -2px 4px rgba(0, 0, 0, 0.25));
+        
+        svg:not(.close) {
+            height: 32px;
+            width: 32px;
+        }
     }
+}
 
-    // @media @desktop {
-    //     bottom: 40px;
-    //     right: 95px;
-    //     left: unset;
-    //     column-gap: 24px;
-    //     row-gap: 0px;
-    //     border-radius: 8px;
-    //     padding: 24px 50px 24px 24px;
-    //     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-    //     filter: none;
-
-    //     svg:not(.close) {
-    //         height: 40px;
-    //         width: 40px;
-    //     }
-    // }
+@media @tablet {
+    .header {
+        & > div {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+    .container {
+        .service {
+            padding: 24px 20px;
+            .name span{
+                font-size: 16px;
+            }   
+            .details .item {
+                .title,
+                .value {
+                    display: inline-block;
+                    margin: 0 12px 0 0;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
 }
 .v-enter-active,
 .v-leave-active {

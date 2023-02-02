@@ -1,9 +1,9 @@
 <template lang="pug">
 .page-header
     h1 Users
-    p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
-    sui-button.line-button(style="float: right") Read Doc
-    div(style="clear:both;")
+    div
+        p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
+        sui-button.line-button(style="float: right") Read Doc
 .actions-wrapper(v-if="viewport === 'desktop'")
     .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
         .select-field
@@ -278,14 +278,38 @@ getUsers();
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 .page-header {
-    padding: 50px 0;
+    padding: 60px 0;
+
+    & > div {
+        display: flex;
+        column-gap: 30px;
+        row-gap: 24px;
+    }
+    h1 {
+        margin: 0;
+    }
 
     p {
+        margin: 20px 0 0 0;
         line-height: 1.5;
+        color: rgba(255, 255, 255, .85);
     }
     
+    sui-button {
+        flex-shrink: 0;
+        align-self: flex-end;
+    }
+
     @media @tablet {
-        padding: 24px 0;
+        padding: 24px 0 32px 0;
+
+        & > div {        
+            flex-direction: column;
+        }
+
+        sui-button {
+            align-self: flex-start;
+        }
     }
 }
 .actions-wrapper {
