@@ -32,8 +32,7 @@ form(
                     option(value="user") User ID
                     option(value="record") Record ID
 
-            .input-field
-                Icon.placeholder-icon(v-if="!searchForm.value" style="margin-left: 12px;") search
+            .input-field.search
                 sui-input(
                     type="search"
                     :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -445,6 +444,17 @@ form {
     sui-input {
         input::placeholder {
             color: rgba(255, 255, 255, .6);
+        }
+    }
+
+    .input-field.search {
+        input::placeholder {
+            background-image: url(/src/assets/img/icons/search.svg);
+            color: rgba(255, 255, 255, .4);
+            background-size: contain;
+            background-position:  1px center;
+            background-repeat: no-repeat;
+            text-indent: 26px;
         }
     }
 
