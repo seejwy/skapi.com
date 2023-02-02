@@ -389,7 +389,7 @@ const save = async () => {
 	if (!formEl.value.checkValidity()) {
 		let currentPageIsValid = true;
 
-		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input`).forEach((el) => {
+		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input, sui-textarea textarea`).forEach((el) => {
 			if (currentPageIsValid && !el.reportValidity()) {
 				currentPageIsValid = false;
 			}
