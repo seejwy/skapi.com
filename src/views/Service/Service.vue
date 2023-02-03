@@ -7,9 +7,8 @@
 .container
     h2 Service Information
     .information-grid
-        .information-grid-item(v-for="info in informationGrid")
+        .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
             .name {{ info.name }}
-            .value {{ service[info.key] }}
             .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
             .value(v-else) {{ service[info.key] }}
 
@@ -56,6 +55,7 @@ ul
 </template>
 <script setup>
 import { inject, reactive } from 'vue';
+import { regionName, dateFormat } from '@/main';
 import Icon from '../../components/Icon.vue';
 
 let service = inject('service');
@@ -64,28 +64,35 @@ pageTitle.value = 'Service "' + service.value.name + '"'
 
 const informationGrid = reactive([
     {
-        name: 'Name of Service',
-        key: 'name'
-    },
-    {
-        name: 'Date Created',
-        key: 'timestamp'
-    },
-    {
         name: 'Service ID',
-        key: 'service'
+        key: 'service',
+        span: 2
+    },
+    {
+        name: 'User ID',
+        key: 'owner',
+        span: 2
+    },
+    {
+        name: 'Group',
+        key: 'group',
+        filter: (value) => {
+            return value === 1 ? "Basic" : "Premium";
+        }
     },
     {
         name: 'Service Location',
-        key: 'region'
+        key: 'region',
+        filter: (value) => {
+            return regionName(value);
+        }
     },
     {
-        name: 'CORS',
-        key: 'cors'
-    },
-    {
-        name: 'API Key',
-        key: 'api_key'
+        name: 'Date Created',
+        key: 'timestamp',
+        filter: (value) => {
+            return dateFormat(value).split(' ')[0];
+        }
     },
     {
         name: 'Storage Use',
@@ -96,10 +103,6 @@ const informationGrid = reactive([
         }
     },
     {
-        name: 'User ID',
-        key: 'owner'
-    },
-    {
         name: '# of Users',
         key: 'users'
     },
@@ -107,14 +110,31 @@ const informationGrid = reactive([
         name: '# of Newsletter Sub',
         key: 'newsletter_subscribers'
     },
-    {
-        name: 'Group',
-        key: 'group'
-    },
 
+])
+
+const settingGrid = reactive([
+    {
+        name: 'Enable/Disable',
+        key: 'active',
+    },
+    {
+        name: 'Name of Service',
+        key: 'name',
+    },
+    {
+        name: 'CORS',
+        key: 'cors'
+    },
+    {
+        name: 'API Key',
+        key: 'api_key'
+    },
 ])
 </script>
 <style lang="less" scoped>
+@import '@/assets/variables.less';
+
 .container {
     padding: 40px;
     background: #434343;
@@ -143,9 +163,6 @@ const informationGrid = reactive([
 }
 
 .information-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     column-gap: 16px;
