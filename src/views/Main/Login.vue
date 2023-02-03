@@ -1,5 +1,5 @@
 <template lang="pug">
-sui-overlay(ref="overlay")
+sui-overlay(ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
     .container
         h1 Login
         .input
@@ -67,9 +67,12 @@ defineExpose({
 
 .container {
     text-align: center;
-    margin: 100px auto 0;
     max-width: 400px;
-
+    padding: 40px 30px;
+    background: #FAFAFA;
+    color: rgba(0, 0, 0, 0.85);
+    border-radius: 8px;
+    
     @media @tablet {
         margin-top: 50px;
     }
