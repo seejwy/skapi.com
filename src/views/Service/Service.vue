@@ -148,9 +148,17 @@ const settingGrid = reactive([
     }
 
     @media @tablet {    
-        margin: 16px 0;
+        margin: 16px -16px;
         padding: 40px 20px;
         border-radius: 0;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    @media @phone {    
+        margin: 16px -8px;
     }
 }
 
