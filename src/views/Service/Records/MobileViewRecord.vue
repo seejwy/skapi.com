@@ -21,6 +21,11 @@ let editCallback = () => {
         type: 'text',
         val: 'SAVE',
         callback: () => {
+            navbarMobileRightButton.value = {
+                    type: 'icon',
+                    val: 'loading',
+                    cssClass: 'animation-rotation--slow-in-out'
+                };
             viewRecord.value.save().then(() => {
                 navbarMobileRightButton.value = {
                     type: 'text',
