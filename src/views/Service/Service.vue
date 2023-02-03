@@ -10,6 +10,17 @@
         .information-grid-item(v-for="info in informationGrid")
             .name {{ info.name }}
             .value {{ service[info.key] }}
+            .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
+            .value(v-else) {{ service[info.key] }}
+
+.container
+    h2 Service Setting 
+    .setting-grid 
+        .setting-grid-item(v-for="setting in settingGrid")
+            .name {{ setting.name }}
+            .value {{  service[setting.key] || '-' }}
+        .setting-grid-item.actions
+            sui-button.line-button Edit
 .container
     h2 Manage your Service 
     .service-grid 
@@ -78,7 +89,11 @@ const informationGrid = reactive([
     },
     {
         name: 'Storage Use',
-        key: null
+        key: 'storage',
+        filter: (value) => {
+            let val = value || 0;
+            return `${val}KB`
+        }
     },
     {
         name: 'User ID',
@@ -119,12 +134,63 @@ const informationGrid = reactive([
     .action {
         text-align: right;
     }
+
+    @media @tablet {    
+        margin: 16px 0;
+        padding: 40px 20px;
+        border-radius: 0;
+    }
 }
 
 .information-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 16px;
+    row-gap: 36px;
+
+    &-item {
+        .name {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+        }
+
+        .value {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        &.span-2 {
+            grid-column: span 2;
+        }
+    }
+
+    @media screen and (max-width: 980px) {    
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media screen and (max-width: 730px) {    
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media @phone {
+        grid-template-columns: repeat(1, 1fr);
+        &-item {
+            &.span-2 {
+                grid-column: span 1;
+            }
+        }
+    }
+}
+
+.setting-grid {
+    display: grid;
+    column-gap: 12px;
+    row-gap:36px;
+    grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
 
     &-item {
         .name {
@@ -134,8 +200,39 @@ const informationGrid = reactive([
 
         .value {
             color: rgba(255, 255, 255, 0.85);
+            word-break: break-all;
+        }
+
+        &.actions {
+            align-self: flex-end;
+            justify-self: flex-end;
         }
     }
+
+    @media screen and (max-width: 1000px) {
+        grid-template-columns: repeat(2, calc(50% - 6px));
+        &-item {
+            &.actions {
+                grid-column: span 2;
+                align-self: flex-end;
+                justify-self: flex-end;
+            }
+        }
+    }
+
+    @media @phone {
+        display: flex;
+        flex-direction: column;
+
+        &-item {
+            &.actions {         
+                grid-column: span 2;
+                justify-self: flex-end;
+            }
+        }
+    }
+
+    
 }
 
 .service-grid {
