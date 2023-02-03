@@ -1,27 +1,28 @@
 <template lang="pug">
-.container
-    h1 Login
-    .input
-        label Email
-        sui-input(:value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com")
-    .input
-        label Password
-        sui-input(:value='form.password' type='password' @input="e=>form.password = e.target.value" placeholder="Enter password")
-    .action
-        label
-            sui-input(type="checkbox")
-            span Remember Me
-        RouterLink(to="/") Forgot Email & Password?
-    .error(v-if="true")
-        Icon warning
-        span There is an error message going on here!!
-    sui-button(@click='login') Login
-    div Not registered yet? 
-        RouterLink(to="/") Create an account
+sui-overlay(ref="overlay")
+    .container
+        h1 Login
+        .input
+            label Email
+            sui-input(:value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com")
+        .input
+            label Password
+            sui-input(:value='form.password' type='password' @input="e=>form.password = e.target.value" placeholder="Enter password")
+        .action
+            label
+                sui-input(type="checkbox")
+                span Remember Me
+            RouterLink(to="/") Forgot Email & Password?
+        .error(v-if="true")
+            Icon warning
+            span There is an error message going on here!!
+        sui-button(@click='login') Login
+        div Not registered yet? 
+            RouterLink(to="/") Create an account
 
 </template>
 <script setup>
-import { inject, watch, reactive } from 'vue';
+import { onMounted, inject, watch, reactive, ref } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -29,6 +30,7 @@ import Icon from '../../components/Icon.vue';
 
 let route = useRoute();
 let router = useRouter();
+const overlay = ref(null);
 
 // set page title
 let pageTitle = inject('pageTitle');
@@ -52,6 +54,11 @@ function login() {
         state.user = u;
     });
 }
+
+onMounted(() => {
+    console.log(overlay.value);
+    overlay.value.open();
+})
 
 </script>
 <style lang="less" scoped>
