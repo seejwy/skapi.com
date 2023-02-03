@@ -62,4 +62,10 @@ getServices(state.getServices);
 
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
+watch(() => state.user, u => {
+    if (!u) {
+        // throw user to login page if not logged in
+        router.push('/');
+    }
+});
 </script>
