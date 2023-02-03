@@ -121,24 +121,24 @@ const currentSelectedUsersPage = ref(0);
 
 const blockUsers = async () => {
     let blockPromise = selectedUsers.value.map((user) => {
-        return Promise; //change this to a block user function
-    })
+        return skapi.blockAccount({service: serviceId, user});
+    });
 
     await Promise.all(blockPromise);
 }
 
 const unblockUsers = async () => {
     let unblockPromise = selectedUsers.value.map((user) => {
-        return Promise; //change this to a unblock user function
-    })
+        return skapi.unblockAccount({service: serviceId, user});
+    });
 
     await Promise.all(unblockPromise);
 }
 
 const deleteUsers = async () => {
     let deletePromise = selectedUsers.value.map((user) => {
-        return Promise; //change this to a delete user function
-    })
+        return skapi.deleteAccount({service: serviceId, user});
+    });
 
     await Promise.all(deletePromise);
 }
