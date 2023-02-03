@@ -1,4 +1,4 @@
-import { Skapi } from 'skapi-js';
+import { Skapi, SkapiError } from 'skapi-js';
 
 export default class Admin extends Skapi {
     // default email templates
@@ -238,6 +238,7 @@ export default class Admin extends Skapi {
          *      userId: user id
          * }
          */
+        console.log({key:this.__user, session: this.session});
         await this.requireAdmin({ throwError: true });
         return await this.request('block-account', { service: params.service, block: params.userId }, { auth: true });
     }
