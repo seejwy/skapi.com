@@ -23,7 +23,11 @@
             sui-button.line-button Edit
     .setting-grid 
         .setting-grid-item(v-for="setting in settingGrid")
-            .name {{ setting.name }}
+            .name 
+                span {{ setting.name }}
+                sui-tooltip(v-if="setting.tip")
+                    Icon(slot="tool") question
+                    div(slot="tip") {{ setting.tip }}
             .value {{  service[setting.key] || '-' }}
 .container
     h2 Manage your Service 
@@ -121,11 +125,13 @@ const settingGrid = reactive([
     },
     {
         name: 'CORS',
-        key: 'cors'
+        key: 'cors',
+        tip: 'Cors tip goes here',
     },
     {
         name: 'API Key',
-        key: 'api_key'
+        key: 'api_key',
+        tip: 'Cors tip goes here',
     },
 ])
 </script>
@@ -325,5 +331,9 @@ const settingGrid = reactive([
     @media screen and (max-width: 850px) {
         flex-direction: column;
     }
+}
+sui-tooltip {
+    margin-top: -7px;
+    margin-left: 8px;
 }
 </style>
