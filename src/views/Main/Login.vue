@@ -30,8 +30,10 @@ import Icon from '../../components/Icon.vue';
 
 let route = useRoute();
 let router = useRouter();
-const overlay = ref(null);
-
+let overlay;
+const open = () => {
+    overlay.open();
+}
 // set page title
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
@@ -51,15 +53,14 @@ watch(() => state.user, u => {
 
 function login() {
     skapi.login(form).then(u => {
-        state.user = u;
+        state.user = u;    
+        overlay.close();
     });
 }
 
-onMounted(() => {
-    console.log(overlay.value);
-    overlay.value.open();
-})
-
+defineExpose({
+    open
+});
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';

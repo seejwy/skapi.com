@@ -20,7 +20,7 @@
             template(v-else-if='service')
                 router-view
 
-            Login(v-else)
+            Login(v-else ref="login")
             
             .padBlock
 
@@ -144,8 +144,8 @@ import NotExists from '@/views/Main/404.vue';
 import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';
 
-import { provide, inject, watch, ref } from 'vue';
-import { skapi, state } from '@/main';
+import { provide, inject, watch, ref, onMounted } from 'vue';
+import { skapi, state, log, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 let router = useRouter();
@@ -167,6 +167,16 @@ provide('fetchingData', ref(false));
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service';
+
+let login;
+
+onMounted(() => {
+    awaitConnection.then(()=>{
+        if(!state.user) {
+            login.open();
+        }
+    });
+});
 
 function getServices(gs) {
     if (!(gs instanceof Promise)) {
