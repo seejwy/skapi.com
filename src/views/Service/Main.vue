@@ -211,7 +211,7 @@ watch(() => state.getServices, getServices);
 watch(() => state.user, u => {
     if (!u) {
         // throw user to login page if not logged in
-        router.replace('/login');
+        router.push('/');
     }
 });
 </script>
