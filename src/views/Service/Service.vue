@@ -14,18 +14,17 @@
             .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
             .value(v-else) {{ service[info.key] }}
 
-.container 
-    .title-wrapper
-        Icon setting
-        h2 Service Setting 
-    h2 Service Setting 
-        h2 Service Setting 
-        
+.container
+    .title-actions-wrapper
+        .title-wrapper
+            Icon setting
+            h2 Service Setting 
+        .actions
+            sui-button.line-button Edit
+    .setting-grid 
         .setting-grid-item(v-for="setting in settingGrid")
             .name {{ setting.name }}
             .value {{  service[setting.key] || '-' }}
-        .setting-grid-item.actions
-            sui-button.line-button Edit
 .container
     h2 Manage your Service 
     .service-grid 
@@ -151,6 +150,10 @@ const settingGrid = reactive([
         margin-bottom: 32px;
     }
 
+    .title-actions-wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
 
     .title-wrapper {
         margin-bottom: 32px;
