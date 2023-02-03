@@ -24,18 +24,23 @@
     h2 Manage your Service 
     .service-grid 
         .service-grid-item
-            div
-                Icon user_setting
-                span.title Authentication
-            div something else
+            .title
+                Icon users
+                span Authentication
+            .body Users are data that your service user's will store and read from your service database. 
+            RouterLink(:to="{name: 'users'}") Go to Users >
         .service-grid-item  
-            div
-                Icon service
-                span.title Record
+            .title
+                Icon folder_open
+                span Record
+            .body Users are data that your service user's will store and read from your service database. 
+            RouterLink(:to="{name: 'records'}") Go to Records >
         .service-grid-item 
-            div
+            .title
                 Icon mail
-                span.title Email System
+                span Email System
+            .body Users are data that your service user's will store and read from your service database. 
+            RouterLink(to="/") Go to Mail >
 
 .container
     h2 Security 
@@ -307,6 +312,9 @@ const settingGrid = reactive([
     gap: 100px;
 
     &-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         width: 100%;
         background: rgba(255, 255, 255, 0.1);
         padding: 20px;
@@ -314,9 +322,25 @@ const settingGrid = reactive([
 
         .title {
             display: inline-block;
-            margin-left: 8px;
-            vertical-align: middle;
+            margin-bottom: 28px;
+            font-size: 20px;
+
+            span {        
+                margin-left: 8px;    
+                vertical-align: middle;
+            }
+        }
+
+        .body {    
             color: rgba(255, 255, 255, 0.85);
+        }
+
+        a {
+            text-align: left;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            text-decoration: none;
         }
     }
 }
