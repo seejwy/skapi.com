@@ -24,39 +24,26 @@
     h2 Manage your Service 
     .service-grid 
         .service-grid-item
-            .title
-                Icon users
-                span Authentication
-            .body Users are data that your service user's will store and read from your service database. 
+            .content
+                .title
+                    Icon users
+                    span Authentication
+                .body Users are data that your service user's will store and read from your service database. 
             RouterLink(:to="{name: 'users'}") Go to Users >
         .service-grid-item  
-            .title
-                Icon folder_open
-                span Record
-            .body Users are data that your service user's will store and read from your service database. 
+            .content
+                .title
+                    Icon folder_open
+                    span Record
+                .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
             RouterLink(:to="{name: 'records'}") Go to Records >
         .service-grid-item 
-            .title
-                Icon mail
-                span Email System
-            .body Users are data that your service user's will store and read from your service database. 
+            .content
+                .title
+                    Icon mail
+                    span Email System
+                .body Users are data that your service user's will store and read from your service database. 
             RouterLink(to="/") Go to Mail >
-
-.container
-    h2 Security 
-    p Well, this is how you start a service!!
-    div.action
-        sui-button.line-button Edit
-
-h1 Service Dashboard
-h4 {{ service.name }}
-hr
-ul
-    li
-        router-link(:to="{name:'records'}") Records
-    li
-        router-link(:to="{name:'users'}") Users
-
 </template>
 <script setup>
 import { inject, reactive } from 'vue';
@@ -218,55 +205,7 @@ const settingGrid = reactive([
         .name {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
-        }
-
-        .value {
-            color: rgba(255, 255, 255, 0.85);
-            word-break: break-all;
-        }
-
-        &.actions {
-            align-self: flex-end;
-            justify-self: flex-end;
-        }
-    }
-
-    @media screen and (max-width: 1000px) {
-        grid-template-columns: repeat(2, calc(50% - 6px));
-        &-item {
-            &.actions {
-                grid-column: span 2;
-                align-self: flex-end;
-                justify-self: flex-end;
-            }
-        }
-    }
-
-    @media @phone {
-        display: flex;
-        flex-direction: column;
-
-        &-item {
-            &.actions {         
-                grid-column: span 2;
-                justify-self: flex-end;
-            }
-        }
-    }
-
-    
-}
-
-.setting-grid {
-    display: grid;
-    column-gap: 12px;
-    row-gap:36px;
-    grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
-
-    &-item {
-        .name {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
         }
 
         .value {
@@ -309,7 +248,7 @@ const settingGrid = reactive([
 .service-grid {
     display: flex;
     justify-content: space-between;
-    gap: 100px;
+    gap: 20px;
 
     &-item {
         display: flex;
@@ -319,20 +258,25 @@ const settingGrid = reactive([
         background: rgba(255, 255, 255, 0.1);
         padding: 20px;
         border-radius: 8px;
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
 
-        .title {
-            display: inline-block;
-            margin-bottom: 28px;
-            font-size: 20px;
+            .title {
+                display: inline-block;
+                margin-bottom: 28px;
+                font-size: 20px;
 
-            span {        
-                margin-left: 8px;    
-                vertical-align: middle;
+                span {        
+                    margin-left: 8px;    
+                    vertical-align: middle;
+                }
             }
-        }
 
-        .body {    
-            color: rgba(255, 255, 255, 0.85);
+            .body {    
+                color: rgba(255, 255, 255, 0.85);
+            }
         }
 
         a {
@@ -342,6 +286,10 @@ const settingGrid = reactive([
             font-size: 14px;
             text-decoration: none;
         }
+    }
+
+    @media screen and (max-width: 850px) {
+        flex-direction: column;
     }
 }
 </style>
