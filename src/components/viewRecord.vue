@@ -887,16 +887,6 @@ defineExpose({
 				sui-tooltip {
 					float: right;
 					vertical-align: middle;
-
-					svg {
-						color: rgba(255, 255, 255, 0.6);
-					}
-
-					div {
-						background: #D9D9D9;
-						color: rgba(0, 0, 0, 0.85);
-						padding: 16px;
-					}
 				}
 			}
 

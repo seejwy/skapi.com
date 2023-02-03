@@ -244,6 +244,7 @@ const settingGrid = reactive([
     &-item {
         .name {
             font-size: 14px;
+            line-height: 1;
             color: rgba(255, 255, 255, 0.6);
             margin-bottom: 8px;
         }
