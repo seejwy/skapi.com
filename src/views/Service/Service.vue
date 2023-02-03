@@ -5,16 +5,22 @@
     div.action
         sui-button.line-button Read Doc
 .container
-    h2 Service Information
+    .title-wrapper
+        Icon warning
+        h2 Service Information
     .information-grid
         .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
             .name {{ info.name }}
             .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
             .value(v-else) {{ service[info.key] }}
 
-.container
+.container 
+    .title-wrapper
+        Icon setting
+        h2 Service Setting 
     h2 Service Setting 
-    .setting-grid 
+        h2 Service Setting 
+        
         .setting-grid-item(v-for="setting in settingGrid")
             .name {{ setting.name }}
             .value {{  service[setting.key] || '-' }}
@@ -139,9 +145,26 @@ const settingGrid = reactive([
     }
 
     h2 {
+        display: inline-block;
+        vertical-align: middle;
         font-size: 20px;
         margin-bottom: 32px;
     }
+
+
+    .title-wrapper {
+        margin-bottom: 32px;
+
+        h2 {
+            margin: 0;
+        }
+
+        svg {
+            margin-right: 8px;
+        }
+    }
+
+    
 
     .action {
         text-align: right;
