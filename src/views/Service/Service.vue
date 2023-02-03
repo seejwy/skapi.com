@@ -252,6 +252,55 @@ const settingGrid = reactive([
     
 }
 
+.setting-grid {
+    display: grid;
+    column-gap: 12px;
+    row-gap:36px;
+    grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
+
+    &-item {
+        .name {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .value {
+            color: rgba(255, 255, 255, 0.85);
+            word-break: break-all;
+        }
+
+        &.actions {
+            align-self: flex-end;
+            justify-self: flex-end;
+        }
+    }
+
+    @media screen and (max-width: 1000px) {
+        grid-template-columns: repeat(2, calc(50% - 6px));
+        &-item {
+            &.actions {
+                grid-column: span 2;
+                align-self: flex-end;
+                justify-self: flex-end;
+            }
+        }
+    }
+
+    @media @phone {
+        display: flex;
+        flex-direction: column;
+
+        &-item {
+            &.actions {         
+                grid-column: span 2;
+                justify-self: flex-end;
+            }
+        }
+    }
+
+    
+}
+
 .service-grid {
     display: flex;
     justify-content: space-between;
