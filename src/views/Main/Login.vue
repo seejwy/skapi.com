@@ -93,8 +93,8 @@ function login() {
             case 'USER_IS_DISABLED':
                 error.value = "This account has been disabled";
                 break;
-            case 'SIGNUP_CONFIRMATION_NEEDED':
-                error.value = "This account has not been verified yet";
+            case 'SIGNUP_CONFIRMATION_NEEDED':            
+                router.push('/confirmation');
                 break;
             default:
                 error.value = "Something went wrong please contact an administrator.";
