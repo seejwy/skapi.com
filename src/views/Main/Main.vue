@@ -24,7 +24,7 @@ NavBar(:is-parent-level='true' style='z-index: 2;background-color: var(--primary
                     router-link(to="/") Sign-up
 
                 li.hideOnTablet
-                    sui-button.signup(@click="()=>router.push('/')") Sign-up
+                    sui-button.signup(@click="()=>router.push('/signup')") Sign-up
 
 main
     router-view
