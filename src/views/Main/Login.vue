@@ -30,7 +30,7 @@ sui-overlay(ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
             span {{ error }}
         sui-input(type="submit" value="Login")
         div Not registered yet? 
-            RouterLink(to="/") Create an account
+            RouterLink(to="/signup") Create an account
 
 </template>
 <script setup>

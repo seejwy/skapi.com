@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../views/Main/LandingPage.vue';
 import Login from '../views/Main/Login.vue';
+import Signup from '../views/Main/Signup.vue';
 import Main from '../views/Main/Main.vue';
 import Dashboard from '../views/Main/Dashboard.vue';
 
@@ -22,9 +23,9 @@ const router = createRouter({
           component: Dashboard
         },
         {
-          path: 'login',
-          name: 'login',
-          component: Login
+          path: 'signup',
+          name: 'signup',
+          component: Signup
         },
         {
           path: "/:catchAll(.*)",
