@@ -13,9 +13,9 @@ sui-overlay(ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 sui-input(type="checkbox")
                 span Remember Me
             RouterLink(to="/") Forgot Email & Password?
-        .error(v-if="true")
+        .error(v-if="error")
             Icon warning
-            span There is an error message going on here!!
+            span {{ error }}
         sui-button(@click='login') Login
         div Not registered yet? 
             RouterLink(to="/") Create an account
@@ -31,6 +31,7 @@ import Icon from '../../components/Icon.vue';
 let route = useRoute();
 let router = useRouter();
 let overlay;
+const error = ref(null);
 const open = () => {
     overlay.open();
 }
@@ -55,6 +56,20 @@ function login() {
     skapi.login(form).then(u => {
         state.user = u;    
         overlay.close();
+    }).catch(e => {
+        console.log({e: e.code});
+        // UserLambdaValidationException
+        // INCORRECT_USERNAME_OR_PASSWORD
+        switch(e.code) {
+            case 'UserLambdaValidationException':
+                error.value = 'User does not exist';
+                break;
+            case 'INCORRECT_USERNAME_OR_PASSWORD':
+                error.value = "Password is incorrect";
+                break;
+            default:
+                error.value = "Something went wrong";
+        }
     });
 }
 
