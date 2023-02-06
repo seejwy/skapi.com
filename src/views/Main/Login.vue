@@ -1,13 +1,25 @@
 <template lang="pug">
 sui-overlay(ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
-    .container
+    form.container(@submit.prevent="login")
         h1 Login
         .input
             label Email
-            sui-input(:value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com")
+            sui-input(
+                type="email" 
+                :value='form.email' 
+                @input="e=>form.email = e.target.value"
+                @change="validateEmail"
+                placeholder="E.g. someone@gmail.com"
+                required)
         .input
             label Password
-            sui-input(:value='form.password' type='password' @input="e=>form.password = e.target.value" placeholder="Enter password")
+            sui-input(
+                type='password'
+                :value='form.password'
+                @input="e=>form.password = e.target.value"
+                @change="validatePassword"
+                placeholder="Enter password" 
+                required)
         .action
             label
                 sui-input(type="checkbox")
@@ -16,7 +28,7 @@ sui-overlay(ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
         .error(v-if="error")
             Icon warning
             span {{ error }}
-        sui-button(@click='login') Login
+        sui-input(type="submit" value="Login")
         div Not registered yet? 
             RouterLink(to="/") Create an account
 
@@ -51,6 +63,25 @@ watch(() => state.user, u => {
         router.replace('/dashboard');
     }
 });
+
+
+const validateEmail = (event) => {
+    if(skapi.validate.email(event.target.value)) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid Email');
+		event.target.reportValidity();
+    }
+}
+
+const validatePassword = (event) => {
+    if(event.target.value.length >= 6 && event.target.value.length <= 60) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid Password');
+		event.target.reportValidity();
+    }
+}
 
 function login() {
     skapi.login(form).then(u => {
