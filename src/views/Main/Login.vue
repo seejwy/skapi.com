@@ -98,6 +98,7 @@ function login() {
                 break;
             default:
                 error.value = "Something went wrong please contact an administrator.";
+                throw e;
         }
     });
 }
