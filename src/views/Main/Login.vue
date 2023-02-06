@@ -93,13 +93,17 @@ function login() {
         // INCORRECT_USERNAME_OR_PASSWORD
         switch(e.code) {
             case 'UserLambdaValidationException':
-                error.value = 'User does not exist';
-                break;
             case 'INCORRECT_USERNAME_OR_PASSWORD':
-                error.value = "Password is incorrect";
+                error.value = 'Username or login is incorrect';
+                break;
+            case 'USER_IS_DISABLED':
+                error.value = "This account has been disabled";
+                break;
+            case 'SIGNUP_CONFIRMATION_NEEDED':
+                error.value = "This account has not been verified yet";
                 break;
             default:
-                error.value = "Something went wrong";
+                error.value = "Something went wrong please contact an administrator.";
         }
     });
 }
