@@ -113,11 +113,12 @@ defineExpose({
 
 .container {
     text-align: center;
-    max-width: 400px;
-    padding: 40px 30px;
+    padding: 40px;
     background: #FAFAFA;
     color: rgba(0, 0, 0, 0.85);
     border-radius: 8px;
+    width: 542px;
+    max-width: 100%;
     
     @media @tablet {
         margin-top: 50px;
@@ -181,8 +182,10 @@ defineExpose({
         }
     }
 
-    sui-button {
+    sui-input[type=submit] {
         margin-bottom: 24px;
+        width: auto;
+        min-width: 140px;
     }
 
     a {
