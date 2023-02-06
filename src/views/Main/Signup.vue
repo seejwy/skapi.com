@@ -1,5 +1,5 @@
 <template lang="pug">
-form.container(@submit.prevent="signup")
+form.container(v-if="page === 'signup'" @submit.prevent="signup")
     h1 Signup
     .input
         label User Name
@@ -19,7 +19,12 @@ form.container(@submit.prevent="signup")
     sui-input(type="submit" value="Create Account")
     div Already have an account?&nbsp;
         RouterLink(to="/dashboard") Login
-
+.container(v-else)
+    h1 Confirm Your Email
+    p Please check your inbox for a confirmation email. Click the link in the email to confirm your email address. 
+    p Haven't got any code?
+    sui-button.line-button(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") Re-send Confirmation Email
+        span(v-if="secondsTillReady") &nbsp; ({{  secondsTillReady }})
 </template>
 <script setup>
 import { inject, watch, reactive, ref } from 'vue';
@@ -31,16 +36,17 @@ import Icon from '../../components/Icon.vue';
 let route = useRoute();
 let router = useRouter();
 const error = ref(null);
-
+const page = ref('signup');
+const secondsTillReady = ref(null);
 // set page title
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
 
 let form = reactive({
     username: '',
-    email: '',
-    password: '',
-    password_confirm: '',
+    email: 'jinyoon+confirm@broadwayinc.com',
+    password: '123123',
+    password_confirm: '123123',
 });
 
 watch(() => state.user, u => {
@@ -78,10 +84,10 @@ const validatePasswordConfirm = (event) => {
 
 function signup() {
     skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: true}).then(result => {
-        router.push('/confirmation');
+        page.value = 'confirm';
     }).catch(e => {
-        console.log({e});
-        console.log({e: e.code});
+        // console.log({e});
+        // console.log({e: e.code});
         // INVALID_PARAMETER
         // Exists
 
@@ -97,6 +103,33 @@ function signup() {
                 throw e;
         }
     });
+}
+
+async function resendSignupConfirmation() {
+    if(secondsTillReady.value !== null) return false;
+
+    secondsTillReady.value = 30;
+    let countDown = setInterval(() => {
+        if(secondsTillReady.value > 0) secondsTillReady.value--;
+        else {
+            secondsTillReady.value = null;
+            clearInterval(countDown);
+        }
+
+    }, 1000);
+    try {
+        await skapi.login({
+            email: form.email,
+            password: form.password
+        });
+    } catch(e) {
+        if(e.code !== 'SIGNUP_CONFIRMATION_NEEDED') throw e;
+        try {        
+            await skapi.resendSignupConfirmation();
+        } catch(e) {
+            console.log({e: e.code});
+        }
+    }
 }
 
 </script>
@@ -195,6 +228,10 @@ function signup() {
         color: #293FE6;
         text-decoration: none;
         font-weight: bold;
+    }
+
+    .line-button {
+        color: var(--primary-color);
     }
 }
 </style>
