@@ -11,7 +11,10 @@ div(v-else-if='state.user')
                 ul
                     li(v-for='s in srvc')
                         router-link(:to='"/dashboard/" + s.service') {{ s.service }}
-Login(v-else ref="login")
+
+sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+    Login
+Login(v-else)
 </template>
 <!-- script below -->
 <script setup>
@@ -25,12 +28,12 @@ let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
-let login;
+let overlay;
 
 onMounted(() => {
     awaitConnection.then(()=>{
         if(!state.user) {
-            login.open();
+            overlay.open();
         }
     });
 });

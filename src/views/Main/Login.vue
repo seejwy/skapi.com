@@ -1,36 +1,35 @@
 <template lang="pug">
-sui-overlay(ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
-    form.container(@submit.prevent="login")
-        h1 Login
-        .input
-            label Email
-            sui-input(
-                type="email" 
-                :value='form.email' 
-                @input="e=>form.email = e.target.value"
-                @change="validateEmail"
-                placeholder="E.g. someone@gmail.com"
-                required)
-        .input
-            label Password
-            sui-input(
-                type='password'
-                :value='form.password'
-                @input="e=>form.password = e.target.value"
-                @change="validatePassword"
-                placeholder="Enter password" 
-                required)
-        .action
-            label
-                sui-input(type="checkbox")
-                span Remember Me
-            RouterLink(to="/") Forgot Email & Password?
-        .error(v-if="error")
-            Icon warning
-            span {{ error }}
-        sui-input(type="submit" value="Login")
-        div Not registered yet? 
-            RouterLink(to="/signup") Create an account
+form.container(@submit.prevent="login")
+    h1 Login
+    .input
+        label Email
+        sui-input(
+            type="email" 
+            :value='form.email' 
+            @input="e=>form.email = e.target.value"
+            @change="validateEmail"
+            placeholder="E.g. someone@gmail.com"
+            required)
+    .input
+        label Password
+        sui-input(
+            type='password'
+            :value='form.password'
+            @input="e=>form.password = e.target.value"
+            @change="validatePassword"
+            placeholder="Enter password" 
+            required)
+    .action
+        label
+            sui-input(type="checkbox")
+            span Remember Me
+        RouterLink(to="/") Forgot Email & Password?
+    .error(v-if="error")
+        Icon warning
+        span {{ error }}
+    sui-input(type="submit" value="Login")
+    div Not registered yet? 
+        RouterLink(to="/signup") Create an account
 
 </template>
 <script setup>
@@ -42,11 +41,7 @@ import Icon from '../../components/Icon.vue';
 
 let route = useRoute();
 let router = useRouter();
-let overlay;
 const error = ref(null);
-const open = () => {
-    overlay.open();
-}
 // set page title
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
@@ -85,8 +80,7 @@ const validatePassword = (event) => {
 
 function login() {
     skapi.login(form).then(u => {
-        state.user = u;    
-        overlay.close();
+        state.user = u;
     }).catch(e => {
         console.log({e: e.code});
         // UserLambdaValidationException
@@ -107,10 +101,6 @@ function login() {
         }
     });
 }
-
-defineExpose({
-    open
-});
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';

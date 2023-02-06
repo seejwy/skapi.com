@@ -20,7 +20,9 @@
             template(v-else-if='service')
                 router-view
 
-            Login(v-else ref="login")
+            sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+                Login
+            Login(v-else)
             
             .padBlock
 
@@ -168,12 +170,12 @@ provide('fetchingData', ref(false));
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service';
 
-let login;
+let overlay;
 
 onMounted(() => {
     awaitConnection.then(()=>{
         if(!state.user) {
-            login.open();
+            overlay.open();
         }
     });
 });
