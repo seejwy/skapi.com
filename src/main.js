@@ -76,6 +76,9 @@ mobileSize.addEventListener('change', setViewport);
 const app = createApp(App);
 app.use(router);
 app.mount('#app');
+app.config.warnHandler = function (msg, vm, trace) {
+    return null;
+};
 
 const getSize = (size) => {
     if (size >= 1000000000) {
