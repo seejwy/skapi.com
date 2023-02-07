@@ -70,6 +70,10 @@ sui-nav#top-nav {
 
     @media @tablet {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+        padding: 0 16px;
+    }
+
+    @media @phone {
         padding: 0 8px;
     }
 
