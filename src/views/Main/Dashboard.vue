@@ -202,7 +202,7 @@ watch(() => state.getServices, getServices);
             }
 
             .title {
-                font-size: 14px;
+                font-size: 16px;
                 font-weight: bold;
                 color: rgba(255, 255, 255, .4);
                 margin-bottom: 12px;
@@ -337,6 +337,7 @@ watch(() => state.getServices, getServices);
 
 @media @tablet {
     .header {
+        margin-top: 24px; 
         & > div {
             flex-direction: column;
             align-items: flex-start;
@@ -344,9 +345,9 @@ watch(() => state.getServices, getServices);
     }
     .container {
         .service {
-            padding: 24px 20px;
+            padding: 24px;
             .name span{
-                font-size: 16px;
+                font-size: 20px;
             }   
             .details .item {
                 .title,
