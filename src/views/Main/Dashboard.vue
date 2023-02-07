@@ -33,21 +33,25 @@ div(v-else-if='state?.user')
             div
             .body Something to tell you
             Icon.close(@click="isOpen = false") X2
-    sui-overlay(style="background: rgba(0, 0, 0, 0.6)" ref="newServiceWindow" @click="newServiceWindow.close()")
+    sui-overlay(style="background: rgba(0, 0, 0, 0.6)" ref="newServiceWindow" @click="close")
         div.overlay
-            .close(@click="newServiceWindow.close()")
+            .close(@click="close")
                 Icon X2
             .overlay-container
-                .overlay-container-title Create a New Service
-                .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
-                sui-input(type="text" placeholder="Name of Service")
-                sui-button Create a Service
+                form(@submit.prevent="createNewService")
+                    .overlay-container-title Create a New Service
+                    .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
+                    sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
+                    sui-button(type="submit" style="text-align: center")
+                        template(v-if="isCreatingService")
+                            Icon.animation-rotation--slow-in-out(style="position: absolute;") loading
+                        span(:style="{'visibility': isCreatingService ? 'hidden' : 'visible'}") Create a Service
 
 Login(v-else)
 </template>
 <script setup>
 import { inject, ref, watch } from 'vue';
-import { state, dateFormat } from '@/main';
+import { state, skapi, dateFormat } from '@/main';
 import Login from './Login.vue';
 import { useRouter } from 'vue-router';
 import Icon from '@/components/Icon.vue';
@@ -59,12 +63,30 @@ pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
 const newServiceWindow = ref(null);
+const serviceName = ref('');
+const isCreatingService = ref(false);
 
 const filterServiceDetails = (service) => {
     return {
         'Locale': service.region,
         'CORS': service.cors,
         'Date Created': dateFormat(service.timestamp).split(' ')[0]
+    }
+}
+
+const createNewService = async () => {
+    if(isCreatingService.value) { return false; }
+    isCreatingService.value = true;
+    // let res = await skapi.createService({name: serviceName.value});
+    // isCreatingService.value = false;
+    // console.log({res});
+    // let res = await skapi.createService({name: serviceName.value});
+    // router.push(`/dashboard/${res.service}`);
+}
+
+const close = () => {
+    if(!isCreatingService.value) {
+        newServiceWindow.value.close();
     }
 }
 
@@ -276,8 +298,13 @@ watch(() => state.getServices, getServices);
 
         sui-input {
             display: block;
-            width: 100%;
             margin-bottom: 28px;
+            width: 100%;
+
+            &[type=submit] {    
+                display: inline-block;        
+                width: unset;
+            }
         }
     }
 }
