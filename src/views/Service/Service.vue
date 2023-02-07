@@ -1,13 +1,14 @@
 <template lang="pug">
-.container
+.container.header
     h2 How to start my service?
-    p Well, this is how you start a service!!
+    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
     div.action
         sui-button.line-button Read Doc
 .container
-    .title-wrapper
-        Icon warning
-        h2 Service Information
+    .title-actions-wrapper
+        .title-wrapper
+            Icon information
+            h2 Service Information
     .information-grid
         .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
             .name {{ info.name }}
@@ -20,7 +21,8 @@
             Icon setting
             h2 Service Setting 
         .actions
-            sui-button.line-button Edit
+            Icon pencil
+            span Edit
     .setting-grid 
         .setting-grid-item(v-for="setting in settingGrid")
             .name 
@@ -28,9 +30,15 @@
                 sui-tooltip(v-if="setting.tip")
                     Icon(slot="tool") question
                     div(slot="tip") {{ setting.tip }}
-            .value {{  service[setting.key] || '-' }}
+            .value(v-if="setting.key === 'active'")
+                .indicator(:class="{'active': service[setting.key] > 0}")
+                span(v-if="service[setting.key] > 0") Enabled 
+                span(v-else) Disabled
+            .value(v-else) {{  service[setting.key] || '-' }}
 .container
-    h2 Manage your Service 
+    .title-actions-wrapper
+        .title-wrapper
+            h2 Manage your Service 
     .service-grid 
         .service-grid-item
             .content
@@ -118,6 +126,10 @@ const settingGrid = reactive([
     {
         name: 'Enable/Disable',
         key: 'active',
+        filter: () => {
+            return 1
+            // return .indicator(:class="{'active': service.active > 0}")
+        }
     },
     {
         name: 'Name of Service',
@@ -152,18 +164,22 @@ const settingGrid = reactive([
     h2 {
         display: inline-block;
         vertical-align: middle;
-        font-size: 20px;
+        font-size: 24px;
         margin-bottom: 32px;
+        font-weight: normal;
+    }
+
+    p {
+        color: rgba(255, 255, 255, .85);
     }
 
     .title-actions-wrapper {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 32px;
     }
 
     .title-wrapper {
-        margin-bottom: 32px;
-
         h2 {
             margin: 0;
         }
@@ -173,10 +189,19 @@ const settingGrid = reactive([
         }
     }
 
-    
+    .actions {
+        cursor: pointer;
+        svg {
+            margin-right: 4px;
+        }
+        span {
+            vertical-align: middle;
+        }
+    }
 
     .action {
         text-align: right;
+        margin-top: 24px;
     }
 
     @media @tablet {    
@@ -186,6 +211,10 @@ const settingGrid = reactive([
 
         &:first-child {
             margin-top: 0;
+        }
+
+        .action {
+            text-align: left;
         }
     }
 
@@ -250,8 +279,13 @@ const settingGrid = reactive([
         }
 
         .value {
+            font-weight: bold;
             color: rgba(255, 255, 255, 0.85);
             word-break: break-all;
+
+            span {    
+                vertical-align: middle;
+            }
         }
 
         &.actions {
@@ -289,7 +323,7 @@ const settingGrid = reactive([
 .service-grid {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: 40px;
 
     &-item {
         display: flex;
@@ -297,7 +331,7 @@ const settingGrid = reactive([
         justify-content: space-between;
         width: 100%;
         background: rgba(255, 255, 255, 0.1);
-        padding: 20px;
+        padding: 32px;
         border-radius: 8px;
         .content {
             display: flex;
@@ -329,12 +363,34 @@ const settingGrid = reactive([
         }
     }
 
-    @media screen and (max-width: 850px) {
+    @media screen and (max-width: 940px) {
         flex-direction: column;
+    }
+
+    @media @tablet {
+        &-item {
+            padding: 24px;
+        }
     }
 }
 sui-tooltip {
     margin-top: -7px;
     margin-left: 8px;
+}
+.indicator {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #D9D9D9;
+    border: 0.3px solid #595959;
+    box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
+    margin-right: 8px;
+    
+    &.active {
+        background: #5AD858;
+    }
 }
 </style>
