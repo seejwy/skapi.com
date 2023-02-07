@@ -185,7 +185,17 @@ watch(() => state.getServices, getServices);
             flex-wrap: wrap;
             overflow: hidden;
 
+            .item {
+                width: 200px;
+            }
+
             @media screen and (max-width: 825px) {
+
+                .item {
+                    display: flex;
+                    width: 100%;
+                }
+                
                 .hide-mobile {
                     display: none;
                 }
@@ -199,10 +209,10 @@ watch(() => state.getServices, getServices);
             }
 
             .value {
-                color: rgba(255, 255, 255, .8);
-                width: 200px;
+                color: #FFF;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                white-space: nowrap;
             }
         }
     }
