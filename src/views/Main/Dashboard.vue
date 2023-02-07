@@ -292,12 +292,13 @@ watch(() => state.getServices, getServices);
         }
 
         &-text {
-            margin: 40px 0 30px 0;
+            color: rgba(255, 255, 255, 0.85);
+            margin: 20px 0 28px 0;
         }
 
         sui-input {
             display: block;
-            margin-bottom: 28px;
+            margin-bottom: 40px;
             width: 100%;
 
             &[type=submit] {    
