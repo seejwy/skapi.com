@@ -195,7 +195,7 @@ watch(() => state.getServices, getServices);
 
         .name span {
             margin-left: 12px;
-            color: rgba(255, 255, 255, .8);
+            color: #fff;
             font-size: 24px;
             vertical-align: middle;
         }
@@ -224,14 +224,13 @@ watch(() => state.getServices, getServices);
             }
 
             .title {
-                font-size: 16px;
-                font-weight: bold;
                 color: rgba(255, 255, 255, .4);
                 margin-bottom: 12px;
             }
 
             .value {
-                color: #FFF;
+                font-weight: bold;
+                color: rgba(255, 255, 255, .85);
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -281,7 +280,7 @@ watch(() => state.getServices, getServices);
         box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
         color: #fff;
         text-align: center;
-        padding: 36px 24px;
+        padding: 40px;
         width: 500px;
         max-width: 100%;
         border-radius: 8px;
@@ -315,18 +314,18 @@ watch(() => state.getServices, getServices);
     grid-template-columns: auto 1fr;
     align-items: center;
     bottom: 40px;
-    right: 95px;
+    right: 40px;
     left: unset;
-    column-gap: 24px;
+    column-gap: 16px;
     row-gap: 0px;
     border-radius: 8px;
-    padding: 24px 60px 40px 24px;
+    padding: 24px 68px 40px 24px;
     background: #FAFAFA;
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
 
     svg:not(.close) {
-        height: 40px;
-        width: 40px;
+        height: 32px;
+        width: 32px;
         color: #293FE6;    
     }
     
@@ -346,7 +345,6 @@ watch(() => state.getServices, getServices);
 
     @media @tablet {
         column-gap: 12px;
-        row-gap: 10px;
         bottom: 0;
         left: 0;
         right: 0;
