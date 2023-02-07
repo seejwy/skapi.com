@@ -64,7 +64,7 @@ const filterServiceDetails = (service) => {
     return {
         'Locale': service.region,
         'CORS': service.cors,
-        'Date Created': dateFormat(service.timestamp).split(' ')[0] + '12123123123123123123'
+        'Date Created': dateFormat(service.timestamp).split(' ')[0]
     }
 }
 
