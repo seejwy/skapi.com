@@ -287,7 +287,7 @@ watch(() => state.getServices, getServices);
 
         &-title {
             font-weight: bold;
-            font-size: 20px;
+            font-size: 28px;
             line-height: 1.2;
         }
 
