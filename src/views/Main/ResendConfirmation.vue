@@ -34,6 +34,9 @@ async function resendSignupConfirmation() {
         let x = await skapi.resendSignupConfirmation();
     } catch(e) {
         console.log({e: e});
+        if(e.code === 'INVALID_REQUEST') {
+            router.replace('/dashboard');
+        }
     }
 }
 </script>
