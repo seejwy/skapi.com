@@ -175,7 +175,7 @@ let overlay;
 onMounted(() => {
     awaitConnection.then(()=>{
         if(!state.user) {
-            overlay.open();
+            overlay?.open();
         }
     });
 });
