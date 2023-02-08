@@ -1,25 +1,26 @@
 <template lang="pug">
-form.container(@submit.prevent="signup")
-    h1 Signup
-    .input
-        label User Name
-        sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your username")
-    .input
-        label Email
-        sui-input(@change="validateEmail" :value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com" required)
-    .input
-        label Password
-        sui-input(@change="validatePassword" :value='form.password' type='password' @input="e=>form.password = e.target.value" placeholder="Create a password" required)
-    .input
-        label Password Confirm
-        sui-input(@change="validatePasswordConfirm" :value='form.password_confirm' type='password' @input="e=>form.password_confirm = e.target.value" placeholder="Retype your password" required)
-    .error(v-if="error")
-        Icon warning
-        span {{ error }}
-    sui-input(type="submit" value="Create Account")
-    div Already have an account?&nbsp;
-        RouterLink(to="/dashboard") Login
-    //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
+.wrapper
+    form.container(@submit.prevent="signup")
+        h1 Signup
+        .input
+            label User Name
+            sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your username")
+        .input
+            label Email
+            sui-input(@change="validateEmail" :value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com" required)
+        .input
+            label Password
+            sui-input(@change="validatePassword" :value='form.password' type='password' @input="e=>form.password = e.target.value" placeholder="Create a password" required)
+        .input
+            label Password Confirm
+            sui-input(@change="validatePasswordConfirm" :value='form.password_confirm' type='password' @input="e=>form.password_confirm = e.target.value" placeholder="Retype your password" required)
+        .error(v-if="error")
+            Icon warning
+            span {{ error }}
+        sui-input(type="submit" value="Create Account")
+        div Already have an account?&nbsp;
+            RouterLink(to="/dashboard") Login
+        //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
 </template>
 <script setup>
 import { inject, watch, reactive, ref } from 'vue';
@@ -104,8 +105,14 @@ function signup() {
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 60px);
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+}
 .container {
-    position: absolute;
     text-align: center;
     padding: 40px;
     background: #FAFAFA;
@@ -115,9 +122,6 @@ function signup() {
     border: 1px solid #808080;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 
     @media @tablet {
         position: absolute;
