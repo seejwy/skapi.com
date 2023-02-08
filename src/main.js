@@ -124,6 +124,12 @@ const groupArray = (arr, cg, pg) => {
 
     return final;
 };
+
+const regions = {
+    US: 'us-east-1',
+    KR: 'ap-northeast-2'
+}
+
 const localeName = (locale) => {
     let name = '';
 
@@ -136,4 +142,4 @@ const localeName = (locale) => {
     return name;
 }
 
-export { skapi, state, getSize, dateFormat, log, groupArray, localeName };
+export { skapi, state, getSize, dateFormat, log, groupArray, localeName, regions };

@@ -1,13 +1,13 @@
 <template lang="pug">
 div(v-if='!state?.connection')
     // is loading...
-
-div(v-else-if='state?.user')
+NewService(v-else-if="state?.user && route.query.new === 'service'")
+div(v-else-if="state?.user")
     .header
         h1 Services
         div
             p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
-            sui-button(type="button" @click="newServiceWindow.open()")
+            sui-button(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList")
@@ -33,21 +33,24 @@ div(v-else-if='state?.user')
             div
             .body Something to tell you
             Icon.close(@click="isOpen = false") X2
-    sui-overlay(style="background: rgba(0, 0, 0, 0.6)" ref="newServiceWindow" @click="close")
+    sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isOpen = false")
         div.overlay
-            .close(@click="close")
+            .close(@click="isOpen = false")
                 Icon X2
             NewService
 Login(v-else)
 </template>
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { inject, ref, watch, nextTick } from 'vue';
 import { state, skapi, dateFormat } from '@/main';
 import Login from './Login.vue';
+import { useRoute, useRouter } from 'vue-router';
+
 import NewService from '@/components/NewService.vue';
 import Icon from '@/components/Icon.vue';
 
 let router = useRouter();
+let route = useRoute();
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
@@ -55,7 +58,7 @@ pageTitle.value = 'skapi';
 let serviceList = ref(null);
 const newServiceWindow = ref(null);
 const serviceName = ref('');
-const isCreatingService = ref(false);
+const isOpen = ref(false);
 
 const filterServiceDetails = (service) => {
     return {
@@ -65,20 +68,9 @@ const filterServiceDetails = (service) => {
     }
 }
 
-const createNewService = async () => {
-    if(isCreatingService.value) { return false; }
-    isCreatingService.value = true;
-    // let res = await skapi.createService({name: serviceName.value});
-    // isCreatingService.value = false;
-    // console.log({res});
-    // let res = await skapi.createService({name: serviceName.value});
-    // router.push(`/dashboard/${res.service}`);
-}
-
-const close = () => {
-    if(!isCreatingService.value) {
-        newServiceWindow.value.close();
-    }
+const openNewServiceWindow = () => {
+    if(state.viewport === 'mobile') router.push('?new=service');
+    else newServiceWindow.value.open();
 }
 
 async function getServices(gs) {
@@ -109,6 +101,19 @@ getServices(state.getServices);
 
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
+watch(() => isOpen.value, async () => {
+    if(state.viewport === 'desktop') {
+        await nextTick();
+        if(isOpen.value) {
+            openNewServiceWindow();
+        } else {
+            newServiceWindow.value.close();
+        }
+    }
+});
+watch(() => state.viewport, (viewport) => {
+    if(viewport === 'desktop') router.replace('/dashboard');
+})
 </script>
 
 <style lang="less" scoped>
@@ -262,40 +267,6 @@ watch(() => state.getServices, getServices);
 
         svg {
             color: #434343;
-        }
-    }
-
-    .overlay-container {
-        background-color: #505050;
-        border: 1px solid #808080;
-        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
-        color: #fff;
-        text-align: center;
-        padding: 40px;
-        width: 500px;
-        max-width: 100%;
-        border-radius: 8px;
-
-        &-title {
-            font-weight: bold;
-            font-size: 28px;
-            line-height: 1.2;
-        }
-
-        &-text {
-            color: rgba(255, 255, 255, 0.85);
-            margin: 20px 0 28px 0;
-        }
-
-        sui-input {
-            display: block;
-            margin-bottom: 40px;
-            width: 100%;
-
-            &[type=submit] {    
-                display: inline-block;        
-                width: unset;
-            }
         }
     }
 }
