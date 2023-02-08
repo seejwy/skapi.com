@@ -33,7 +33,7 @@ form.container(@submit.prevent="login")
 
 </template>
 <script setup>
-import { onMounted, inject, watch, reactive, ref } from 'vue';
+import { onMounted, inject, watch, reactive, ref, onBeforeUnmount } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -44,6 +44,15 @@ let router = useRouter();
 const error = ref(null);
 // set page title
 let pageTitle = inject('pageTitle');
+let appStyle = inject('appStyle');
+let viewport = inject('viewport');
+const currentBgColor = appStyle.background;
+onBeforeUnmount(() => {
+    appStyle.background = currentBgColor;
+})
+if(state.viewport === 'mobile') {
+    appStyle.background = '#fff';
+}
 pageTitle.value = 'skapi';
 
 let form = reactive({
@@ -58,7 +67,6 @@ watch(() => state.user, u => {
         router.replace('/dashboard');
     }
 });
-
 
 const validateEmail = (event) => {
     if(skapi.validate.email(event.target.value)) {
@@ -116,7 +124,9 @@ function login() {
     max-width: 100%;
     
     @media @tablet {
-        margin-top: 50px;
+        margin: 40px auto 0;    
+        background: #FFF;
+        padding: 0;
     }
 
     & > * {
