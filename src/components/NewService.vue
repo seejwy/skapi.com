@@ -23,6 +23,7 @@ const isCreatingService = ref(false);
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
+const serviceName = ref('');
 
 if(state.viewport === 'mobile') {
     pageTitle.value = 'Create a new Service'

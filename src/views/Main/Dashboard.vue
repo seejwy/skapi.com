@@ -57,7 +57,6 @@ pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
 const newServiceWindow = ref(null);
-const serviceName = ref('');
 const isOpen = ref(false);
 
 const filterServiceDetails = (service) => {
