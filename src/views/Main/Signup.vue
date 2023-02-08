@@ -133,6 +133,8 @@ function signup() {
         box-shadow: none;
         border: none;
         background: #FFF;
+        padding: 0;
+        margin-top: 40px;
     }
 
     & > * {
