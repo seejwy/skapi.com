@@ -1303,17 +1303,17 @@ const calculateDistance = (locale, region) => {
     return d;
 }
 
-
-console.log(getClosestRegion());
-
 const createNewService = async () => {
     if(isCreatingService.value) { return false; }
+    const closestRegion = getClosestRegion();
     isCreatingService.value = true;
-    // let res = await skapi.createService({name: serviceName.value});
-    // isCreatingService.value = false;
-    // console.log({res});
-    // let res = await skapi.createService({name: serviceName.value});
-    // router.push(`/dashboard/${res.service}`);
+    let res = await skapi.createService({region: closestRegion, name: serviceName.value});
+    if(state.services[closestRegion]) {
+        state.services[closestRegion].push(res);
+    } else {
+        state.services[closestRegion] = [res];
+    }
+    router.push(`/dashboard/${res.service}`);
 }
 
 </script>
