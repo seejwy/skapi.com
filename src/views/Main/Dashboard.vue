@@ -11,18 +11,17 @@ div(v-else-if="state?.user")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList")
-        template(v-for="(services, region) in serviceList")
-            template(v-for='service in services')
-                router-link.service(:to='"/dashboard/" + service.service') 
-                    .settings
-                        .name 
-                            .indicator(:class="{'active': service.active > 0}")
-                            span {{ service.name }}
-                        Icon right
-                    .details
-                        .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
-                            .title {{  key }}
-                            .value {{ value || '-' }}
+        template(v-for="service in serviceList")
+            router-link.service(:to='"/dashboard/" + service.service') 
+                .settings
+                    .name 
+                        .indicator(:class="{'active': service.active > 0}")
+                        span {{ service.name }}
+                    Icon right
+                .details
+                    .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
+                        .title {{  key }}
+                        .value {{ value || '-' }}
     .container.empty(v-else)
         .title No Services
         span Get started by creating a new service. 
@@ -79,13 +78,14 @@ async function getServices(gs) {
 
     try {
         let services = await gs.then();
-        if (serviceList.value === null) {
-            serviceList.value = services;
-        }
-        else {
-            for (let region in services) {
-                serviceList.value[region] = services[region];
+
+        if(serviceList.value === null) {
+            serviceList.value = [];
+            for(let region in services) {
+                serviceList.value = [...serviceList.value, ...services[region]];
             }
+
+            serviceList.value.sort((a, b) => a.timestamp > b.timestamp ? -1 : a.timestamp < b.timestamp ? 1 : 0);
         }
 
         return services;
