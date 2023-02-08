@@ -22,7 +22,7 @@ pageTitle.value = 'skapi';
 async function resendSignupConfirmation() {
     if(secondsTillReady.value !== null) return false;
 
-    secondsTillReady.value = 5;
+    secondsTillReady.value = 30;
     let countDown = setInterval(() => {
         if(secondsTillReady.value > 0) secondsTillReady.value--;
         else {
