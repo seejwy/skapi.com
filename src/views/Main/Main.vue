@@ -51,6 +51,7 @@ let route = useRoute();
 let appStyle = inject('appStyle');
 appStyle.background = '#FFF';
 appStyle.color = 'rgba(0 0 0 / 85%)';
+appStyle.navBackground = '#293fe6';
 
 function bypassSameRoute(e) {
     // bypass when same route is clicked
