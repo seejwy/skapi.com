@@ -170,15 +170,20 @@ function login() {
     .error {
         text-align: left;
         color: #EB1717;
-        margin-bottom: 27px;
+        margin-bottom: 20px;
 
         svg {
             margin-right: 4px;
+        }
+        
+        & + sui-input[type=submit] {
+            margin-top: 0;
         }
     }
 
     sui-input[type=submit] {
         margin-bottom: 24px;
+        margin-top: 40px;
         width: auto;
         min-width: 140px;
     }
