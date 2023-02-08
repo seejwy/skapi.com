@@ -45,6 +45,8 @@ pageTitle.value = 'skapi';
         box-shadow: none;
         border: none;
         background: #FFF;
+        padding: 0;
+        margin-top: 40px;
     }
 
     & > *:not(sui-button) {
@@ -57,11 +59,11 @@ pageTitle.value = 'skapi';
 
     h1 {
         font-size: 32px;
-        margin: 16px 0 20px 0;
+        margin: 20px 0 40px 0;
     }
 
     p {
-        margin: 20px auto 40px auto;
+        margin: 40px auto;
     }
 
     .input {
