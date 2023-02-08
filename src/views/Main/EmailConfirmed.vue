@@ -1,9 +1,10 @@
 <template lang="pug">
-.container
-    Icon check_circle
-    h1 Congratulations!
-    p Your email has been confirmed. #[br] You can now login to Skapi.
-    sui-button(type="button" @click="router.push('/dashboard')") Login
+.wrapper
+    .container
+        Icon check_circle
+        h1 Congratulations!
+        p Your email has been confirmed. #[br] You can now login to Skapi.
+        sui-button(type="button" @click="router.push('/dashboard')") Login
 </template>
 <script setup>
 import { inject } from 'vue';
@@ -20,8 +21,18 @@ pageTitle.value = 'skapi';
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 60px);
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    @media @tablet {
+        align-items: flex-start;
+        padding: 0;
+    }
+}
 .container {
-    position: absolute;
     text-align: center;
     padding: 40px;
     background: #FAFAFA;
@@ -31,16 +42,9 @@ pageTitle.value = 'skapi';
     border: 1px solid #808080;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 
     @media @tablet {
-        position: absolute;
         width: 100%;
-        top: unset;
-        left: 0;
-        transform: none;
         border-radius: 0;
         box-shadow: none;
         border: none;

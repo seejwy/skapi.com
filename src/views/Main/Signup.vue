@@ -111,6 +111,10 @@ function signup() {
     align-items: center;
     justify-content: center;
     padding: 60px 0;
+    @media @tablet {
+        align-items: flex-start;
+        padding: 0;
+    }
 }
 .container {
     text-align: center;
@@ -124,11 +128,7 @@ function signup() {
     border-radius: 8px;
 
     @media @tablet {
-        position: absolute;
         width: 100%;
-        top: unset;
-        left: 0;
-        transform: none;
         border-radius: 0;
         box-shadow: none;
         border: none;
