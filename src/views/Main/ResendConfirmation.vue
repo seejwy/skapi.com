@@ -3,8 +3,9 @@
     h1 Confirm Your Email
     p Please check your inbox for a confirmation email. Click the link in the email to confirm your email address. 
     p Haven't got any code?
-    sui-button.line-button(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") Re-send Confirmation Email
-        span(v-if="secondsTillReady") &nbsp; ({{  secondsTillReady }})
+    sui-button.line-button(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") 
+        template(v-if="secondsTillReady") Email has been sent ({{  secondsTillReady }})
+        template(v-else) Re-send Confirmation Email
 </template>
 <script setup>
 import { inject, ref } from 'vue';
@@ -75,7 +76,11 @@ async function resendSignupConfirmation() {
 
     h1 {
         font-size: 32px;
-        margin: 0 0 36px 0;
+        margin: 0 0 20px 0;
+    }
+
+    P {
+        margin: 40px auto 12px auto;
     }
 
     .input {
