@@ -37,23 +37,14 @@ div(v-else-if='state?.user')
         div.overlay
             .close(@click="close")
                 Icon X2
-            .overlay-container
-                form(@submit.prevent="createNewService")
-                    .overlay-container-title Create a New Service
-                    .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
-                    sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
-                    sui-button(type="submit" style="text-align: center")
-                        template(v-if="isCreatingService")
-                            Icon.animation-rotation--slow-in-out(style="position: absolute;") loading
-                        span(:style="{'visibility': isCreatingService ? 'hidden' : 'visible'}") Create a Service
-
+            NewService
 Login(v-else)
 </template>
 <script setup>
 import { inject, ref, watch } from 'vue';
 import { state, skapi, dateFormat } from '@/main';
 import Login from './Login.vue';
-import { useRouter } from 'vue-router';
+import NewService from '@/components/NewService.vue';
 import Icon from '@/components/Icon.vue';
 
 let router = useRouter();
