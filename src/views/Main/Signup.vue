@@ -91,7 +91,7 @@ function signup() {
                 error.value = 'Email or password is invalid';
                 break;
             case 'EXISTS':
-                error.value = "This email is already in user";
+                error.value = "This email is already in use";
                 break;
             default:
                 error.value = "Something went wrong please contact an administrator.";
