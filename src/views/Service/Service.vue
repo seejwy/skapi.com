@@ -171,6 +171,7 @@ const settingGrid = reactive([
 
     p {
         color: rgba(255, 255, 255, .85);
+        line-height: 1.5;
     }
 
     .title-actions-wrapper {
@@ -351,6 +352,7 @@ const settingGrid = reactive([
 
             .body {    
                 color: rgba(255, 255, 255, 0.85);
+                line-height: 1.5;
             }
         }
 
