@@ -1,5 +1,5 @@
 <template lang="pug">
-NavBar(:is-parent-level='true' style='z-index: 2;background-color: var(--app-nav-bg-color);')
+NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 2;background-color: var(--app-nav-bg-color);')
     ul.inline-vertical-middle(@click='bypassSameRoute')
         li
             router-link(to="/") Documentation
