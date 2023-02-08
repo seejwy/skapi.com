@@ -122,6 +122,7 @@ function login() {
     border-radius: 8px;
     width: 542px;
     max-width: 100%;
+    margin-top: 60px;
     
     @media @tablet {
         margin: 40px auto 0;    
