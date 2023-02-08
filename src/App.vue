@@ -36,6 +36,12 @@ provide('appStyle', {
   set color(v) {
     document.body.style.setProperty('--app-color', v);
   },
+  get navBackground() {
+    return document.body.style.getPropertyValue('--app-nav-bg-color');
+  },
+  set navBackground(v) {
+    document.body.style.setProperty('--app-nav-bg-color', v);
+  },
   get mainPadding() {
     return document.getElementById('app-main').style.padding;
   },
