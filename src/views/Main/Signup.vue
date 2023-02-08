@@ -19,6 +19,7 @@ form.container(@submit.prevent="signup")
     sui-input(type="submit" value="Create Account")
     div Already have an account?&nbsp;
         RouterLink(to="/dashboard") Login
+    //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
 </template>
 <script setup>
 import { inject, watch, reactive, ref } from 'vue';
@@ -201,5 +202,14 @@ function signup() {
         text-decoration: none;
         font-weight: bold;
     }
+
+    // .terms {
+    //     font-size: 12px;
+    //     margin-top: 20px;
+
+    //     a {
+    //         font-weight: normal;
+    //     }
+    // }
 }
 </style>
