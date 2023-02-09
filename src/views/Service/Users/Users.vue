@@ -60,14 +60,12 @@
                     td
                         sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                     td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                        //To add actual conditions to determine which icon to show
-                        template(v-if="key === 'block'")
-                            template(v-if="user[key]")                        
-                                Icon block
-                            template(v-else)
-                                Icon unblock
-                        template(v-else-if="key === 'status'")                  
-                            Icon check_circle
+                        template(v-if="key === 'suspended'")
+                            Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
+                            Icon(v-else) unblock
+                        template(v-else-if="key === 'group'")                     
+                            Icon(v-if="user[key] > 0") check_circle
+                            Icon(v-else) x
                         template(v-else) {{ user[key] || '-' }}
                     td(v-if="computedVisibleFields.length <= 2")
                 //- Below code needs to change to page list not full users list
@@ -179,11 +177,11 @@ const search = () => {
 }
 
 let visibleFields = reactive({
-    block: {
+    suspended: {
         text: 'Block',
         show: viewport.value === 'desktop' ? true : false,
     },
-    status: {
+    group: {
         text: 'Status',
         show: viewport.value === 'desktop' ? true : false,
     },
@@ -207,10 +205,6 @@ let visibleFields = reactive({
         text: 'Gender',
         show: false,
     },
-    group: {
-        text: 'Group',
-        show: false,
-    }
 });
 
 let showSetting = ref(false);
