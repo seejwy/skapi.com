@@ -132,18 +132,30 @@ const changeSearchType = (value) => {
 
 const blockUsers = async () => {
     let blockPromise = selectedUsers.value.map((user) => {
-        return skapi.blockAccount({service: serviceId, user});
+        return skapi.blockAccount({service: serviceId, userId: user});
     });
 
     await Promise.all(blockPromise);
+    selectedUsers.value.forEach((sel) => {
+        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
+            return item.user_id === sel
+        });
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:suspended';
+    });
 }
 
 const unblockUsers = async () => {
     let unblockPromise = selectedUsers.value.map((user) => {
-        return skapi.unblockAccount({service: serviceId, user});
+        return skapi.unblockAccount({service: serviceId, userId: user});
     });
 
     await Promise.all(unblockPromise);
+    selectedUsers.value.forEach((sel) => {
+        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
+            return item.user_id === sel
+        });
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:approved';
+    })
 }
 
 const deleteUsers = async () => {
