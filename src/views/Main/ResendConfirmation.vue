@@ -5,12 +5,12 @@
         p Please check your inbox for a confirmation email. Click the link in the email to confirm your email address. 
         p Haven't got any code?
         sui-button.line-button(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") 
-            template(v-if="secondsTillReady") Email has been sent ({{  secondsTillReady }})
+            template(v-if="secondsTillReady") Email has been sent
             template(v-else) Re-send Confirmation Email
 </template>
 <script setup>
 import { inject, ref } from 'vue';
-import { skapi, state } from '@/main';
+import { skapi } from '@/main';
 import { useRouter } from 'vue-router';
 
 let router = useRouter();
