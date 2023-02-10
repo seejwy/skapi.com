@@ -11,12 +11,12 @@ import { skapi } from '@/main';
 import Icon from '../../../components/Icon.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 
-let viewRecord = ref(null);
+let viewRecord = null;
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
 let editCallback = () => {
-    viewRecord.value.editRecord();
+    viewRecord.editRecord();
     navbarMobileRightButton.value = {
         type: 'text',
         val: 'SAVE',
@@ -26,7 +26,7 @@ let editCallback = () => {
                     val: 'loading',
                     cssClass: 'animation-rotation--slow-in-out'
                 };
-            viewRecord.value.save().then(() => {
+            viewRecord.save().then(() => {
                 navbarMobileRightButton.value = {
                     type: 'text',
                     val: 'EDIT',
@@ -81,6 +81,7 @@ if (!record.value) {
 }
 
 onMounted(() => {
+    viewRecord.editRecord();
     appStyle.mainPadding = '0';
     appStyle.background = '#333333';
 });
