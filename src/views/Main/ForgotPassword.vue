@@ -31,7 +31,7 @@
                         required)
                 .input
                     span Haven't got any code?
-                    sui-button.line-button(type="button") Re-send Code
+                    sui-button.line-button(type="button" @click="resendForgotPassword") Re-send Code
                 .input
                     label New Password
                     sui-input(
@@ -102,15 +102,16 @@ const validatePasswordConfirm = (event) => {
 
 const forgotPassword = () => {
         forgotError.value = null;
-        skapi.forgotPassword({email: email.value}).then(res => {
-            console.log({res});
-            step.value++;
-        }).catch(e => {
-            console.log({e:e.code});
-            if(e.code === 'LimitExceededException') {
-                forgotError.value = "You have exceeded the number of tries. Please try again later.";
-            }
-        });
+
+const resendForgotPassword = () => {
+    forgotError.value = null;
+    skapi.forgotPassword({email: email.value}).then(res => {
+    }).catch(e => {
+        console.log({e:e.code});
+        if(e.code === 'LimitExceededException') {
+            forgotError.value = "You have exceeded the number of tries. Please try again later.";
+        }
+    });
 }
 
 const changePassword = () => {
