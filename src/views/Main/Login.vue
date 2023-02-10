@@ -23,7 +23,7 @@ form.container(@submit.prevent="login")
         label
             sui-input(type="checkbox")
             span Remember Me
-        RouterLink(to="/") Forgot Email & Password?
+        RouterLink(to="/forgotpassword") Forgot Email & Password?
     .error(v-if="error")
         Icon warning
         span {{ error }}
