@@ -31,7 +31,12 @@
                         required)
                 .input
                     span Haven't got any code?
-                    sui-button.line-button(type="button" @click="resendForgotPassword") Re-send Code
+                    sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(secondsTillReady || forgotError || isRequestingCode) || null") 
+                        template(v-if="forgotError") {{ forgotError }}
+                        template(v-else-if="isRequestingCode") 
+                            Icon.animation-rotation--slow-in-out loading
+                        template(v-else-if="secondsTillReady") Code has been sent
+                        span(:style="{color: 'var(--primary-color)', margin: 0, visibility: !forgotError && !isRequestingCode && !secondsTillReady ? 'visible' : 'hidden', position:  !forgotError && !secondsTillReady ? 'relative' : 'absolute'}") Resend Code
                 .input
                     label New Password
                     sui-input(
@@ -79,6 +84,8 @@ let password = ref('');
 let passwordConfirm = ref('');
 let forgotError = ref(null);
 let resetError = ref(null);
+const secondsTillReady = ref(null);
+const isRequestingCode = ref(false);
 
 let step = ref(1);
 
@@ -101,17 +108,41 @@ const validatePasswordConfirm = (event) => {
 }
 
 const forgotPassword = () => {
-        forgotError.value = null;
-
-const resendForgotPassword = () => {
     forgotError.value = null;
     skapi.forgotPassword({email: email.value}).then(res => {
+        step.value++;
     }).catch(e => {
         console.log({e:e.code});
         if(e.code === 'LimitExceededException') {
             forgotError.value = "You have exceeded the number of tries. Please try again later.";
         }
     });
+}
+
+const resendForgotPassword = async () => {
+    if(secondsTillReady.value !== null || forgotError.value !== null) return false;
+    forgotError.value = null;
+
+    try {
+        isRequestingCode.value = true;
+        await skapi.forgotPassword({email: email.value})
+        isRequestingCode.value = false;
+
+        secondsTillReady.value = 30;
+        let countDown = setInterval(() => {
+            if(secondsTillReady.value > 0) secondsTillReady.value--;
+            else {
+                secondsTillReady.value = null;
+                clearInterval(countDown);
+            }
+
+        }, 1000);
+    } catch(e) {
+        console.log({e:e.code});
+        if(e.code === 'LimitExceededException') {
+            forgotError.value = "Limit exceeded. Please try again later.";
+        }
+    }
 }
 
 const changePassword = () => {
@@ -253,6 +284,12 @@ const changePassword = () => {
     .line-button {
         display: block;
         color: var(--primary-color);
+
+        svg {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+        }
     }
 
     svg {
@@ -270,9 +307,14 @@ const changePassword = () => {
         border-radius: 50%;
         background-color: #D9D9D9;
         cursor: pointer;
+        margin-right: 12px;
 
         &.active {        
             background-color: var(--primary-color);
+        }
+
+        &:last-child {
+            margin: 0;
         }
     }
 }
