@@ -56,24 +56,41 @@
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
             tbody(v-if="groupedUserList?.length")
-                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
-                    td
-                        sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                        template(v-if="key === 'suspended'")
-                            Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
-                            Icon(v-else) unblock
-                        template(v-else-if="key === 'group'")                     
-                            Icon(v-if="user[key] > 0") check_circle
-                            Icon(v-else) x
-                        template(v-else) {{ user[key] || '-' }}
-                    td(v-if="computedVisibleFields.length <= 2")
-                //- Below code needs to change to page list not full users list
-                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                    tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
-                        td  
-                        td(v-for="(key, index) in computedVisibleFields")
+                template(v-if="viewport === 'desktop'")
+                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
+                        td
+                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                        td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                            template(v-if="key === 'suspended'")
+                                Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
+                                Icon(v-else) unblock
+                            template(v-else-if="key === 'group'")                     
+                                Icon(v-if="user[key] > 0") check_circle
+                                Icon(v-else) x
+                            template(v-else) {{ user[key] || '-' }}
                         td(v-if="computedVisibleFields.length <= 2")
+                    //- Below code needs to change to page list not full users list
+                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                            td  
+                            td(v-for="(key, index) in computedVisibleFields")
+                            td(v-if="computedVisibleFields.length <= 2")
+                    
+                template(v-else)
+                    template(v-for="batch in groupedUserList")
+                        template(v-for="page in batch")
+                            tr(v-for="(user, userIndex) in page" :key="user['user_id']")
+                                td
+                                    sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                                td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                                    template(v-if="key === 'suspended'")
+                                        Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
+                                        Icon(v-else) unblock
+                                    template(v-else-if="key === 'group'")                     
+                                        Icon(v-if="user[key] > 0") check_circle
+                                        Icon(v-else) x
+                                    template(v-else) {{ user[key] || '-' }}
+                                td(v-if="computedVisibleFields.length <= 2")
     .paginator.hideOnTablet(v-if="groupedUserList?.length")
         Icon(
             :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
@@ -98,7 +115,7 @@
             ) right
 </template>
 <script setup>
-import { inject, ref, reactive, computed, watch } from 'vue';
+import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -125,7 +142,6 @@ const searchParams = reactive({
 
 const changeSearchType = (value) => {
     searchParams.searchFor = value;
-    console.log({value});
     if(value === 'user_id') searchParams.condition = '=';
     else searchParams.condition = '>=';
 }
@@ -292,6 +308,14 @@ async function getMoreUsers() {
     fetchingData.value = false;
 }
 
+
+const mobileScrollHandler = (e) => {
+    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+        console.log("GetmoreUsers");
+        getMoreUsers();
+    }
+}
+
 function getUsers(refresh = false) {
     // initial table fetch
 
@@ -331,6 +355,12 @@ function getUsers(refresh = false) {
 // get users on created
 getUsers();
 
+onMounted(() => {
+    window.addEventListener('scroll', mobileScrollHandler, { passive: true });
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
+});
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
