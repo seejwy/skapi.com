@@ -386,6 +386,7 @@ onBeforeUnmount(() => {
         & > * { 
             display: inline-block;
             margin-left: 16px;
+            padding: 9px 12px;
 
             @media @tablet {
                 margin-left: 0;
