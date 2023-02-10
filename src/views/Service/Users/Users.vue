@@ -1,6 +1,6 @@
 <template lang="pug">
 .page-header
-    h1 Users
+    h1.hideOnTablet Users
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     sui-button.line-button(style="float: right") Read Doc
     div(style="clear:both;")
