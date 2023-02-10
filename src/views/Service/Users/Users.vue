@@ -630,6 +630,10 @@ onBeforeUnmount(() => {
 }
 
 @media @tablet {
+    .table-wrapper {
+        max-height: unset;
+    }
+
     .table-outer-wrapper {
         margin: auto -16px;
         border-radius: 0;
