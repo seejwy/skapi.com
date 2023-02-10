@@ -115,9 +115,9 @@ const resendForgotPassword = () => {
 }
 
 const changePassword = () => {
-    
-    step.value++;
-    // skapi.resetPassword({ email: email.value, code, new_password });
+    skapi.resetPassword({ email: email.value, code: code.value, new_password: password.value }).then(() => {    
+        step.value++;
+    });
 }
 
 </script>
