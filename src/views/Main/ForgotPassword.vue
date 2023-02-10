@@ -20,7 +20,7 @@
             form(@submit.prevent="changePassword")
                 h1 New Password
                 p Please check your email and insert the code in order to create a new password.
-                p The code has sent to : XXXXXXX@gmail.com
+                p The code has been sent to : {{email}}
                 .input
                     label Code
                     sui-input(
@@ -30,7 +30,7 @@
                         placeholder="Enter verification code"
                         required)
                 .input
-                    label Haven't got any code?
+                    span Haven't got any code?
                     sui-button.line-button(type="button") Re-send Code
                 .input
                     label New Password
@@ -190,12 +190,15 @@ const changePassword = () => {
     .input {
         margin: 20px auto 12px;
 
-        label {
+        label,
+        span {
             display: block;
             text-align: left;
-            font-weight: bold;
             color: rgba(0, 0, 0, 0.65);
             margin-bottom: 8px;
+        }
+        label {
+            font-weight: bold;
         }
         sui-input {
             width: 100%;
