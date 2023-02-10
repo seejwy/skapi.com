@@ -4,6 +4,7 @@ import Login from '../views/Main/Login.vue';
 import Signup from '../views/Main/Signup.vue';
 import ResendConfirmation from '../views/Main/ResendConfirmation.vue';
 import EmailConfirmed from '../views/Main/EmailConfirmed.vue';
+import ForgotPassword from '../views/Main/ForgotPassword.vue';
 import Main from '../views/Main/Main.vue';
 import Dashboard from '../views/Main/Dashboard.vue';
 
@@ -28,6 +29,11 @@ const router = createRouter({
           path: 'signup',
           name: 'signup',
           component: Signup
+        },
+        {
+          path: 'forgotpassword',
+          name: 'forgotpassword',
+          component: ForgotPassword
         },
         {
           path: 'confirmation',
