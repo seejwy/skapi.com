@@ -117,6 +117,7 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
 import { inject, ref, watch, computed, nextTick, onMounted, provide } from 'vue';
 import { skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+import { recordTables, refreshTables, getMoreRecords } from './records.js';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
@@ -127,8 +128,6 @@ const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
-let tableList = [];
-provide('tableList', tableList);
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Records';
@@ -138,7 +137,6 @@ let fetchingData = inject('fetchingData');
 let isFabOpen = ref(false);
 
 // data
-let recordTables = inject('recordTables');
 let searchResult = inject('searchResult');
 
 // for paginators
@@ -150,7 +148,6 @@ let currentSelectedTablePage = ref(0);
 let currentSelectedTableBatch = ref(0);
 
 let groupedTableList = computed(() => {
-    console.log(recordTables.value);
     if (!recordTables.value || !recordTables.value.list.length) {
         currentSelectedTableBatch.value = 0;
         return null;
@@ -183,7 +180,6 @@ function addRecord(mobile = false) {
         });
     }
     else {
-        recordToOpen.value = {};
         nextTick(() => {
             viewRecord.value.editRecord();
             openRecord.value.open();
@@ -254,85 +250,19 @@ async function getMoreTables() {
 
 function getTables() {
     // initial table fetch
-
     currentSelectedTablePage.value = 0;
     currentSelectedTableBatch.value = 0;
 
-    recordTables.value = null;
     fetchingData.value = true;
-
-    skapi.getTable({ service: serviceId }, { limit: fetchLimit })
-        .then(t => {
-            recordTables.value = {
-                endOfList: t.endOfList,
-                list: t.list.map(m => {
-                    m.opened = false;
-                    m.records = ref(null);
-
-                    skapi.getRecords({
-                        service: serviceId,
-                        table: m.table
-                    }, { limit: 50 }).then(r => m.records.value = r);
-
-                    if (!tableList.includes(m.table)) {
-                        tableList.push = m.table;
-                    }
-
-                    return m;
-                }),
-                params: {
-                    service: serviceId,
-                    table: t.table
-                }
-            };
-
-            fetchingData.value = false;
-        }).catch(err => {
-            fetchingData.value = false;
-            throw err;
-        });
-
-    return;
+    refreshTables(serviceId).then(() => {
+        fetchingData.value = false;
+    });
 }
-
-provide('getTables', getTables);
 
 // get tables on created (if not already fetched)
 if (!recordTables.value) {
     getTables();
 }
-
-// fetch table records
-let getMoreRecordsQueue = {};
-async function getMoreRecords(event, table) {
-    if (event === null) {
-        // table is string
-        getMoreRecordsQueue[table] = await skapi.getRecords({
-            service: serviceId,
-            table: table
-        }, { fetchMore: true, limit: fetchLimit });
-    }
-    else if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - 40) {
-        if (getMoreRecordsQueue?.[table.table] instanceof Promise) {
-            return;
-        }
-
-        getMoreRecordsQueue[table.table] = await skapi.getRecords({
-            service: serviceId,
-            table: table.table
-        }, { fetchMore: true, limit: fetchLimit });
-
-        let r = getMoreRecordsQueue[table.table];
-        for (let rec of r.list) {
-            table.records.list.push(rec);
-        }
-
-        table.records.endOfList = r.endOfList;
-        delete getMoreRecordsQueue[table.table];
-    }
-}
-
-provide('getMoreRecords', getMoreRecords);
 
 function numberOfSkeletons() {
     // calculated by available vertical space

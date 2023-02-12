@@ -292,13 +292,9 @@ sui-overlay(ref="exitEditOverlay")
 import { ref, computed, watch, nextTick, inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
+import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
 import TagsInput from '@/components/TagsInput.vue';
 import Icon from '@/components/Icon.vue';
-
-let recordTables = inject('recordTables');
-let tableList = inject('tableList');
-let getTables = inject('getTables');
-let getMoreRecords = inject('getMoreRecords');
 
 const route = useRoute();
 const props = defineProps(['record']);
@@ -489,11 +485,12 @@ const save = async () => {
 			if (tableList.includes(r.table)) {
 				let idx = tableList.indexOf(r.table);
 				let tbl = recordTables.value.list[idx];
+				tbl.number_of_records++;
 				tbl.size += recordSize; // update table size
-				getMoreRecords(null, r.table);
+				getMoreRecords(null, recordTables.value.list[idx]);
 			}
 			else {
-				getTables();
+				refreshTables(serviceId);
 			}
 		}
 		else {

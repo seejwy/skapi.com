@@ -5,7 +5,7 @@ div(v-else style="text-align: center; padding: 1em;")
     Icon.animation-rotation(style="display:inline-block;width:32px;height:32px;") refresh
 </template>
 <script setup>
-import { inject, watch, onBeforeUnmount, onMounted, ref } from 'vue';
+import { inject, watch, onBeforeUnmount, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { skapi } from '@/main';
 import Icon from '../../../components/Icon.vue';
@@ -15,6 +15,7 @@ let viewRecord = null;
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
+
 let editCallback = () => {
     viewRecord.editRecord();
     navbarMobileRightButton.value = {
@@ -22,10 +23,10 @@ let editCallback = () => {
         val: 'SAVE',
         callback: () => {
             navbarMobileRightButton.value = {
-                    type: 'icon',
-                    val: 'loading',
-                    cssClass: 'animation-rotation--slow-in-out'
-                };
+                type: 'icon',
+                val: 'loading',
+                cssClass: 'animation-rotation--slow-in-out'
+            };
             viewRecord.save().then(() => {
                 navbarMobileRightButton.value = {
                     type: 'text',
@@ -33,12 +34,6 @@ let editCallback = () => {
                     callback: editCallback
                 };
             });
-
-            // navbarMobileRightButton.value = {
-            //     type: 'icon',
-            //     val: 'some icon when saving',
-            //     cssClass: [list, of, css, class]
-            // };
         }
     };
 };
@@ -81,9 +76,12 @@ if (!record.value) {
 }
 
 onMounted(() => {
-    viewRecord.editRecord();
     appStyle.mainPadding = '0';
     appStyle.background = '#333333';
+    if (record.value && typeof record.value === 'object' && !Object.keys(record.value).length) {
+        // is add record when empty object
+        editCallback();
+    }
 });
 
 onBeforeUnmount(() => {
