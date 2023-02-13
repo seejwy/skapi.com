@@ -163,7 +163,6 @@ let serviceId = route.params.service;
 let service = ref(null);
 
 provide('service', service);
-provide('recordTables', ref(null));
 provide('serviceUsers', ref(null));
 provide('fetchingData', ref(false));
 

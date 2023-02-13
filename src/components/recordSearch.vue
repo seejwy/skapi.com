@@ -345,6 +345,8 @@ function search(searchParams) {
                                     group: val ? 1 : 0
                                 };
                             }
+                        } else {
+                            params[k] = value;
                         }
                     }
                     else {
