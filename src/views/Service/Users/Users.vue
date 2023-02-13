@@ -218,6 +218,7 @@ const search = () => {
         limit: fetchLimit 
     }).then((res) => {
         console.log(res.list);
+        fetchingData.value = false;
         serviceUsers.value = {
             endOfList: res.endOfList,
             list: res.list
