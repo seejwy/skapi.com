@@ -3,11 +3,11 @@ import { skapi } from '@/main';
 export const tableList = [];
 export const recordTables = ref(null);
 
-export async function refreshTables(serviceId, fetchLimit=50) {
+export async function refreshTables(serviceId) {
     // initial table fetch
 
     recordTables.value = null;
-    let t = await skapi.getTable({ service: serviceId }, { limit: fetchLimit })
+    let t = await skapi.getTable({ service: serviceId }, { limit: 50 });
 
     recordTables.value = {
         endOfList: t.endOfList,
@@ -21,7 +21,7 @@ export async function refreshTables(serviceId, fetchLimit=50) {
             }, { limit: 50 }).then(r => m.records.value = r);
 
             if (!tableList.includes(m.table)) {
-                tableList.push = m.table;
+                tableList.push(m.table);
             }
 
             return m;
@@ -35,7 +35,7 @@ export async function refreshTables(serviceId, fetchLimit=50) {
 
 // fetch more table records
 let getMoreRecordsQueue = {};
-export async function getMoreRecords(event, table) {
+export async function getMoreRecords(event, table, serviceId, fetchMore = true) {
     if (getMoreRecordsQueue?.[table.table] instanceof Promise) {
         return;
     }
@@ -44,14 +44,21 @@ export async function getMoreRecords(event, table) {
         getMoreRecordsQueue[table.table] = await skapi.getRecords({
             service: serviceId,
             table: table.table
-        }, { fetchMore: true, limit: fetchLimit });
+        }, { fetchMore, limit: 50 });
     }
 
     let r = getMoreRecordsQueue[table.table];
-    for (let rec of r.list) {
-        table.records.list.push(rec);
+
+    if (fetchMore) {
+        for (let rec of r.list) {
+            table.records.list.push(rec);
+        }
+    }
+    else {
+        table.records.list = r.list;
     }
 
     table.records.endOfList = r.endOfList;
     delete getMoreRecordsQueue[table.table];
+    return r;
 }

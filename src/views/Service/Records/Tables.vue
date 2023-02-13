@@ -59,7 +59,7 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
 
                             Icon.animation-rotation(v-else) refresh
 
-                        div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t)")
+                        div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
                             .noRecords(v-if='!t.records.list.length')
                                 div
                                     sui-flextext(min-size='14' max-size='24') No Records
@@ -117,7 +117,7 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
 import { inject, ref, watch, computed, nextTick, onMounted, provide } from 'vue';
 import { skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
-import { recordTables, refreshTables, getMoreRecords } from './records.js';
+import { tableList, recordTables, refreshTables, getMoreRecords } from './records.js';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
@@ -230,13 +230,19 @@ async function getMoreTables() {
     recordTables.value.endOfList = t.endOfList;
 
     t.list.map(m => {
+        if (!tableList.includes(m.table)) {
+            tableList.push(m.table);
+        }
+        
         m.opened = false;
         m.records = ref(null);
 
         skapi.getRecords({
             service: serviceId,
             table: m.table
-        }, { limit: fetchLimit }).then(r => m.records.value = r);
+        }, { limit: fetchLimit }).then(r => {
+            m.records.value = r;
+        });
 
         recordTables.value.list.push(m);
     });
