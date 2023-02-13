@@ -11,9 +11,8 @@
                 option(value="id" selected) User ID
                 option(value="email") Email
                 option(value="name") Name
-
         .input-field
-            sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value")
+            sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value" @keypress.enter="search")
     
     .actions
         sui-button.text-button(@click="")
@@ -120,7 +119,6 @@ let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
 
-
 const groupedUserList = computed(() => {
     if (!serviceUsers.value || !serviceUsers.value.list.length) {
         currentSelectedUsersBatch.value = 0;
@@ -129,6 +127,26 @@ const groupedUserList = computed(() => {
 
     return groupArray(serviceUsers.value.list, numberOfUsersPerPage, numberOfPagePerBatch);
 });
+
+const search = () => {
+    let params = {
+        service: serviceId,
+        searchFor: 'user_id',
+        condition: '=',
+        value: searchValue.value
+    }
+
+    skapi.getUsers(params, { 
+        refresh: true, 
+        limit: fetchLimit 
+    }).then((res) => {
+        console.log(res.list);
+        serviceUsers.value = {
+            endOfList: res.endOfList,
+            list: res.list
+        };
+    });
+}
 
 let visibleFields = reactive({
     block: {

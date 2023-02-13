@@ -68,25 +68,26 @@
 									span.type File
 									span {{ key }}
 
-								a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
-									Icon attached
-									span
-										.filename {{ file.filename }}
-										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon download
-							.data-row(v-for="data in record.json")
-								.name
-									span.type(v-if="typeof data === 'object'") JSON
-									span.type(v-else) {{ typeof data }}
-									span {{ key }}
+									a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
+										Icon attached
+										span
+											.filename {{ file.filename }}
+											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+										Icon download
+								.data-row(v-for="value in record.json")
+									.name
+										span.type(v-if="typeof value === 'object'") JSON
+										span.type(v-else) {{ typeof value }}
+										span {{ key }}
 
-								.value {{ data }}
-						.data-row(v-else-if="record.json.length")
+									.value(v-if="value === null") null
+									.value(v-else) {{ value }}
+						.data-row(v-else-if="record.json !== undefined")
 							.name
 								span.type JSON
 								span {{ key }}
-
-							pre.value {{ record.json }}
+							.value(v-if="record.json === null") null
+							.value(v-else) {{ record.json }}
 						.data-row(v-else)
 							.name
 								span.type {{ typeof record.primitive }}
@@ -202,61 +203,68 @@
 			//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
 		.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
-			template(v-for="(keyData, keyIndex) in data")
-				.data-row(v-for="(record, index) in keyData.data")
-					.data-name-action
-						.select-input
-							.select-field
-								sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
-									option(disabled) Value Type
-									option(value="string") String
-									option(value="number") Number
-									option(value="boolean") Boolean
-									option(value="file") File
-									option(value="json") JSON
-							.input-field
-								sui-input(type="text" :value="keyData.key" placeholder="Key Name" @input="(e) => keyData.key = e.target.value" required)
-						.action(@click="removeField(keyData, keyIndex, index)")
-							Icon trash
-					.data-values 
-						template(v-if="record.type === 'file'")
-							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
-								input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
-								div
-									Icon attached
-									span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
-									sui-button.line-button(@click.prevent.stop="" type="button") Upload
-							template(v-for="(file, index) in record.data")
-								.value.file(v-if="file.md5")
-									Icon attached
-									span
-										.filename {{ file.name || file.filename }}
-										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon.remove(@click="record.data.splice(index, 1)") X
-
-						sui-textarea.data-input-field(
-							v-else-if="record.type === 'json'"
-							style="height: auto; white-space:pre;"
-							placeholder="Key Value"
-							spellcheck="false"
-							:value="record.data"
-							@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
-							@change="validateJson")
-
-						.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
-							div Value:
+			.data-row(v-for="(record, recordIndex) in data")
+				.data-name-action
+					.select-input
+						.select-field
+							sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
+								option(disabled) Value Type
+								option(value="string") String
+								option(value="number") Number
+								option(value="boolean") Boolean
+								option(value="file") File
+								option(value="json") JSON
+						.input-field
+							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
+					.action(@click="removeField(recordIndex)")
+						Icon trash
+				.data-values
+					template(v-if="record.type === 'file'")
+						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
+							input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
 							div
-								label
-									span True
-									sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
-							div
-								label 
-									span False
-									sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
+								Icon attached
+								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
+								sui-button.line-button(@click.prevent.stop="" type="button") Upload
+						template(v-for="(file, index) in record.data")
+							.value.file(v-if="file.md5")
+								Icon attached
+								span
+									.filename {{ file.name || file.filename }}
+									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+								Icon.remove(@click="record.data.splice(index, 1)") X
 
-						sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
+					sui-textarea.data-input-field(
+						v-else-if="record.type === 'json'"
+						style="height: auto; white-space:pre;"
+						placeholder="Key Value"
+						spellcheck="false"
+						:value="record.data"
+						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+						@change="validateJson")
+					sui-textarea.data-input-field(
+						v-else-if="record.type === 'json'"
+						style="height: auto; white-space:pre;"
+						placeholder="Key Value"
+						spellcheck="false"
+						:value="record.data"
+						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+						@change="validateJson")
 
-						sui-textarea.data-input-field(v-else style="height: auto;" :name="keyData.key" spellcheck="false" placeholder="Key Value") {{ record.data }}
+					.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
+						div Value:
+						div
+							label
+								span True
+								sui-input(type="radio" :name="record.key" value="true" :checked="record.data === true ? true : null")
+						div
+							label 
+								span False
+								sui-input(type="radio" :name="record.key" value="false" :checked="record.data !== true ? true : null")
+
+					sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
+
+					sui-textarea.data-input-field(v-else style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value") {{  record.data  }}
 
 			div
 				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
@@ -385,26 +393,24 @@ const editRecord = () => {
 	if (record?.data) {
 		let recordData = record.data;
 		for (let key in recordData) {
-			let keyObj = { key, data: [] };
 			let typeSplitFiles = getDataByTypes(recordData[key]).data;
 			if (typeSplitFiles.files.length) {
-				keyObj.data.push({ type: 'file', data: typeSplitFiles.files });
+				data.value.push({key, type: 'file', data: typeSplitFiles.files});
 				typeSplitFiles.json.forEach(value => {
-					if (Array.isArray(value)) {
-						keyObj.data.push({ type: 'json', data: JSON.stringify(value, null, 2) });
+
+					if (Array.isArray(value)) {				
+						data.value.push({key, type: 'json', data: JSON.stringify(value, null, 2)});
 					} else {
-						keyObj.data.push({ type: typeof value, data: value });
+						data.value.push({key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
 					}
 				});
 			} else {
 				if (typeSplitFiles.primitive !== null) {
-					keyObj.data.push({ type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive });
+					data.value.push({key, type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive});
 				} else {
-					keyObj.data.push({ type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2) });
+					data.value.push({key, type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2)});
 				}
 			}
-
-			data.value.push(keyObj);
 		}
 	}
 
@@ -416,7 +422,7 @@ const save = async () => {
 	if (!formEl.value.checkValidity()) {
 		let currentPageIsValid = true;
 
-		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input`).forEach((el) => {
+		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input, sui-textarea textarea`).forEach((el) => {
 			if (currentPageIsValid && !el.reportValidity()) {
 				currentPageIsValid = false;
 			}
@@ -436,23 +442,21 @@ const save = async () => {
 		service: serviceId,
 		formData: form => {
 			data.value.forEach(record => {
-				record.data.forEach(field => {
-					if (field.type === 'json') {
-						form.append(record.key, new Blob([field.data], {
-							type: 'application/json'
-						}));
-					} else if (field.type === 'file') {
-						field.data.forEach(file => {
-							if (file instanceof File) {
-								form.append(record.key, file);
-							} else {
-								form.append(record.key, new Blob([JSON.stringify(file)], {
-									type: 'application/json'
-								}));
-							}
-						});
-					}
-				});
+				if (record.type === 'json') {
+					form.append(record.key, new Blob([record.data], {
+						type: 'application/json'
+					}));
+				} else if (record.type === 'file') {
+					record.data.forEach(file => {
+						if (file instanceof File) {
+							form.append(record.key, file);
+						} else {
+							form.append(record.key, new Blob([JSON.stringify(file)], {
+								type: 'application/json'
+							}));
+						}
+					});
+				}
 			});
 			return form;
 		}
@@ -530,14 +534,11 @@ const addFiles = (event, keyIndex, index) => {
 };
 
 const addField = () => {
-	data.value.push({ key: '', data: [{ type: 'string', data: [] }] });
+	data.value.push({ key: '', type: 'string', data: '' });
 };
 
-const removeField = (keyData, keyIndex, index) => {
-	keyData.data.splice(index, 1);
-	if (!keyData.data.length) {
-		data.value.splice(keyIndex, 1);
-	}
+const removeField = (index) => {
+	data.value.splice(index, 1);
 };
 
 const openFileInput = (event, index) => {
@@ -558,21 +559,24 @@ const validateJson = (event) => {
 
 const getDataByTypes = (record) => {
 	let files = [];
-	let json = [];
+	let json;
 	let primitive = null;
 	if (Array.isArray(record)) {
+		let newArr = [];
 		for (let key in record) {
 			if (record[key]?.md5) {
 				files.push(record[key]);
 			} else {
-				json.push(record[key]);
+				newArr.push(record[key]);
 			}
 		}
+		
+		json = newArr;
 	} else if (typeof record === 'object') {
 		if (record?.md5) {
 			files.push(record);
 		} else {
-			json.push(record);
+			json = record;
 		}
 	} else {
 		primitive = record;
