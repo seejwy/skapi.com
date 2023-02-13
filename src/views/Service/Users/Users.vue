@@ -205,6 +205,7 @@ const groupedUserList = computed(() => {
 });
 
 const search = () => {
+    fetchingData.value = true;
     serviceUsers.value = null;
 
     skapi.getUsers(route.query.search ? {
