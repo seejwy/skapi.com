@@ -310,4 +310,54 @@ export default class Admin extends Skapi {
         await this.requireAdmin({ throwError: true, ignoreVerification: true });
         return await this.request('delete-newsletter', params, { auth: true });
     }
+
+    recordSizeCalculator(item) {
+        /*
+    
+        Caculates record size.
+    
+        Designed to match how dynamodb storage works.
+        Reference: https://dynobase.dev/dynamodb-capacity-and-item-size-calculator/
+    
+        */
+
+        let total = 0;
+
+        function getSize(i) {
+            let byte_size = 0;
+            if (i === null)
+                byte_size += 1;
+
+            if (typeof i === 'boolean')
+                byte_size += 1;
+
+            else if (typeof i === 'number')
+                byte_size += Math.round(i.toString().length / 2) + 1;
+
+            else if (typeof i === 'string')
+                byte_size += new TextEncoder().encode(i).length;
+
+            else if (typeof i === 'object') {
+                byte_size += 3;
+                let isArray = Array.isArray(i);
+                for (let k in Object.keys(i)) {
+                    if (isArray)
+                        byte_size += 1;
+                    else
+                        byte_size += new TextEncoder().encode(k).length;
+
+                    byte_size += getSize(i[k]);
+                }
+            }
+
+            return byte_size;
+        }
+
+        for (let k in item) {
+            total += new TextEncoder().encode(k).length;
+            total += getSize(item[k]);
+        }
+
+        return total;
+    }
 }
