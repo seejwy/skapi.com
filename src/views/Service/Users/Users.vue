@@ -1,5 +1,5 @@
 <template lang="pug">
-.page-header(v-if="!Object.keys(route.query).length")
+.page-header(v-if="!Object.keys(route?.query).length")
     h1.hideOnTablet Users
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     sui-button.line-button(style="float: right") Read Doc
@@ -79,7 +79,7 @@
                 template(v-else)
                     template(v-for="batch in groupedUserList")
                         template(v-for="page in batch")
-                            tr(v-for="(user, userIndex) in page" :key="user['user_id']")
+                            tr(v-for="(user, userIndex) in page" :key="user['user_id']"  @click="openUser(user['user_id'])")
                                 td
                                     sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                                 td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
@@ -157,6 +157,10 @@ const changeSearchType = (value) => {
     searchParams.searchFor = value;
     if(value === 'user_id') searchParams.condition = '=';
     else searchParams.condition = '>=';
+}
+
+const openUser = (user_id) => {
+    router.push({name: 'userView', params: {user_id}})
 }
 
 const blockUsers = async () => {
