@@ -82,16 +82,16 @@
 
 									.value(v-if="value === null") null
 									.value(v-else) {{ value }}
-							.data-row(v-else-if="record.json !== undefined")
-								.name
-									span.type JSON
-									span {{ key }}
-								.value(v-if="record.json === null") null
-								.value(v-else) {{ record.json }}
-							.data-row(v-else)
-								.name
-									span.type {{ typeof record.primitive }}
-									span {{ key }}
+						.data-row(v-else-if="record.json !== undefined")
+							.name
+								span.type JSON
+								span {{ key }}
+							.value(v-if="record.json === null") null
+							.value(v-else) {{ record.json }}
+						.data-row(v-else)
+							.name
+								span.type {{ typeof record.primitive }}
+								span {{ key }}
 
 							.value {{ record.primitive }}
 			.no-data(v-else)
@@ -202,69 +202,69 @@
 			//- 		.name Access 
 			//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
-			.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
-				.data-row(v-for="(record, recordIndex) in data")
-					.data-name-action
-						.select-input
-							.select-field
-								sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
-									option(disabled) Value Type
-									option(value="string") String
-									option(value="number") Number
-									option(value="boolean") Boolean
-									option(value="file") File
-									option(value="json") JSON
-							.input-field
-								sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
-						.action(@click="removeField(recordIndex)")
-							Icon trash
-					.data-values
-						template(v-if="record.type === 'file'")
-							.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
-								input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
-								div
-									Icon attached
-									span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
-									sui-button.line-button(@click.prevent.stop="" type="button") Upload
-							template(v-for="(file, index) in record.data")
-								.value.file(v-if="file.md5")
-									Icon attached
-									span
-										.filename {{ file.name || file.filename }}
-										div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-									Icon.remove(@click="record.data.splice(index, 1)") X
-
-						sui-textarea.data-input-field(
-							v-else-if="record.type === 'json'"
-							style="height: auto; white-space:pre;"
-							placeholder="Key Value"
-							spellcheck="false"
-							:value="record.data"
-							@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
-							@change="validateJson")
-						sui-textarea.data-input-field(
-							v-else-if="record.type === 'json'"
-							style="height: auto; white-space:pre;"
-							placeholder="Key Value"
-							spellcheck="false"
-							:value="record.data"
-							@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
-							@change="validateJson")
-
-						.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
-							div Value:
+		.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
+			.data-row(v-for="(record, recordIndex) in data")
+				.data-name-action
+					.select-input
+						.select-field
+							sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
+								option(disabled) Value Type
+								option(value="string") String
+								option(value="number") Number
+								option(value="boolean") Boolean
+								option(value="file") File
+								option(value="json") JSON
+						.input-field
+							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
+					.action(@click="removeField(recordIndex)")
+						Icon trash
+				.data-values
+					template(v-if="record.type === 'file'")
+						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
+							input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
 							div
-								label
-									span True
-									sui-input(type="radio" :name="record.key" value="true" :checked="record.data === true ? true : null")
-							div
-								label 
-									span False
-									sui-input(type="radio" :name="record.key" value="false" :checked="record.data !== true ? true : null")
+								Icon attached
+								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
+								sui-button.line-button(@click.prevent.stop="" type="button") Upload
+						template(v-for="(file, index) in record.data")
+							.value.file(v-if="file.md5")
+								Icon attached
+								span
+									.filename {{ file.name || file.filename }}
+									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+								Icon.remove(@click="record.data.splice(index, 1)") X
 
-						sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
+					sui-textarea.data-input-field(
+						v-else-if="record.type === 'json'"
+						style="height: auto; white-space:pre;"
+						placeholder="Key Value"
+						spellcheck="false"
+						:value="record.data"
+						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+						@change="validateJson")
+					sui-textarea.data-input-field(
+						v-else-if="record.type === 'json'"
+						style="height: auto; white-space:pre;"
+						placeholder="Key Value"
+						spellcheck="false"
+						:value="record.data"
+						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+						@change="validateJson")
 
-						sui-textarea.data-input-field(v-else style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value") {{  record.data  }}
+					.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
+						div Value:
+						div
+							label
+								span True
+								sui-input(type="radio" :name="record.key" value="true" :checked="record.data === true ? true : null")
+						div
+							label 
+								span False
+								sui-input(type="radio" :name="record.key" value="false" :checked="record.data !== true ? true : null")
+
+					sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
+
+					sui-textarea.data-input-field(v-else style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value") {{  record.data  }}
 
 			div
 				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
