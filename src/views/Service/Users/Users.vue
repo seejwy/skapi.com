@@ -113,6 +113,17 @@
             :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
             ) right
+
+.page-action.showOnTablet(@blur="isFabOpen = false")
+    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen")
+        Icon menu_vertical
+
+    Transition
+        div(v-if="isFabOpen" @click.stop)
+            sui-button.fab(@click="router.push({name: 'mobileSearchUser'})")
+                Icon search
+            sui-button.fab
+                Icon plus2
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue';
@@ -260,6 +271,7 @@ pageTitle.value = 'Users';
 
 // flag
 let fetchingData = inject('fetchingData');
+let isFabOpen = ref(false);
 
 // data
 let serviceUsers = inject('serviceUsers');
@@ -655,6 +667,38 @@ onBeforeUnmount(() => {
 @media @phone {
     .table-outer-wrapper {
         margin: auto -8px;
+    }
+}
+
+.page-action {
+    position: fixed;
+    bottom: 76px;
+    right: 16px;
+    overflow: hidden;
+
+    &>sui-button {
+        z-index: 2;
+    }
+
+    &,
+    &>div {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 12px;
+        width: 48px;
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+        transition: opacity .1s ease, transform .1s ease;
+        opacity: 1;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+        opacity: 0;
+        transform: translateY(100px);
     }
 }
 </style>
