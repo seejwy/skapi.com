@@ -1,73 +1,72 @@
 <template lang="pug">
-template(v-if="props.record?.record_id")
-	.container(v-if="!isEdit")
-		.head(:class="{'mobile-head': isMobileUrl}")
-			.title {{ !isMobileUrl ? props.record.record_id : '' }}
-			.menu
-				ul
-					li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
-					li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
+.container(v-if="!isEdit && props.record?.record_id")
+	.head(:class="{'mobile-head': isMobileUrl}")
+		.title {{ !isMobileUrl ? props.record.record_id : '' }}
+		.menu
+			ul
+				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
+				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
 
-				.action(v-if='!isMobileUrl' @click="overlay.open")
-					Icon trash
-					span delete
-		.content(:class="{desktop:!isMobileUrl}")
-			.grid(v-if="view === 'information'")
-				.grid-item.title Record ID 
-				.grid-item {{ props.record.record_id }}
-				.grid-item.title Table Name
-				.grid-item {{ props.record.table }}
-				.grid-item.title Access Group
-				.grid-item {{ props.record.access_group === 'private' ? 'Private' : props.record.access_group ? 'Registered' : 'Public' }}
-				.grid-item.title User ID
-				.grid-item {{ props.record.user_id }}
-				.grid-item.title Subscription
-				.grid-item {{ props.record.subscription || '-' }}
-				.grid-item.title Reference 
-				.grid-item {{ props.record.reference || '-' }}
-				.grid-item.title.span-2 Index
-				.grid-item.title(style="font-weight: normal") Index Name
-				.grid-item {{ props.record.index?.name || '-' }}
-				.grid-item.title(style="font-weight: normal") Index Value
-				.grid-item
-					span.type(v-if="props.record.index.hasOwnProperty('value')") {{ typeof props.record.index.value }}
-					span {{ props.record.index.hasOwnProperty('value') ? props.record.index.value : '-' }}
-				.grid-item.title Upload Datetime
-				.grid-item {{ dateFormat(props.record.uploaded) }}
-				.grid-item.title Reference
-				.grid-item
-					template(v-if="props.record.config?.reference_limit === 0")
-						.sub-grid Disabled
-					template(v-else)
-						.sub-grid Multiple Reference : {{props.record.config?.allow_multiple_reference ? 'Allowed' : 'Not Allowed'}}
-						.sub-grid Reference Limit : {{ (typeof props.record.config?.reference_limit === 'number') ? props.record.config.reference_limit : 'Infinite' }}
-				template(v-if="props.record.tags?.length")
-					.grid-item.title.span-2 Tags
-					.grid-item.span-2(style="padding-top: 4px;")
-						.tags-wrapper
-							.tag(v-for="tag in props.record?.tags") {{ tag }}
+			.action(v-if='!isMobileUrl' @click="deleteConfirmOverlay.open")
+				Icon trash
+				span delete
+	.content(:class="{desktop:!isMobileUrl}")
+		.grid(v-if="view === 'information'")
+			.grid-item.title Record ID 
+			.grid-item {{ props.record.record_id }}
+			.grid-item.title Table Name
+			.grid-item {{ props.record.table }}
+			.grid-item.title Access Group
+			.grid-item {{ props.record.access_group === 'private' ? 'Private' : props.record.access_group ? 'Registered' : 'Public' }}
+			.grid-item.title User ID
+			.grid-item {{ props.record.user_id }}
+			.grid-item.title Subscription
+			.grid-item {{ props.record.subscription || '-' }}
+			.grid-item.title Reference 
+			.grid-item {{ props.record.reference?.record_id || '-' }}
+			.grid-item.title.span-2 Index
+			.grid-item.title(style="font-weight: normal") Index Name
+			.grid-item {{ props.record?.index?.name || '-' }}
+			.grid-item.title(style="font-weight: normal") Index Value
+			.grid-item
+				span.type(v-if="props.record.index && props.record.index.hasOwnProperty('value')") {{ typeof props.record.index.value }}
+				span {{ props.record.index && props.record.index.hasOwnProperty('value') ? props.record.index.value : '-' }}
+			.grid-item.title Upload Datetime
+			.grid-item {{ dateFormat(props.record.uploaded) }}
+			.grid-item.title Reference
+			.grid-item
+				template(v-if="props.record.reference?.reference_limit === 0")
+					.sub-grid Disabled
 				template(v-else)
-					.grid-item.title Tags
-					.grid-item -
+					.sub-grid Multiple Reference : {{props.record.reference?.allow_multiple_reference ? 'Allowed' : 'Not Allowed'}}
+					.sub-grid Reference Limit : {{ (typeof props.record.reference?.reference_limit === 'number') ? props.record.reference?.reference_limit : 'Infinite' }}
+			template(v-if="props.record.tags?.length")
+				.grid-item.title.span-2 Tags
+				.grid-item.span-2(style="padding-top: 4px;")
+					.tags-wrapper
+						.tag(v-for="tag in props.record?.tags") {{ tag }}
+			template(v-else)
+				.grid-item.title Tags
+				.grid-item -
 
-				// private_access temporarily removed. will be brought back with better scalable structure
-				//- template(v-if="props.record.config?.private_access?.length")
-				//- 	.grid-item.title.span-2 Access
-				//- 	.grid-item.span-2(style="padding-top: 4px;")
-				//- 		.tags-wrapper
-				//- 			.tag(v-for="userId in props.record.config?.private_access") {{ userId }}
-				//- template(v-else)
-				//- 	.grid-item.title Access
-				//- 	.grid-item -
-			template(v-else-if="view === 'record'")
-				template(v-if="props.record.data")
-					template(v-for="(record, key) in props.record.data")
-						template(v-for="record in getDataByTypes(record)")
-							template(v-if="record.files.length")
-								.data-row
-									.name
-										span.type File
-										span {{ key }}
+			// private_access temporarily removed. will be brought back with better scalable structure
+			//- template(v-if="props.record.config?.private_access?.length")
+			//- 	.grid-item.title.span-2 Access
+			//- 	.grid-item.span-2(style="padding-top: 4px;")
+			//- 		.tags-wrapper
+			//- 			.tag(v-for="userId in props.record.config?.private_access") {{ userId }}
+			//- template(v-else)
+			//- 	.grid-item.title Access
+			//- 	.grid-item -
+		template(v-else-if="view === 'record'")
+			template(v-if="props.record.data")
+				template(v-for="(record, key) in props.record.data")
+					template(v-for="record in getDataByTypes(record)")
+						template(v-if="record.files.length")
+							.data-row
+								.name
+									span.type File
+									span {{ key }}
 
 									a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
 										Icon attached
@@ -75,209 +74,217 @@ template(v-if="props.record?.record_id")
 											.filename {{ file.filename }}
 											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 										Icon download
-								.data-row(v-for="data in record.json")
+								.data-row(v-for="value in record.json")
 									.name
-										span.type(v-if="typeof data === 'object'") JSON
-										span.type(v-else) {{ typeof data }}
+										span.type(v-if="typeof value === 'object'") JSON
+										span.type(v-else) {{ typeof value }}
 										span {{ key }}
 
-									.value {{ data }}
-							.data-row(v-else-if="record.json.length")
-								.name
-									span.type JSON
-									span {{ key }}
+									.value(v-if="value === null") null
+									.value(v-else) {{ value }}
+						.data-row(v-else-if="record.json !== undefined")
+							.name
+								span.type JSON
+								span {{ key }}
+							.value(v-if="record.json === null") null
+							.value(v-else) {{ record.json }}
+						.data-row(v-else)
+							.name
+								span.type {{ typeof record.primitive }}
+								span {{ key }}
 
-								pre.value {{ record.json }}
-							.data-row(v-else)
-								.name
-									span.type {{ typeof record.primitive }}
-									span {{ key }}
+							.value {{ record.primitive }}
+			.no-data(v-else)
+				Icon(style="height: 72px; width: 72px;") no_record
+				p No Data
+	.foot(v-if='!isMobileUrl')
+		sui-button.line-button(@click="editRecord") Edit
+.container(v-else-if="isEdit")
+	form(ref="formEl")
+		.head(:class="{'mobile-head': isMobileUrl}")
+			.title {{ !isMobileUrl ? form.record_id || 'Add Record' : ''}}
+			.menu
+				ul
+					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
+					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
 
-								.value {{ record.primitive }}
-				.no-data(v-else)
-					Icon(style="height: 72px; width: 72px;") no_record
-					p No Data
-		.foot(v-if='!isMobileUrl')
-			sui-button.line-button(@click="editRecord") Edit
-	.container(v-else)
-		form(ref="formEl")
-			.head(:class="{'mobile-head': isMobileUrl}")
-				.title {{ !isMobileUrl ? form.record_id : ''}}
-				.menu
-					ul
-						li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
-						li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
+		.content#setting(:class="{desktop:!isMobileUrl}" v-show="view === 'information'")
+			.row
+				.section(style="width: 100%;")
+					.name Table Name
+					sui-input(required :value="form.table" @input="(e) => form.table = e.target.value")
 
-			.content#setting(:class="{desktop:!isMobileUrl}" v-show="view === 'information'")
-				.row
-					.section(style="width: 100%;")
-						.name Table Name
-						sui-input(required :value="form.table" @input="(e) => form.table = e.target.value")
+			.row
+				.section
+					.name 
+						span Reference ID
+						sui-tooltip
+							Icon(slot="tool") question
+							div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
 
-				.row
-					.section
-						.name 
-							span Reference ID
-							sui-tooltip
-								Icon(slot="tool") question
-								div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
-					
-						sui-input(:value="form.reference" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference = e.target.value")
-					.section
-						.name Access Group
-						sui-select(:value="form.access_group.toString()" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
-							option(value="0") Public 
-							option(value="1") Registered
+					sui-input(:value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference.record_id = e.target.value")
+				.section
+					.name Access Group
+					sui-select(:value="form.access_group.toString()" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
+						option(value="0") Public 
+						option(value="1") Registered
 
-				.row
-					.section(style="width: 100%;")
-						.name Tags 
-						TagsInput(:value="form.tags" @change="(value) => form.tags = value")
+			.row
+				.section(style="width: 100%;")
+					.name Tags 
+					TagsInput(:value="form.tags" @change="(value) => form.tags = value")
 
-				.row
-					.section(style="width: 100%;")
-						.name Index Name 
-						sui-input(
-							:required="form.index.value !== '' ? true : null"
-							:value="form.index.name"
-							@input="(e)=> form.index.name = e.target.value")
+			.row
+				.section(style="width: 100%;")
+					.name Index Name 
+					sui-input(
+						:required="form.index.value !== '' ? true : null"
+						:value="form.index.name"
+						@input="(e)=> form.index.name = e.target.value")
 
-				.row
-					.section
-						.name Index Value
-						.row(style="row-gap: 16px;")
-							.section(style="flex-grow: 0")
-								sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => indexValueType = e.target.value")
-									option(disabled) Value Type
-									option(value="string") String
-									option(value="number") Number
-									option(value="boolean") Boolean
-							.section
-								.radio-container(v-if="indexValueType === 'boolean'")
-									label(@click="e => form.index.value = true") True
-										sui-input(type="radio" :checked="form.index.value === true || null")
-									label(@click="e => form.index.value = false") False
-										sui-input(type="radio" :checked="form.index.value === false || null")
-								sui-input(
-									v-else
-									:type="indexValueType === 'number' ? 'number' : 'text'"
-									:required="form.index.name !== '' ? true : null"
-									:value="form.index.value"
-									@input="(e)=> form.index.value = e.target.value")
+			.row
+				.section
+					.name Index Value
+					.row(style="row-gap: 16px;")
+						.section(style="flex-grow: 0")
+							sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => indexValueType = e.target.value")
+								option(disabled) Value Type
+								option(value="string") String
+								option(value="number") Number
+								option(value="boolean") Boolean
+						.section
+							.radio-container(v-if="indexValueType === 'boolean'")
+								label(@click="e => form.index.value = true") True
+									sui-input(type="radio" :checked="form.index.value === true || null")
+								label(@click="e => form.index.value = false") False
+									sui-input(type="radio" :checked="form.index.value === false || null")
+							sui-input(
+								v-else
+								:type="indexValueType === 'number' ? 'number' : 'text'"
+								:required="form.index.name !== '' ? true : null"
+								:value="form.index.value"
+								@input="(e)=> form.index.value = e.target.value")
 
-				.row
-					.section
-						.name(style="display: flex; align-items: center;")
+			.row
+				.section
+					.name(style="display: flex; align-items: center;")
+						label
+							sui-input(
+								type="checkbox" 
+								style="margin-right: 8px; color:white;"
+								@change="e=>form.reference.reference_limit = e.target.checked ? null : 0"
+								:checked="form.reference?.reference_limit !== 0 ? true : null")
+
+							span Allow Reference
+
+					.reference-container(v-if="allowReference")
+						div
 							label
-								sui-input(
-									type="checkbox" 
-									style="margin-right: 8px; color:white;"
-									@change="e=>form.config.reference_limit = e.target.checked ? null : 0"
-									:checked="form.config.reference_limit !== 0 ? true : null")
+								span Allow Multiple Reference
+								sui-input#allow_multiple_reference(
+									style="color:white; margin-left: 8px"
+									type="checkbox"
+									@input="(e)=>form.reference.allow_multiple_reference = e.target.checked"
+									:checked="form.reference.allow_multiple_reference ? true : null")
 
-								span Allow Reference
+						div
+							span Reference Limit:
+							input.line-input(
+								type="number"
+								min="1"
+								placeholder="Infitite"
+								:value="form.reference.reference_limit === null ? '' : (form.reference?.reference_limit || '').toString()"
+								@input="(e) => form.reference.reference_limit = e.target.value ? parseInt(e.target.value) : null")
 
-						.reference-container(v-if="allowReference")
+			// private_access temporarily removed. will be brought back with better scalable structure
+			//- .row
+			//- 	.section(style="width: 100%;")
+			//- 		.name Access 
+			//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
+
+		.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
+			.data-row(v-for="(record, recordIndex) in data")
+				.data-name-action
+					.select-input
+						.select-field
+							sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
+								option(disabled) Value Type
+								option(value="string") String
+								option(value="number") Number
+								option(value="boolean") Boolean
+								option(value="file") File
+								option(value="json") JSON
+						.input-field
+							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
+					.action(@click="removeField(recordIndex)")
+						Icon trash
+				.data-values
+					template(v-if="record.type === 'file'")
+						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
+							input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
 							div
-								label
-									span Allow Multiple Reference
-									sui-input#allow_multiple_reference(
-										style="color:white; margin-left: 8px"
-										type="checkbox"
-										@input="(e)=>form.config.allow_multiple_reference = e.target.checked"
-										:checked="form.config.allow_multiple_reference ? true : null")
+								Icon attached
+								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
+								sui-button.line-button(@click.prevent.stop="" type="button") Upload
+						template(v-for="(file, index) in record.data")
+							.value.file(v-if="file.md5")
+								Icon attached
+								span
+									.filename {{ file.name || file.filename }}
+									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+								Icon.remove(@click="record.data.splice(index, 1)") X
 
-							div
-								span Reference Limit:
-								input.line-input(
-									type="number"
-									min="1"
-									placeholder="Infitite"
-									:value="form.config.reference_limit === null ? '' : form.config.reference_limit.toString()"
-									@input="(e) => form.config.reference_limit = e.target.value ? parseInt(e.target.value) : null")
+					sui-textarea.data-input-field(
+						v-else-if="record.type === 'json'"
+						style="height: auto; white-space:pre;"
+						placeholder="Key Value"
+						spellcheck="false"
+						:value="record.data"
+						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+						@change="validateJson")
+					sui-textarea.data-input-field(
+						v-else-if="record.type === 'json'"
+						style="height: auto; white-space:pre;"
+						placeholder="Key Value"
+						spellcheck="false"
+						:value="record.data"
+						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+						@change="validateJson")
 
-				// private_access temporarily removed. will be brought back with better scalable structure
-				//- .row
-				//- 	.section(style="width: 100%;")
-				//- 		.name Access 
-				//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
+					.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
+						div Value:
+						div
+							label
+								span True
+								sui-input(type="radio" :name="record.key" value="true" :checked="record.data === true ? true : null")
+						div
+							label 
+								span False
+								sui-input(type="radio" :name="record.key" value="false" :checked="record.data !== true ? true : null")
 
-			.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
-				template(v-for="(keyData, keyIndex) in data")
-					.data-row(v-for="(record, index) in keyData.data")
-						.data-name-action
-							.select-input
-								.select-field
-									sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
-										option(disabled) Value Type
-										option(value="string") String
-										option(value="number") Number
-										option(value="boolean") Boolean
-										option(value="file") File
-										option(value="json") JSON
-								.input-field
-									sui-input(type="text" :value="keyData.key" placeholder="Key Name" @input="(e) => keyData.key = e.target.value" required)
-							.action(@click="removeField(keyData, keyIndex, index)")
-								Icon trash
-						.data-values 
-							template(v-if="record.type === 'file'")
-								.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
-									input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
-									div
-										Icon attached
-										span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
-										sui-button.line-button(@click.prevent.stop="" type="button") Upload
-								template(v-for="(file, index) in record.data")
-									.value.file(v-if="file.md5")
-										Icon attached
-										span
-											.filename {{ file.name || file.filename }}
-											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-										Icon.remove(@click="record.data.splice(index, 1)") X
+					sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
 
-							sui-textarea.data-input-field(
-								v-else-if="record.type === 'json'"
-								style="height: auto; white-space:pre;"
-								placeholder="Key Value"
-								spellcheck="false"
-								:value="record.data"
-								@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
-								@change="validateJson")
+					sui-textarea.data-input-field(v-else style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value") {{  record.data  }}
 
-							.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
-								div Value:
-								div
-									label
-										span True
-										sui-input(type="radio" :name="keyData.key" value="true" :checked="record.data === true ? true : null")
-								div
-									label 
-										span False
-										sui-input(type="radio" :name="keyData.key" value="false" :checked="record.data !== true ? true : null")
+			div
+				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
-							sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="keyData.key" :value="record.data.toString()")
+		.foot(v-if='!isMobileUrl')
+			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").line-button Cancel
+			div(style="display: inline-block")
+				sui-button(v-if="isSaving" type="button" disabled)
+					span(style="visibility: hidden;") Save
+					Icon.animation-rotation--slow-in-out(style=" position: absolute; height: 19px; width: 19px;") loading
+				sui-button(v-else type="button" @click="save") Save
 
-							sui-textarea.data-input-field(v-else style="height: auto;" :name="keyData.key" spellcheck="false" placeholder="Key Value") {{ record.data }}
-
-				div
-					sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
-
-			.foot(v-if='!isMobileUrl')
-				sui-button(type="button" @click="isEdit = false" style="margin-right: 16px;").line-button Cancel
-				div(style="display: inline-block")
-					sui-button(v-if="isSaving" type="button" disabled)
-						span(style="visibility: hidden;") Save
-						Icon.animation-rotation--slow-in-out(style=" position: absolute; height: 19px; width: 19px;") loading
-					sui-button(v-else type="button" @click="save") Save
-
-sui-overlay(ref="overlay")
+sui-overlay(ref="deleteConfirmOverlay")
 	.popup
 		.title
 			Icon warning
 			div Are you sure?
 		.body Are you sure you want to delete the record?
 		.foot
-			sui-button(@click="()=>overlay.close()") No 
+			sui-button(@click="()=>deleteConfirmOverlay.close()") No 
 			sui-button.line-button(@click="deleteRecord") Yes
 sui-overlay(ref="exitEditOverlay")
 	.popup
@@ -293,13 +300,14 @@ sui-overlay(ref="exitEditOverlay")
 import { ref, computed, watch, nextTick, inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
+import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
 import TagsInput from '@/components/TagsInput.vue';
 import Icon from '@/components/Icon.vue';
 
 const route = useRoute();
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
-const overlay = ref(null);
+const deleteConfirmOverlay = ref(null);
 const exitEditOverlay = ref(null);
 
 const serviceId = route.params.service;
@@ -310,9 +318,10 @@ const formEl = ref(null);
 const form = ref({});
 const data = ref([]);
 const indexValueType = ref('string');
+let isNewRecord = false;
 
 const allowReference = computed(() => {
-	if (form.value.config?.reference_limit === 0) return false;
+	if (form.value.reference?.reference_limit === 0) return false;
 	return true;
 });
 
@@ -327,6 +336,8 @@ const editRecord = () => {
 		return;
 	}
 
+	isNewRecord = !props.record?.record_id;
+
 	data.value = [];
 	let record = JSON.parse(JSON.stringify(props.record));
 	form.value = {};
@@ -338,8 +349,7 @@ const editRecord = () => {
 		// 'subscription_group', (not for admin)
 		'reference',
 		'index',
-		'tags',
-		'config'
+		'tags'
 	]) {
 		if (record.hasOwnProperty(k)) {
 			form.value[k] = record[k];
@@ -349,37 +359,58 @@ const editRecord = () => {
 					form.value.config.reference_limit = null;
 				}
 			}
-		} else if (k === 'index') {
-			form.value.index = {
-				name: '',
-				value: ''
-			};
+		}
+
+		else {
+			// set default values
+			switch (k) {
+				case 'index':
+					form.value.index = {
+						name: '',
+						value: ''
+					};
+					break;
+				case 'access_group':
+					form.value.access_group = 1;
+					break;
+				case 'record_id':
+				case 'tags':
+					// do nothing
+					break;
+				case 'reference':
+					form.value.reference = {};
+					form.value.reference.record_id = null;
+					form.value.reference.reference_limit = null;
+					form.value.reference.allow_multiple_reference = true;
+					break;
+				default:
+					form.value[k] = '';
+					break;
+			}
 		}
 	}
 
 	if (record?.data) {
 		let recordData = record.data;
 		for (let key in recordData) {
-			let keyObj = { key, data: [] };
 			let typeSplitFiles = getDataByTypes(recordData[key]).data;
 			if (typeSplitFiles.files.length) {
-				keyObj.data.push({ type: 'file', data: typeSplitFiles.files });
+				data.value.push({key, type: 'file', data: typeSplitFiles.files});
 				typeSplitFiles.json.forEach(value => {
-					if (Array.isArray(value)) {
-						keyObj.data.push({ type: 'json', data: JSON.stringify(value, null, 2) });
+
+					if (Array.isArray(value)) {				
+						data.value.push({key, type: 'json', data: JSON.stringify(value, null, 2)});
 					} else {
-						keyObj.data.push({ type: typeof value, data: value });
+						data.value.push({key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
 					}
 				});
 			} else {
 				if (typeSplitFiles.primitive !== null) {
-					keyObj.data.push({ type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive });
+					data.value.push({key, type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive});
 				} else {
-					keyObj.data.push({ type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2) });
+					data.value.push({key, type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2)});
 				}
 			}
-
-			data.value.push(keyObj);
 		}
 	}
 
@@ -391,7 +422,7 @@ const save = async () => {
 	if (!formEl.value.checkValidity()) {
 		let currentPageIsValid = true;
 
-		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input`).forEach((el) => {
+		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input, sui-textarea textarea`).forEach((el) => {
 			if (currentPageIsValid && !el.reportValidity()) {
 				currentPageIsValid = false;
 			}
@@ -407,43 +438,41 @@ const save = async () => {
 		return false;
 	}
 
-	Object.assign(form.value, {
+	let config = Object.assign({}, form.value, {
 		service: serviceId,
 		formData: form => {
 			data.value.forEach(record => {
-				record.data.forEach(field => {
-					if (field.type === 'json') {
-						form.append(record.key, new Blob([field.data], {
-							type: 'application/json'
-						}));
-					} else if (field.type === 'file') {
-						field.data.forEach(file => {
-							if (file instanceof File) {
-								form.append(record.key, file);
-							} else {
-								form.append(record.key, new Blob([JSON.stringify(file)], {
-									type: 'application/json'
-								}));
-							}
-						});
-					}
-				});
+				if (record.type === 'json') {
+					form.append(record.key, new Blob([record.data], {
+						type: 'application/json'
+					}));
+				} else if (record.type === 'file') {
+					record.data.forEach(file => {
+						if (file instanceof File) {
+							form.append(record.key, file);
+						} else {
+							form.append(record.key, new Blob([JSON.stringify(file)], {
+								type: 'application/json'
+							}));
+						}
+					});
+				}
 			});
 			return form;
 		}
 	});
 
-	if (!form.value.index?.name) {
-		form.value.index = null; // set to null to remove index
+	if (!config.index?.name) {
+		config.index = null; // set to null to remove index
 	} else {
-		form.value.index.value = (() => {
-			let value = form.value.index.value;
+		config.index.value = (() => {
+			let value = config.index.value;
 			switch (document.querySelector('sui-select[index-type]').value) {
 				case 'number':
 					value = Number(value);
 					break;
 				case 'boolean':
-					value = value === true ? true : false;
+					value = value === true;
 					break;
 			}
 
@@ -451,14 +480,39 @@ const save = async () => {
 		})();
 	}
 
-	form.value.access_group = Number(form.value.access_group);
+	config.access_group = Number(config.access_group);
+
 	try {
-		let r = await skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, form.value);
+		let r = await skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, config);
+		if (isNewRecord) {
+			let recordSize = skapi.recordSizeCalculator(r);
+			if (tableList.includes(r.table)) {
+				let idx = tableList.indexOf(r.table);
+				let tbl = recordTables.value.list[idx];
+				tbl.number_of_records++;
+				tbl.size += recordSize; // update table size
+				let gotMore = await getMoreRecords(null, recordTables.value.list[idx], serviceId);
+				if (gotMore.startKey_list[gotMore.startKey_list.length - 1] === '"end"') {
+					// start over if it already reached the end
+					await getMoreRecords(null, recordTables.value.list[idx], serviceId, false);
+				}
+			}
+		}
+		else {
+			for (let k in props.record) {
+				if (!r.hasOwnProperty(k)) {
+					delete props.record[k];
+				}
+			}
+		}
+
 		for (let k in r) {
 			props.record[k] = r[k];
 		}
+
 		isSaving.value = false;
 		isEdit.value = false;
+
 	} catch (e) {
 		// do some error message
 		isSaving.value = false;
@@ -480,14 +534,11 @@ const addFiles = (event, keyIndex, index) => {
 };
 
 const addField = () => {
-	data.value.push({ key: '', data: [{ type: 'string', data: [] }] });
+	data.value.push({ key: '', type: 'string', data: '' });
 };
 
-const removeField = (keyData, keyIndex, index) => {
-	keyData.data.splice(index, 1);
-	if (!keyData.data.length) {
-		data.value.splice(keyIndex, 1);
-	}
+const removeField = (index) => {
+	data.value.splice(index, 1);
 };
 
 const openFileInput = (event, index) => {
@@ -508,21 +559,24 @@ const validateJson = (event) => {
 
 const getDataByTypes = (record) => {
 	let files = [];
-	let json = [];
+	let json;
 	let primitive = null;
 	if (Array.isArray(record)) {
+		let newArr = [];
 		for (let key in record) {
 			if (record[key]?.md5) {
 				files.push(record[key]);
 			} else {
-				json.push(record[key]);
+				newArr.push(record[key]);
 			}
 		}
+		
+		json = newArr;
 	} else if (typeof record === 'object') {
 		if (record?.md5) {
 			files.push(record);
 		} else {
-			json.push(record);
+			json = record;
 		}
 	} else {
 		primitive = record;
@@ -883,7 +937,7 @@ defineExpose({
 			.name {
 				margin-bottom: 8px;
 				font-weight: bold;
-				
+
 				sui-tooltip {
 					float: right;
 					vertical-align: middle;
@@ -963,14 +1017,14 @@ defineExpose({
 		}
 	}
 
-	
+
 
 	label {
 		cursor: pointer;
 
-		span {	
+		span {
 			line-height: 1;
-		    vertical-align: middle;
+			vertical-align: middle;
 		}
 	}
 
