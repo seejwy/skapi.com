@@ -10,6 +10,7 @@ form(
             :value="searchParams.value"
             @input="(e) => searchParams.value = e.target.value")
         Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search
+.mobile-search-type
     sui-select(
         name='search_type'
         :value="searchParams.searchFor"
@@ -114,7 +115,14 @@ onBeforeUnmount(() => {
     }
 }
 
-sui-select {
-    width: 100%;
+.mobile-search-type {
+    padding: 0 8px;
+
+    sui-select {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 0.5px solid #8C8C8C;
+        box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
+    }
 }
 </style>
