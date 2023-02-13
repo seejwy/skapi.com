@@ -14,7 +14,7 @@ form(
     sui-select(
         name='search_type'
         :value="searchParams.searchFor"
-        @input="e => {searchParams.searchFor = e.target.value;}")
+        @input="e => {changeSearchType(e.target.value);}")
             option(value="user_id" selected) User ID
             option(value="email") Email
             option(value="name") Name
@@ -47,6 +47,10 @@ const changeSearchType = (value) => {
     searchParams.searchFor = value;
     if(value === 'user_id') searchParams.condition = '=';
     else searchParams.condition = '>=';
+}
+
+const search = () => {
+    router.push({name:"usersSearch", params: {search: searchParams.searchFor}, query: {search: searchParams.searchFor, condition: searchParams.condition, value: searchParams.value}});
 }
 
 watch(viewport, viewport => {

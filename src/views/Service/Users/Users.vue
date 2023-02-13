@@ -1,5 +1,5 @@
 <template lang="pug">
-.page-header
+.page-header(v-if="!Object.keys(route.query).length")
     h1.hideOnTablet Users
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     sui-button.line-button(style="float: right") Read Doc
@@ -126,9 +126,9 @@
                 Icon plus2
 </template>
 <script setup>
-import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { skapi, groupArray } from '@/main';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 
@@ -150,6 +150,8 @@ const searchParams = reactive({
     condition: '=',
     value: ''
 });
+
+const navbarBackDestination = inject('navbarBackDestination');
 
 const changeSearchType = (value) => {
     searchParams.searchFor = value;
@@ -203,7 +205,14 @@ const groupedUserList = computed(() => {
 });
 
 const search = () => {
-    skapi.getUsers(searchParams, { 
+    serviceUsers.value = null;
+
+    skapi.getUsers(route.query.search ? {
+        service: serviceId,
+        searchFor: route.query.search,
+        condition: route.query.condition,
+        value: route.query.value
+    } : searchParams, { 
         refresh: true, 
         limit: fetchLimit 
     }).then((res) => {
@@ -323,7 +332,6 @@ async function getMoreUsers() {
 
 const mobileScrollHandler = (e) => {
     if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
-        console.log("GetmoreUsers");
         getMoreUsers();
     }
 }
@@ -365,13 +373,36 @@ function getUsers(refresh = false) {
 }
 
 // get users on created
-getUsers();
+
+if(route.query.search) {
+    navbarBackDestination.value = () => {
+        pageTitle.value = "Users";
+        router.push({name: 'users'});
+    };
+    search();
+} else {
+    getUsers();
+}
 
 onMounted(() => {
     window.addEventListener('scroll', mobileScrollHandler, { passive: true });
-})
+    if(route.query.search) {
+        let type = (function(route) {
+            if(route === 'user_id') return "User ID";
+            return route.charAt(0).toUpperCase() + route.slice(1);
+        })(route.query.search);
+
+        pageTitle.value = `${type} : ${route.query.value}`;
+    }
+});
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
+});
+
+onBeforeRouteLeave((to, from) => {
+    if(from.params.search && !to.params.search) {
+        getUsers(true);
+    }
 });
 </script>
 <style lang="less" scoped>
