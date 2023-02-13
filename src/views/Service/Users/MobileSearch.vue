@@ -36,17 +36,8 @@ appStyle.mainPadding = '0';
 let viewport = inject('viewport');
 let router = useRouter();
 let route = useRoute();
-let serviceId = route.params.service;
-
-let fetchLimit = 50;
-let numberOfUsersPerPage = 10;
-let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
-
-const currentSelectedUsersBatch = ref(0);
-const currentSelectedUsersPage = ref(0);
 
 const searchParams = reactive({
-    service: serviceId,
     searchFor: 'user_id',
     condition: '=',
     value: ''
