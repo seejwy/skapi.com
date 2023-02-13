@@ -8,8 +8,15 @@
 // search form
 RecordSearch#recordSearch.hideOnTablet
 
-sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
+sui-button.hideOnTablet(style='float:right;margin: 8px 0;' @click='()=>addRecord()') + Add Record
 .hideOnTablet(style="clear:both;")
+
+// record view
+sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
+    .close-record-overlay(@click="()=>viewRecord.close()")
+        Icon X2
+    .view-record-overlay
+        ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close()")
 
 .table-container#data-container
     .header.label-head
@@ -17,7 +24,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
         div.not-clickable
             span Size
             span # of records
-        Icon.clickable.hideOnTablet(:class="{'animation-rotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(true); }") refresh
+        Icon.clickable.hideOnTablet(:class="{'animation-rotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
 
     // skeleton(mobile)
     .tableHead.animation-skeleton.showOnTablet(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
@@ -25,12 +32,6 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
 
     // table list
     template(v-else)
-        sui-overlay(ref='openRecord' @click='viewRecord.close' style="background-color:rgba(0 0 0 / 60%)")
-            .close-record-overlay(@click="viewRecord.close")
-                Icon X2
-            .view-record-overlay
-                ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="openRecord.close()")
-
         .noTables(v-if='!recordTables.list.length')
             div
                 sui-flextext(min-size='16' max-size='32') No Record Tables
@@ -107,14 +108,15 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;') + Add Record
         div(v-if="isFabOpen" @click.stop)
             sui-button.fab(@click="router.push({name: 'mobileSearchRecord'})")
                 Icon search
-            sui-button.fab
+            sui-button.fab(@click='()=>addRecord(true)')
                 Icon plus2
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onMounted } from 'vue';
+import { inject, ref, watch, computed, nextTick, onMounted, provide } from 'vue';
 import { skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+import { recordTables, refreshTables, getMoreRecords } from './records.js';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
@@ -134,7 +136,6 @@ let fetchingData = inject('fetchingData');
 let isFabOpen = ref(false);
 
 // data
-let recordTables = inject('recordTables');
 let searchResult = inject('searchResult');
 
 // for paginators
@@ -166,6 +167,24 @@ onMounted(() => {
         displayRecord(recordToOpen.value);
     }
 });
+
+function addRecord(mobile = false) {
+    recordToOpen.value = {};
+    if (mobile) {
+        router.push({
+            name: 'mobileRecordView',
+            query: {
+                id: 'Add Record'
+            }
+        });
+    }
+    else {
+        nextTick(() => {
+            viewRecord.value.editRecord();
+            openRecord.value.open();
+        });
+    }
+}
 
 async function displayRecord(r) {
     if (typeof r === 'string') {
@@ -228,75 +247,20 @@ async function getMoreTables() {
     getMoreTablesQueue = null;
 }
 
-function getTables(refresh = false) {
+function getTables() {
     // initial table fetch
-
     currentSelectedTablePage.value = 0;
     currentSelectedTableBatch.value = 0;
 
-    if (!refresh && recordTables.value) {
-        // bypass if already fetched || is a search query
-        fetchingData.value = false;
-        return;
-    }
-
-    recordTables.value = null;
     fetchingData.value = true;
-
-    skapi.getTable({ service: serviceId }, { limit: fetchLimit })
-        .then(t => {
-            recordTables.value = {
-                endOfList: t.endOfList,
-                list: t.list.map(m => {
-                    m.opened = false;
-                    m.records = ref(null);
-
-                    skapi.getRecords({
-                        service: serviceId,
-                        table: m.table
-                    }, { limit: 50 }).then(r => m.records.value = r);
-
-                    return m;
-                }),
-                params: {
-                    service: serviceId,
-                    table: t.table
-                }
-            };
-
-            fetchingData.value = false;
-        }).catch(err => {
-            fetchingData.value = false;
-            throw err;
-        });
-
-    return;
+    refreshTables(serviceId).then(() => {
+        fetchingData.value = false;
+    });
 }
 
-// get tables on created
-getTables();
-
-// fetch table records
-let getMoreRecordsQueue = {};
-async function getMoreRecords(event, table) {
-    if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - 40) {
-        if (getMoreRecordsQueue?.[table.table] instanceof Promise) {
-            return;
-        }
-
-        getMoreRecordsQueue[table.table] = await skapi.getRecords({
-            service: serviceId,
-            table: table.table
-        }, { fetchMore: true, limit: fetchLimit });
-
-        let r = getMoreRecordsQueue[table.table];
-        for (let rec of r.list) {
-            table.records.list.push(rec);
-        }
-
-        table.records.endOfList = r.endOfList;
-        delete getMoreRecordsQueue[table.table];
-    }
+// get tables on created (if not already fetched)
+if (!recordTables.value) {
+    getTables();
 }
 
 function numberOfSkeletons() {
@@ -393,7 +357,7 @@ watch(currentSelectedTableBatch, n => {
     p {
         line-height: 1.5;
     }
-    
+
     @media @tablet {
         padding: 24px 0;
     }
