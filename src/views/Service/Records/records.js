@@ -41,13 +41,16 @@ export async function getMoreRecords(event, table, serviceId, fetchMore = true) 
     }
 
     if (event === null || event && event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - 40) {
-        getMoreRecordsQueue[table.table] = await skapi.getRecords({
+        getMoreRecordsQueue[table.table] = skapi.getRecords({
             service: serviceId,
             table: table.table
         }, { fetchMore, limit: 50 });
     }
+    else {
+        return;
+    }
 
-    let r = getMoreRecordsQueue[table.table];
+    let r = await getMoreRecordsQueue[table.table];
 
     if (fetchMore) {
         for (let rec of r.list) {
