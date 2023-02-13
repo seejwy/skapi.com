@@ -152,7 +152,7 @@ let fetchingData = inject('fetchingData');
 
 let pageTitle = inject('pageTitle');
 let searchTitle = computed(() => {
-    let s = `${fetchingData.value ? "Searching" : viewport.value === 'desktop' ? "Result of" : ''}${fetchingData.value ? '' : ' ' + route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type]}"${fetchingData.value ? ' ...' : ''}`;
+    let s = `${fetchingData.value ? "Searching" : viewport.value === 'desktop' ? "Result of" : ''}${fetchingData.value ? '' : ' ' + route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type === 'record' ? 'record_id' : route.query.search_type]}"${fetchingData.value ? ' ...' : ''}`;
     let capitalized = s.trim().replace(/^\w/, c => c.toUpperCase());
     pageTitle.value = viewport.value === 'desktop' ? 'Records' : capitalized;
 
