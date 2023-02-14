@@ -17,8 +17,17 @@
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="apiKey" @input="(e) => apiKey = e.target.value" required)
         hr
         div(style="text-align: right; margin-bottom: 40px;")
-            sui-button.text-button.delete-button(type="button" @click="deleteService") Delete Service
-        sui-button.hideOnTablet(type="submit") Save 
+            sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
+        sui-button.hideOnTablet(type="submit") Save
+sui-overlay(ref="deleteConfirmOverlay")
+    .popup
+        .title
+            Icon warning
+            div Are you sure?
+        .body Are you sure you want to delete the record?
+        .foot
+            sui-button(@click="()=> { deleteConfirmOverlay.close(); promiseRunning = false; }") No 
+            sui-button.line-button(@click="deleteService") Yes
 </template>
 <!-- script below -->
 <script setup>
@@ -41,6 +50,7 @@ const cors = ref('');
 const apiKey = ref('');
 const togglePromise = ref(null);
 const promiseRunning = ref(false);
+const deleteConfirmOverlay= ref(null);
 
 serviceName.value = service.value.name;
 cors.value = service.value.cors;
@@ -104,11 +114,15 @@ const toggleService = async() => {
     }
 }
 
-const deleteService = () => {
+const deleteServiceAsk = () => {
     if(promiseRunning.value) return;
-
     promiseRunning.value = true;
+    deleteConfirmOverlay.value.open();
+}
+
+const deleteService = () => {
     skapi.deleteService(service.value.service).then(() => {
+        deleteConfirmOverlay.value.close();
         router.replace('/dashboard');
     }).catch(() => {
         promiseRunning.value = false;
@@ -230,5 +244,38 @@ onBeforeUnmount(() => {
 }
 .delete-button {
     color: rgba(240, 78, 78, 0.85);
+}
+
+
+.popup {
+	background: #333333;
+	border: 1px solid #808080;
+	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+	border-radius: 8px;
+	padding: 60px 32px;
+	margin: 12px;
+	text-align: center;
+
+	svg {
+		height: 38px;
+		width: 38px;
+	}
+
+	.title {
+		color: #FF8D3B;
+
+		&>div {
+			margin-top: 12px;
+			font-size: 20px;
+		}
+	}
+
+	.body {
+		padding: 20px 0 28px 0;
+	}
+
+	.foot sui-button:first-child {
+		margin-right: 12px;
+	}
 }
 </style>
