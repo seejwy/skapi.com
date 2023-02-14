@@ -30,6 +30,7 @@ watch(() => state.user, user => {
             let services = window.sessionStorage.getItem(user.user_id);
             if (services && services !== 'null') {
                 state.services = JSON.parse(services);
+                skapi.services = state.services;
             }
             else {
                 state.services = (await skapi.getServices());
