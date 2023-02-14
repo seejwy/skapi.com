@@ -1,92 +1,108 @@
 <template lang="pug">
-.container.header
-    h2 How to start my service?
-    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
-    div.action
-        sui-button.line-button Read Doc
-.container
-    .title-actions-wrapper.showOnTablet
-        .title-wrapper
-            Icon information
-            h2 Service Information
-    .inner-container 
-        .title-actions-wrapper.hideOnTablet
+EditService(v-if="state?.user && route.query.edit === 'service'")
+template(v-else)
+    .container.header
+        h2 How to start my service?
+        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
+        div.action
+            sui-button.line-button Read Doc
+    .container
+        .title-actions-wrapper.showOnTablet
             .title-wrapper
                 Icon information
                 h2 Service Information
-        .information-grid
-            .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
-                .name {{ info.name }}
-                .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
-                .value(v-else) {{ service[info.key] }}
+        .inner-container 
+            .title-actions-wrapper.hideOnTablet
+                .title-wrapper
+                    Icon information
+                    h2 Service Information
+            .information-grid
+                .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
+                    .name {{ info.name }}
+                    .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
+                    .value(v-else) {{ service[info.key] }}
 
-.container
-    .title-actions-wrapper.showOnTablet
-        .title-wrapper
-            Icon setting
-            h2 Service Setting 
-        .actions(@click="edit")
-            Icon pencil
-            span Edit
-    .inner-container 
-        .title-actions-wrapper.hideOnTablet
+    .container
+        .title-actions-wrapper.showOnTablet
             .title-wrapper
                 Icon setting
                 h2 Service Setting 
             .actions(@click="edit")
                 Icon pencil
                 span Edit
-        .setting-grid 
-            .setting-grid-item(v-for="setting in settingGrid")
-                .name 
-                    span {{ setting.name }}
-                    sui-tooltip(v-if="setting.tip")
-                        Icon(slot="tool") question
-                        div(slot="tip") {{ setting.tip }}
-                .value(v-if="setting.key === 'active'")
-                    .indicator(:class="{'active': service[setting.key] > 0}")
-                    span(v-if="service[setting.key] > 0") Enabled 
-                    span(v-else) Disabled
-                .value(v-else) {{  service[setting.key] || '-' }}
-.container
-    .title-actions-wrapper.showOnTablet
-        .title-wrapper
-            h2 Manage your Service 
-    .inner-container.services
-        .title-actions-wrapper.hideOnTablet
+        .inner-container 
+            .title-actions-wrapper.hideOnTablet
+                .title-wrapper
+                    Icon setting
+                    h2 Service Setting 
+                .actions(@click="edit")
+                    Icon pencil
+                    span Edit
+            .setting-grid 
+                .setting-grid-item(v-for="setting in settingGrid")
+                    .name 
+                        span {{ setting.name }}
+                        sui-tooltip(v-if="setting.tip")
+                            Icon(slot="tool") question
+                            div(slot="tip") {{ setting.tip }}
+                    .value(v-if="setting.key === 'active'")
+                        .indicator(:class="{'active': service[setting.key] > 0}")
+                        span(v-if="service[setting.key] > 0") Enabled 
+                        span(v-else) Disabled
+                    .value(v-else) {{  service[setting.key] || '-' }}
+    .container
+        .title-actions-wrapper.showOnTablet
             .title-wrapper
                 h2 Manage your Service 
-        .service-grid 
-            .service-grid-item
-                .content
-                    .title
-                        Icon users
-                        span Authentication
-                    .body Users are data that your service user's will store and read from your service database. 
-                RouterLink(:to="{name: 'users'}") Go to Users >
-            .service-grid-item  
-                .content
-                    .title
-                        Icon folder_open
-                        span Record
-                    .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
-                RouterLink(:to="{name: 'records'}") Go to Records >
-            .service-grid-item 
-                .content
-                    .title
-                        Icon mail
-                        span Email System
-                    .body Users are data that your service user's will store and read from your service database. 
-                RouterLink(to="/") Go to Mail >
+        .inner-container.services
+            .title-actions-wrapper.hideOnTablet
+                .title-wrapper
+                    h2 Manage your Service 
+            .service-grid 
+                .service-grid-item
+                    .content
+                        .title
+                            Icon users
+                            span Authentication
+                        .body Users are data that your service user's will store and read from your service database. 
+                    RouterLink(:to="{name: 'users'}") Go to Users >
+                .service-grid-item  
+                    .content
+                        .title
+                            Icon folder_open
+                            span Record
+                        .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
+                    RouterLink(:to="{name: 'records'}") Go to Records >
+                .service-grid-item 
+                    .content
+                        .title
+                            Icon mail
+                            span Email System
+                        .body Users are data that your service user's will store and read from your service database. 
+                    RouterLink(to="/") Go to Mail >
+    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isEdit = false")
+        div.overlay
+            .close(@click="isEdit = false")
+                Icon X2
+            EditService
 </template>
 <script setup>
-import { inject, reactive } from 'vue';
-import { regionName, dateFormat } from '@/main';
+import { inject, reactive, ref, watch, nextTick } from 'vue';
+import { state, regionName, dateFormat } from '@/main';
+import { useRoute, useRouter } from 'vue-router';
+
+import EditService from '@/components/EditService.vue';
 import Icon from '../../components/Icon.vue';
+
+const route = useRoute();
+const router = useRouter();
 
 let service = inject('service');
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service "' + service.value.name + '"'
+
+const settingWindow = ref(null);
+const isEdit = ref(false);
 
 const informationGrid = reactive([
     {
@@ -165,8 +181,25 @@ const settingGrid = reactive([
 ]);
 
 const edit = () => {
-    console.log("Editing service");
+    if(state.viewport === 'desktop') isEdit.value = true;
+    else router.push('?edit=service');
 }
+
+const opensettingWindow = () => {
+    if(state.viewport === 'mobile') router.push('?new=service');
+    else settingWindow.value.open();
+}
+
+watch(() => isEdit.value, async () => {
+    if(state.viewport === 'desktop') {
+        await nextTick();
+        if(isEdit.value) {
+            opensettingWindow();
+        } else {
+            settingWindow.value.close();
+        }
+    }
+});
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
