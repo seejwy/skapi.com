@@ -28,6 +28,15 @@ sui-overlay(ref="deleteConfirmOverlay")
         .foot
             sui-button(@click="()=> { deleteConfirmOverlay.close(); promiseRunning = false; }") No 
             sui-button.line-button(@click="deleteService") Yes
+
+sui-overlay(ref="deleteErrorOverlay")
+    .popup
+        .title.danger
+            Icon warning
+            div Something went wrong!
+        .body Your service needs to be disabled to be deleted.
+        .foot
+            sui-button(@click="()=> { deleteErrorOverlay.close(); promiseRunning = false; }") Ok
 </template>
 <!-- script below -->
 <script setup>
@@ -50,7 +59,8 @@ const cors = ref('');
 const apiKey = ref('');
 const togglePromise = ref(null);
 const promiseRunning = ref(false);
-const deleteConfirmOverlay= ref(null);
+const deleteConfirmOverlay = ref(null);
+const deleteErrorOverlay = ref(null);
 
 serviceName.value = service.value.name;
 cors.value = service.value.cors;
@@ -125,6 +135,8 @@ const deleteService = () => {
         deleteConfirmOverlay.value.close();
         router.replace('/dashboard');
     }).catch(() => {
+        deleteConfirmOverlay.value.close();
+        deleteErrorOverlay.value.open();
         promiseRunning.value = false;
     });
 }
@@ -264,6 +276,9 @@ onBeforeUnmount(() => {
 	.title {
 		color: #FF8D3B;
 
+        &.danger {
+            color: #F04E4E;
+        }
 		&>div {
 			margin-top: 12px;
 			font-size: 20px;
