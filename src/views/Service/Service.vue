@@ -25,7 +25,7 @@
         .title-wrapper
             Icon setting
             h2 Service Setting 
-        .actions
+        .actions(@click="edit")
             Icon pencil
             span Edit
     .inner-container 
@@ -33,7 +33,7 @@
             .title-wrapper
                 Icon setting
                 h2 Service Setting 
-            .actions
+            .actions(@click="edit")
                 Icon pencil
                 span Edit
         .setting-grid 
@@ -162,7 +162,11 @@ const settingGrid = reactive([
         key: 'api_key',
         tip: 'Cors tip goes here',
     },
-])
+]);
+
+const edit = () => {
+    console.log("Editing service");
+}
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
@@ -408,7 +412,7 @@ const settingGrid = reactive([
     @media screen and (max-width: 940px) {
         flex-direction: column;
         gap: 20px;
-        
+
         &-item { 
             border-radius: 12px;
             background: #434343;
