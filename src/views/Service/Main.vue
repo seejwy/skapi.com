@@ -26,7 +26,7 @@
             
             .padBlock
 
-    .sidebar
+    .sidebar(v-if="state.user")
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
 
         router-link(:to="{name: 'service'}")
