@@ -2,6 +2,10 @@
 .overlay-container
     form(@submit.prevent="save")
         .overlay-container-title.hideOnTablet Service Setting
+        .toggle
+            span Enable/Disable
+            .toggle-bar 
+                .toggle-ball(@click="toggleService" :class="{'active': service.active > 0}")
         .input
             label Name of Service
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
@@ -32,6 +36,7 @@ let navbarBackDestination = inject('navbarBackDestination');
 const serviceName = ref('');
 const cors = ref('');
 const apiKey = ref('');
+const togglePromise = ref(null);
 
 serviceName.value = service.value.name;
 cors.value = service.value.cors;
@@ -60,6 +65,19 @@ const save = () => {
         cors: cors.value,
         api_key: apiKey.value
     });
+}
+
+const toggleService = async() => {
+    if((togglePromise.value instanceof Promise)) return;
+    if(service.value.active > 0) {
+        togglePromise.value = skapi.disableService(service.value.service).then(() => {
+            togglePromise.value = null;
+        });
+    } else {
+        togglePromise.value = skapi.enableService(service.value.service).then(() => {
+            togglePromise.value = null;
+        });
+    }
 }
 
 if(state.viewport === 'mobile') {
@@ -135,6 +153,44 @@ onBeforeUnmount(() => {
         box-shadow: none;
         background: transparent;
         padding: 0;
+    }
+}
+.toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, .6);
+
+    &-bar {
+        position: relative;
+        height: 8px;
+        width: 40px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 0.3px solid #595959;
+        box-shadow: inset 0.5px 0.5px 1px rgba(0, 0, 0, 0.25);
+        border-radius: 2px;
+        margin-right: 10px;
+    }
+    &-ball {
+        position: absolute;
+        cursor: pointer;
+        height: 20px;
+        width: 20px;
+        left: -10px;
+        top: -7px;
+        border-radius: 10px;
+        background: #D9D9D9;
+        border: 0.3px solid #595959;
+        box-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.25), inset -0.5px -0.5px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px #FFFFFF;
+        transition: left .3s ease-in-out, background-color .3s ease-in-out;
+
+        &.active {
+            left: calc(100% - 10px);
+            background: #5AD858;
+        }
     }
 }
 </style>
