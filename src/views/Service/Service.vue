@@ -195,8 +195,6 @@ watch(() => isEdit.value, async () => {
         await nextTick();
         if(isEdit.value) {
             opensettingWindow();
-        } else {
-            settingWindow.value.close();
         }
     }
 });
