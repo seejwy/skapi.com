@@ -15,7 +15,10 @@
         .input
             label API Key
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="apiKey" @input="(e) => apiKey = e.target.value" required)
-        sui-button(type="submit") Save 
+        hr
+        div(style="text-align: right; margin-bottom: 40px;")
+            sui-button.text-button.delete-button(type="button" @click="deleteService") Delete Service
+        sui-button.hideOnTablet(type="submit") Save 
 </template>
 <!-- script below -->
 <script setup>
@@ -78,6 +81,13 @@ const toggleService = async() => {
             togglePromise.value = null;
         });
     }
+}
+
+const deleteService = () => {
+    skapi.deleteService(service.value.service).then(() => {
+        console.lo
+        router.replace('/dashboard');
+    });
 }
 
 if(state.viewport === 'mobile') {
@@ -192,5 +202,8 @@ onBeforeUnmount(() => {
             background: #5AD858;
         }
     }
+}
+.delete-button {
+    color: rgba(240, 78, 78, 0.85);
 }
 </style>
