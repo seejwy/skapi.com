@@ -64,11 +64,23 @@ const buttonCallback = async () => {
 }
 
 const save = () => {
-    return skapi.updateService(service.value.service, {
-        name: serviceName.value,
-        cors: cors.value,
-        api_key: apiKey.value
-    });
+    if(promiseRunning.value) return;
+
+    promiseRunning.value = true;
+    let res;
+
+    try {
+        res = skapi.updateService(service.value.service, {
+            name: serviceName.value,
+            cors: cors.value,
+            api_key: apiKey.value
+        });
+    } catch(e) {
+        throw e;
+    } finally {
+        promiseRunning.value = false;
+    }
+    return res;
 }
 
 const toggleService = async() => {
