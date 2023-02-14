@@ -64,6 +64,7 @@ skapi.getUsers({
 
 </script>
 <style lang="less" scoped>
+@import '@/assets/variables.less';
 .tab {
     background-color: #333333;
     display: inline-block;
@@ -90,6 +91,14 @@ skapi.getUsers({
         &:last-child {
             margin: 0;
         }
-    } 
+    }
+
+    @media @tablet {
+        margin: 0 -16px;
+    }
+    
+    @media @phone {
+        margin: 0 -8px;
+    }
 }
 </style>
