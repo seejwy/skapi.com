@@ -73,9 +73,10 @@ export default class Admin extends Skapi {
 
     async getServices() {
         await this.checkAdmin();
-        return await this.request('get-services', null, {
+        this.services = await this.request('get-services', null, {
             auth: true
         });
+        return this.services; 
     }
 
     async requireAdmin(opt = { throwError, ignoreVerification }) {
@@ -131,7 +132,7 @@ export default class Admin extends Skapi {
         if (this.services) {
             // get the service index number
             for (let i = 0; this.services[region].length > i; i++) {
-                let s = this.__user.services[i];
+                let s = this.services[region][i];
                 if (s.service === service) {
                     hasService = s;
                     serviceIndex = i;
