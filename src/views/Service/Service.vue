@@ -376,7 +376,7 @@ const edit = () => {
         justify-content: space-between;
         width: 100%;
         background: rgba(255, 255, 255, 0.1);
-        padding: 32px;
+        padding: 24px;
         border-radius: 8px;
         .content {
             display: flex;
@@ -415,13 +415,13 @@ const edit = () => {
 
         &-item { 
             border-radius: 12px;
-            background: #434343;
         }
     }
 
     @media @tablet {
         &-item {
             padding: 24px;
+            background: #434343;
         }
     }
 }
