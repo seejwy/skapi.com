@@ -40,6 +40,7 @@ const serviceName = ref('');
 const cors = ref('');
 const apiKey = ref('');
 const togglePromise = ref(null);
+const promiseRunning = ref(false);
 
 serviceName.value = service.value.name;
 cors.value = service.value.cors;
@@ -71,22 +72,34 @@ const save = () => {
 }
 
 const toggleService = async() => {
-    if((togglePromise.value instanceof Promise)) return;
-    if(service.value.active > 0) {
-        togglePromise.value = skapi.disableService(service.value.service).then(() => {
-            togglePromise.value = null;
-        });
-    } else {
-        togglePromise.value = skapi.enableService(service.value.service).then(() => {
-            togglePromise.value = null;
-        });
+    if((togglePromise.value instanceof Promise) || promiseRunning.value) return;
+
+    promiseRunning.value = true;
+    try {
+        if(service.value.active > 0) {
+            togglePromise.value = skapi.disableService(service.value.service).then(() => {
+                togglePromise.value = null;
+            });
+        } else {
+            togglePromise.value = skapi.enableService(service.value.service).then(() => {
+                togglePromise.value = null;
+            });
+        }
+    } catch(e) {
+        throw e;
+    } finally {
+        promiseRunning.value = false;
     }
 }
 
 const deleteService = () => {
+    if(promiseRunning.value) return;
+
+    promiseRunning.value = true;
     skapi.deleteService(service.value.service).then(() => {
-        console.lo
         router.replace('/dashboard');
+    }).catch(() => {
+        promiseRunning.value = false;
     });
 }
 
