@@ -23,18 +23,22 @@ sui-overlay(ref="deleteConfirmOverlay")
     .popup
         .title
             Icon warning
-            div Are you sure?
-        .body Are you sure you want to delete the record?
+            div Deleting Service?
+        .body 
+            p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
+            p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
+            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
+
         .foot
             sui-button(@click="()=> { deleteConfirmOverlay.close(); promiseRunning = false; }") No 
             sui-button.line-button(@click="deleteService") Yes
 
 sui-overlay(ref="deleteErrorOverlay")
     .popup
-        .title.danger
+        .title
             Icon warning
             div Something went wrong!
-        .body Your service needs to be disabled to be deleted.
+        .body {{ errorMessage }}
         .foot
             sui-button(@click="()=> { deleteErrorOverlay.close(); promiseRunning = false; }") Ok
 </template>
@@ -60,6 +64,8 @@ const apiKey = ref('');
 const togglePromise = ref(null);
 const promiseRunning = ref(false);
 const deleteConfirmOverlay = ref(null);
+const confirmationCode = ref('');
+const errorMessage = ref('');
 const deleteErrorOverlay = ref(null);
 
 serviceName.value = service.value.name;
@@ -131,10 +137,19 @@ const deleteServiceAsk = () => {
 }
 
 const deleteService = () => {
+    if(confirmationCode.value !== service.value.service) {
+        errorMessage.value = "Your service code did not match.";
+        deleteConfirmOverlay.value.close();
+        deleteErrorOverlay.value.open();
+        promiseRunning.value = false;
+        return;
+    }
+
     skapi.deleteService(service.value.service).then(() => {
         deleteConfirmOverlay.value.close();
         router.replace('/dashboard');
     }).catch(() => {
+        errorMessage.value = "Please disable your service before deleting it.";
         deleteConfirmOverlay.value.close();
         deleteErrorOverlay.value.open();
         promiseRunning.value = false;
@@ -274,11 +289,8 @@ onBeforeUnmount(() => {
 	}
 
 	.title {
-		color: #FF8D3B;
+        color: #F04E4E;
 
-        &.danger {
-            color: #F04E4E;
-        }
 		&>div {
 			margin-top: 12px;
 			font-size: 20px;
@@ -287,6 +299,22 @@ onBeforeUnmount(() => {
 
 	.body {
 		padding: 20px 0 28px 0;
+
+        p {
+            margin: 0 0 32px 0;
+
+            &:last-of-type {
+                margin-bottom: 24px;
+            }
+        }
+
+        sui-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+        }
 	}
 
 	.foot sui-button:first-child {
