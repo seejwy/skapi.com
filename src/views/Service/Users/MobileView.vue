@@ -7,10 +7,9 @@
        
     template(v-else)
         div fetching
-pre {{ user }}
 </template>
 <script setup>
-import { inject, ref, reactive, watch } from 'vue';
+import { inject, ref, reactive, watch, onMounted, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { useRoute } from 'vue-router';
 
@@ -62,6 +61,12 @@ skapi.getUsers({
     user.value = res.list[0];
 });
 
+onMounted(() => {
+    appStyle.background = '#333333';
+})
+onBeforeUnmount(() => {
+    appStyle.background = '#595959';
+})
 </script>
 <style lang="less" scoped>
 .container {
