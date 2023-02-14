@@ -1,4 +1,5 @@
 <template lang="pug">
+.tab Information
 .container
     template(v-if="user")
         .label(v-for="key in info")
@@ -63,6 +64,14 @@ skapi.getUsers({
 
 </script>
 <style lang="less" scoped>
+.tab {
+    background-color: #333333;
+    display: inline-block;
+    margin: 12px 0 0 8px;
+    border-radius: 8px 8px 0px 0px;
+    padding: 0 12px;
+    line-height: 40px;
+}
 .container {
     background-color: #333333;
     padding: 32px 12px;
