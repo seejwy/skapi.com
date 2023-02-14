@@ -5,62 +5,79 @@
     div.action
         sui-button.line-button Read Doc
 .container
-    .title-actions-wrapper
+    .title-actions-wrapper.showOnTablet
         .title-wrapper
             Icon information
             h2 Service Information
-    .information-grid
-        .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
-            .name {{ info.name }}
-            .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
-            .value(v-else) {{ service[info.key] }}
+    .inner-container 
+        .title-actions-wrapper.hideOnTablet
+            .title-wrapper
+                Icon information
+                h2 Service Information
+        .information-grid
+            .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
+                .name {{ info.name }}
+                .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
+                .value(v-else) {{ service[info.key] }}
 
 .container
-    .title-actions-wrapper
+    .title-actions-wrapper.showOnTablet
         .title-wrapper
             Icon setting
             h2 Service Setting 
         .actions
             Icon pencil
             span Edit
-    .setting-grid 
-        .setting-grid-item(v-for="setting in settingGrid")
-            .name 
-                span {{ setting.name }}
-                sui-tooltip(v-if="setting.tip")
-                    Icon(slot="tool") question
-                    div(slot="tip") {{ setting.tip }}
-            .value(v-if="setting.key === 'active'")
-                .indicator(:class="{'active': service[setting.key] > 0}")
-                span(v-if="service[setting.key] > 0") Enabled 
-                span(v-else) Disabled
-            .value(v-else) {{  service[setting.key] || '-' }}
+    .inner-container 
+        .title-actions-wrapper.hideOnTablet
+            .title-wrapper
+                Icon setting
+                h2 Service Setting 
+            .actions
+                Icon pencil
+                span Edit
+        .setting-grid 
+            .setting-grid-item(v-for="setting in settingGrid")
+                .name 
+                    span {{ setting.name }}
+                    sui-tooltip(v-if="setting.tip")
+                        Icon(slot="tool") question
+                        div(slot="tip") {{ setting.tip }}
+                .value(v-if="setting.key === 'active'")
+                    .indicator(:class="{'active': service[setting.key] > 0}")
+                    span(v-if="service[setting.key] > 0") Enabled 
+                    span(v-else) Disabled
+                .value(v-else) {{  service[setting.key] || '-' }}
 .container
-    .title-actions-wrapper
+    .title-actions-wrapper.showOnTablet
         .title-wrapper
             h2 Manage your Service 
-    .service-grid 
-        .service-grid-item
-            .content
-                .title
-                    Icon users
-                    span Authentication
-                .body Users are data that your service user's will store and read from your service database. 
-            RouterLink(:to="{name: 'users'}") Go to Users >
-        .service-grid-item  
-            .content
-                .title
-                    Icon folder_open
-                    span Record
-                .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
-            RouterLink(:to="{name: 'records'}") Go to Records >
-        .service-grid-item 
-            .content
-                .title
-                    Icon mail
-                    span Email System
-                .body Users are data that your service user's will store and read from your service database. 
-            RouterLink(to="/") Go to Mail >
+    .inner-container.services
+        .title-actions-wrapper.hideOnTablet
+            .title-wrapper
+                h2 Manage your Service 
+        .service-grid 
+            .service-grid-item
+                .content
+                    .title
+                        Icon users
+                        span Authentication
+                    .body Users are data that your service user's will store and read from your service database. 
+                RouterLink(:to="{name: 'users'}") Go to Users >
+            .service-grid-item  
+                .content
+                    .title
+                        Icon folder_open
+                        span Record
+                    .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
+                RouterLink(:to="{name: 'records'}") Go to Records >
+            .service-grid-item 
+                .content
+                    .title
+                        Icon mail
+                        span Email System
+                    .body Users are data that your service user's will store and read from your service database. 
+                RouterLink(to="/") Go to Mail >
 </template>
 <script setup>
 import { inject, reactive } from 'vue';
@@ -151,10 +168,20 @@ const settingGrid = reactive([
 @import '@/assets/variables.less';
 
 .container {
-    padding: 40px;
-    background: #434343;
-    border-radius: 12px;
     margin: 40px 0;
+
+    .inner-container {    
+        padding: 40px;
+        background: #434343;
+        border-radius: 12px;
+        .title-actions-wrapper {
+            margin-bottom: 32px;
+
+            h2 {
+                font-size: 24px;
+            }
+        }
+    }
 
     h2,
     p {
@@ -177,7 +204,11 @@ const settingGrid = reactive([
     .title-actions-wrapper {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 32px;
+        margin-bottom: 20px;
+
+        h2 {        
+            font-size: 20px;
+        }
     }
 
     .title-wrapper {
@@ -206,12 +237,21 @@ const settingGrid = reactive([
     }
 
     @media @tablet {    
-        margin: 16px -16px;
-        padding: 40px 20px;
+        margin: 0 -16px;
+        padding: 20px;
         border-radius: 0;
 
         &:first-child {
             margin-top: 0;
+        }
+
+        .inner-container {    
+            padding: 20px;
+
+            &.services {
+                padding: 0;
+                background-color: transparent;
+            }
         }
 
         .action {
@@ -367,6 +407,12 @@ const settingGrid = reactive([
 
     @media screen and (max-width: 940px) {
         flex-direction: column;
+        gap: 20px;
+        
+        &-item { 
+            border-radius: 12px;
+            background: #434343;
+        }
     }
 
     @media @tablet {
