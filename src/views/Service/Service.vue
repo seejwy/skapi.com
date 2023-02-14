@@ -478,4 +478,24 @@ sui-tooltip {
         background: #5AD858;
     }
 }
+.overlay {
+    padding: 16px;
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 32px;
+        height: 32px;
+        background-color: #BFBFBF;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        svg {
+            color: #434343;
+        }
+    }
+}
 </style>
