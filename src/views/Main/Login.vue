@@ -21,7 +21,9 @@ form.container(@submit.prevent="login")
             required)
     .action
         label
-            sui-input(type="checkbox")
+            sui-input(type="checkbox" 
+                @input="(e)=>rememberme = e.target.checked"
+				:checked="rememberme ? true : null")
             span Remember Me
         RouterLink(to="/forgotpassword") Forgot Email & Password?
     .error(v-if="error")
@@ -42,6 +44,7 @@ import Icon from '../../components/Icon.vue';
 let route = useRoute();
 let router = useRouter();
 const error = ref(null);
+const rememberme = ref(false);
 // set page title
 let pageTitle = inject('pageTitle');
 let appStyle = inject('appStyle');
@@ -87,10 +90,9 @@ const validatePassword = (event) => {
 }
 
 function login() {
-    skapi.login(form).then(u => {
+    skapi.AdminLogin(form, null, rememberme.value).then(u => {
         state.user = u;
     }).catch(e => {
-        console.log({e: e.code});
         // UserLambdaValidationException
         // INCORRECT_USERNAME_OR_PASSWORD
         switch(e.code) {
