@@ -236,6 +236,10 @@ const search = () => {
         return;
     }
 
+    callSearch();
+}
+
+const callSearch = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
     if(route.query.search) {
@@ -413,7 +417,7 @@ if(route.query.search) {
         pageTitle.value = "Users";
         router.push({name: 'users'});
     };
-    search();
+    callSearch();
 } else {
     getUsers();
 }
