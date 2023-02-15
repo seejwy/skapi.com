@@ -27,7 +27,7 @@
 
 .table-outer-wrapper
     .table-actions
-        .header-actions--before(v-if="showSetting" @click="showSetting = false")
+        .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
                 span Headers
