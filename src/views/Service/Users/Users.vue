@@ -573,6 +573,7 @@ onBeforeRouteLeave((to, from) => {
                 th {          
                     padding: 12px;      
                     height: 52px;
+                    white-space: nowrap;
 
                     &:first-child {
                         padding-left: 20px;
