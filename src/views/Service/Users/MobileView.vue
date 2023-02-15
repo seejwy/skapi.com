@@ -4,7 +4,9 @@
     template(v-if="user")
         .label(v-for="key in info")
             span {{ key.name || key.key }}
-            .value {{ key.filter ? key.filter(user[key.key]) : user[key.key] || '-'}}
+            .value(:class="key.class") 
+                Icon(v-if="key.icon") {{ key.icon(user[key.key]) }}
+                span {{ key.filter ? key.filter(user[key.key]) : user[key.key] || '-'}}
        
     template(v-else)
         div fetching
@@ -36,15 +38,26 @@ const info = reactive([
     {
         key: 'suspended',
         name: 'Block/Unblocked',
+        icon: (value) => {
+            return value.includes('approved') ? 'unblock' : 'block';
+        },
         filter: (value) => {
-            return value.includes('approved') ? 'unblocked' : 'blocked';
+            return value.includes('approved') ? 'Unblocked' : 'Blocked';
         }
     },
     {
-        key: 'status'
+        key: 'group',
+        name: 'Status',
+        icon: (value) => {
+            return value > 0 ? 'check_circle' : 'X';
+        },
+        filter: (value) => {
+            return value > 0 ? 'Enabled' : 'Disabled';
+        }
     },
     {
-        key: 'gender'
+        key: 'gender',
+        class: 'capitalize'
     },
     {
         key: 'address'
@@ -89,7 +102,7 @@ watch(() => state.viewport, (viewport) => {
         margin-bottom: 32px;
         display: block;
 
-        span {
+        & > span {
             font-weight: bold;
             color: rgba(255, 255, 255, .4);
             text-transform: capitalize;
@@ -97,6 +110,20 @@ watch(() => state.viewport, (viewport) => {
 
         &:last-child {
             margin: 0;
+        }
+
+        .capitalize {
+            text-transform: capitalize;
+        }
+
+        .value {
+            margin-top: 8px;
+            svg {
+                margin-right: 10px;
+            }
+            span {
+                vertical-align: middle;
+            }
         }
     }
 
