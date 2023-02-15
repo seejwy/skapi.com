@@ -238,13 +238,13 @@ const search = () => {
 
     fetchingData.value = true;
     serviceUsers.value = null;
+    if(route.query.search) {
+        searchParams.searchFor = route.query.search;
+        searchParams.condition = route.query.condition;
+        searchParams.value = route.query.value;
+    }
 
-    skapi.getUsers(route.query.search ? {
-        service: serviceId,
-        searchFor: route.query.search,
-        condition: route.query.condition,
-        value: route.query.value
-    } : searchParams, { 
+    skapi.getUsers(searchParams, { 
         refresh: true, 
         limit: fetchLimit 
     }).then((res) => {
