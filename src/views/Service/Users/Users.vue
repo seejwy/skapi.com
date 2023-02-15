@@ -103,6 +103,13 @@
                                         Icon(v-else) x
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
+    .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
+        template(v-if="searchParams.value === ''")     
+            .title No Users
+            p You have no existing users yet
+        template(v-else) 
+            .title No Users Found
+            p There were no users matching the query.
     .paginator.hideOnTablet(v-if="groupedUserList?.length")
         Icon(
             :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
@@ -688,6 +695,23 @@ onBeforeRouteLeave((to, from) => {
         }
     }
 }
+
+.no-users-found {
+    text-align: center;
+    padding: 32px 0;
+    background-color: #4A4A4A;
+    border-radius: 0 0 8px 8px;
+    color: rgba(255, 255, 255, .4);
+
+    .title {
+        font-size: 36px;
+    }
+    
+    p {
+        margin: 20px 0 0 0;
+    }
+}
+
 .paginator {
     padding: 24px 0;
     text-align: center;
