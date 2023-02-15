@@ -1,5 +1,5 @@
 <template lang="pug">
-.page-header(v-if="!Object.keys(route?.query).length")
+.page-header(v-if="!Object.keys(route?.query).length || viewport === 'desktop'")
     h1.hideOnTablet Users
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     sui-button.line-button(style="float: right") Read Doc
@@ -216,7 +216,7 @@ const search = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
 
-    skapi.getUsers(route.query.search ? {
+    skapi.getUsers(route.query.search && viewport.value === 'mobile' ? {
         service: serviceId,
         searchFor: route.query.search,
         condition: route.query.condition,
@@ -395,16 +395,25 @@ if(route.query.search) {
     getUsers();
 }
 
-onMounted(() => {
-    window.addEventListener('scroll', mobileScrollHandler, { passive: true });
-    if(route.query.search) {
+const toggleMobileDesktopSearchView = () => {
+    if(viewport.value === 'mobile' && route.query.search) {
         let type = (function(route) {
             if(route === 'user_id') return "User ID";
             return route.charAt(0).toUpperCase() + route.slice(1);
         })(route.query.search);
 
         pageTitle.value = `${type} : ${route.query.value}`;
+    } else {
+        pageTitle.value = 'Users';
     }
+}
+onMounted(() => {
+    window.addEventListener('scroll', mobileScrollHandler, { passive: true });
+    toggleMobileDesktopSearchView();
+});
+watch(() => viewport.value, (viewport) => {
+    console.log(viewport);
+    toggleMobileDesktopSearchView();
 });
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', mobileScrollHandler, { passive: true });

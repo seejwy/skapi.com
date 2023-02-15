@@ -62,6 +62,7 @@ watch(viewport, viewport => {
 
 onBeforeUnmount(() => {
     appStyle.mainPadding = null;
+    appStyle.background = '#595959';
 });
 </script>
 <style lang="less" scoped>
