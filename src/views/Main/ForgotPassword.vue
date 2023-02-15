@@ -68,7 +68,7 @@
 
 </template>
 <script setup>
-import { inject, ref } from 'vue';
+import { inject, ref, onBeforeMount } from 'vue';
 import { skapi, state } from '@/main';
 import { useRouter } from 'vue-router';
 
@@ -88,6 +88,12 @@ const secondsTillReady = ref(null);
 const isRequestingCode = ref(false);
 
 let step = ref(1);
+
+onBeforeMount(async() => {
+    await skapi.getConnection().then(() => {
+        if(state.user) router.push({name: 'dashboard'});
+    })
+});
 
 const validatePassword = (event) => {
     if(event.target.value.length >= 6 && event.target.value.length <= 60) {

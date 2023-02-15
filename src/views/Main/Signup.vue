@@ -23,7 +23,7 @@
         //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
 </template>
 <script setup>
-import { inject, watch, reactive, ref } from 'vue';
+import { inject, watch, reactive, ref, onBeforeMount } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -37,6 +37,12 @@ const secondsTillReady = ref(null);
 // set page title
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
+
+onBeforeMount(async() => {
+    await skapi.getConnection().then(() => {
+        if(state.user) router.push({name: 'dashboard'});
+    })
+});
 
 let form = reactive({
     username: '',
