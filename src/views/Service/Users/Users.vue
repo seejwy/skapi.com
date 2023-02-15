@@ -216,7 +216,7 @@ const search = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
 
-    skapi.getUsers(route.query.search && viewport.value === 'mobile' ? {
+    skapi.getUsers(route.query.search ? {
         service: serviceId,
         searchFor: route.query.search,
         condition: route.query.condition,
@@ -405,6 +405,7 @@ const toggleMobileDesktopSearchView = () => {
         pageTitle.value = `${type} : ${route.query.value}`;
     } else {
         pageTitle.value = 'Users';
+        router.replace({name: 'users'});
     }
 }
 onMounted(() => {
@@ -412,7 +413,6 @@ onMounted(() => {
     toggleMobileDesktopSearchView();
 });
 watch(() => viewport.value, (viewport) => {
-    console.log(viewport);
     toggleMobileDesktopSearchView();
 });
 onBeforeUnmount(() => {
