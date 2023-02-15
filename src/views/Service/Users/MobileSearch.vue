@@ -8,7 +8,8 @@ form(
             type="search"
             autocomplete="off"
             :value="searchParams.value"
-            @input="(e) => searchParams.value = e.target.value")
+            @input="(e) => searchParams.value = e.target.value"
+            required)
         Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search
 .mobile-search-type
     sui-select(

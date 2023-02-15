@@ -5,14 +5,15 @@
     sui-button.line-button(style="float: right") Read Doc
     div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'")
-    .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
-        .select-field
-            sui-select(name='search_type' :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
-                option(value="user_id" selected) User ID
-                option(value="email") Email
-                option(value="name") Name
-        .input-field
-            sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchParams.value" @input="(e) => searchParams.value = e.target.value" @keypress.enter="search")
+    form(@submit.prevent="search")
+        .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
+            .select-field
+                sui-select(name='search_type' :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
+                    option(value="user_id" selected) User ID
+                    option(value="email") Email
+                    option(value="name") Name
+            .input-field
+                sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchParams.value" @input="(e) => searchParams.value = e.target.value" required)
     
     .actions
         sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
