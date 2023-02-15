@@ -1,5 +1,3 @@
-import { Skapi } from 'skapi-js';
-
 export default class Admin extends Skapi {
     // default email templates
     default_templates = {
