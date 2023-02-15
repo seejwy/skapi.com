@@ -12,12 +12,13 @@
 <script setup>
 import { inject, ref, reactive, watch } from 'vue';
 import { state, skapi } from '@/main';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
+const router = useRouter();
 const route = useRoute();
 
 pageTitle.value = route.params.user_id;
@@ -61,6 +62,12 @@ skapi.getUsers({
 }).then((res) => {
     user.value = res.list[0];
 });
+
+watch(() => state.viewport, (viewport) => {
+    if(viewport === 'desktop') {
+        router.replace({name: 'users'});
+    }
+}, {immediate: true});
 
 </script>
 <style lang="less" scoped>
