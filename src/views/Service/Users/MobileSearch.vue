@@ -5,10 +5,11 @@ form(
     .mobile-search-nav(v-if='state.viewport === "mobile"')
         Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'users'})") left
         sui-input(
+            ref="searchField"
             type="search"
             autocomplete="off"
             :value="searchParams.value"
-            @input="(e) => searchParams.value = e.target.value"
+            @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
             required)
         Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search
 .mobile-search-type
@@ -37,6 +38,7 @@ appStyle.mainPadding = '0';
 let viewport = inject('viewport');
 let router = useRouter();
 let route = useRoute();
+const searchField = ref(null);
 
 const searchParams = reactive({
     searchFor: 'user_id',
@@ -45,13 +47,27 @@ const searchParams = reactive({
 });
 
 const changeSearchType = (value) => {
+    let field = searchField.value.children[0];
+    field.setCustomValidity('');
+
     searchParams.searchFor = value;
     if(value === 'user_id') searchParams.condition = '=';
     else searchParams.condition = '>=';
 }
 
 const search = () => {
-    router.push({name:"usersSearch", params: {search: searchParams.searchFor}, query: {search: searchParams.searchFor, condition: searchParams.condition, value: searchParams.value}});
+    let field = searchField.value.children[0];
+    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
+        field.setCustomValidity('Please enter a valid USER ID');
+        field.reportValidity();
+    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
+        field.setCustomValidity('Please enter a valid email');
+        field.reportValidity();
+    }
+
+    if(field.checkValidity()) {
+        router.push({name:"usersSearch", params: {search: searchParams.searchFor}, query: {search: searchParams.searchFor, condition: searchParams.condition, value: searchParams.value}});
+    }
 }
 
 watch(viewport, viewport => {

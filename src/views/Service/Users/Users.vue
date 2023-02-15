@@ -13,7 +13,14 @@
                     option(value="email") Email
                     option(value="name") Name
             .input-field
-                sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchParams.value" @input="(e) => searchParams.value = e.target.value" required)
+                sui-input(
+                    ref="searchField" 
+                    type="search" 
+                    autocomplete="off" 
+                    placeholder="Search" 
+                    :value="searchParams.value" 
+                    @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
+                    required)
     
     .actions
         sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
@@ -142,6 +149,7 @@ let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
 let searchValue = ref('');
+const searchField = ref(null);
 
 let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
@@ -214,6 +222,20 @@ const groupedUserList = computed(() => {
 });
 
 const search = () => {
+    let field = searchField.value.children[0];
+
+    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
+        field.setCustomValidity('Please enter a valid USER ID');
+        field.reportValidity();
+    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
+        field.setCustomValidity('Please enter a valid email');
+        field.reportValidity();
+    }
+
+    if(!field.checkValidity()) {
+        return;
+    }
+
     fetchingData.value = true;
     serviceUsers.value = null;
 
