@@ -32,12 +32,16 @@
             div.dropdown
                 span Headers
                 Icon down2
-            .filter-wrapper
-                .filter(v-if="showSetting")
-                    .label(v-for="(field, key) in visibleFields")
-                        label
-                            sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
-                            span {{  field.text }}
+            template(v-if="viewport === 'desktop'")
+                .filter-wrapper
+                    .filter(v-if="showSetting")
+                        .label(v-for="(field, key) in visibleFields")
+                            label
+                                sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
+                                span {{  field.text }}
+            template(v-else)
+                sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
+                    option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
@@ -229,7 +233,7 @@ const search = () => {
         };
     });
 }
-
+const mobileVisibleField = ref('user_id');
 let visibleFields = reactive({
     suspended: {
         text: 'Block',
@@ -263,7 +267,8 @@ let visibleFields = reactive({
 
 let showSetting = ref(false);
 const computedVisibleFields = computed(() => {
-    return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
+    if(viewport.value === 'desktop') return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
+    return [mobileVisibleField.value];
 });
 const selectedUsers = ref([]);
 const userSelectionHandler = (e) => {
@@ -494,6 +499,8 @@ onBeforeRouteLeave((to, from) => {
         }
 
         .header-actions {
+            position: relative;
+
             &--before {
                 position: fixed;
                 top: 0;
@@ -504,6 +511,12 @@ onBeforeRouteLeave((to, from) => {
             }
             .dropdown > * {
                 vertical-align: middle;
+            }
+
+            sui-select {
+                position: absolute;
+                top: 0;
+                opacity: 0;
             }
         }
     }
