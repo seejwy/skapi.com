@@ -682,6 +682,21 @@ onBeforeRouteLeave((to, from) => {
 @media @tablet {
     .table-wrapper {
         max-height: unset;
+        overflow: hidden;
+
+        table {
+            thead th.user-id {
+                min-width: unset;
+            }
+
+            tbody td {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 0;
+                width: 100%;
+            }
+        }
     }
 
     .table-outer-wrapper {
