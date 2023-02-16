@@ -19,7 +19,7 @@
         template(v-else-if="step === 2")
             form(@submit.prevent="changePassword")
                 h1 New Password
-                p Please check your email and insert the code in order to create a new password.
+                p(style="color: var(--primary-color)") Please check your email and insert the code in order to create a new password.
                 p The code has been sent to : {{email}}
                 .input
                     label Code
@@ -211,11 +211,12 @@ const changePassword = () => {
 
     h1 {
         font-size: 32px;
-        margin: 20px 0 40px 0;
+        margin: 0 0 40px 0;
     }
 
     p {
         margin: 20px auto;
+        line-height: 1.5;
 
         &:first-of-type {
             margin-top: 40px;
