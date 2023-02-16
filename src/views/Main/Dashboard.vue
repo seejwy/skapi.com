@@ -37,11 +37,13 @@ div(v-else-if="state?.user")
             .close(@click="isOpen = false")
                 Icon X2
             NewService
+sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+    Login
 Login(v-else)
 </template>
 <script setup>
-import { inject, ref, watch, nextTick } from 'vue';
-import { state, skapi, dateFormat } from '@/main';
+import { inject, ref, watch, nextTick, onMounted } from 'vue';
+import { state, skapi, dateFormat, awaitConnection } from '@/main';
 import Login from './Login.vue';
 import { useRoute, useRouter } from 'vue-router';
 
