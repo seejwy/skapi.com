@@ -4,7 +4,7 @@
         h1 Confirm Your Email
         p Please check your inbox for a confirmation email. Click the link in the email to confirm your email address. 
         p(style="color: var(--primary-color)") Continue to login after confirmation.
-        p Haven't got any code?
+        p(style="text-align: left; ") Haven't got any code?
         sui-button.line-button(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") 
             template(v-if="secondsTillReady") Email has been sent
             template(v-else) Re-send Confirmation Email
@@ -86,7 +86,7 @@ async function resendSignupConfirmation() {
     }
 
     P {
-        margin: 40px auto 12px auto;
+        margin: 40px auto 8px auto;
         line-height: 1.5;
     }
 
@@ -151,7 +151,6 @@ async function resendSignupConfirmation() {
 
     .line-button {
         color: var(--primary-color);
-        width: auto;
     }
 }
 </style>
