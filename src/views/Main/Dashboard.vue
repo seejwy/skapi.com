@@ -3,19 +3,23 @@ div(v-if='!state.connection')
     // is loading...
 
 div(v-else-if='state.user')
-    h1 The Dashboard
-    template(v-if="serviceList")
-        template(v-for="(srvc, reg) in serviceList")
-            p {{ reg }}
-            ul
-                li(v-for='s in srvc')
-                    router-link(:to='"/dashboard/" + s.service') {{ s.service }}
+    div
+        h1 The Dashboard
+        template(v-if="serviceList")
+            template(v-for="(srvc, reg) in serviceList")
+                p {{ reg }}
+                ul
+                    li(v-for='s in srvc')
+                        router-link(:to='"/dashboard/" + s.service') {{ s.service }}
+
+sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+    Login
 Login(v-else)
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch } from 'vue';
-import { state } from '@/main';
+import { inject, ref, watch, onMounted } from 'vue';
+import { state, awaitConnection } from '@/main';
 import Login from './Login.vue';
 import { useRouter } from 'vue-router';
 let router = useRouter();
@@ -24,7 +28,15 @@ let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
+let overlay;
 
+onMounted(() => {
+    awaitConnection.then(()=>{
+        if(!state.user) {
+            overlay.open();
+        }
+    });
+});
 async function getServices(gs) {
     if (!(gs instanceof Promise) || !state.user) {
         return;
@@ -53,4 +65,10 @@ getServices(state.getServices);
 
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
+watch(() => state.user, u => {
+    if (!u) {
+        // throw user to login page if not logged in
+        router.push('/');
+    }
+});
 </script>

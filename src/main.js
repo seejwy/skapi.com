@@ -19,7 +19,7 @@ const state = reactive({
 import Admin from './admin';
 let skapi = new Admin();
 
-skapi.getConnection().then(c => {
+let awaitConnection = skapi.getConnection().then(c => {
     state.connection = c;
     state.user = skapi.user;
 });
@@ -137,4 +137,4 @@ const regionName = (region) => {
     return name;
 }
 
-export { skapi, state, getSize, dateFormat, log, groupArray, regionName };
+export { skapi, state, getSize, dateFormat, log, groupArray, regionName, awaitConnection };

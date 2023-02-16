@@ -1,27 +1,41 @@
 <template lang="pug">
-.container
+form.container(@submit.prevent="login")
     h1 Login
     .input
         label Email
-        sui-input(:value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com")
+        sui-input(
+            type="email" 
+            :value='form.email' 
+            @input="e=>form.email = e.target.value"
+            @change="validateEmail"
+            placeholder="E.g. someone@gmail.com"
+            required)
     .input
         label Password
-        sui-input(:value='form.password' type='password' @input="e=>form.password = e.target.value" placeholder="Enter password")
+        sui-input(
+            type='password'
+            :value='form.password'
+            @input="e=>form.password = e.target.value"
+            @change="validatePassword"
+            placeholder="Enter password" 
+            required)
     .action
         label
-            sui-input(type="checkbox")
+            sui-input(type="checkbox" 
+                @input="(e)=>rememberme = e.target.checked"
+				:checked="rememberme ? true : null")
             span Remember Me
-        RouterLink(to="/") Forgot Email & Password?
-    .error(v-if="true")
+        RouterLink(to="/forgotpassword") Forgot Email & Password?
+    .error(v-if="error")
         Icon warning
-        span There is an error message going on here!!
-    sui-button(@click='login') Login
+        span {{ error }}
+    sui-input(type="submit" value="Login")
     div Not registered yet? 
-        RouterLink(to="/") Create an account
+        RouterLink(to="/signup") Create an account
 
 </template>
 <script setup>
-import { inject, watch, reactive } from 'vue';
+import { onMounted, inject, watch, reactive, ref, onBeforeUnmount } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -29,9 +43,19 @@ import Icon from '../../components/Icon.vue';
 
 let route = useRoute();
 let router = useRouter();
-
+const error = ref(null);
+const rememberme = ref(false);
 // set page title
 let pageTitle = inject('pageTitle');
+let appStyle = inject('appStyle');
+let viewport = inject('viewport');
+const currentBgColor = appStyle.background;
+onBeforeUnmount(() => {
+    appStyle.background = currentBgColor;
+})
+if(state.viewport === 'mobile') {
+    appStyle.background = '#fff';
+}
 pageTitle.value = 'skapi';
 
 let form = reactive({
@@ -47,23 +71,70 @@ watch(() => state.user, u => {
     }
 });
 
-function login() {
-    skapi.login(form).then(u => {
-        state.user = u;
-    });
+const validateEmail = (event) => {
+    if(skapi.validate.email(event.target.value)) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid Email');
+		event.target.reportValidity();
+    }
 }
 
+const validatePassword = (event) => {
+    if(event.target.value.length >= 6 && event.target.value.length <= 60) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid Password');
+		event.target.reportValidity();
+    }
+}
+
+function login() {
+    skapi.AdminLogin(form, null, rememberme.value).then(u => {
+        state.user = u;
+    }).catch(e => {
+        // UserLambdaValidationException
+        // INCORRECT_USERNAME_OR_PASSWORD
+        switch(e.code) {
+            case 'UserLambdaValidationException':
+            case 'INCORRECT_USERNAME_OR_PASSWORD':
+                error.value = 'Username or password is incorrect';
+                break;
+            case 'USER_IS_DISABLED':
+                error.value = "This account has been disabled";
+                break;
+            case 'SIGNUP_CONFIRMATION_NEEDED':            
+                router.push('/confirmation');
+                break;
+            default:
+                error.value = "Something went wrong please contact an administrator.";
+                throw e;
+        }
+    });
+}
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 
 .container {
     text-align: center;
-    margin: 100px auto 0;
-    max-width: 400px;
+    padding: 40px;
+    background: #FAFAFA;
+    color: rgba(0, 0, 0, 0.85);
+    border-radius: 8px;
+    width: 542px;
+    max-width: 100%;
+    margin-top: 60px;
+    border: 1px solid #808080;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
 
     @media @tablet {
-        margin-top: 50px;
+        margin: 40px auto 0;    
+        background: #FFF;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
     }
 
     & > * {
@@ -117,15 +188,22 @@ function login() {
     .error {
         text-align: left;
         color: #EB1717;
-        margin-bottom: 27px;
+        margin-bottom: 20px;
 
         svg {
             margin-right: 4px;
         }
+        
+        & + sui-input[type=submit] {
+            margin-top: 0;
+        }
     }
 
-    sui-button {
+    sui-input[type=submit] {
         margin-bottom: 24px;
+        margin-top: 40px;
+        width: auto;
+        min-width: 140px;
     }
 
     a {

@@ -18,13 +18,13 @@ NavBar(:is-parent-level='true' style='z-index: 2;background-color: var(--primary
 
             template(v-else)
                 li
-                    router-link(to="/login") Login
+                    router-link(to="/dashboard") Dashboard
 
                 li.showOnTablet
                     router-link(to="/") Sign-up
 
                 li.hideOnTablet
-                    sui-button.signup(@click="()=>router.push('/')") Sign-up
+                    sui-button.signup(@click="()=>router.push('/signup')") Sign-up
 
 main
     router-view

@@ -20,11 +20,13 @@
             template(v-else-if='service')
                 router-view
 
+            sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+                Login
             Login(v-else)
             
             .padBlock
 
-    .sidebar
+    .sidebar(v-if="state.user")
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
 
         router-link(:to="{name: 'service'}")
@@ -144,8 +146,8 @@ import NotExists from '@/views/Main/404.vue';
 import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';
 
-import { provide, inject, watch, ref } from 'vue';
-import { skapi, state } from '@/main';
+import { provide, inject, watch, ref, onMounted } from 'vue';
+import { skapi, state, log, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 let router = useRouter();
@@ -166,6 +168,16 @@ provide('fetchingData', ref(false));
 
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service';
+
+let overlay;
+
+onMounted(() => {
+    awaitConnection.then(()=>{
+        if(!state.user) {
+            overlay?.open();
+        }
+    });
+});
 
 function getServices(gs) {
     if (!(gs instanceof Promise)) {
@@ -200,7 +212,7 @@ watch(() => state.getServices, getServices);
 watch(() => state.user, u => {
     if (!u) {
         // throw user to login page if not logged in
-        router.replace('/login');
+        router.push('/');
     }
 });
 </script>
