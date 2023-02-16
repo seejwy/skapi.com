@@ -321,4 +321,7 @@ onBeforeUnmount(() => {
 		margin-right: 12px;
 	}
 }
+hr {
+    opacity: 8%;
+}
 </style>
