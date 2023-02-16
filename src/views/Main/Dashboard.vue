@@ -131,6 +131,7 @@ watch(() => state.viewport, (viewport) => {
 
     & > div {
         display: flex;
+        flex-direction: column;
         align-items: flex-start;
         align-items: flex-end;
         column-gap: 30px;
@@ -325,10 +326,6 @@ watch(() => state.viewport, (viewport) => {
 @media @tablet {
     .header {
         margin-top: 24px; 
-        & > div {
-            flex-direction: column;
-            align-items: flex-start;
-        }
     }
     .container {
         .service {
