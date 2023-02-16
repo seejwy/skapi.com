@@ -87,6 +87,7 @@ async function resendSignupConfirmation() {
 
     P {
         margin: 40px auto 12px auto;
+        line-height: 1.5;
     }
 
     .input {
@@ -150,6 +151,7 @@ async function resendSignupConfirmation() {
 
     .line-button {
         color: var(--primary-color);
+        width: auto;
     }
 }
 </style>

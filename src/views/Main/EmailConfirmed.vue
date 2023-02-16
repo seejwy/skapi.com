@@ -68,6 +68,7 @@ pageTitle.value = 'skapi';
 
     p {
         margin: 40px auto;
+        line-height: 1.5;
     }
 
     .input {
