@@ -83,7 +83,7 @@ const buttonCallback = async () => {
     } finally {
         navbarMobileRightButton.value = {
             type: 'text',
-            val: 'SAVE',
+            val: 'Save',
             callback: buttonCallback
         };
     }
@@ -166,7 +166,7 @@ if(state.viewport === 'mobile') {
 
     navbarMobileRightButton.value = {
         type: 'text',
-        val: 'SAVE',
+        val: 'Save',
         callback: buttonCallback
     };
 }
