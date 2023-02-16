@@ -70,6 +70,10 @@ sui-nav#top-nav {
 
     @media @tablet {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+        padding: 0 16px;
+    }
+
+    @media @phone {
         padding: 0 8px;
     }
 
@@ -96,8 +100,8 @@ sui-nav#top-nav {
                     display: inline-block;
 
                     a {
-                        color: inherit;
                         text-decoration: none;
+                        color: rgba(255, 255, 255, .6);
                     }
                 }
             }
@@ -122,8 +126,8 @@ sui-nav#top-nav {
 
                 &.title-text {
                     display: inline;
-                    font-weight: 700;
                     user-select: none;
+                    font-size: 20px;
                     vertical-align: middle;
                 }
             }

@@ -106,27 +106,27 @@ const isEdit = ref(false);
 
 const informationGrid = reactive([
     {
-        name: 'Service ID',
-        key: 'service',
+        name: 'User ID',
+        key: 'owner',
         span: 2
     },
     {
-        name: 'User ID',
-        key: 'owner',
+        name: 'Service ID',
+        key: 'service',
         span: 2
     },
     {
         name: 'Group',
         key: 'group',
         filter: (value) => {
-            return value === 1 ? "Basic" : "Premium";
+            return value == 1 ? 'Basic' : 'Premium'
         }
     },
     {
         name: 'Service Location',
         key: 'region',
         filter: (value) => {
-            return regionName(value);
+            return localeName(value);
         }
     },
     {
@@ -152,8 +152,7 @@ const informationGrid = reactive([
         name: '# of Newsletter Sub',
         key: 'newsletter_subscribers'
     },
-
-])
+]);
 
 const settingGrid = reactive([
     {
@@ -220,6 +219,7 @@ watch(() => isEdit.value, async () => {
 
     h2,
     p {
+        color: rgba(255, 255, 255, .85);
         margin: 0;
     }
 
@@ -301,10 +301,38 @@ watch(() => isEdit.value, async () => {
 
 .information-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fill, 160px);
     column-gap: 16px;
-    row-gap: 36px;
+    row-gap: 40px;
 
+    &-item {
+        .name {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+        }
+
+        .value {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        &.span-2 {
+            grid-column: span 2;
+        }
+
+        @media @phone {
+            &.span-2 {
+                grid-column: span 1;
+            }
+        }
+    }
+}
+
+.setting-grid {
+    display: flex;
+    justify-content: space-between;
+    
     &-item {
         .name {
             font-size: 14px;
@@ -399,7 +427,11 @@ watch(() => isEdit.value, async () => {
 .service-grid {
     display: flex;
     justify-content: space-between;
-    gap: 40px;
+    gap: 20px;
+
+    @media screen and (max-width: 825px) {
+        flex-direction: column;
+    }
 
     &-item {
         display: flex;
@@ -493,6 +525,14 @@ sui-tooltip {
 
         svg {
             color: #434343;
+        }
+
+        a {
+            text-align: left;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            text-decoration: none;
         }
     }
 }
