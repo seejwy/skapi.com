@@ -145,7 +145,7 @@ import NotExists from '@/views/Main/404.vue';
 import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';
 
-import { provide, inject, watch, ref, onMounted } from 'vue';
+import { provide, inject, watch, ref, onMounted, onBeforeUnmount } from 'vue';
 import { skapi, state, log, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
