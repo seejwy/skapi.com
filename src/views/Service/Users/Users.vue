@@ -449,9 +449,12 @@ onMounted(() => {
 watch(() => viewport.value, (viewport) => {
     toggleMobileDesktopSearchView();
 });
+
+document.body.classList.add('table');
 onBeforeUnmount(() => {
+    document.body.classList.remove('table');
     window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
-});
+})
 
 onBeforeRouteLeave((to, from) => {
     if(from.params.search && !to.params.search) {

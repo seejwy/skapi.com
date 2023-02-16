@@ -32,7 +32,6 @@ let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 
 pageTitle.value = null;
-appStyle.background = 'rgb(51, 51, 51)';
 appStyle.mainPadding = '0';
 
 let viewport = inject('viewport');
@@ -72,14 +71,14 @@ const search = () => {
 
 watch(viewport, viewport => {
     if (viewport === 'desktop') {
-        appStyle.background = '#595959';
         router.replace({ name: 'users' });
     }
 }, { immediate: true });
 
+appStyle.background = '#333333';
 onBeforeUnmount(() => {
     appStyle.mainPadding = null;
-    appStyle.background = '#595959';
+    appStyle.background = null;
 });
 </script>
 <style lang="less" scoped>

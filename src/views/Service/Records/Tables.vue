@@ -113,7 +113,7 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onMounted, provide } from 'vue';
+import { inject, ref, watch, computed, nextTick, onMounted, onBeforeUnmount, provide } from 'vue';
 import { skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import { recordTables, refreshTables, getMoreRecords } from './records.js';
@@ -281,18 +281,11 @@ function viewRecordList(t) {
 
 // watchers
 let appStyle = inject('appStyle');
-function adjustBackgroundColor(n) {
-    // record page has darker background in mobile mode
-    appStyle.background = n === 'mobile' ? 'rgb(67, 67, 67)' : '#595959';
-}
-
-adjustBackgroundColor(viewport.value);
 watch(viewport, n => {
     // close opened table on viewport change
     for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
         t.opened = false;
     }
-    adjustBackgroundColor(n);
 });
 
 watch(currentSelectedTablePage, n => {
@@ -313,6 +306,11 @@ watch(currentSelectedTableBatch, n => {
     nextTick(() => {
         window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
+});
+
+document.body.classList.add('table');
+onBeforeUnmount(() => {
+    document.body.classList.remove('table');
 });
 </script>
 

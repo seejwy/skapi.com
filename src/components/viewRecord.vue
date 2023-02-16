@@ -289,7 +289,7 @@ sui-overlay(ref="exitEditOverlay")
 			sui-button.line-button(@click="confirmClose") Yes
 </template>
 <script setup>
-import { ref, computed, watch, nextTick, inject } from 'vue';
+import { ref, computed, watch, nextTick, inject, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { skapi, dateFormat, getSize } from '@/main';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
@@ -297,6 +297,7 @@ import TagsInput from '@/components/TagsInput.vue';
 import Icon from '@/components/Icon.vue';
 
 const route = useRoute();
+const appStyle = inject('appStyle');
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const deleteConfirmOverlay = ref(null);
@@ -600,6 +601,10 @@ const close = () => {
 	recordToOpen.value = null;
 };
 
+appStyle.background = '#333333';
+onBeforeUnmount(() => {
+	appStyle.background = null;
+})
 defineExpose({
 	close,
 	editRecord,

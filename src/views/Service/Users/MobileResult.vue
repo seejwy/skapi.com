@@ -365,15 +365,15 @@ const toggleMobileDesktopSearchView = () => {
     }
 }
 onMounted(() => {
-    appStyle.background = '#333';
     window.addEventListener('scroll', mobileScrollHandler, { passive: true });
     toggleMobileDesktopSearchView();
 });
 watch(() => viewport.value, (viewport) => {
     toggleMobileDesktopSearchView();
 });
+appStyle.background = '#333333';
 onBeforeUnmount(() => {
-    appStyle.background = '#595959';
+    appStyle.background = null;
     window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
 });
 

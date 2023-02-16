@@ -44,7 +44,6 @@
 
 <style lang="less">
 @import '@/assets/variables.less';
-
 .servicePageShell {
     display: flex;
     flex-direction: row-reverse;
@@ -144,15 +143,11 @@ import NotExists from '@/views/Main/404.vue';
 import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';
 
-import { provide, inject, watch, ref } from 'vue';
+import { provide, inject, watch, ref, onBeforeUnmount } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 let router = useRouter();
-
-let appStyle = inject('appStyle');
-appStyle.background = '#595959';
-appStyle.color = '#fff';
 
 // sets pageTitle for immediate effect
 // this does not trigger again when nested routes change
@@ -203,4 +198,9 @@ watch(() => state.user, u => {
         router.replace('/login');
     }
 });
+
+document.body.classList.add('dashboard');
+onBeforeUnmount(() => {
+    document.body.classList.remove('dashboard');
+})
 </script>

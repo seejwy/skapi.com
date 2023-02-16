@@ -15,7 +15,6 @@ let router = useRouter();
 let route = useRoute();
 
 onMounted(() => {
-    appStyle.background = 'rgb(51, 51, 51)';
     appStyle.mainPadding = '0';
 });
 
@@ -28,7 +27,10 @@ watch(viewport, n => {
         router.replace({ name: 'records' });
     }
 });
+
+appStyle.background = '#333333';
 onBeforeUnmount(() => {
     appStyle.mainPadding = null;
+    appStyle.background = null;
 });
 </script>

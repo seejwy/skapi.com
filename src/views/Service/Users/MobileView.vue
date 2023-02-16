@@ -1,5 +1,6 @@
 <template lang="pug">
-.tab Information
+.head
+    .tab Information
 .container
     template(v-if="user")
         .label(v-for="key in info")
@@ -12,7 +13,7 @@
         div fetching
 </template>
 <script setup>
-import { inject, ref, reactive, watch } from 'vue';
+import { inject, ref, reactive, watch, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -82,16 +83,28 @@ watch(() => state.viewport, (viewport) => {
     }
 }, {immediate: true});
 
+appStyle.background = '#333333';
+onBeforeUnmount(() => {
+    appStyle.background = null;
+})
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
-.tab {
-    background-color: #333333;
-    display: inline-block;
-    margin: 12px 0 0 8px;
-    border-radius: 8px 8px 0px 0px;
-    padding: 0 12px;
-    line-height: 40px;
+.head {
+    background-color: #595959;
+    margin: 0 -16px;
+    .tab {
+        background-color: #333333;
+        display: inline-block;
+        margin: 12px 0 0 8px;
+        border-radius: 8px 8px 0px 0px;
+        padding: 0 12px;
+        line-height: 40px;
+    }
+
+    @media @phone {
+        margin: 0 -8px;
+    }
 }
 .container {
     background-color: #333333;
