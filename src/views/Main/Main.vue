@@ -1,5 +1,5 @@
 <template lang="pug">
-NavBar(:is-parent-level='true' style='z-index: 2;background-color: var(--primary-color);')
+NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 2;background-color: var(--app-nav-bg-color);')
     ul.inline-vertical-middle(@click='bypassSameRoute')
         li
             router-link(to="/") Documentation
@@ -51,6 +51,7 @@ let route = useRoute();
 let appStyle = inject('appStyle');
 appStyle.background = '#FFF';
 appStyle.color = 'rgba(0 0 0 / 85%)';
+appStyle.navBackground = '#293fe6';
 
 function bypassSameRoute(e) {
     // bypass when same route is clicked
