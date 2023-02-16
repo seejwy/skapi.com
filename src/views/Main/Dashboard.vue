@@ -10,7 +10,7 @@ div(v-else-if="state?.user")
             sui-button(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
                 Icon plus2
                 span New Service
-    .container(v-if="serviceList")
+    .container(v-if="serviceList.length")
         template(v-for="service in serviceList")
             router-link.service(:to='"/dashboard/" + service.service') 
                 .settings
