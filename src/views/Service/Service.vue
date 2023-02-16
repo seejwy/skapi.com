@@ -204,6 +204,10 @@ watch(() => isEdit.value, async () => {
 .container {
     margin: 40px 0;
 
+    &:first-child {
+        margin-top: 56px;
+    }
+
     .inner-container {    
         padding: 40px;
         background: #434343;
@@ -212,7 +216,8 @@ watch(() => isEdit.value, async () => {
             margin-bottom: 32px;
 
             h2 {
-                font-size: 24px;
+                font-size: 20px;
+                font-weight: normal;
             }
         }
     }
@@ -227,8 +232,12 @@ watch(() => isEdit.value, async () => {
         display: inline-block;
         vertical-align: middle;
         font-size: 24px;
-        margin-bottom: 32px;
-        font-weight: normal;
+        margin-bottom: 50px;
+        font-weight: bold;
+
+        @media @tablet {        
+            margin-bottom: 28px;
+        }
     }
 
     p {
@@ -243,6 +252,7 @@ watch(() => isEdit.value, async () => {
 
         h2 {        
             font-size: 20px;
+            font-weight: normal;
         }
     }
 
@@ -273,7 +283,7 @@ watch(() => isEdit.value, async () => {
 
     @media @tablet {    
         margin: 0 -16px;
-        padding: 20px;
+        padding: 40px 20px 0;
         border-radius: 0;
 
         &:first-child {
@@ -287,10 +297,6 @@ watch(() => isEdit.value, async () => {
                 padding: 0;
                 background-color: transparent;
             }
-        }
-
-        .action {
-            text-align: left;
         }
     }
 
