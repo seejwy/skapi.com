@@ -74,6 +74,7 @@ async function resendSignupConfirmation() {
         box-shadow: none;
         border: none;
         background: #FFF;
+        padding: 40px 0;
     }
 
     & > * {
