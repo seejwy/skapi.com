@@ -128,21 +128,21 @@ let record = inject('recordToOpen');
 record.value = null;
 
 function adjustBackgroundColor(n) {
+    console.log("Adjusting", n);
     if (n === 'mobile') {
-        appStyle.background = '#262626';
         // remove padding for zebra list to extend to full width
         appStyle.mainPadding = '0';
-    }
-    else {
-        appStyle.background = '#595959';
+        appStyle.background = '#333333';
+    } else {
         appStyle.mainPadding = null;
+        appStyle.background = null;
     }
 }
-onMounted(() => {
-    adjustBackgroundColor(viewport.value);
-});
+
 watch(viewport, n => {
     adjustBackgroundColor(n);
+}, {
+    immediate: true
 });
 
 // flag
@@ -206,6 +206,7 @@ onBeforeUnmount(() => {
     window.removeEventListener('scroll', scrollEventMobile, { passive: true });
     // set padding to original value
     appStyle.mainPadding = null;
+    appStyle.background = null;
 });
 
 let openRecord = ref(null);

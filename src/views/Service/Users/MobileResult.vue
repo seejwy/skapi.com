@@ -1,55 +1,14 @@
 <template lang="pug">
-.page-header
-    h1.hideOnTablet Users
-    p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
-    sui-button.line-button(style="float: right") Read Doc
-    div(style="clear:both;")
-.actions-wrapper(v-if="viewport === 'desktop'")
-    form(@submit.prevent="search")
-        .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
-            .select-field
-                sui-select(name='search_type' :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
-                    option(value="user_id" selected) User ID
-                    option(value="email") Email
-                    option(value="name") Name
-            .input-field
-                sui-input(
-                    ref="searchField" 
-                    type="search" 
-                    autocomplete="off" 
-                    placeholder="Search" 
-                    :value="searchParams.value" 
-                    @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
-                    required)
-    
-    .actions
-        sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
-            Icon block
-            span.hideOnTablet block
-        sui-button.text-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
-            Icon unblock
-            span.hideOnTablet unblock
-        sui-button.text-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
-            Icon trash
-            span.hideOnTablet delete
-
-.table-outer-wrapper
+template(v-if="fetchingData || !groupedUserList?.length")
+    .no-users-found(v-if="!fetchingData") No users found
+.table-outer-wrapper(v-else)
     .table-actions
-        .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
-        .header-actions(@click="showSetting = true")
+        .header-actions
             div.dropdown
                 span Headers
                 Icon down2
-            template(v-if="viewport === 'desktop'")
-                .filter-wrapper
-                    .filter(v-if="showSetting")
-                        .label(v-for="(field, key) in visibleFields")
-                            label
-                                sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
-                                span {{  field.text }}
-            template(v-else)
-                sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
-                    option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
+            sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
+                option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
@@ -103,46 +62,7 @@
                                         Icon(v-else) x
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
-    .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
-        template(v-if="searchParams.value === ''")     
-            .title No Users
-            p You have no existing users yet
-        template(v-else) 
-            .title No Users Found
-            p There were no users matching the query.
-    .paginator.hideOnTablet(v-if="groupedUserList?.length")
-        Icon(
-            :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
-            @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
-            ) left
-        span.more-page(
-            :class="{active: currentSelectedUsersBatch}"
-            @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
-            ) ...
-        span.page(
-            v-for="(i, idx) in groupedUserList?.[currentSelectedUsersBatch].length"
-            :class="{active: idx === currentSelectedUsersPage}"
-            @click="currentSelectedUsersPage = idx"
-            ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
-        span.more-page(
-            :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
-            @click="getMoreUsers") ...
-            
-        Icon(
-            :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
-            @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
-            ) right
 
-.page-action.showOnTablet(@blur="isFabOpen = false")
-    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen")
-        Icon menu_vertical
-
-    Transition
-        div(v-if="isFabOpen" @click.stop)
-            sui-button.fab(@click="router.push({name: 'mobileSearchUser'})")
-                Icon search
-            sui-button.fab
-                Icon plus2
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
@@ -161,6 +81,8 @@ const searchField = ref(null);
 let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
+
+const appStyle = inject('appStyle');
 
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
@@ -449,12 +371,11 @@ onMounted(() => {
 watch(() => viewport.value, (viewport) => {
     toggleMobileDesktopSearchView();
 });
-
-document.body.classList.add('table');
+appStyle.background = '#333333';
 onBeforeUnmount(() => {
-    document.body.classList.remove('table');
+    appStyle.background = null;
     window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
-})
+});
 
 onBeforeRouteLeave((to, from) => {
     if(from.params.search && !to.params.search) {
@@ -465,38 +386,14 @@ onBeforeRouteLeave((to, from) => {
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 .page-header {
-    padding: 60px 0;
-
-    & > div {
-        display: flex;
-        column-gap: 30px;
-        row-gap: 24px;
-    }
-    h1 {
-        margin: 0;
-    }
+    padding: 50px 0;
 
     p {
-        margin: 20px 0 0 0;
         line-height: 1.5;
-        color: rgba(255, 255, 255, .85);
     }
     
-    sui-button {
-        flex-shrink: 0;
-        align-self: flex-end;
-    }
-
     @media @tablet {
-        padding: 24px 0 32px 0;
-
-        & > div {        
-            flex-direction: column;
-        }
-
-        sui-button {
-            align-self: flex-start;
-        }
+        padding: 24px 0;
     }
 }
 .actions-wrapper {
@@ -560,7 +457,7 @@ onBeforeRouteLeave((to, from) => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: #434343;
+        background: #3B3B3B;
         padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
 
@@ -637,7 +534,7 @@ onBeforeRouteLeave((to, from) => {
         thead,
         tbody {
             tr {
-                background-color: #434343;
+                background-color: #3B3B3B;
 
                 td,
                 th {          
@@ -665,7 +562,7 @@ onBeforeRouteLeave((to, from) => {
         thead {
             th {
                 position: sticky;
-                background-color: #434343;
+                background-color: #333;
                 top: 0;
                 text-align: left;
 
@@ -696,7 +593,7 @@ onBeforeRouteLeave((to, from) => {
         tbody {
             tr {
                 &:nth-child(odd) {
-                    background: #4a4a4a;
+                    background: #3B3B3B;
                 }
 
                 td {
@@ -726,17 +623,16 @@ onBeforeRouteLeave((to, from) => {
 .no-users-found {
     text-align: center;
     padding: 32px 0;
-    background-color: #4A4A4A;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
-
-    .title {
-        font-size: 36px;
-    }
-    
-    p {
-        margin: 20px 0 0 0;
-    }
+    font-size: 36px;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    left: 0;
+    right: 0;
 }
 
 .paginator {
@@ -807,7 +703,6 @@ onBeforeRouteLeave((to, from) => {
         border: none;
 
         .table-actions {
-            background: rgba(255, 255, 255, 0.04);
             border-radius: 0;
 
             .actions {

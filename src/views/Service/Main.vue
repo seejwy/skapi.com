@@ -46,7 +46,6 @@
 
 <style lang="less">
 @import '@/assets/variables.less';
-
 .servicePageShell {
     display: flex;
     flex-direction: row-reverse;
@@ -152,10 +151,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 let router = useRouter();
 
-let appStyle = inject('appStyle');
-appStyle.background = '#595959';
-appStyle.color = '#fff';
-
 // sets pageTitle for immediate effect
 // this does not trigger again when nested routes change
 let route = useRoute();
@@ -215,4 +210,9 @@ watch(() => state.user, u => {
         router.push('/');
     }
 });
+
+document.body.classList.add('dashboard');
+onBeforeUnmount(() => {
+    document.body.classList.remove('dashboard');
+})
 </script>

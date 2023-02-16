@@ -12,7 +12,10 @@ router-view
 <script setup>
 import { provide, ref } from 'vue';
 import { state } from '@/main';
+import { useRoute } from 'vue-router';
+
 let pageTitle = ref('skapi');
+const route = useRoute();
 provide('pageTitle', pageTitle);
 provide('navbarMobileRightButton', ref(null));
 provide('navbarBackDestination', ref(null));

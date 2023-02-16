@@ -32,7 +32,6 @@ main
 </template>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
-
 sui-button.signup {
     background-color: #fff;
     color: var(--primary-color);
@@ -49,9 +48,6 @@ import { skapi, state } from '@/main';
 let router = useRouter();
 let route = useRoute();
 let appStyle = inject('appStyle');
-appStyle.background = '#FFF';
-appStyle.color = 'rgba(0 0 0 / 85%)';
-appStyle.navBackground = '#293fe6';
 
 function bypassSameRoute(e) {
     // bypass when same route is clicked
