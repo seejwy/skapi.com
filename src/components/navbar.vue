@@ -100,8 +100,8 @@ sui-nav#top-nav {
                     display: inline-block;
 
                     a {
-                        color: inherit;
                         text-decoration: none;
+                        color: rgba(255, 255, 255, .6);
                     }
                 }
             }
@@ -126,8 +126,8 @@ sui-nav#top-nav {
 
                 &.title-text {
                     display: inline;
-                    font-weight: 700;
                     user-select: none;
+                    font-size: 20px;
                     vertical-align: middle;
                 }
             }
