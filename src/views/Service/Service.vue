@@ -88,7 +88,7 @@ template(v-else)
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
-import { state, regionName, dateFormat } from '@/main';
+import { state, regions, localeName, dateFormat } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import EditService from '@/components/EditService.vue';
