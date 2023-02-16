@@ -335,7 +335,7 @@ watch(() => state.viewport, (viewport) => {
 
 @media @tablet {
     .header {
-        margin-top: 24px; 
+        margin-top: 40px; 
     }
     .container {
         .service {

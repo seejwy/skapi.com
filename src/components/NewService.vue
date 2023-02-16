@@ -1338,7 +1338,7 @@ const createNewService = async () => {
 
     &-text {
         color: rgba(255, 255, 255, 0.85);
-        margin: 28px 0 28px 0;
+        margin: 40px 0 28px 0;
         line-height: 1.5;
     }
 

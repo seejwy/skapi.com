@@ -237,7 +237,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 28px;
+    margin-top: 40px;
     font-weight: bold;
     color: rgba(255, 255, 255, .6);
 
