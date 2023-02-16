@@ -20,7 +20,7 @@ let editCallback = () => {
     viewRecord.editRecord();
     navbarMobileRightButton.value = {
         type: 'text',
-        val: 'SAVE',
+        val: 'Save',
         callback: () => {
             navbarMobileRightButton.value = {
                 type: 'icon',
@@ -30,7 +30,7 @@ let editCallback = () => {
             viewRecord.save().then(() => {
                 navbarMobileRightButton.value = {
                     type: 'text',
-                    val: 'EDIT',
+                    val: 'Edit',
                     callback: editCallback
                 };
             });
@@ -40,7 +40,7 @@ let editCallback = () => {
 
 navbarMobileRightButton.value = {
     type: 'text',
-    val: 'EDIT',
+    val: 'Edit',
     callback: editCallback
 };
 
