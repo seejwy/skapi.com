@@ -72,7 +72,7 @@ export default class Admin extends Skapi {
     async grantAccess(params) {
         await this.checkAdmin();
         // { service ,user_id, access_group }
-        return this.request('grant-access', params);
+        return this.request('grant-access', params, { auth: true });
     }
 
     async getServices() {
