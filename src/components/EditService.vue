@@ -11,12 +11,12 @@
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         .input
             label CORS
-            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="cors" @input="(e) => cors = e.target.value" required)
+            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required)
         .input
             label API Key
-            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="apiKey" @input="(e) => apiKey = e.target.value" required)
+            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="apiKey" @input="(e) => apiKey = e.target.value")
         hr
-        div(style="text-align: right; margin-bottom: 40px;")
+        div(style="text-align: right; margin-bottom: 20px;")
             sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
         sui-button.hideOnTablet(type="submit") Save
 sui-overlay(ref="deleteConfirmOverlay")
@@ -201,6 +201,7 @@ onBeforeUnmount(() => {
     &-title {
         font-weight: bold;
         font-size: 28px;
+        margin-bottom: 40px;
     }
 
     .input {
@@ -270,7 +271,13 @@ onBeforeUnmount(() => {
     }
 }
 .delete-button {
-    color: rgba(240, 78, 78, 0.85);
+    padding: 0;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.85);
+
+    &:hover {
+        background-color: transparent;
+    }
 }
 
 
@@ -299,6 +306,7 @@ onBeforeUnmount(() => {
 
 	.body {
 		padding: 20px 0 28px 0;
+        line-height: 1.5;
 
         p {
             margin: 0 0 32px 0;
