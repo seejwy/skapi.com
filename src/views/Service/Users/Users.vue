@@ -1,27 +1,27 @@
 <template lang="pug">
-.page-header
-    h1 Users
-    div
-        p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
-        sui-button.line-button(style="float: right") Read Doc
+.page-header(v-if="!Object.keys(route.query).length")
+    h1.hideOnTablet Users
+    p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
+    sui-button.line-button(style="float: right") Read Doc
+    div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'")
     .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
         .select-field
-            sui-select(name='search_type')
-                option(value="id" selected) User ID
+            sui-select(name='search_type' :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
+                option(value="user_id" selected) User ID
                 option(value="email") Email
                 option(value="name") Name
         .input-field
-            sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value" @keypress.enter="search")
+            sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchParams.value" @input="(e) => searchParams.value = e.target.value" @keypress.enter="search")
     
     .actions
-        sui-button.text-button(@click="")
+        sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon block
             span.hideOnTablet block
-        sui-button.text-button(@click="")
+        sui-button.text-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon unblock
             span.hideOnTablet unblock
-        sui-button.text-button(@click="")
+        sui-button.text-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
             Icon trash
             span.hideOnTablet delete
 
@@ -40,11 +40,11 @@
                             span {{  field.text }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(@click="")
+            sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
-            sui-button.icon-button(@click="")
+            sui-button.icon-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon unblock
-            sui-button.icon-button(@click="")
+            sui-button.icon-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
 
     .table-wrapper
@@ -56,26 +56,41 @@
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
             tbody(v-if="groupedUserList?.length")
-                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
-                    td
-                        sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                        //To add actual conditions to determine which icon to show
-                        template(v-if="key === 'block'")
-                            template(v-if="user[key]")                        
-                                Icon block
-                            template(v-else)
-                                Icon unblock
-                        template(v-else-if="key === 'status'")                  
-                            Icon check_circle
-                        template(v-else) {{ user[key] || '-' }}
-                    td(v-if="computedVisibleFields.length <= 2")
-                //- Below code needs to change to page list not full users list
-                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                    tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
-                        td  
-                        td(v-for="(key, index) in computedVisibleFields")
+                template(v-if="viewport === 'desktop'")
+                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
+                        td
+                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                        td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                            template(v-if="key === 'suspended'")
+                                Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
+                                Icon(v-else) unblock
+                            template(v-else-if="key === 'group'")                     
+                                Icon(v-if="user[key] > 0") check_circle
+                                Icon(v-else) x
+                            template(v-else) {{ user[key] || '-' }}
                         td(v-if="computedVisibleFields.length <= 2")
+                    //- Below code needs to change to page list not full users list
+                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                            td  
+                            td(v-for="(key, index) in computedVisibleFields")
+                            td(v-if="computedVisibleFields.length <= 2")
+                    
+                template(v-else)
+                    template(v-for="batch in groupedUserList")
+                        template(v-for="page in batch")
+                            tr(v-for="(user, userIndex) in page" :key="user['user_id']")
+                                td
+                                    sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                                td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                                    template(v-if="key === 'suspended'")
+                                        Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
+                                        Icon(v-else) unblock
+                                    template(v-else-if="key === 'group'")                     
+                                        Icon(v-if="user[key] > 0") check_circle
+                                        Icon(v-else) x
+                                    template(v-else) {{ user[key] || '-' }}
+                                td(v-if="computedVisibleFields.length <= 2")
     .paginator.hideOnTablet(v-if="groupedUserList?.length")
         Icon(
             :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
@@ -98,11 +113,22 @@
             :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
             ) right
+
+.page-action.showOnTablet(@blur="isFabOpen = false")
+    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen")
+        Icon menu_vertical
+
+    Transition
+        div(v-if="isFabOpen" @click.stop)
+            sui-button.fab(@click="router.push({name: 'mobileSearchUser'})")
+                Icon search
+            sui-button.fab
+                Icon plus2
 </template>
 <script setup>
-import { inject, ref, reactive, computed, watch } from 'vue';
+import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { skapi, groupArray } from '@/main';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 
@@ -118,6 +144,56 @@ let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
+const searchParams = reactive({
+    service: serviceId,
+    searchFor: 'user_id',
+    condition: '=',
+    value: ''
+});
+
+const navbarBackDestination = inject('navbarBackDestination');
+
+const changeSearchType = (value) => {
+    searchParams.searchFor = value;
+    if(value === 'user_id') searchParams.condition = '=';
+    else searchParams.condition = '>=';
+}
+
+const blockUsers = async () => {
+    let blockPromise = selectedUsers.value.map((user) => {
+        return skapi.blockAccount({service: serviceId, userId: user});
+    });
+
+    await Promise.all(blockPromise);
+    selectedUsers.value.forEach((sel) => {
+        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
+            return item.user_id === sel
+        });
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:suspended';
+    });
+}
+
+const unblockUsers = async () => {
+    let unblockPromise = selectedUsers.value.map((user) => {
+        return skapi.unblockAccount({service: serviceId, userId: user});
+    });
+
+    await Promise.all(unblockPromise);
+    selectedUsers.value.forEach((sel) => {
+        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
+            return item.user_id === sel
+        });
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:approved';
+    })
+}
+
+const deleteUsers = async () => {
+    let deletePromise = selectedUsers.value.map((user) => {
+        return skapi.deleteAccount({service: serviceId, user});
+    });
+
+    await Promise.all(deletePromise);
+}
 
 const groupedUserList = computed(() => {
     if (!serviceUsers.value || !serviceUsers.value.list.length) {
@@ -129,18 +205,20 @@ const groupedUserList = computed(() => {
 });
 
 const search = () => {
-    let params = {
-        service: serviceId,
-        searchFor: 'user_id',
-        condition: '=',
-        value: searchValue.value
-    }
+    fetchingData.value = true;
+    serviceUsers.value = null;
 
-    skapi.getUsers(params, { 
+    skapi.getUsers(route.query.search ? {
+        service: serviceId,
+        searchFor: route.query.search,
+        condition: route.query.condition,
+        value: route.query.value
+    } : searchParams, { 
         refresh: true, 
         limit: fetchLimit 
     }).then((res) => {
         console.log(res.list);
+        fetchingData.value = false;
         serviceUsers.value = {
             endOfList: res.endOfList,
             list: res.list
@@ -149,11 +227,11 @@ const search = () => {
 }
 
 let visibleFields = reactive({
-    block: {
+    suspended: {
         text: 'Block',
         show: viewport.value === 'desktop' ? true : false,
     },
-    status: {
+    group: {
         text: 'Status',
         show: viewport.value === 'desktop' ? true : false,
     },
@@ -177,10 +255,6 @@ let visibleFields = reactive({
         text: 'Gender',
         show: false,
     },
-    group: {
-        text: 'Group',
-        show: false,
-    }
 });
 
 let showSetting = ref(false);
@@ -208,6 +282,7 @@ pageTitle.value = 'Users';
 
 // flag
 let fetchingData = inject('fetchingData');
+let isFabOpen = ref(false);
 
 // data
 let serviceUsers = inject('serviceUsers');
@@ -215,6 +290,9 @@ let searchResult = inject('searchResult');
 
 let getMoreUsersQueue = null;
 async function getMoreUsers() {
+    if (serviceUsers.value.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
+        return;
+    }
     fetchingData.value = true;
 
     if (groupedUserList.value.length - 1 > currentSelectedUsersBatch.value) {
@@ -251,6 +329,13 @@ async function getMoreUsers() {
     currentSelectedUsersBatch.value++;
     currentSelectedUsersPage.value = 0;
     fetchingData.value = false;
+}
+
+
+const mobileScrollHandler = (e) => {
+    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+        getMoreUsers();
+    }
 }
 
 function getUsers(refresh = false) {
@@ -290,8 +375,37 @@ function getUsers(refresh = false) {
 }
 
 // get users on created
-getUsers();
 
+if(route.query.search) {
+    navbarBackDestination.value = () => {
+        pageTitle.value = "Users";
+        router.push({name: 'users'});
+    };
+    search();
+} else {
+    getUsers();
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', mobileScrollHandler, { passive: true });
+    if(route.query.search) {
+        let type = (function(route) {
+            if(route === 'user_id') return "User ID";
+            return route.charAt(0).toUpperCase() + route.slice(1);
+        })(route.query.search);
+
+        pageTitle.value = `${type} : ${route.query.value}`;
+    }
+});
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
+});
+
+onBeforeRouteLeave((to, from) => {
+    if(from.params.search && !to.params.search) {
+        getUsers(true);
+    }
+});
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
@@ -341,6 +455,7 @@ getUsers();
         & > * { 
             display: inline-block;
             margin-left: 16px;
+            padding: 9px 12px;
 
             @media @tablet {
                 margin-left: 0;
@@ -585,6 +700,10 @@ getUsers();
 }
 
 @media @tablet {
+    .table-wrapper {
+        max-height: unset;
+    }
+
     .table-outer-wrapper {
         margin: auto -16px;
         border-radius: 0;
@@ -605,6 +724,38 @@ getUsers();
 @media @phone {
     .table-outer-wrapper {
         margin: auto -8px;
+    }
+}
+
+.page-action {
+    position: fixed;
+    bottom: 76px;
+    right: 16px;
+    overflow: hidden;
+
+    &>sui-button {
+        z-index: 2;
+    }
+
+    &,
+    &>div {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 12px;
+        width: 48px;
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+        transition: opacity .1s ease, transform .1s ease;
+        opacity: 1;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+        opacity: 0;
+        transform: translateY(100px);
     }
 }
 </style>
