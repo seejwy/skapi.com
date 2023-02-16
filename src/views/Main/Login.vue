@@ -133,6 +133,8 @@ function login() {
         margin: 40px auto 0;    
         background: #FFF;
         padding: 0;
+        border: 0;
+        box-shadow: none;
     }
 
     & > * {
