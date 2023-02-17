@@ -172,7 +172,7 @@ watch(() => state.viewport, (viewport) => {
         text-align: center;
 
         .title {
-            font-size: 20px;
+            font-size: 28px;
             font-weight: bold;
             color: rgba(0, 0, 0, 0.6);
             margin-bottom: 12px;

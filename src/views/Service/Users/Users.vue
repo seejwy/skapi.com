@@ -731,7 +731,7 @@ onBeforeRouteLeave((to, from) => {
     color: rgba(255, 255, 255, .4);
 
     .title {
-        font-size: 36px;
+        font-size: 28px;
     }
     
     p {

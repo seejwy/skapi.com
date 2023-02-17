@@ -625,7 +625,7 @@ onBeforeRouteLeave((to, from) => {
     padding: 32px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
-    font-size: 36px;
+    font-size: 28px;
     align-items: center;
     position: absolute;
     top: 50%;

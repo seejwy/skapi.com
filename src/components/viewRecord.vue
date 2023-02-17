@@ -900,7 +900,7 @@ defineExpose({
 		.no-data {
 			text-align: center;
 			color: rgba(255, 255, 255, .4);
-			font-size: 36px;
+			font-size: 28px;
 			margin-top: 65px;
 
 			p {
