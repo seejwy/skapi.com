@@ -17,9 +17,9 @@ form(
         name='search_type'
         :value="searchParams.searchFor"
         @input="e => {changeSearchType(e.target.value);}")
-            option(value="user_id" selected) User ID
-            option(value="email") Email
-            option(value="name") Name
+            option(value="user_id" selected) Search By User ID
+            option(value="email") Search By Email
+            option(value="name") Search By Name
 </template>
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted, computed, ref, reactive } from 'vue';
