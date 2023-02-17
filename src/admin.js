@@ -1,3 +1,4 @@
+import {state} from './main.js';
 export default class Admin extends Skapi {
     // default email templates
     default_templates = {
@@ -66,7 +67,9 @@ export default class Admin extends Skapi {
 
     async AdminLogout() {
         window.localStorage.removeItem('remember', 'true');
-        return this.logout();
+        let r = await this.logout();
+        state.services = null;
+        return r;
     }
 
     async grantAccess(params) {

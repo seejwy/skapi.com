@@ -14,7 +14,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                     router-link(to="/") Account Settings
 
                 li
-                    a.clickable(@click='()=>skapi.logout().then(() => state.user = null)') Logout
+                    a.clickable(@click='()=>skapi.AdminLogout().then(() => state.user = null)') Logout
 
             template(v-else)
                 li

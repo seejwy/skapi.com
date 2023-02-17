@@ -13,7 +13,7 @@
                     router-link(to="/" tag="li") Account Settings
 
                 li
-                    a.clickable(@click='()=>skapi.logout().then(() => state.user = null)') Logout
+                    a.clickable(@click='()=>skapi.AdminLogout().then(() => state.user = null)') Logout
 
         main#app-main(v-if='state.connection')
             NotExists(v-if='service === 404')
