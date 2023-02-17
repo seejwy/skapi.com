@@ -39,22 +39,18 @@
                         span(:style="{color: 'var(--primary-color)', margin: 0, visibility: !forgotError && !isRequestingCode && !secondsTillReady ? 'visible' : 'hidden', position:  !forgotError && !secondsTillReady ? 'relative' : 'absolute'}") Resend Code
                 .input
                     label New Password
-                    sui-input(
-                        type="password" 
-                        :value="password"
-                        @input="(e) => password = e.target.value"
-                        placeholder="E.g. someone@gmail.com"
+                    PasswordInput(
+                        @input="e=>password = e.target.value" 
+                        :value='password' 
                         @change="validatePassword" 
-                        required)
+                        :required="true")
                 .input
                     label Retype New Password
-                    sui-input(
-                        type="password" 
-                        :value="passwordConfirm"
-                        @input="(e) => passwordConfirm = e.target.value"
-                        placeholder="E.g. someone@gmail.com"
+                    PasswordInput(
+                        @input="e=>passwordConfirm = e.target.value" 
+                        :value='passwordConfirm' 
                         @change="validatePasswordConfirm" 
-                        required)
+                        :required="true")
                 
                 sui-button(type="submit") Change
         template(v-else)
@@ -73,6 +69,7 @@ import { skapi, state } from '@/main';
 import { useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
+import PasswordInput from '../../components/PasswordInput.vue';
 
 let router = useRouter();
 // set page title

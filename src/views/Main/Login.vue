@@ -12,13 +12,7 @@ form.container(@submit.prevent="login")
             required)
     .input
         label Password
-        sui-input(
-            type='password'
-            :value='form.password'
-            @input="e=>form.password = e.target.value"
-            @change="validatePassword"
-            placeholder="Enter password" 
-            required)
+        PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Enter password" :required="true")
     .action
         label
             sui-input(type="checkbox" 
@@ -40,6 +34,7 @@ import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '../../components/Icon.vue';
+import PasswordInput from '../../components/PasswordInput.vue';
 
 let route = useRoute();
 let router = useRouter();
@@ -155,8 +150,12 @@ function login() {
             color: rgba(0, 0, 0, 0.65);
             margin-bottom: 8px;
         }
-        sui-input {
+        sui-input,
+        .sui-input {
             width: 100%;
+        }
+
+        sui-input {    
             border: 1px solid #8C8C8C;
         }
     }

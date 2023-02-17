@@ -9,11 +9,11 @@
             label Email
             sui-input(@change="validateEmail" :value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com" required)
         .input
-            label Password
-            sui-input(@change="validatePassword" :value='form.password' type='password' @input="e=>form.password = e.target.value" placeholder="Create a password" required)
+            label Password            
+            PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
         .input
             label Password Confirm
-            sui-input(@change="validatePasswordConfirm" :value='form.password_confirm' type='password' @input="e=>form.password_confirm = e.target.value" placeholder="Retype your password" required)
+            PasswordInput(@input="e=>form.password_confirm = e.target.value" :value='form.password_confirm' @change="validatePasswordConfirm" placeholder="Retype your password" :required="true")
         .error(v-if="error")
             Icon warning
             span {{ error }}
@@ -28,6 +28,7 @@ import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '../../components/Icon.vue';
+import PasswordInput from '../../components/PasswordInput.vue';
 
 let route = useRoute();
 let router = useRouter();
