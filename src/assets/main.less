@@ -41,6 +41,11 @@
   --primary-color: #293fe6;
   --app-nav-bg-color: #293fe6;
   --input-box-shadow: rgb(0 0 0 / 50%) -1px -1px 2px -1px, rgb(255 255 255 / 33%) 1px 1px 1px, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
+  --head-space: 60px;
+
+  @media @tablet {
+    --head-space: 40px;
+  }
 }
 
 html,
@@ -126,6 +131,42 @@ main {
 
   @media @phone {
     padding: 0 8px;
+  }
+
+  .head-space-helper {
+    margin-top: var(--head-space);
+  }
+  
+  .page-header {
+      margin-bottom: 20px;
+
+      h1, h2 {
+        font-size: 28px;
+        margin: 0;
+      }
+
+      p { 
+          margin: 16px 0 24px;
+          line-height: 1.5;
+          color: rgba(0, 0, 0, 0.85);
+      }
+
+      .dashboard & p {
+        color: rgba(255, 255, 255, .85);
+      }
+  
+      .action {
+          text-align: right;
+      }
+
+      @media @tablet {      
+
+        h1 {
+          display: none;
+        }
+
+        margin-bottom: 40px;
+      }
   }
 }
 

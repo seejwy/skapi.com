@@ -124,13 +124,12 @@ function login() {
     border-radius: 8px;
     width: 542px;
     max-width: 100%;
-    margin-top: 60px;
     border: 1px solid #808080;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
 
-    @media @tablet {
-        margin: 40px auto 0;    
+    @media @tablet {  
+        margin: var(--head-space) auto 0;
         background: #FFF;
         padding: 0;
         border: 0;

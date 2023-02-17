@@ -1,7 +1,7 @@
 <template lang="pug">
 EditService(v-if="state?.user && route.query.edit === 'service'")
 template(v-else)
-    .container.header
+    .page-header.head-space-helper
         h2 How to start my service?
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
         div.action
@@ -200,9 +200,8 @@ watch(() => isEdit.value, async () => {
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
-
 .container {
-    margin: 40px 0;
+    margin: 0 0 40px 0;
 
     .inner-container {    
         padding: 40px;
@@ -272,14 +271,8 @@ watch(() => isEdit.value, async () => {
         }
     }
 
-    .action {
-        text-align: right;
-        margin-top: 24px;
-    }
-
     @media @tablet {    
-        margin: 0 -16px;
-        padding: 40px 20px 0;
+        margin: 40px 0 0;
         border-radius: 0;
 
         &:first-child {

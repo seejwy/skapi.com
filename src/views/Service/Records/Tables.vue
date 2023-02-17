@@ -1,8 +1,8 @@
 <template lang="pug">
-.page-header
-    h1.hideOnTablet Record
-    div
-        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+.page-header.head-space-helper
+    h1 Record
+    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+    .action
         sui-button.line-button Read Doc
 
 // search form
@@ -352,43 +352,6 @@ onBeforeUnmount(() => {
     .v-leave-to {
         opacity: 0;
         transform: translateY(100px);
-    }
-}
-
-.page-header {
-    padding: 60px 0;
-
-    & > div {
-        display: flex;
-        column-gap: 30px;
-        row-gap: 24px;
-    }
-    h1 {
-        margin: 0;
-    }
-
-    p {
-        margin: 20px 0 0 0;
-        line-height: 1.5;
-        color: rgba(255, 255, 255, .85);
-    }
-    
-    sui-button {
-        flex-shrink: 0;
-        align-self: flex-end;
-    }
-
-
-    @media @tablet {
-        padding: 24px 0 32px 0;
-
-        & > div {        
-            flex-direction: column;
-        }
-
-        sui-button {
-            align-self: flex-start;
-        }
     }
 }
 

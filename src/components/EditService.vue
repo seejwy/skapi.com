@@ -230,6 +230,7 @@ onBeforeUnmount(() => {
         box-shadow: none;
         background: transparent;
         padding: 0;
+        margin-top: var(--head-space);
     }
 }
 .toggle {
@@ -237,7 +238,6 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 40px;
     font-weight: bold;
     color: rgba(255, 255, 255, .6);
 

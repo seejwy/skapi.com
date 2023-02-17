@@ -3,10 +3,10 @@ div(v-if='!state?.connection')
     // is loading...
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 div(v-else-if="state?.user")
-    .header
+    .page-header.head-space-helper
         h1 Services
-        div
-            p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+        .action
             sui-button(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
                 Icon plus2
                 span New Service
@@ -130,44 +130,40 @@ watch(() => state.viewport, (viewport) => {
 
 <style lang="less" scoped>
 @import '@/assets/variables.less';
-.header {
-    margin-top: 60px; 
+// .header {
+//     p, h1 {
+//         margin: 0;
+//     }
 
-    p, h1 {
-        margin: 0;
-    }
+//     h1 {
+//         font-size: 28px;
+//         margin-bottom: 20px;
+//     }
 
-    h1 {
-        font-size: 28px;
-        margin-bottom: 20px;
-    }
+//     & > div {
+//         display: flex;
+//         flex-direction: column;
+//         align-items: flex-start;
+//         align-items: flex-end;
+//         column-gap: 30px;
+//         row-gap: 24px;
+//         margin-bottom: 36px;
+//         line-height: 1.5;
+//     }
 
-    & > div {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        align-items: flex-end;
-        column-gap: 30px;
-        row-gap: 24px;
-        margin-bottom: 36px;
-        line-height: 1.5;
-    }
+//     p {
+//         color: rgba(0, 0, 0, 0.85);
+//     }
 
-    p {
-        color: rgba(0, 0, 0, 0.85);
-    }
-
-    sui-button {    
-        flex-shrink: 0;
-    }
+//     sui-button {    
+//         flex-shrink: 0;
+//     }
     
-    sui-button svg {
-        margin-right: 4px;
-    }
-}
+//     sui-button svg {
+//         margin-right: 4px;
+//     }
+// }
 .container {
-    margin-top: 40px;
-
     &.empty {
         background: #F5F5F5;
         padding: 84px 0;
@@ -337,9 +333,6 @@ watch(() => state.viewport, (viewport) => {
 }
 
 @media @tablet {
-    .header {
-        margin-top: 40px; 
-    }
     .container {
         .service {
             padding: 24px;

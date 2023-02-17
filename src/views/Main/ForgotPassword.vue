@@ -189,7 +189,7 @@ const changePassword = () => {
         border: none;
         background: #FFF;
         padding: 0;
-        margin-top: 40px;
+        margin-top: var(--head-space);
     }
 
     & > *:not(sui-button) {
