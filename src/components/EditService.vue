@@ -158,8 +158,8 @@ const deleteService = () => {
 
 if(state.viewport === 'mobile') {
     pageTitle.value = 'Service Setting'
-    appStyle.navBackground = '#505050';
     appStyle.background = '#333333';
+    appStyle.navBackground = '#505050';
     navbarBackDestination.value = function() {
         router.push(`/dashboard/${service.value.service}`);
     }
@@ -178,7 +178,7 @@ watch(() => state.viewport, (viewport) => {
 })
 
 onBeforeUnmount(() => {
-    appStyle.background = '#595959';
+    appStyle.background = null;
     appStyle.navBackground = '#293fe6';
     pageTitle.value = 'skapi';
     navbarMobileRightButton.value = null;

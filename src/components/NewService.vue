@@ -35,7 +35,7 @@ if(state.viewport === 'mobile') {
 }
 
 onBeforeUnmount(() => {
-    appStyle.background = '#fff';
+    appStyle.background = null;
     appStyle.navBackground = '#293fe6';
     pageTitle.value = 'skapi';
     navbarMobileRightButton.value = null;
