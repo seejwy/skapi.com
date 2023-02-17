@@ -130,7 +130,7 @@ watch(() => state.viewport, (viewport) => {
 .header {
     margin-top: 60px; 
 
-    * {
+    p, h1 {
         margin: 0;
     }
 

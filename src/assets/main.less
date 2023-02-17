@@ -202,6 +202,25 @@ main {
   inset: 0;
 }
 
+sui-button,
+sui-input[type=submit] {
+  position: relative;
+  line-height: 1;
+  font-size: 16px;
+  padding: 12px 32px;
+  width: auto;
+
+  svg {
+    position: absolute;
+    left: 32px;
+
+     & + * {
+      display: inline-block;
+      margin-left: 28px;
+     }
+  }
+}
+
 sui-button {
   & span[class*="material-symbols-"] {
     display: inline-block;
