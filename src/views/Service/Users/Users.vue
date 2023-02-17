@@ -92,10 +92,10 @@
                 template(v-else)
                     template(v-for="batch in groupedUserList")
                         template(v-for="page in batch")
-                            tr(v-for="(user, userIndex) in page" :key="user['user_id']"  @click="openUser(user['user_id'])")
+                            tr(v-for="(user, userIndex) in page" :key="user['user_id']")
                                 td
                                     sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                                td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
+                                td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}"  @click="openUser(user['user_id'])") 
                                     template(v-if="key === 'suspended'")
                                         Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
                                         Icon(v-else) unblock
