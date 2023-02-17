@@ -143,7 +143,7 @@ function signup() {
         margin-top: 40px;
     }
 
-    & > * {
+    & > *:not([type=submit]) {
         width: 100%;
     }
 
