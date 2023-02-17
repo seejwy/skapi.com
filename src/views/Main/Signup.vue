@@ -85,7 +85,7 @@ const validatePasswordConfirm = (event) => {
 }
 
 function signup() {
-    skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: true}).then(result => {
+    skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: `${import.meta.env.VITE_BASE_URL}/success`}).then(result => {
         router.push('/confirmation');
     }).catch(e => {
         console.log("SIGNUP", {e});
