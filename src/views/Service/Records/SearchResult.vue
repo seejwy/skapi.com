@@ -284,12 +284,6 @@ function displayRecord(r) {
 }
 
 .record-container {
-    sui-input {
-        input::placeholder {
-            color: rgba(255, 255, 255, .6);
-        }
-    }
-
     svg {
         color: white;
         margin-left: 4px;

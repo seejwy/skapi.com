@@ -363,12 +363,6 @@ onBeforeUnmount(() => {
 }
 
 .table-container {
-    sui-input {
-        input::placeholder {
-            color: rgba(255, 255, 255, .6);
-        }
-    }
-
     background-color: #434343;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.2);

@@ -263,6 +263,12 @@ sui-input[type=submit] {
   }
 }
 
+sui-input {
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
 sui-button {
   & span[class*="material-symbols-"] {
     display: inline-block;
@@ -319,10 +325,5 @@ sui-tooltip {
     background: #D9D9D9;
     color: rgba(0, 0, 0, 0.85);
     padding: 16px;
-  }
-  sui-input {
-    input::placeholder {
-      color: rgba(0, 0, 0, .4);
-    }
   }
 }

@@ -1108,8 +1108,4 @@ defineExpose({
 	padding: 0 8px;
 	min-width: 72px;
 }
-
-input::placeholder {
-	color: rgba(255, 255, 255, .4);
-}
 </style>

@@ -505,7 +505,6 @@ onBeforeRouteLeave((to, from) => {
             
             input::placeholder {
                 background-image: url(/src/assets/img/icons/search.svg);
-                color: rgba(255, 255, 255, .4);
                 background-size: contain;
                 background-position:  1px center;
                 background-repeat: no-repeat;
