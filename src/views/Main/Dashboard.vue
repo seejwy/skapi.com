@@ -121,7 +121,10 @@ watch(() => isOpen.value, async () => {
     }
 });
 watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop') router.replace('/dashboard');
+    if(viewport === 'desktop') {
+        isOpen.value = false;
+        router.replace('/dashboard');
+    }
 })
 </script>
 
