@@ -1,5 +1,3 @@
-import { Skapi, SkapiError } from 'skapi-js';
-
 export default class Admin extends Skapi {
     // default email templates
     default_templates = {
@@ -69,6 +67,12 @@ export default class Admin extends Skapi {
     async AdminLogout() {
         window.localStorage.removeItem('remember', 'true');
         return this.logout();
+    }
+
+    async grantAccess(params) {
+        await this.checkAdmin();
+        // { service ,user_id, access_group }
+        return this.request('grant-access', params, { auth: true });
     }
 
     async getServices() {
