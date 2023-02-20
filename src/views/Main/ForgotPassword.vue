@@ -51,7 +51,7 @@
                         :value='passwordConfirm' 
                         @change="validatePasswordConfirm" 
                         :required="true")
-                
+                .error(v-if="resetError") {{ resetError }}
                 SubmitButton(:loading="promiseRunning") Change Password
         template(v-else)
             Icon check_circle
@@ -158,7 +158,12 @@ const changePassword = () => {
     skapi.resetPassword({ email: email.value, code: code.value, new_password: password.value }).then(() => {    
         step.value++;
     }).catch(e => {
-        console.log({e});
+        console.log({e:e.code});
+        if(e.code === 'LimitExceededException') {
+            resetError.value = "You have exceeded the number of tries. Please try again later."
+        } else if(e.code === 'CodeMismatchException') {
+            resetError.value = "Verification code is incorrect."
+        }
     }).finally(() => {
         promiseRunning.value = false;
     });
