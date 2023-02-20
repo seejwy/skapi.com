@@ -50,6 +50,8 @@ import { useRoute, useRouter } from 'vue-router';
 
 import Icon from './Icon.vue';
 
+const emit = defineEmits(['close']);
+
 let route = useRoute();
 let router = useRouter();
 const isCreatingService = ref(false);
@@ -89,14 +91,14 @@ const buttonCallback = async () => {
     }
 }
 
-const save = () => {
+const save = async () => {
     if(promiseRunning.value) return;
 
     promiseRunning.value = true;
     let res;
 
     try {
-        res = skapi.updateService(service.value.service, {
+        res = await skapi.updateService(service.value.service, {
             name: serviceName.value,
             cors: cors.value,
             api_key: apiKey.value
@@ -105,6 +107,7 @@ const save = () => {
         throw e;
     } finally {
         promiseRunning.value = false;
+        emit('close', '');
     }
     return res;
 }

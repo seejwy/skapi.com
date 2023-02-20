@@ -1,5 +1,5 @@
 <template lang="pug">
-EditService(v-if="state?.user && route.query.edit === 'service'")
+EditService(v-if="state?.user && route.query.edit === 'service'" @close="router.replace({query: null})")
 template(v-else)
     .page-header.head-space-helper
         h2 How to start my service?
@@ -84,7 +84,7 @@ template(v-else)
         div.overlay
             .close(@click="isEdit = false")
                 Icon X2
-            EditService
+            EditService(@close="isEdit = false")
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
