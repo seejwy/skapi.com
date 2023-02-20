@@ -1306,11 +1306,6 @@ const createNewService = async () => {
     const closestRegion = getClosestRegion();
     isCreatingService.value = true;
     let res = await skapi.createService({region: closestRegion, name: serviceName.value});
-    if(state.services[closestRegion]) {
-        state.services[closestRegion].push(res);
-    } else {
-        state.services[closestRegion] = [res];
-    }
     router.push(`/dashboard/${res.service}`);
 }
 

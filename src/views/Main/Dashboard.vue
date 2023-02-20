@@ -87,7 +87,7 @@ async function getServices(gs) {
     }
 
     try {
-        let services = await gs.then();
+        let services = await gs;
 
         if(serviceList.value === null) {
             serviceList.value = [];
