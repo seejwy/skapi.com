@@ -186,6 +186,7 @@ onBeforeUnmount(() => {
     appStyle.navBackground = '#293fe6';
     pageTitle.value = 'skapi';
     navbarMobileRightButton.value = null;
+    navbarBackDestination.value = null;
 });
 </script>
 
