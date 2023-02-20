@@ -299,7 +299,7 @@ sui-overlay(ref="exitEditOverlay")
 <script setup>
 import { ref, computed, watch, nextTick, inject, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
-import { skapi, dateFormat, getSize } from '@/main';
+import { skapi, state, dateFormat, getSize } from '@/main';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
 import TagsInput from '@/components/TagsInput.vue';
 import Icon from '@/components/Icon.vue';
@@ -331,6 +331,10 @@ const isMobileUrl = route.query?.id;
 watch(() => props.record, () => {
 	indexValueType.value = typeof props.record?.index?.value || 'string';
 });
+
+if(state.viewport === 'mobile') {
+	appStyle.background = '#333333';
+}
 
 const editRecord = () => {
 	if (!props?.record) {
@@ -606,7 +610,6 @@ const close = () => {
 	recordToOpen.value = null;
 };
 
-appStyle.background = '#333333';
 onBeforeUnmount(() => {
 	appStyle.background = null;
 })
