@@ -7,7 +7,7 @@ div(v-else-if="state?.user")
         h1 Services
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
         .action
-            sui-button(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
+            sui-button.with-icon(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList?.length")

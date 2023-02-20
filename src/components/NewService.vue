@@ -4,10 +4,7 @@
         .overlay-container-title.hideOnTablet Create a New Service
         .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
         sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
-        sui-button(type="submit" style="text-align: center")
-            template(v-if="isCreatingService")
-                Icon.animation-rotation--slow-in-out(style="position: absolute;") loading
-            span(:style="{'visibility': isCreatingService ? 'hidden' : 'visible'}") Create a Service
+        SubmitButton(:loading="isCreatingService") Create Service
 </template>
 <!-- script below -->
 <script setup>
@@ -16,6 +13,7 @@ import { state, skapi, regions } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from './Icon.vue';
+import SubmitButton from './SubmitButton.vue';
 
 let route = useRoute();
 let router = useRouter();

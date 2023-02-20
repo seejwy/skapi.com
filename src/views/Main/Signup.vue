@@ -17,7 +17,7 @@
         .error(v-if="error")
             Icon warning
             span {{ error }}
-        sui-input(type="submit" value="Create Account")
+        SubmitButton(:loading="promiseRunning") Create Account
         div Already have an account?&nbsp;
             RouterLink(to="/dashboard") Login
         //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
@@ -28,6 +28,7 @@ import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '../../components/Icon.vue';
+import SubmitButton from '../../components/SubmitButton.vue';
 import PasswordInput from '../../components/PasswordInput.vue';
 
 let route = useRoute();
@@ -35,6 +36,8 @@ let router = useRouter();
 const error = ref(null);
 const page = ref('signup');
 const secondsTillReady = ref(null);
+const promiseRunning = ref(false);
+
 // set page title
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
@@ -86,6 +89,7 @@ const validatePasswordConfirm = (event) => {
 }
 
 function signup() {
+    promiseRunning.value = true;
     skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: `${import.meta.env.VITE_BASE_URL}/success`}).then(result => {
         router.push('/confirmation');
     }).catch(e => {
@@ -94,6 +98,7 @@ function signup() {
         // console.log({e: e.code});
         // INVALID_PARAMETER
         // Exists
+        promiseRunning.value = false;
 
         switch(e.code) {
             case 'INVALID_PARAMETER':
@@ -142,10 +147,6 @@ function signup() {
         background: #FFF;
         padding: 0;
         margin-top: var(--head-space);
-    }
-
-    & > *:not([type=submit]) {
-        width: 100%;
     }
 
     h1 {
@@ -206,7 +207,7 @@ function signup() {
             }
     }
 
-    sui-input[type=submit] {
+    sui-button[type=submit] {
         margin: 40px 0 24px;
     }
 

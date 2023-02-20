@@ -274,7 +274,7 @@
 			div(style="display: inline-block")
 				sui-button(v-if="isSaving" type="button" disabled)
 					span(style="visibility: hidden;") Save
-					Icon.animation-rotation--slow-in-out(style=" position: absolute; height: 19px; width: 19px;") loading
+					Icon.animation-rotation--slow-in-out(style=" position: absolute;") loading
 				sui-button(v-else type="button" @click="save") Save
 
 sui-overlay(ref="deleteConfirmOverlay")

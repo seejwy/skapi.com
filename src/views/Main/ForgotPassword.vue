@@ -14,7 +14,7 @@
                         @input="(e) => email = e.target.value"
                         required)
                 .error(v-if="forgotError") {{ forgotError }}
-                sui-button(type="submit") Continue
+                SubmitButton(:loading="promiseRunning") Continue
                 RouterLink(to="/dashboard") Back to Login
         template(v-else-if="step === 2")
             form(@submit.prevent="changePassword")
@@ -52,7 +52,7 @@
                         @change="validatePasswordConfirm" 
                         :required="true")
                 
-                sui-button(type="submit") Change
+                SubmitButton(:loading="promiseRunning") Change Password
         template(v-else)
             Icon check_circle
             h1 New Password Success
@@ -69,6 +69,7 @@ import { skapi, state } from '@/main';
 import { useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
+import SubmitButton from '../../components/SubmitButton.vue';
 import PasswordInput from '../../components/PasswordInput.vue';
 
 let router = useRouter();
@@ -83,6 +84,7 @@ let forgotError = ref(null);
 let resetError = ref(null);
 const secondsTillReady = ref(null);
 const isRequestingCode = ref(false);
+const promiseRunning = ref(false);
 
 let step = ref(1);
 
@@ -111,6 +113,7 @@ const validatePasswordConfirm = (event) => {
 }
 
 const forgotPassword = () => {
+    promiseRunning.value = true;
     forgotError.value = null;
     skapi.forgotPassword({email: email.value}).then(res => {
         step.value++;
@@ -119,6 +122,8 @@ const forgotPassword = () => {
         if(e.code === 'LimitExceededException') {
             forgotError.value = "You have exceeded the number of tries. Please try again later.";
         }
+    }).finally(() => {    
+        promiseRunning.value = false;
     });
 }
 
@@ -149,8 +154,13 @@ const resendForgotPassword = async () => {
 }
 
 const changePassword = () => {
+    promiseRunning.value = true;
     skapi.resetPassword({ email: email.value, code: code.value, new_password: password.value }).then(() => {    
         step.value++;
+    }).catch(e => {
+        console.log({e});
+    }).finally(() => {
+        promiseRunning.value = false;
     });
 }
 

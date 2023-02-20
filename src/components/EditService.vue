@@ -18,7 +18,7 @@
         hr
         div(style="text-align: right; margin-bottom: 20px;")
             sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
-        sui-button.hideOnTablet(type="submit") Save
+        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning") Save
 sui-overlay(ref="deleteConfirmOverlay")
     .popup
         .title
@@ -49,6 +49,7 @@ import { state, skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from './Icon.vue';
+import SubmitButton from './SubmitButton.vue';
 
 const emit = defineEmits(['close']);
 

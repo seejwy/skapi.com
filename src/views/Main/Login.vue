@@ -23,7 +23,8 @@ form.container(@submit.prevent="login")
     .error(v-if="error")
         Icon warning
         span {{ error }}
-    sui-input(type="submit" value="Login")
+    SubmitButton(:loading="promiseRunning") Login
+    //- sui-input(type="submit" value="Login")
     div Not registered yet? 
         RouterLink(to="/signup") Create an account
 
@@ -34,12 +35,15 @@ import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '../../components/Icon.vue';
+import SubmitButton from '../../components/SubmitButton.vue';
 import PasswordInput from '../../components/PasswordInput.vue';
 
 let route = useRoute();
 let router = useRouter();
 const error = ref(null);
 const rememberme = ref(false);
+const promiseRunning = ref(false);
+
 // set page title
 let pageTitle = inject('pageTitle');
 let appStyle = inject('appStyle');
@@ -85,11 +89,13 @@ const validatePassword = (event) => {
 }
 
 function login() {
+    promiseRunning.value = true;
     skapi.AdminLogin(form, null, rememberme.value).then(u => {
         state.user = u;
     }).catch(e => {
         // UserLambdaValidationException
         // INCORRECT_USERNAME_OR_PASSWORD
+        promiseRunning.value = false;
         switch(e.code) {
             case 'UserLambdaValidationException':
             case 'INCORRECT_USERNAME_OR_PASSWORD':
@@ -129,10 +135,6 @@ function login() {
         padding: 0;
         border: 0;
         box-shadow: none;
-    }
-
-    & > * {
-        width: 100%;
     }
 
     h1 {
@@ -197,11 +199,8 @@ function login() {
         }
     }
 
-    sui-input[type=submit] {
-        margin-bottom: 24px;
-        margin-top: 40px;
-        width: auto;
-        min-width: 140px;
+    sui-button[type=submit] {
+        margin: 40px 0 24px;
     }
 
     a {
