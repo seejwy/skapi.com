@@ -23,9 +23,6 @@
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
             Login(v-else)
-            
-            .padBlock
-
     .sidebar(v-if="state.user")
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
 
@@ -129,13 +126,6 @@
 
     .sideScreen {
         flex-grow: 1;
-
-        main {
-            .padBlock {
-                width: 100%;
-                height: 100px;
-            }
-        }
     }
 }
 </style>

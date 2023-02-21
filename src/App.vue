@@ -50,6 +50,9 @@ provide('appStyle', {
   },
   set mainPadding(v) {
     document.getElementById('app-main').style.padding = v;
+    if(v) {
+      document.getElementById('app-main').style.paddingBottom = '80px';
+    }
   }
 });
 

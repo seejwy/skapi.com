@@ -292,6 +292,10 @@ watch(() => isEdit.value, async () => {
     @media @phone {    
         margin: 16px -8px;
     }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .information-grid {

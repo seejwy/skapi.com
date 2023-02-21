@@ -119,7 +119,6 @@ function signup() {
 @import '@/assets/variables.less';
 .wrapper {
     display: flex;
-    min-height: calc(100vh - 60px);
     align-items: center;
     justify-content: center;
     padding: 60px 0;
