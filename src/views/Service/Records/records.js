@@ -17,8 +17,10 @@ export async function refreshTables(serviceId) {
 
             skapi.getRecords({
                 service: serviceId,
-                table: m.table
-            }, { limit: 50 }).then(r => m.records.value = r);
+                table: { name: m.table }
+            }, { limit: 50 }).then(r => {
+                m.records.value = r;
+            });
 
             if (!tableList.includes(m.table)) {
                 tableList.push(m.table);
@@ -43,7 +45,7 @@ export async function getMoreRecords(event, table, serviceId, fetchMore = true) 
     if (event === null || event && event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - 40) {
         getMoreRecordsQueue[table.table] = skapi.getRecords({
             service: serviceId,
-            table: table.table
+            table: { name: table.table }
         }, { fetchMore, limit: 50 });
     }
     else {

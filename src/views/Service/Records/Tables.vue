@@ -233,13 +233,13 @@ async function getMoreTables() {
         if (!tableList.includes(m.table)) {
             tableList.push(m.table);
         }
-        
+
         m.opened = false;
         m.records = ref(null);
 
         skapi.getRecords({
             service: serviceId,
-            table: m.table
+            table: { name: m.table }
         }, { limit: fetchLimit }).then(r => {
             m.records.value = r;
         });

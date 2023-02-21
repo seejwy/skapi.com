@@ -13,7 +13,7 @@
                 option(value="name") Name
         .input-field
             sui-input(type="search" autocomplete="off" placeholder="Search" :value="searchValue" @input="(e) => searchValue = e.target.value" @keypress.enter="search")
-    
+
     .actions
         sui-button.text-button(@click="")
             Icon block
@@ -93,7 +93,7 @@
         span.more-page(
             :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
             @click="getMoreUsers") ...
-            
+
         Icon(
             :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
@@ -134,19 +134,18 @@ const search = () => {
         searchFor: 'user_id',
         condition: '=',
         value: searchValue.value
-    }
+    };
 
-    skapi.getUsers(params, { 
-        refresh: true, 
-        limit: fetchLimit 
+    skapi.getUsers(params, {
+        refresh: true,
+        limit: fetchLimit
     }).then((res) => {
-        console.log(res.list);
         serviceUsers.value = {
             endOfList: res.endOfList,
             list: res.list
         };
     });
-}
+};
 
 let visibleFields = reactive({
     block: {
@@ -189,20 +188,20 @@ const computedVisibleFields = computed(() => {
 });
 const selectedUsers = ref([]);
 const userSelectionHandler = (e) => {
-    if(e.target.checked) {
+    if (e.target.checked) {
         selectedUsers.value.push(e.target.value);
     } else {
         selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
     }
-}
+};
 const selectAllHandler = (e) => {
     selectedUsers.value = [];
-    if(e.target.checked) {
+    if (e.target.checked) {
         groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].map(user => {
             selectedUsers.value.push(user.user_id);
-        })
+        });
     }
-}
+};
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
 
@@ -295,17 +294,19 @@ getUsers();
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
+
 .page-header {
     padding: 50px 0;
 
     p {
         line-height: 1.5;
     }
-    
+
     @media @tablet {
         padding: 24px 0;
     }
 }
+
 .actions-wrapper {
     display: flex;
     align-items: center;
@@ -314,7 +315,7 @@ getUsers();
     .actions {
         flex-shrink: 0;
 
-        & > * { 
+        &>* {
             display: inline-block;
             margin-left: 16px;
 
@@ -336,24 +337,27 @@ getUsers();
 
         .icon {
             padding-right: 12px;
+
             svg {
                 color: rgba(255, 255, 255, 0.4);
             }
         }
+
         sui-input {
             padding: 0;
-            
+
             input::placeholder {
                 background-image: url(/src/assets/img/icons/search.svg);
                 color: rgba(255, 255, 255, .4);
                 background-size: contain;
-                background-position:  1px center;
+                background-position: 1px center;
                 background-repeat: no-repeat;
                 text-indent: 26px;
             }
         }
     }
 }
+
 .table-outer-wrapper {
     position: relative;
     margin-top: 36px;
@@ -370,7 +374,7 @@ getUsers();
         padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
 
-        & > * {
+        &>* {
             cursor: pointer;
         }
 
@@ -383,7 +387,8 @@ getUsers();
                 left: 0;
                 z-index: 8;
             }
-            .dropdown > * {
+
+            .dropdown>* {
                 vertical-align: middle;
             }
         }
@@ -407,18 +412,20 @@ getUsers();
 
         label {
             cursor: pointer;
+
             span {
-                
+
                 margin-left: 12px;
             }
         }
-        
+
         sui-input {
             color: #fff;
             cursor: pointer;
         }
     }
 }
+
 .table-wrapper {
     max-height: calc(52px * 11 + 52px);
     overflow: auto;
@@ -438,8 +445,8 @@ getUsers();
                 background-color: #434343;
 
                 td,
-                th {          
-                    padding: 12px;      
+                th {
+                    padding: 12px;
                     height: 52px;
 
                     &:first-child {
@@ -484,7 +491,7 @@ getUsers();
                 cursor: pointer;
                 text-align: right;
 
-                svg {                
+                svg {
                     margin-left: 4px;
                 }
             }
@@ -513,12 +520,14 @@ getUsers();
 
         tr {
             height: 52px;
+
             td {
                 white-space: nowrap;
             }
         }
     }
 }
+
 .paginator {
     padding: 24px 0;
     text-align: center;
@@ -550,14 +559,16 @@ getUsers();
             }
         }
     }
+
     svg {
-            color: rgba(255, 255, 255, .15);
-            vertical-align: middle;
-            &.active {
-                cursor: pointer;
-                color: #fff;
-            }
+        color: rgba(255, 255, 255, .15);
+        vertical-align: middle;
+
+        &.active {
+            cursor: pointer;
+            color: #fff;
         }
+    }
 }
 
 @media @tablet {
@@ -582,5 +593,4 @@ getUsers();
     .table-outer-wrapper {
         margin: auto -8px;
     }
-}
-</style>
+}</style>

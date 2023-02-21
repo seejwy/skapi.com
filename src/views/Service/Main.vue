@@ -181,7 +181,6 @@ function getServices(gs) {
         }
 
         for (let s of services[region]) {
-            console.log(s);
             if (s.service === serviceId) {
                 service.value = s;
                 return s;
