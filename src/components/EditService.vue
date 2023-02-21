@@ -30,7 +30,7 @@ sui-overlay(ref="deleteConfirmOverlay")
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
 
         .foot
-            sui-button(@click="()=> { deleteConfirmOverlay.close(); promiseRunning = false; }") No 
+            sui-button(@click="()=> { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}") No 
             sui-button.line-button(@click="deleteService") Yes
 
 sui-overlay(ref="deleteErrorOverlay")
@@ -142,6 +142,7 @@ const deleteServiceAsk = () => {
 
 const deleteService = () => {
     if(confirmationCode.value !== service.value.service) {
+        confirmationCode.value = '';
         errorMessage.value = "Your service code did not match.";
         deleteConfirmOverlay.value.close();
         deleteErrorOverlay.value.open();
@@ -156,6 +157,8 @@ const deleteService = () => {
         errorMessage.value = "Please disable your service before deleting it.";
         deleteConfirmOverlay.value.close();
         deleteErrorOverlay.value.open();
+    }).finally(() => {    
+        confirmationCode.value = '';
         promiseRunning.value = false;
     });
 }
