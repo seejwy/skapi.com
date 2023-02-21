@@ -128,7 +128,7 @@
         span.more-page(
             :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
             @click="getMoreUsers") ...
-            
+
         Icon(
             :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
@@ -307,20 +307,20 @@ const computedVisibleFields = computed(() => {
 });
 const selectedUsers = ref([]);
 const userSelectionHandler = (e) => {
-    if(e.target.checked) {
+    if (e.target.checked) {
         selectedUsers.value.push(e.target.value);
     } else {
         selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
     }
-}
+};
 const selectAllHandler = (e) => {
     selectedUsers.value = [];
-    if(e.target.checked) {
+    if (e.target.checked) {
         groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].map(user => {
             selectedUsers.value.push(user.user_id);
-        })
+        });
     }
-}
+};
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
 
@@ -478,7 +478,7 @@ onBeforeRouteLeave((to, from) => {
     .actions {
         flex-shrink: 0;
 
-        & > * { 
+        &>* {
             display: inline-block;
             margin-left: 16px;
             padding: 9px 12px;
@@ -501,23 +501,26 @@ onBeforeRouteLeave((to, from) => {
 
         .icon {
             padding-right: 12px;
+
             svg {
                 color: rgba(255, 255, 255, 0.4);
             }
         }
+
         sui-input {
             padding: 0;
-            
+
             input::placeholder {
                 background-image: url(/src/assets/img/icons/search.svg);
                 background-size: contain;
-                background-position:  1px center;
+                background-position: 1px center;
                 background-repeat: no-repeat;
                 text-indent: 26px;
             }
         }
     }
 }
+
 .table-outer-wrapper {
     position: relative;
     margin-top: 36px;
@@ -534,7 +537,7 @@ onBeforeRouteLeave((to, from) => {
         padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
 
-        & > * {
+        &>* {
             cursor: pointer;
         }
 
@@ -549,7 +552,8 @@ onBeforeRouteLeave((to, from) => {
                 left: 0;
                 z-index: 8;
             }
-            .dropdown > * {
+
+            .dropdown>* {
                 vertical-align: middle;
             }
 
@@ -579,18 +583,20 @@ onBeforeRouteLeave((to, from) => {
 
         label {
             cursor: pointer;
+
             span {
-                
+
                 margin-left: 12px;
             }
         }
-        
+
         sui-input {
             color: #fff;
             cursor: pointer;
         }
     }
 }
+
 .table-wrapper {
     max-height: calc(52px * 11 + 52px);
     overflow: auto;
@@ -610,8 +616,8 @@ onBeforeRouteLeave((to, from) => {
                 background-color: #434343;
 
                 td,
-                th {          
-                    padding: 12px;      
+                th {
+                    padding: 12px;
                     height: 52px;
                     white-space: nowrap;
 
@@ -658,7 +664,7 @@ onBeforeRouteLeave((to, from) => {
                 cursor: pointer;
                 text-align: right;
 
-                svg {                
+                svg {
                     margin-left: 4px;
                 }
             }
@@ -687,6 +693,7 @@ onBeforeRouteLeave((to, from) => {
 
         tr {
             height: 52px;
+
             td {
                 white-space: nowrap;
             }
@@ -741,14 +748,16 @@ onBeforeRouteLeave((to, from) => {
             }
         }
     }
+
     svg {
-            color: rgba(255, 255, 255, .15);
-            vertical-align: middle;
-            &.active {
-                cursor: pointer;
-                color: #fff;
-            }
+        color: rgba(255, 255, 255, .15);
+        vertical-align: middle;
+
+        &.active {
+            cursor: pointer;
+            color: #fff;
         }
+    }
 }
 
 @media @tablet {
