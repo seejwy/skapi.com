@@ -32,10 +32,9 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
 
     // table list
     template(v-else)
-        .noTables(v-if='!recordTables.list.length')
+        .no-records(v-if='!recordTables.list.length')
             div
-                sui-flextext(min-size='16' max-size='32') No Record Tables
-                br
+                .title No Record Tables
                 p List of tables will show when there is data
 
         template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch]")
@@ -389,6 +388,7 @@ onBeforeUnmount(() => {
         display: flex;
         align-items: center;
         flex-wrap: wrap;
+        height: 52px;
     }
 
     .tableWrapper {
@@ -499,17 +499,24 @@ onBeforeUnmount(() => {
         }
     }
 
-    .noTables {
-        margin: 32px 0;
+    .no-records {
+        background-color: #4A4A4A;
+        color: rgba(255, 255, 255, 0.4);
+        padding: 32px 0;
+        margin: 0 -20px -24px -20px;
+        border-radius: 0 0 8px 8px;
         text-align: center;
         display: flex;
         justify-content: center;
         align-items: center;
-        opacity: .6;
         flex-wrap: wrap;
 
+        .title {
+            font-size: 28px;
+        }
+
         p {
-            margin: 0;
+            margin: 20px 0 0 0;
         }
     }
 
