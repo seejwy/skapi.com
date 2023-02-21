@@ -178,7 +178,7 @@
 							span Allow Reference
 
 					// reference not allowed when if reference_limit is 0
-					.reference-container(v-if="form.value.reference.reference_limit !== 0")
+					.reference-container(v-if="form.reference.reference_limit !== 0")
 						div
 							label
 								span Allow Multiple Reference
