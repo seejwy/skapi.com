@@ -148,6 +148,7 @@ import Icon from '@/components/Icon.vue';
 import { provide, inject, watch, ref, onMounted, onBeforeUnmount } from 'vue';
 import { skapi, state, log, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+import { recordTables } from './Records/records.js';
 
 let router = useRouter();
 
@@ -171,6 +172,7 @@ onMounted(() => {
         if(!state.user) {
             overlay?.open();
         }
+        recordTables.value = null;
     });
 });
 
