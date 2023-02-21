@@ -7,6 +7,7 @@ import EmailConfirmed from '../views/Main/EmailConfirmed.vue';
 import ForgotPassword from '../views/Main/ForgotPassword.vue';
 import Main from '../views/Main/Main.vue';
 import Dashboard from '../views/Main/Dashboard.vue';
+import Settings from '../views/Main/Settings.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,11 @@ const router = createRouter({
           path: 'dashboard',
           name: 'dashboard',
           component: Dashboard
+        },
+        {
+          path: 'account-settings',
+          name: 'settings',
+          component: Settings
         },
         {
           path: 'signup',
