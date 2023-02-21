@@ -77,6 +77,7 @@ if (!record.value) {
 
 onMounted(() => {
     appStyle.mainPadding = '0';
+    appStyle.background = '#333333';
     if (record.value && typeof record.value === 'object' && !Object.keys(record.value).length) {
         // is add record when empty object
         editCallback();
@@ -85,6 +86,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     appStyle.mainPadding = null;
+    appStyle.background = null;
     navbarMobileRightButton.value = null;
     navbarBackDestination.value = null;
 });

@@ -328,10 +328,6 @@ watch(() => props.record, () => {
 	indexValueType.value = typeof props.record?.index?.value || 'string';
 });
 
-if(state.viewport === 'mobile') {
-	appStyle.background = '#333333';
-}
-
 const editRecord = () => {
 	if (!props?.record) {
 		return;
@@ -610,9 +606,6 @@ const close = () => {
 	recordToOpen.value = null;
 };
 
-onBeforeUnmount(() => {
-	appStyle.background = null;
-})
 defineExpose({
 	close,
 	editRecord,
