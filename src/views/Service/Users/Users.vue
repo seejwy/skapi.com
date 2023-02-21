@@ -65,7 +65,7 @@
             thead
                 tr(:class="{rounded: fetchingData || null}")
                     th
-                        sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                        sui-input(v-if="viewport === 'desktop'" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
             tbody(v-if="groupedUserList?.length")
@@ -448,7 +448,12 @@ onMounted(() => {
     toggleMobileDesktopSearchView();
 });
 watch(() => viewport.value, (viewport) => {
+    selectedUsers.value = [];
     toggleMobileDesktopSearchView();
+});
+
+watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
+    selectedUsers.value = [];
 });
 
 document.body.classList.add('table');
@@ -613,6 +618,7 @@ onBeforeRouteLeave((to, from) => {
                     &:first-child {
                         padding-left: 20px;
                         width: 48px;
+                        min-width: 48px;
                     }
 
                     sui-input {
