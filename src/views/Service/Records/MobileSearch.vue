@@ -16,6 +16,7 @@ let route = useRoute();
 
 onMounted(() => {
     appStyle.mainPadding = '0';
+    appStyle.background = '#333333';
 });
 
 // kick out desktop users
@@ -28,7 +29,6 @@ watch(viewport, n => {
     }
 });
 
-appStyle.background = '#333333';
 onBeforeUnmount(() => {
     appStyle.mainPadding = null;
     appStyle.background = null;
