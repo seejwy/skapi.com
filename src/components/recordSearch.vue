@@ -278,7 +278,7 @@ function search(searchParams) {
     if (!searchParams[type === 'table' ? 'table' : type === 'user' ? 'reference' : 'record_id']) {
         return router.replace('records');
     }
-
+    console.log({ searchParams });
     for (let k in searchParams) {
         // ignore empty values
         if (!searchParams[k]) {
@@ -351,12 +351,14 @@ function search(searchParams) {
                         }
                     }
                     else {
-                        params[k] = value;
+                        if (k === 'table') {
+                            advancedForm.value[k] = value;
+                            params.table.name = value;
+                        }
+                        else {
+                            params[k] = value;
+                        }
                     }
-                }
-                else if (k === 'table') {
-                    advancedForm.value[k] = value;
-                    params.table.name = value;
                 }
                 else if (k !== 'subscription') {
                     advancedForm.value[k] = value;
@@ -370,7 +372,7 @@ function search(searchParams) {
     if (viewport.value === 'mobile') {
         searchResult.value = null;
     }
-    
+    console.log({ params });
     skapi.getRecords(params, { limit: 50 })
         .then(r => {
             searchResult.value = r;
