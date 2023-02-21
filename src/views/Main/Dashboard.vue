@@ -25,13 +25,13 @@ div(v-else-if="state?.user")
     .container.empty(v-else)
         .title No Services
         span Get started by creating a new service. 
-    Transition
-        .toast(v-if="true")
+    Transition(name="toast")
+        .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
             Icon warning_bell
             .title Email Verfication is Needed
             div
-            .body Something to tell you
-            Icon.close(@click="isOpen = false") X2
+            .body Please verify your email to prevent your services from shutting down.
+            Icon.close(@click="state.showVerificationNotification = false") X2
     sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isOpen = false")
         div.overlay
             .close(@click="isOpen = false")
@@ -281,58 +281,6 @@ watch(() => state.viewport, (viewport) => {
     }
 }
 
-.toast {
-    position: fixed;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    bottom: 40px;
-    right: 40px;
-    left: unset;
-    column-gap: 16px;
-    row-gap: 0px;
-    border-radius: 8px;
-    padding: 24px 68px 40px 24px;
-    background: #FAFAFA;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-
-    svg:not(.close) {
-        height: 32px;
-        width: 32px;
-        color: #293FE6;    
-    }
-    
-    .close {
-        position: absolute;
-        top: 11px;
-        right: 11px;
-        cursor: pointer;
-    }
-
-    .title {
-        display: inline-block;
-        font-weight: bold;
-        color: #293FE6;
-    }
-
-
-    @media @tablet {
-        column-gap: 12px;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 20px 50px 28px 20px;
-        color: rgba(0,0,0,.8);
-        border-radius: 0;
-        filter: drop-shadow(0px -2px 4px rgba(0, 0, 0, 0.25));
-        
-        svg:not(.close) {
-            height: 32px;
-            width: 32px;
-        }
-    }
-}
-
 @media @tablet {
     .container {
         .service {
@@ -350,15 +298,5 @@ watch(() => state.viewport, (viewport) => {
             }
         }
     }
-}
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.5s ease, bottom 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
-        bottom: -10px;
 }
 </style>

@@ -12,6 +12,7 @@ const state = reactive({
     connection: null,
     getServices: null,
     services: null,
+    showVerificationNotification: true,
     viewportOnChange: (v) => v
 });
 

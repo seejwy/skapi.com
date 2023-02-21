@@ -336,3 +336,70 @@ sui-tooltip {
     padding: 16px;
   }
 }
+
+.toast {
+  position: fixed;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  bottom: 40px;
+  right: 40px;
+  left: unset;
+  column-gap: 16px;
+  row-gap: 0px;
+  border-radius: 8px;
+  padding: 24px 68px 40px 24px;
+  background: #FAFAFA;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  color: rgba(0, 0, 0, 0.85);
+  max-width: 500px;
+
+  svg:not(.close) {
+      height: 32px;
+      width: 32px;
+      color: #293FE6;    
+  }
+  
+  .close {
+      position: absolute;
+      top: 11px;
+      right: 11px;
+      cursor: pointer;
+  }
+
+  .title {
+      display: inline-block;
+      font-weight: bold;
+      color: #293FE6;
+  }
+
+
+  @media @tablet {
+      column-gap: 12px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 50px 28px 20px;
+      color: rgba(0,0,0,.8);
+      border-radius: 0;
+      filter: drop-shadow(0px -2px 4px rgba(0, 0, 0, 0.25));
+      max-width: unset;
+      
+      svg:not(.close) {
+          height: 32px;
+          width: 32px;
+      }
+  }
+
+  
+  &-enter-active,
+  &-leave-active {
+      transition: opacity 0.5s ease, bottom 0.5s ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+      opacity: 0;
+      bottom: -10px;
+  }
+}
