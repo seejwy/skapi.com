@@ -128,11 +128,10 @@ let record = inject('recordToOpen');
 record.value = null;
 
 function adjustBackgroundColor(n) {
-    console.log("Adjusting", n);
     if (n === 'mobile') {
         // remove padding for zebra list to extend to full width
         appStyle.mainPadding = '0';
-        appStyle.background = '#333333';
+        appStyle.background = '#262626';
     } else {
         appStyle.mainPadding = null;
         appStyle.background = null;
