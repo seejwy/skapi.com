@@ -722,6 +722,24 @@ defineExpose({
 		.data-row {
 			margin-bottom: 72px;
 
+			& .data-row:nth-child(2) {
+				margin-top: 72px;
+
+				&::before {
+					content: '';
+					display: block;
+					position: relative;
+					top: -36px;
+					height: 2px;
+					width: 100%;
+					background-color: rgba(255, 255, 255, 0.08);
+				}
+			}
+
+			& .data-row:last-child {
+				margin-bottom: 0;
+			}
+			
 			.action {
 				float: right;
 			}
