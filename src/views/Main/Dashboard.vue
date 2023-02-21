@@ -42,7 +42,7 @@ sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="backgro
 Login(v-else)
 </template>
 <script setup>
-import { inject, ref, watch, nextTick, onMounted } from 'vue';
+import { inject, ref, watch, nextTick, onUpdated } from 'vue';
 import { state, skapi, dateFormat, awaitConnection } from '@/main';
 import Login from './Login.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -74,13 +74,14 @@ const openNewServiceWindow = () => {
     else newServiceWindow.value.open();
 }
 
-onMounted(() => {
+onUpdated(() => {
     awaitConnection.then(()=>{
-        if(!state.user) {
+        if(!state.user && state.viewport === 'desktop') {
             overlay.open();
         }
     });
 });
+
 async function getServices(gs) {
     if (!(gs instanceof Promise) || !state.user) {
         return;
