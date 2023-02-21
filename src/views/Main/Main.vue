@@ -21,7 +21,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                     router-link(to="/dashboard") Dashboard
 
                 li.showOnTablet
-                    router-link(to="/") Sign-up
+                    router-link(to="/signup") Sign-up
 
                 li.hideOnTablet
                     sui-button.signup(@click="()=>router.push('/signup')") Sign-up
