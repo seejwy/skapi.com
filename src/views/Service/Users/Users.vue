@@ -105,7 +105,7 @@
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
     .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
-        template(v-if="searchParams.value === ''")     
+        template(v-if="route.query.value === ''")     
             .title No Users
             p You have no existing users yet
         template(v-else) 
@@ -171,6 +171,12 @@ const searchParams = reactive({
     condition: '=',
     value: ''
 });
+
+if(route.query.search) {
+    searchParams.searchFor = route.query.search;
+    searchParams.condition = route.query.condition;
+    searchParams.value = route.query.value;
+}
 
 const navbarBackDestination = inject('navbarBackDestination');
 
@@ -244,17 +250,21 @@ const search = () => {
         return;
     }
 
+    router.push({
+        name:"users",
+        query: {
+            search: searchParams.searchFor, 
+            condition: searchParams.condition, 
+            value: searchParams.value
+        }
+    });
+
     callSearch();
 }
 
 const callSearch = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
-    if(route.query.search) {
-        searchParams.searchFor = route.query.search;
-        searchParams.condition = route.query.condition;
-        searchParams.value = route.query.value;
-    }
 
     skapi.getUsers(searchParams, { 
         refresh: true, 
@@ -301,11 +311,14 @@ let visibleFields = reactive({
 });
 
 let showSetting = ref(false);
+
 const computedVisibleFields = computed(() => {
     if(viewport.value === 'desktop') return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
     return [mobileVisibleField.value];
 });
+
 const selectedUsers = ref([]);
+
 const userSelectionHandler = (e) => {
     if (e.target.checked) {
         selectedUsers.value.push(e.target.value);
@@ -313,6 +326,7 @@ const userSelectionHandler = (e) => {
         selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
     }
 };
+
 const selectAllHandler = (e) => {
     selectedUsers.value = [];
     if (e.target.checked) {
@@ -321,6 +335,7 @@ const selectAllHandler = (e) => {
         });
     }
 };
+
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
 
@@ -333,6 +348,7 @@ let serviceUsers = inject('serviceUsers');
 let searchResult = inject('searchResult');
 
 let getMoreUsersQueue = null;
+
 async function getMoreUsers() {
     if (serviceUsers.value.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
         return;
@@ -350,8 +366,8 @@ async function getMoreUsers() {
         return;
     }
 
-
     getMoreUsersQueue = skapi.getUsers(
+        route.query.search ? searchParams :
         {
             service: serviceId,
             searchFor: 'timestamp',
@@ -374,7 +390,6 @@ async function getMoreUsers() {
     currentSelectedUsersPage.value = 0;
     fetchingData.value = false;
 }
-
 
 const mobileScrollHandler = (e) => {
     if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
@@ -401,7 +416,7 @@ function getUsers(refresh = false) {
         value: 0
     };
 
-    skapi.getUsers(params, { limit: fetchLimit })
+    skapi.getUsers(route.query.search ? searchParams : params, { limit: fetchLimit })
         .then(t => {
             serviceUsers.value = {
                 endOfList: t.endOfList,
@@ -419,7 +434,6 @@ function getUsers(refresh = false) {
 }
 
 // get users on created
-
 if(route.query.search) {
     navbarBackDestination.value = () => {
         pageTitle.value = "Users";
@@ -440,13 +454,14 @@ const toggleMobileDesktopSearchView = () => {
         pageTitle.value = `${type} : ${route.query.value}`;
     } else {
         pageTitle.value = 'Users';
-        router.replace({name: 'users'});
     }
 }
+
 onMounted(() => {
     window.addEventListener('scroll', mobileScrollHandler, { passive: true });
     toggleMobileDesktopSearchView();
 });
+
 watch(() => viewport.value, (viewport) => {
     selectedUsers.value = [];
     toggleMobileDesktopSearchView();
@@ -456,11 +471,19 @@ watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () 
     selectedUsers.value = [];
 });
 
+watch(() => route.query, () => {
+    if(route.query.search) {
+        searchParams.searchFor = route.query.search;
+        searchParams.condition = route.query.condition;
+        searchParams.value = route.query.value;
+    }
+})
+
 document.body.classList.add('table');
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
     window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
-})
+});
 
 onBeforeRouteLeave((to, from) => {
     if(from.params.search && !to.params.search) {
