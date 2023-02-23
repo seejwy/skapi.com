@@ -35,6 +35,11 @@
             span.hideOnTablet delete
 
 .table-outer-wrapper
+    .search-query(v-if="route.query.search")
+        span Result of {{ route.query.search }} : "{{ route.query.value }}" {{ route.query.condition }}
+        .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
+            span(style="vertical-align:middle;") Clear
+            Icon X2
     .table-actions
         .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
@@ -476,6 +481,8 @@ watch(() => route.query, () => {
         searchParams.searchFor = route.query.search;
         searchParams.condition = route.query.condition;
         searchParams.value = route.query.value;
+    } else {
+        getUsers(true);
     }
 })
 
@@ -551,6 +558,23 @@ onBeforeRouteLeave((to, from) => {
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+
+    .search-query {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        padding: 14px 14px 0 20px;
+        background: #434343;
+        border-radius: 8px 8px 0 0;
+
+        & + .table-actions {
+            border-radius: 0;
+        }
+
+        svg {
+            margin-left: 4px;
+        }
+    }
 
     .table-actions {
         display: flex;
