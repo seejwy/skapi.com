@@ -18,7 +18,7 @@ form.container(@submit.prevent="login")
             sui-input(type="checkbox" 
                 @input="(e)=>rememberme = e.target.checked"
 				:checked="rememberme ? true : null")
-            span Remember Me
+            span Stay logged in
         RouterLink(to="/forgotpassword") Forgot Email & Password?
     .error(v-if="error")
         Icon warning
@@ -56,10 +56,11 @@ if(state.viewport === 'mobile') {
     appStyle.background = '#fff';
 }
 pageTitle.value = 'skapi';
-
 let form = reactive({
-    email: 'jinyoon@broadwayinc.com',
-    password: 'Bwq14321!!'
+    // email: 'jinyoon@broadwayinc.com',
+    // password: 'Bwq14321!!'
+    email: 'hisieunzz@gmail.com',
+    password: '123123123'
 });
 
 watch(() => state.user, u => {
