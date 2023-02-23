@@ -1327,6 +1327,7 @@ const createNewService = async () => {
     &-title {
         font-weight: bold;
         font-size: 28px;
+        margin-bottom: 40px;
     }
 
     &-text {
@@ -1340,6 +1341,10 @@ const createNewService = async () => {
         margin-bottom: 40px;
         width: 100%;
         background-color: rgba(255, 255, 255, .08);
+
+        input::placeholder {
+            color: rgba(255, 255, 255, .4);
+        }
 
         &[type=submit] {    
             display: inline-block;        
