@@ -4,7 +4,7 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
-        h1 Services
+        h1.fixed Services
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
         .action
             sui-button.with-icon(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
