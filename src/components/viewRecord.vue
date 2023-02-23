@@ -15,13 +15,13 @@
 			.grid-item.title Record ID 
 			.grid-item {{ props.record.record_id }}
 			.grid-item.title Table Name
-			.grid-item {{ props.record.table }}
+			.grid-item {{ props.record.table.name }}
 			.grid-item.title Access Group
-			.grid-item {{ props.record.access_group === 'private' ? 'Private' : props.record.access_group ? 'Registered' : 'Public' }}
+			.grid-item {{ props.record.table.access_group === 'private' ? 'Private' : props.record.table.access_group ? 'Registered' : 'Public' }}
 			.grid-item.title User ID
 			.grid-item {{ props.record.user_id }}
 			.grid-item.title Subscription
-			.grid-item {{ props.record.subscription || '-' }}
+			.grid-item {{ props.record.table.subscription?.user_id || '-' }}
 			.grid-item.title Reference 
 			.grid-item {{ props.record.reference?.record_id || '-' }}
 			.grid-item.title.span-2 Index
@@ -112,7 +112,7 @@
 			.row
 				.section(style="width: 100%;")
 					.name Table Name
-					sui-input(required :value="form.table" @input="(e) => form.table = e.target.value")
+					sui-input(required :value="form.table.name" @input="(e) => form.table.name = e.target.value")
 
 			.row
 				.section
@@ -125,7 +125,7 @@
 					sui-input(:value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference.record_id = e.target.value")
 				.section
 					.name Access Group
-					sui-select(:value="form.access_group.toString()" @change="(e) => form.access_group = e.target.value" style="min-width: 160px;")
+					sui-select(:value="form.table.access_group.toString()" @change="(e) => form.table.access_group = e.target.value" style="min-width: 160px;")
 						option(value="0") Public 
 						option(value="1") Registered
 
@@ -177,7 +177,8 @@
 
 							span Allow Reference
 
-					.reference-container(v-if="allowReference")
+					// reference not allowed when if reference_limit is 0
+					.reference-container(v-if="form.reference.reference_limit !== 0")
 						div
 							label
 								span Allow Multiple Reference
@@ -321,11 +322,6 @@ const data = ref([]);
 const indexValueType = ref('string');
 let isNewRecord = false;
 
-const allowReference = computed(() => {
-	if (form.value.reference?.reference_limit === 0) return false;
-	return true;
-});
-
 const isMobileUrl = route.query?.id;
 
 watch(() => props.record, () => {
@@ -349,7 +345,7 @@ const editRecord = () => {
 
 	for (let k of [
 		'record_id',
-		'access_group',
+		// 'access_group',
 		'table',
 		// 'subscription_group', (not for admin)
 		'reference',
@@ -359,11 +355,11 @@ const editRecord = () => {
 		if (record.hasOwnProperty(k)) {
 			form.value[k] = record[k];
 
-			if (k === 'config') {
-				if (!record.config.hasOwnProperty('reference_limit')) {
-					form.value.config.reference_limit = null;
-				}
-			}
+			// if (k === 'config') {
+			// 	if (!record.config.hasOwnProperty('reference_limit')) {
+			// 		form.value.config.reference_limit = null;
+			// 	}
+			// }
 		}
 
 		else {
@@ -375,18 +371,22 @@ const editRecord = () => {
 						value: ''
 					};
 					break;
-				case 'access_group':
-					form.value.access_group = 1;
+				case 'table':
+					form.value.table = {
+						access_group: 1,
+						name: ''
+					};
 					break;
 				case 'record_id':
 				case 'tags':
 					// do nothing
 					break;
 				case 'reference':
-					form.value.reference = {};
-					form.value.reference.record_id = null;
-					form.value.reference.reference_limit = null;
-					form.value.reference.allow_multiple_reference = true;
+					form.value.reference = {
+						record_id: null,
+						reference_limit: null,
+						allow_multiple_reference: true
+					};
 					break;
 				default:
 					form.value[k] = '';
@@ -400,20 +400,20 @@ const editRecord = () => {
 		for (let key in recordData) {
 			let typeSplitFiles = getDataByTypes(recordData[key]).data;
 			if (typeSplitFiles.files.length) {
-				data.value.push({key, type: 'file', data: typeSplitFiles.files});
+				data.value.push({ key, type: 'file', data: typeSplitFiles.files });
 				typeSplitFiles.json.forEach(value => {
 
-					if (Array.isArray(value)) {				
-						data.value.push({key, type: 'json', data: JSON.stringify(value, null, 2)});
+					if (Array.isArray(value)) {
+						data.value.push({ key, type: 'json', data: JSON.stringify(value, null, 2) });
 					} else {
-						data.value.push({key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
+						data.value.push({ key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
 					}
 				});
 			} else {
 				if (typeSplitFiles.primitive !== null) {
-					data.value.push({key, type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive});
+					data.value.push({ key, type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive });
 				} else {
-					data.value.push({key, type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2)});
+					data.value.push({ key, type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2) });
 				}
 			}
 		}
@@ -485,14 +485,14 @@ const save = async () => {
 		})();
 	}
 
-	config.access_group = Number(config.access_group);
+	config.table.access_group = Number(config.table.access_group);
 
 	try {
 		let r = await skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, config);
 		if (isNewRecord) {
 			let recordSize = skapi.recordSizeCalculator(r);
-			if (tableList.includes(r.table)) {
-				let idx = tableList.indexOf(r.table);
+			if (tableList.includes(r.table.name)) {
+				let idx = tableList.indexOf(r.table.name);
 				let tbl = recordTables.value.list[idx];
 				tbl.number_of_records++;
 				tbl.size += recordSize; // update table size
@@ -575,7 +575,7 @@ const getDataByTypes = (record) => {
 				newArr.push(record[key]);
 			}
 		}
-		
+
 		json = newArr;
 	} else if (typeof record === 'object') {
 		if (record?.md5) {

@@ -82,6 +82,7 @@ app.config.warnHandler = function (msg, vm, trace) {
     return null;
 };
 
+// get size of record data
 const getSize = (size) => {
     if (size >= 1000000000) {
         return `${(size / 1000000000).toFixed(1)} GB`;

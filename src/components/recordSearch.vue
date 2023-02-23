@@ -270,14 +270,15 @@ let searchResult = inject('searchResult');
 function search(searchParams) {
     // search query
     let params = {
-        service: serviceId
+        service: serviceId,
+        table: {}
     };
 
     let type = searchParams['search_type'];
     if (!searchParams[type === 'table' ? 'table' : type === 'user' ? 'reference' : 'record_id']) {
         return router.replace('records');
     }
-
+    console.log({ searchParams });
     for (let k in searchParams) {
         // ignore empty values
         if (!searchParams[k]) {
@@ -292,7 +293,7 @@ function search(searchParams) {
 
             case 'access_group':
                 let access_group = value === 'private' ? 'private' : Number(value);
-                params.access_group = access_group;
+                params.table.access_group = access_group;
                 advancedForm.value[k] = access_group;
                 break;
 
@@ -340,7 +341,7 @@ function search(searchParams) {
                                 params[k] = value;
                             }
                             else {
-                                params.subscription = {
+                                params.table.subscription = {
                                     user_id: value,
                                     group: val ? 1 : 0
                                 };
@@ -350,7 +351,13 @@ function search(searchParams) {
                         }
                     }
                     else {
-                        params[k] = value;
+                        if (k === 'table') {
+                            advancedForm.value[k] = value;
+                            params.table.name = value;
+                        }
+                        else {
+                            params[k] = value;
+                        }
                     }
                 }
                 else if (k !== 'subscription') {
@@ -365,7 +372,7 @@ function search(searchParams) {
     if (viewport.value === 'mobile') {
         searchResult.value = null;
     }
-
+    console.log({ params });
     skapi.getRecords(params, { limit: 50 })
         .then(r => {
             searchResult.value = r;
@@ -447,7 +454,7 @@ form {
         input::placeholder {
             background-image: url(/src/assets/img/icons/search.svg);
             background-size: contain;
-            background-position:  1px center;
+            background-position: 1px center;
             background-repeat: no-repeat;
             text-indent: 26px;
         }
