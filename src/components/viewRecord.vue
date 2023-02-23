@@ -171,7 +171,7 @@
 						label
 							sui-input(
 								type="checkbox" 
-								style="margin-right: 8px; color:white;"
+								style="margin-right: 8px;"
 								@change="e=>form.reference.reference_limit = e.target.checked ? null : 0"
 								:checked="form.reference?.reference_limit !== 0 ? true : null")
 
@@ -183,7 +183,7 @@
 							label
 								span Allow Multiple Reference
 								sui-input#allow_multiple_reference(
-									style="color:white; margin-left: 8px"
+									style="margin-left: 8px"
 									type="checkbox"
 									@input="(e)=>form.reference.allow_multiple_reference = e.target.checked"
 									:checked="form.reference.allow_multiple_reference ? true : null")
