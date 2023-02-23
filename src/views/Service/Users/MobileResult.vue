@@ -1,4 +1,9 @@
 <template lang="pug">
+SearchNavBar(v-if='viewport === "mobile"')
+    div {{ mobilePageTitle }}
+    template(v-slot:right) 
+        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'})}") X2
+
 template(v-if="fetchingData || !groupedUserList?.length")
     .no-users-found(v-if="!fetchingData") No users found
 .table-outer-wrapper(v-else)
@@ -70,6 +75,7 @@ import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
+import SearchNavBar from '@/components/SearchNavBar.vue';
 
 const viewport = inject('viewport');
 let route = useRoute();
@@ -83,7 +89,7 @@ let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const appStyle = inject('appStyle');
-
+const navbarBackDestination = inject('navbarBackDestination');
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
 const searchParams = reactive({
@@ -92,8 +98,6 @@ const searchParams = reactive({
     condition: '=',
     value: ''
 });
-
-const navbarBackDestination = inject('navbarBackDestination');
 
 const changeSearchType = (value) => {
     searchParams.searchFor = value;
@@ -243,6 +247,7 @@ const selectAllHandler = (e) => {
     }
 }
 let pageTitle = inject('pageTitle');
+const mobilePageTitle = ref('');
 pageTitle.value = 'Users';
 
 // flag
@@ -357,8 +362,9 @@ const toggleMobileDesktopSearchView = () => {
             if(route === 'user_id') return "User ID";
             return route.charAt(0).toUpperCase() + route.slice(1);
         })(route.query.search);
-
-        pageTitle.value = `${type} : ${route.query.value}`;
+        appStyle.mainPadding = 0;
+        pageTitle.value = null;
+        mobilePageTitle.value = `${type} : ${route.query.value}`;
     } else {
         pageTitle.value = 'Users';
         router.replace({name: 'users'});
@@ -451,6 +457,14 @@ onBeforeRouteLeave((to, from) => {
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+
+    @media @tablet {
+        padding: 0 16px;
+    }
+
+    @media @phone {
+        padding: 0 8px;
+    }
 
     .table-actions {
         display: flex;
@@ -708,12 +722,6 @@ onBeforeRouteLeave((to, from) => {
                 margin: -14px 0;
             }
         }
-    }
-}
-
-@media @phone {
-    .table-outer-wrapper {
-        margin: auto -8px;
     }
 }
 

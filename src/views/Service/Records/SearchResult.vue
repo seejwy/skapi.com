@@ -1,4 +1,8 @@
 <template lang="pug">
+SearchNavBar(v-if='viewport === "mobile"')
+    div {{ searchTitle }}
+    template(v-slot:right) 
+        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchRecord'})}") X2
 .recordPageHead.hideOnTablet
     h1 Record
     span This is some text
@@ -112,6 +116,8 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
 import { inject, ref, watch, computed, nextTick, onBeforeUnmount, onMounted } from 'vue';
 import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+
+import SearchNavBar from '@/components/SearchNavBar.vue';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
@@ -131,7 +137,7 @@ function adjustBackgroundColor(n) {
     if (n === 'mobile') {
         // remove padding for zebra list to extend to full width
         appStyle.mainPadding = '0';
-        appStyle.background = '#262626';
+        appStyle.background = '#333333';
     } else {
         appStyle.mainPadding = null;
         appStyle.background = null;
@@ -150,11 +156,13 @@ let fetchingData = inject('fetchingData');
 // page title
 
 let pageTitle = inject('pageTitle');
+pageTitle.value = null;
 let searchTitle = computed(() => {
     let s = `${fetchingData.value ? "Searching" : viewport.value === 'desktop' ? "Result of" : ''}${fetchingData.value ? '' : ' ' + route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type === 'record' ? 'record_id' : route.query.search_type]}"${fetchingData.value ? ' ...' : ''}`;
     let capitalized = s.trim().replace(/^\w/, c => c.toUpperCase());
-    pageTitle.value = viewport.value === 'desktop' ? 'Records' : capitalized;
-
+    if(viewport === 'desktop') {
+        pageTitle.value = viewport.value === 'desktop' ? 'Records' : capitalized;
+    }
     return capitalized;
 });
 

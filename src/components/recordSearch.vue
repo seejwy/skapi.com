@@ -4,8 +4,9 @@ form(
     :action="'/dashboard/' + serviceId + '/records/search'"
     @submit.prevent="submitSearch")
     // navbar for mobile search
-    .mobile-search-nav(v-if='viewport === "mobile"')
-        Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'records'})") left
+    SearchNavBar(v-if='viewport === "mobile"')
+        template(v-slot:left)    
+            Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'records'})") left
         sui-input(
             type="search"
             :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -16,7 +17,8 @@ form(
             @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
             @mounted="focusMe"
             autocomplete="off")
-        Icon.showOnTablet.placeholder-icon(v-if="!searchForm.value" style='width:32px;') search
+        template(v-slot:right) 
+            Icon.showOnTablet.placeholder-icon(style='width:32px;') search
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='searchForm.isAdvanced = false')
@@ -195,7 +197,8 @@ form(
 import { inject, reactive, ref, watch } from 'vue';
 import { skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
-import NavBar from '@/components/navbar.vue';
+
+import SearchNavBar from '@/components/SearchNavBar.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
