@@ -74,6 +74,11 @@ const openNewServiceWindow = () => {
     else newServiceWindow.value.open();
 }
 
+awaitConnection.then(()=>{
+    if(!state.user && state.viewport === 'desktop') {
+        overlay.open();
+    }
+});
 onUpdated(() => {
     awaitConnection.then(()=>{
         if(!state.user && state.viewport === 'desktop') {
