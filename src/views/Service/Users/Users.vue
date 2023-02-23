@@ -553,7 +553,7 @@ onBeforeRouteLeave((to, from) => {
 
 .table-outer-wrapper {
     position: relative;
-    margin-top: 36px;
+    margin-top: 20px;
     background-color: #434343;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);

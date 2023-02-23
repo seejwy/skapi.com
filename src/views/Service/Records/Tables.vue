@@ -368,7 +368,7 @@ onBeforeUnmount(() => {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25),
     inset 1px 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
-    margin: 36px 0 0 0;
+    margin: 20px 0 0 0;
     padding: 24px 20px;
 
     @media @tablet {
