@@ -559,6 +559,7 @@ onBeforeRouteLeave((to, from) => {
         background: #434343;
         padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
+        color: rgba(255, 255, 255, 0.6);
 
         &>* {
             cursor: pointer;
@@ -666,6 +667,7 @@ onBeforeRouteLeave((to, from) => {
             th {
                 position: sticky;
                 background-color: #434343;
+                color: rgba(255, 255, 255, 0.6);
                 top: 0;
                 text-align: left;
 
