@@ -392,7 +392,7 @@ onBeforeUnmount(() => {
     }
 
     .tableWrapper {
-        background-color: #262626;
+        background-color: #333333;
         border-radius: 8px;
 
         .records {

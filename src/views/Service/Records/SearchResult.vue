@@ -373,7 +373,7 @@ function displayRecord(r) {
     }
 
     .recordWrapper {
-        background-color: #262626;
+        background-color: #333333;
         border-radius: 8px;
         margin-top: 1.5em;
 
@@ -425,7 +425,7 @@ function displayRecord(r) {
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
-        background-color: #262626;
+        background-color: #333333;
         margin-top: 1.5em;
         border-radius: 8px;
 
