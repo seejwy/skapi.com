@@ -362,11 +362,12 @@ const toggleMobileDesktopSearchView = () => {
             if(route === 'user_id') return "User ID";
             return route.charAt(0).toUpperCase() + route.slice(1);
         })(route.query.search);
-        appStyle.mainPadding = 0;
+        appStyle.mainPadding = '0';
         pageTitle.value = null;
         mobilePageTitle.value = `${type} : ${route.query.value}`;
     } else {
         pageTitle.value = 'Users';
+        appStyle.mainPadding = null;
         router.replace({name: 'users'});
     }
 }
