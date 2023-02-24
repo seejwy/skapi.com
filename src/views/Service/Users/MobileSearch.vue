@@ -20,9 +20,20 @@ form(
         name='search_type'
         :value="searchParams.searchFor"
         @input="e => {changeSearchType(e.target.value);}")
-            option(value="user_id" selected) Search By User ID
-            option(value="email") Search By Email
-            option(value="name") Search By Name
+        option(value="user_id") Search By User ID
+        option(value="email") Search By Email
+        option(value="phone_number") Search By Phone
+        option(value="address") Search By Address
+        option(value="gender") Search By Gender
+        option(value="name") Search By Name
+        option(value="locale") Search By Locale
+        option(value="timestamp") Search By Date Created
+        option(value="birthdate") Search By Birth Date
+        option(value="subscribers") Search By Subscribers
+    sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
+        option(value=">=" selected) &gt;=
+        option(value="<=") &lt;=
+        option(value="=") =
 </template>
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted, computed, ref, reactive } from 'vue';
@@ -87,8 +98,10 @@ onBeforeUnmount(() => {
 </script>
 <style lang="less" scoped>
 .mobile-search-type {
+    display: flex;
     margin: 8px 0;
     padding: 8px;
+    gap: 16px;
     
     sui-select {
         width: 100%;

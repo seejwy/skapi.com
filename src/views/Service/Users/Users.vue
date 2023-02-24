@@ -7,21 +7,34 @@
     div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'")
     form(@submit.prevent="search")
-        .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
-            .select-field
-                sui-select(name='search_type' :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
-                    option(value="user_id" selected) User ID
-                    option(value="email") Email
-                    option(value="name") Name
-            .input-field
-                sui-input(
-                    ref="searchField" 
-                    type="search" 
-                    autocomplete="off" 
-                    placeholder="Search" 
-                    :value="searchParams.value" 
-                    @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
-                    required)
+        .search-input-wrapper
+            sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
+                option(value="user_id") User ID
+                option(value="email") Email
+                option(value="phone_number") Phone
+                option(value="address") Address
+                option(value="gender") Gender
+                option(value="name") Name
+                option(value="locale") Locale
+                option(value="timestamp") Date Created
+                option(value="birthdate") Birth Date
+                option(value="subscribers") Subscribers
+        
+            .select-input(@click.stop)
+                .input-field
+                    sui-input(
+                        ref="searchField" 
+                        type="search" 
+                        autocomplete="off" 
+                        placeholder="Search" 
+                        :value="searchParams.value" 
+                        @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
+                        required)
+                .select-field(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers' || searchParams.searchFor === 'birthdate'")
+                    sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
+                        option(value=">=" selected) &gt;=
+                        option(value="<=") &lt;=
+                        option(value="=") =
     
     .actions
         sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
