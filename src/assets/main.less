@@ -266,7 +266,33 @@ sui-input[type=submit] {
     }
   }
 }
+
+sui-input[type=checkbox] {
+  filter: none;
+  border-radius: 2px;
+  border-width: 2px;
+  cursor: pointer;
+
+  &[checked] {
+    border: none;
+    color: #fff;
+    background: var(--primary-color);
+    box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%);
+  }
+}
+
 .dashboard {
+  sui-input[type=checkbox] {
+    border-color: #ffffff;
+  
+    &[checked] {
+      color: rgba(0, 0, 0, 0.5);
+      background: #ffffff;
+    }
+  }
+}
+
+.dashboard { 
   sui-input {
     input::placeholder {
       color: rgba(255, 255, 255, 0.4);

@@ -995,25 +995,11 @@ defineExpose({
 				}
 			}
 
-			sui-input:not([type=radio]) {
+			sui-input:not([type=radio]):not([type=checkbox]) {
 				background: rgba(255, 255, 255, 0.08);
 				border: 1px solid rgba(255, 255, 255, 0.2);
 				box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 				border-radius: 5px;
-
-				&[type=checkbox] {
-					filter: none;
-					border-radius: 2px;
-					border-width: 2px;
-					border-color: rgba(255, 255, 255, 1);
-
-					&[checked] {
-						border: none;
-						color: rgba(0, 0, 0, 0.5);
-						background: rgba(255, 255, 255, 1);
-						box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
-					}
-				}
 			}
 
 			sui-select {

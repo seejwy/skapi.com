@@ -661,12 +661,7 @@ onBeforeRouteLeave((to, from) => {
     table {
         min-width: 100%;
         border-collapse: collapse;
-
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
-
+        
         thead,
         tbody {
             tr {
