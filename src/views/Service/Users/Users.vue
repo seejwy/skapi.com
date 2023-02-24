@@ -55,7 +55,7 @@
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
-    .table-actions
+    .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
         .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
@@ -82,7 +82,7 @@
 
     .table-wrapper
         table
-            thead
+            thead(v-if="groupedUserList?.length && !fetchingData")
                 tr(:class="{rounded: fetchingData || null}")
                     th
                         sui-input(v-if="viewport === 'desktop'" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
@@ -586,7 +586,7 @@ onBeforeRouteLeave((to, from) => {
         justify-content: space-between;
         align-items: center;
         background: #434343;
-        padding: 24px 36px 14px 20px;
+        padding: 20px 36px 20px 20px;
         border-radius: 8px 8px 0 0;
         color: rgba(255, 255, 255, 0.6);
 
@@ -596,6 +596,10 @@ onBeforeRouteLeave((to, from) => {
 
         &>* {
             cursor: pointer;
+        }
+
+        &.rounded-border {
+            border-radius: 8px;
         }
 
         .refresh {
