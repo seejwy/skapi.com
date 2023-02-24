@@ -9,6 +9,7 @@ form(
             ref="searchField"
             type="search"
             autocomplete="off"
+            :placeholder="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'birthdate' ? 'YYYY-MM-DD' : 'Search'" 
             :value="searchParams.value"
             @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
             required)
