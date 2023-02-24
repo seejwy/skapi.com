@@ -3,12 +3,12 @@ SearchNavBar(v-if='viewport === "mobile"')
     div {{ searchTitle }}
     template(v-slot:right) 
         Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchRecord'})}") X2
-.recordPageHead.hideOnTablet
+
+.page-header.head-space-helper.hideOnTablet 
     h1 Record
-    span This is some text
-    br
-    sui-button.line-button(style="float:right") Read Doc
-    div(style="clear:both;")
+    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+    .action
+        sui-button.line-button Read Doc
 
 // search form
 RecordSearch#recordSearch.hideOnTablet
@@ -304,7 +304,7 @@ function displayRecord(r) {
     inset 1px 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     margin: 0;
-    margin-top: 36px;
+    margin-top: 20px;
     padding: 24px 20px;
 
     @media @tablet {
