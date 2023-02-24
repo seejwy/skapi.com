@@ -58,27 +58,27 @@ template(v-else)
                 .title-wrapper
                     h2 Manage your Service 
             .service-grid 
-                .service-grid-item
+                RouterLink(:to="{name: 'users'}").service-grid-item
                     .content
                         .title
                             Icon users
                             span Authentication
                         .body Users are data that your service user's will store and read from your service database. 
-                    RouterLink(:to="{name: 'users'}") Go to Users >
-                .service-grid-item  
+                    .goto Go to Users >
+                RouterLink(:to="{name: 'records'}").service-grid-item  
                     .content
                         .title
                             Icon folder_open
                             span Record
                         .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
-                    RouterLink(:to="{name: 'records'}") Go to Records >
-                .service-grid-item 
+                    .goto Go to Records >
+                RouterLink(to="/").service-grid-item 
                     .content
                         .title
                             Icon mail
                             span Email System
                         .body Users are data that your service user's will store and read from your service database. 
-                    RouterLink(to="/") Go to Mail >
+                    .goto Go to Mail >
     sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isEdit = false")
         div.overlay
             .close(@click="isEdit = false")
@@ -457,13 +457,20 @@ watch(() => isEdit.value, async () => {
             }
         }
 
-        a {
+        .goto {
             text-align: left;
             margin-top: 40px;
             color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
             text-decoration: none;
         }
+    }
+    a.service-grid-item {
+        text-align: left;
+        margin-top: 40px;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 14px;
+        text-decoration: none;
     }
 
     @media screen and (max-width: 940px) {
