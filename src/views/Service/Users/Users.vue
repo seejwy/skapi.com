@@ -590,6 +590,10 @@ onBeforeRouteLeave((to, from) => {
         border-radius: 8px 8px 0 0;
         color: rgba(255, 255, 255, 0.6);
 
+        @media @tablet {        
+            padding: 14px 16px 14px 20px;
+        }
+
         &>* {
             cursor: pointer;
         }
@@ -829,7 +833,7 @@ onBeforeRouteLeave((to, from) => {
     }
 
     .table-outer-wrapper {
-        margin: auto -16px;
+        margin: auto -20px;
         border-radius: 0;
         box-shadow: none;
         border: none;
@@ -847,7 +851,7 @@ onBeforeRouteLeave((to, from) => {
 
 @media @phone {
     .table-outer-wrapper {
-        margin: auto -8px;
+        margin: auto -16px;
     }
 }
 
