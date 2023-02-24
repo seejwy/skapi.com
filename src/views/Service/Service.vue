@@ -467,7 +467,6 @@ watch(() => isEdit.value, async () => {
     }
     a.service-grid-item {
         text-align: left;
-        margin-top: 40px;
         color: rgba(255, 255, 255, 0.85);
         font-size: 14px;
         text-decoration: none;
