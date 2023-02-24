@@ -538,8 +538,6 @@ onBeforeRouteLeave((to, from) => {
         }
 
         sui-input {
-            padding: 0;
-
             input::placeholder {
                 background-image: url(/src/assets/img/icons/search.svg);
                 background-size: contain;
@@ -882,5 +880,80 @@ onBeforeRouteLeave((to, from) => {
         opacity: 0;
         transform: translateY(100px);
     }
+}
+
+.search-input-wrapper {
+    margin: 8px 0px;
+
+    & > sui-select {
+        background: rgba(255, 255, 255, 0.08);
+    }
+}
+.select-input {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--input-box-shadow);
+  border-radius: 4px;
+  display: inline-flex;
+  height: calc(100% + 9.6px + 9.6px);
+  align-items: center;
+  max-width: 100%;
+  width: 300px;
+  margin-left: 16px;
+  position: relative;
+
+  &>* {
+    display: inline-block;
+    position: relative;
+  }
+
+  &>*:first-child {
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      vertical-align: middle;
+      background-color: rgba(255, 255, 255, .2);
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+    }
+  }
+
+  &>.select-field {
+    sui-select {
+      width: 8em;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+  }
+
+  &>.input-field {
+    display: inline-flex;
+    flex-grow: 1;
+    align-items: center;
+
+    sui-input {
+      width: 100%;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+
+    sui-input {
+      input {
+        color: #fff;
+        margin-left: 12px;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
 }
 </style>
