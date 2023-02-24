@@ -41,13 +41,13 @@
     .actions
         sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon block
-            span.hideOnTablet block
+            span.hide-when-pre-tablet block
         sui-button.text-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon unblock
-            span.hideOnTablet unblock
+            span.hide-when-pre-tablet unblock
         sui-button.text-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
             Icon trash
-            span.hideOnTablet delete
+            span.hide-when-pre-tablet delete
 
 .table-outer-wrapper
     .search-query(v-if="route.query.search && viewport === 'desktop'")
@@ -964,5 +964,11 @@ onBeforeRouteLeave((to, from) => {
       }
     }
   }
+}
+
+.hide-when-pre-tablet {
+    @media screen and (max-width: 870px) {
+        display: none;
+    }
 }
 </style>
