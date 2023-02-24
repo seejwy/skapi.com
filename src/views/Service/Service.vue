@@ -29,7 +29,6 @@ template(v-else)
                 h2 Service Setting 
             .actions(@click="edit")
                 Icon pencil
-                span Edit
         .inner-container 
             .title-actions-wrapper.hideOnTablet
                 .title-wrapper
