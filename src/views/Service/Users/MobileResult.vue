@@ -148,34 +148,36 @@ const groupedUserList = computed(() => {
     return groupArray(serviceUsers.value.list, numberOfUsersPerPage, numberOfPagePerBatch);
 });
 
-const search = () => {
-    let field = searchField.value.children[0];
-
-    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid USER ID');
-        field.reportValidity();
-    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid email');
-        field.reportValidity();
+const getCleanSearchParams = () => {
+    let params = {
+        ...searchParams
     }
 
-    if(!field.checkValidity()) {
-        return;
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
+    } else if(params.searchFor === 'subscribers') {
+        params.value = Number(params.value);
     }
 
-    callSearch();
+    return params;
 }
-
 const callSearch = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
-    if(route.query.search) {
-        searchParams.searchFor = route.query.search;
-        searchParams.condition = route.query.condition;
-        searchParams.value = route.query.value;
+
+    let params = getCleanSearchParams();
+
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
     }
 
-    skapi.getUsers(searchParams, { 
+    skapi.getUsers(params, { 
         refresh: true, 
         limit: fetchLimit 
     }).then((res) => {
@@ -187,6 +189,7 @@ const callSearch = () => {
         };
     });
 }
+
 const mobileVisibleField = ref('user_id');
 let visibleFields = reactive({
     suspended: {
@@ -339,6 +342,11 @@ function getUsers(refresh = false) {
 }
 
 // get users on created
+if(route.query.search) {
+    searchParams.searchFor = route.query.search;
+    searchParams.condition = route.query.condition;
+    searchParams.value = route.query.value;
+}
 
 if(route.query.search) {
     callSearch();
