@@ -24,7 +24,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                     router-link(to="/signup") Sign-up
 
                 li.hideOnTablet
-                    sui-button.signup(@click="()=>router.push('/signup')") Sign-up
+                    sui-button.signup(@click="()=>router.push('/signup')" style="padding: 12px 16px") Sign-up
 
 main
     router-view
