@@ -646,11 +646,6 @@ onBeforeRouteLeave((to, from) => {
                 margin-left: 12px;
             }
         }
-
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
     }
 }
 
