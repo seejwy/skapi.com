@@ -8,7 +8,7 @@
 .actions-wrapper(v-if="viewport === 'desktop'")
     form(@submit.prevent="search")
         .search-input-wrapper
-            sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
+            sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
                 option(value="user_id") User ID
                 option(value="email") Email
                 option(value="phone_number") Phone
@@ -165,6 +165,7 @@
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
+import { changeSearchCondition } from './users';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 

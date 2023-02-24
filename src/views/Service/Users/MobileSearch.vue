@@ -19,7 +19,7 @@ form(
     sui-select(
         name='search_type'
         :value="searchParams.searchFor"
-        @input="e => {changeSearchType(e.target.value);}")
+        @input="e => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
         option(value="user_id") Search By User ID
         option(value="email") Search By Email
         option(value="phone_number") Search By Phone
@@ -38,6 +38,7 @@ form(
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted, computed, ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { changeSearchCondition } from './users';
 import { state, skapi } from '@/main';
 
 import Icon from '@/components/Icon.vue';
@@ -63,10 +64,8 @@ const searchParams = reactive({
 const changeSearchType = (value) => {
     let field = searchField.value.children[0];
     field.setCustomValidity('');
-
-    searchParams.searchFor = value;
-    if(value === 'user_id') searchParams.condition = '=';
-    else searchParams.condition = '>=';
+    
+    changeSearchCondition(value, searchParams);
 }
 
 const search = () => {

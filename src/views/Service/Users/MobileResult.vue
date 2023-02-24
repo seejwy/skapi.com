@@ -99,12 +99,6 @@ const searchParams = reactive({
     value: ''
 });
 
-const changeSearchType = (value) => {
-    searchParams.searchFor = value;
-    if(value === 'user_id') searchParams.condition = '=';
-    else searchParams.condition = '>=';
-}
-
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
 }
