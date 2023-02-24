@@ -16,11 +16,7 @@
     align-items: center;
     background-color: #333;
     z-index: 1;
-    padding: 0 16px;
-
-    @media @phone {
-        padding: 0 8px;
-    }
+    padding: 0 var(--side-padding);
 
     &::after {
         display: block;

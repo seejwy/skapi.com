@@ -423,14 +423,7 @@ onBeforeRouteLeave((to, from) => {
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
-
-    @media @tablet {
-        padding: 0 16px;
-    }
-
-    @media @phone {
-        padding: 0 8px;
-    }
+    padding: 0 var(--side-padding, 0);
 
     .table-actions {
         display: flex;
@@ -676,7 +669,7 @@ onBeforeRouteLeave((to, from) => {
     }
 
     .table-outer-wrapper {
-        margin: auto -16px;
+        margin: auto -20px;
         border-radius: 0;
         box-shadow: none;
         border: none;

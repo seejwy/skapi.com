@@ -45,6 +45,11 @@
 
   @media @tablet {
     --head-space: 40px;
+    --side-padding: 20px;
+  }
+
+  @media @phone {
+    --side-padding: 16px;
   }
 }
 
@@ -122,16 +127,8 @@ body {
 main {
   max-width: 1000px;
   margin: auto;
-  padding: 0 24px 80px;
+  padding: 0 var(--side-padding, 24px) 80px;
   box-sizing: content-box;
-
-  @media @tablet {
-    padding: 0 16px 80px;
-  }
-
-  @media @phone {
-    padding: 0 8px 80px;
-  }
 
   .head-space-helper {
     margin-top: var(--head-space);

@@ -46,7 +46,7 @@ form(
                     autocomplete="off")
                 Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") filter
 
-        .mobileSearchType(v-else)
+        .mobile-search-type(v-else)
             sui-select(
                 name='search_type'
                 :value="searchForm.type"
@@ -420,9 +420,9 @@ switch (route.name) {
 @import '@/assets/variables.less';
 
 form {
-    .mobileSearchType {
+    .mobile-search-type {
         width: 100%;
-        padding: 8px;
+        padding: 8px var(--side-padding);
 
         sui-select {
             width: 100%;
@@ -477,7 +477,7 @@ form {
         align-items: center;
         color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
-        padding: 8px;
+        padding: 8px var(--side-padding);
 
         hr {
             flex-grow: 1;
