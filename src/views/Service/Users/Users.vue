@@ -568,7 +568,7 @@ onBeforeRouteLeave((to, from) => {
         display: flex;
         justify-content: space-between;
         font-weight: bold;
-        padding: 14px 14px 0 20px;
+        padding: 14px 36px 0 20px;
         background: #434343;
         border-radius: 8px 8px 0 0;
 
