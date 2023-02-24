@@ -167,7 +167,7 @@
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
-import { changeSearchCondition } from './users';
+import { changeSearchCondition, visibleFields } from './users';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
@@ -319,36 +319,6 @@ const callSearch = () => {
     });
 }
 const mobileVisibleField = ref('user_id');
-let visibleFields = reactive({
-    suspended: {
-        text: 'Block',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    group: {
-        text: 'Status',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    user_id: {
-        text: 'User ID',
-        show: true,
-    },
-    name: {
-        text: 'Name',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    email: {
-        text: 'Email',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    address: {
-        text: 'Address',
-        show: false,
-    },
-    gender: {
-        text: 'Gender',
-        show: false,
-    },
-});
 
 let showSetting = ref(false);
 

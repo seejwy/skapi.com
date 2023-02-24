@@ -1,5 +1,5 @@
-import { ref } from 'vue';
-import { skapi } from '@/main';
+import { reactive } from 'vue';
+import { skapi, state } from '@/main';
 
 export const changeSearchCondition = (value, searchParams) => {
     switch(value) {
@@ -16,3 +16,38 @@ export const changeSearchCondition = (value, searchParams) => {
             break;
     }
 }
+
+export const visibleFields = reactive({
+    suspended: {
+        text: 'Block',
+        show: state.viewport.value === 'desktop' ? true : false,
+    },
+    group: {
+        text: 'Status',
+        show: state.viewport.value === 'desktop' ? true : false,
+    },
+    user_id: {
+        text: 'User ID',
+        show: true,
+    },
+    name: {
+        text: 'Name',
+        show: state.viewport.value === 'desktop' ? true : false,
+    },
+    email: {
+        text: 'Email',
+        show: state.viewport.value === 'desktop' ? true : false,
+    },
+    address: {
+        text: 'Address',
+        show: false,
+    },
+    gender: {
+        text: 'Gender',
+        show: false,
+    },
+    birthdate: {
+        text: 'Birthdate',
+        show: false,
+    },
+});
