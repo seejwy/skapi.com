@@ -341,10 +341,6 @@ function getUsers(refresh = false) {
 // get users on created
 
 if(route.query.search) {
-    navbarBackDestination.value = () => {
-        pageTitle.value = "Users";
-        router.push({name: 'users'});
-    };
     callSearch();
 } else {
     getUsers();
