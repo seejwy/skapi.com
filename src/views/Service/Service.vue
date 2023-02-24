@@ -288,10 +288,6 @@ watch(() => isEdit.value, async () => {
         }
     }
 
-    @media @phone {    
-        margin: 16px 0;
-    }
-
     &:last-child {
         margin-bottom: 0;
     }
