@@ -26,7 +26,7 @@
                         ref="searchField" 
                         type="search" 
                         autocomplete="off" 
-                        :placeholder="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'birthdate' ? 'YYYY-MM-DD' : 'Search'" 
+                        :placeholder="placeholder(searchParams.searchFor)" 
                         :value="searchParams.value" 
                         @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
                         required)
@@ -167,7 +167,7 @@
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
-import { changeSearchCondition, visibleFields, getValidationMessage } from './users';
+import { changeSearchCondition, visibleFields, getValidationMessage, placeholder } from './users';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 

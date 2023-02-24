@@ -9,7 +9,7 @@ form(
             ref="searchField"
             type="search"
             autocomplete="off"
-            :placeholder="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'birthdate' ? 'YYYY-MM-DD' : 'Search'" 
+            :placeholder="placeholder(searchParams.searchFor)" 
             :value="searchParams.value"
             @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
             required)
@@ -39,7 +39,7 @@ form(
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted, computed, ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { changeSearchCondition, visibleFields, getValidationMessage } from './users';
+import { changeSearchCondition, getValidationMessage, placeholder } from './users';
 import { state, skapi } from '@/main';
 
 import Icon from '@/components/Icon.vue';
@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
 .mobile-search-type {
     display: flex;
     margin: 8px 0;
-    padding: 8px;
+    padding: 8px var(--side-padding);
     gap: 16px;
     
     sui-select {

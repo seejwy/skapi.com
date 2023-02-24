@@ -82,3 +82,18 @@ export const getValidationMessage = (searchParams) => {
 
     return message;
 }
+
+export const placeholder = (type) => {
+    let placeholder = 'Search';
+
+    switch(type) {
+        case 'timestamp':
+        case 'birthdate':
+            placeholder = 'YYYY-MM-DD';
+            break;
+        case 'locale':
+            placeholder = '2 digit country code e.g. KR'
+    }
+
+    return placeholder;
+}
