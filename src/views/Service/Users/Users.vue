@@ -51,7 +51,7 @@
 
 .table-outer-wrapper
     .search-query(v-if="route.query.search && viewport === 'desktop'")
-        span Result of {{ route.query.search }} : "{{ route.query.value }}" {{ route.query.condition }}
+        span Result of {{ visibleFields[route.query.search].text }} : "{{ route.query.value }}" {{ route.query.condition }}
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
@@ -461,12 +461,9 @@ if(route.query.search) {
 
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
-        let type = (function(route) {
-            if(route === 'user_id') return "User ID";
-            return route.charAt(0).toUpperCase() + route.slice(1);
-        })(route.query.search);
-
-        pageTitle.value = `${type} : ${route.query.value}`;
+        appStyle.mainPadding = '0';
+        pageTitle.value = null;
+        mobilePageTitle.value = `${visibleFields[route.query.search].text} : ${route.query.value}`;
     } else {
         pageTitle.value = 'Users';
     }

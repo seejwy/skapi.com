@@ -50,6 +50,10 @@ export const visibleFields = reactive({
         text: 'Birthdate',
         show: false,
     },
+    timestamp: {
+        text: 'Date Created',
+        show: false,
+    },
 });
 
 export const getValidationMessage = (searchParams) => {

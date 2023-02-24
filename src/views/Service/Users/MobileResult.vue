@@ -327,13 +327,9 @@ if(route.query.search) {
 
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
-        let type = (function(route) {
-            if(route === 'user_id') return "User ID";
-            return route.charAt(0).toUpperCase() + route.slice(1);
-        })(route.query.search);
         appStyle.mainPadding = '0';
         pageTitle.value = null;
-        mobilePageTitle.value = `${type} : ${route.query.value}`;
+        mobilePageTitle.value = `${visibleFields[route.query.search].text} : ${route.query.value}`;
     } else {
         pageTitle.value = 'Users';
         appStyle.mainPadding = null;
