@@ -41,7 +41,7 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
             template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList.length)")
                 template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1].length)")
                     // when v-for by number, it starts with 1
-                    .tableWrapper(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
+                    .table-wrapper(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
                         .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
                             span {{ t.table }}
                             div
@@ -383,15 +383,18 @@ onBeforeUnmount(() => {
     }
 
     .header {
-        padding: 0 16px;
+        padding: 0 16px 0 16px;
         color: rgba(255, 255, 255, 0.4);
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        height: 52px;
+
+        & + .table-wrapper {
+            margin-top: 24px;
+        }
     }
 
-    .tableWrapper {
+    .table-wrapper {
         background-color: #333333;
         border-radius: 8px;
 

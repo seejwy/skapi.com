@@ -586,7 +586,7 @@ onBeforeRouteLeave((to, from) => {
         justify-content: space-between;
         align-items: center;
         background: #434343;
-        padding: 14px 14px 14px 20px;
+        padding: 24px 36px 14px 20px;
         border-radius: 8px 8px 0 0;
         color: rgba(255, 255, 255, 0.6);
 
