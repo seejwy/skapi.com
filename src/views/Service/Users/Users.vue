@@ -48,7 +48,7 @@
             span.hideOnTablet delete
 
 .table-outer-wrapper
-    .search-query(v-if="route.query.search")
+    .search-query(v-if="route.query.search && viewport === 'desktop'")
         span Result of {{ route.query.search }} : "{{ route.query.value }}" {{ route.query.condition }}
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
