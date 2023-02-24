@@ -242,7 +242,7 @@ watch(() => isEdit.value, async () => {
     .title-actions-wrapper {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
 
         h2 {        
             font-size: 20px;
