@@ -125,7 +125,7 @@
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
     .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
-        template(v-if="route.query.value === ''")     
+        template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
             p You have no existing users yet
         template(v-else) 
