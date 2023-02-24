@@ -566,4 +566,69 @@ form {
     margin-right: 12px;
     color: rgba(255, 255, 255, .6);
 }
+
+.select-input {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--input-box-shadow);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  position: relative;
+
+  &>* {
+    display: inline-block;
+    position: relative;
+  }
+
+  &>*:first-child {
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      vertical-align: middle;
+      background-color: rgba(255, 255, 255, .2);
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+    }
+  }
+
+  &>.select-field {
+    sui-select {
+      width: 8em;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+  }
+
+  &>.input-field {
+    display: inline-flex;
+    flex-grow: 1;
+    align-items: center;
+
+    sui-input {
+      width: 100%;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+
+    sui-input {
+      input {
+        color: #fff;
+        margin-left: 12px;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+}
 </style>
