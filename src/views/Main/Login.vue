@@ -57,10 +57,8 @@ if(state.viewport === 'mobile') {
 }
 pageTitle.value = 'skapi';
 let form = reactive({
-    // email: 'jinyoon@broadwayinc.com',
-    // password: 'Bwq14321!!'
-    email: 'hisieunzz@gmail.com',
-    password: '123123123'
+    email: 'jinyoon@broadwayinc.com',
+    password: 'Bwq14321!!'
 });
 
 watch(() => state.user, u => {
