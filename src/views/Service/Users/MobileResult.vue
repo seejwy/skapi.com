@@ -5,7 +5,9 @@ SearchNavBar(v-if='viewport === "mobile"')
         Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'})}") X2
 
 template(v-if="fetchingData || !groupedUserList?.length")
-    .no-users-found(v-if="!fetchingData") No users found
+    .no-users-found(v-if="!fetchingData") 
+        .title No users found
+        p There were no users matching the query.
 .table-outer-wrapper(v-else)
     .table-actions
         .header-actions
@@ -597,7 +599,6 @@ onBeforeRouteLeave((to, from) => {
     padding: 32px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
-    font-size: 28px;
     align-items: center;
     position: absolute;
     top: 50%;
@@ -605,6 +606,14 @@ onBeforeRouteLeave((to, from) => {
     text-align: center;
     left: 0;
     right: 0;
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    p {
+        margin: 20px 0 0 0;
+    }
 }
 
 .paginator {
