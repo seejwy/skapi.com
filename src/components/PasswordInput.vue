@@ -1,8 +1,8 @@
 <template lang="pug">
 .sui-input
 	sui-input(:type="type" @input="$emit('input', $event)" @change="$emit('change', $event)" :value="props.value" :placeholder="props.placeholder" :required="required || null")
-	Icon(v-if="type === 'password'" @click="type = 'text'") eye_open
-	Icon(v-else @click="type = 'password'") eye_close
+	Icon(v-if="type !== 'password'" @click="type = 'password'") eye_open
+	Icon(v-else @click="type = 'text'") eye_close
 </template>
 <script setup>
 import { ref } from 'vue';
