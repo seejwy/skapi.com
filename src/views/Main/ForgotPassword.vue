@@ -177,6 +177,8 @@ const changePassword = () => {
     align-items: center;
     justify-content: center;
     padding: 60px 0;
+    min-height: calc(100vh - 140px);
+
     @media @tablet {
         align-items: flex-start;
         padding: 0;
@@ -192,6 +194,7 @@ const changePassword = () => {
     border: 1px solid #808080;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
+    margin-top: 60px;
 
     @media @tablet {
         width: 100%;
