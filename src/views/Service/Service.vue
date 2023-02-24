@@ -295,11 +295,21 @@ watch(() => isEdit.value, async () => {
 
 .information-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 160px);
-    column-gap: 16px;
-    row-gap: 40px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 28px;
+
+    @media @tablet {   
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media @phone {
+        grid-template-columns: 1fr;
+    }
 
     &-item {
+        min-width: 0;
+
         .name {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
@@ -309,17 +319,16 @@ watch(() => isEdit.value, async () => {
         .value {
             font-weight: bold;
             color: rgba(255, 255, 255, 0.85);
+            word-break: break-all;
         }
-
-        &.span-2 {
-            grid-column: span 2;
-        }
-
+        
         @media @phone {
+        // @media screen and (max-width: 520px) {
             &.span-2 {
-                grid-column: span 1;
+                grid-column: span 2;
             }
         }
+
     }
 }
 
@@ -365,7 +374,7 @@ watch(() => isEdit.value, async () => {
 .setting-grid {
     display: grid;
     column-gap: 12px;
-    row-gap:36px;
+    row-gap:28px;
     grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
 
     &-item {
