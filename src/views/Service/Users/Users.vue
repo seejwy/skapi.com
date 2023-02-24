@@ -71,7 +71,7 @@
             template(v-else)
                 sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                     option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
-        Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
+        Icon.refresh(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
@@ -592,6 +592,10 @@ onBeforeRouteLeave((to, from) => {
 
         &>* {
             cursor: pointer;
+        }
+
+        .refresh {
+            color: #fff;
         }
 
         .header-actions {
