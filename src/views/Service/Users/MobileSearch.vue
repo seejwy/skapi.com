@@ -39,7 +39,7 @@ form(
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted, computed, ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { changeSearchCondition } from './users';
+import { changeSearchCondition, visibleFields, getValidationMessage } from './users';
 import { state, skapi } from '@/main';
 
 import Icon from '@/components/Icon.vue';
@@ -71,12 +71,15 @@ const changeSearchType = (value) => {
 
 const search = () => {
     let field = searchField.value.children[0];
-    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid USER ID');
+    
+    let errorMessage = getValidationMessage(searchParams);
+    if(errorMessage) {
+        field.setCustomValidity(errorMessage);
         field.reportValidity();
-    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid email');
-        field.reportValidity();
+    }
+
+    if(!field.checkValidity()) {
+        return;
     }
 
     if(field.checkValidity()) {

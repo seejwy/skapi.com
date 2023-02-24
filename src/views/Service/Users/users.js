@@ -51,3 +51,22 @@ export const visibleFields = reactive({
         show: false,
     },
 });
+
+export const getValidationMessage = (searchParams) => {
+    let message = '';
+
+    switch(searchParams.searchFor) {
+        case 'user_id':
+            if(!skapi.validate.userId(searchParams.value)) message = 'Please enter a valid USER ID';
+            break;
+        case 'email':
+            if(!skapi.validate.email(searchParams.value)) message = 'Please enter a valid email';
+            break;
+        case 'birthdate':
+        case 'timestamp':
+            let regex = /\d{4}-\d{2}-\d{2}/;
+            if(!searchParams.value.match(regex) || !(new Date(searchParams.value).getTime())) message = 'Please enter date in YYYY-MM-DD format'
+    }
+
+    return message;
+}

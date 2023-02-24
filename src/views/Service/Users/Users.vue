@@ -167,7 +167,7 @@
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
-import { changeSearchCondition, visibleFields } from './users';
+import { changeSearchCondition, visibleFields, getValidationMessage } from './users';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
@@ -252,12 +252,10 @@ const groupedUserList = computed(() => {
 
 const search = () => {
     let field = searchField.value.children[0];
-
-    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid USER ID');
-        field.reportValidity();
-    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid email');
+    
+    let errorMessage = getValidationMessage(searchParams);
+    if(errorMessage) {
+        field.setCustomValidity(errorMessage);
         field.reportValidity();
     }
 
