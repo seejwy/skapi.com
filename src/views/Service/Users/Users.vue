@@ -32,8 +32,10 @@
                         required)
                 .select-field(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers' || searchParams.searchFor === 'birthdate'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
-                        option(value=">=" selected) &gt;=
-                        option(value="<=") &lt;=
+                        option(value=">" v-if="searchParams.searchFor === 'birthdate'") &gt;
+                        option(value=">=" v-if="searchParams.searchFor !== 'birthdate'") &gt;=
+                        option(value="<" v-if="searchParams.searchFor === 'birthdate'") &lt;
+                        option(value="<=" v-if="searchParams.searchFor !== 'birthdate'") &lt;=
                         option(value="=") =
     
     .actions

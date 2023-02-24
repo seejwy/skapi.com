@@ -8,9 +8,9 @@ export const changeSearchCondition = (value, searchParams) => {
         case 'email':
         case 'gender':
         case 'locale':
+        case 'birthdate':
             searchParams.condition = '=';
             break;
-        case 'birthdate':
         case 'name':
             searchParams.condition = '>=';
             break;
