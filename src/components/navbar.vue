@@ -124,6 +124,10 @@ sui-nav#top-nav {
                     user-select: none;
                     font-size: 20px;
                     vertical-align: middle;
+
+                    @media @tablet {
+                        font-weight: bold;
+                    }
                 }
             }
         }
