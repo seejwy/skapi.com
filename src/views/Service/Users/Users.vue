@@ -185,27 +185,21 @@ const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
 const searchParams = reactive({
     service: serviceId,
-    searchFor: 'user_id',
-    condition: '=',
+    searchFor: 'timestamp',
+    condition: '>=',
     value: ''
 });
-
-if(route.query.search) {
-    searchParams.searchFor = route.query.search;
-    searchParams.condition = route.query.condition;
-    searchParams.value = route.query.value;
-}
-
 const navbarBackDestination = inject('navbarBackDestination');
-
-const changeSearchType = (value) => {
-    searchParams.searchFor = value;
-    if(value === 'user_id') searchParams.condition = '=';
-    else searchParams.condition = '>=';
-}
 
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
+}
+
+const changeSearchType = (value) => {
+    let field = searchField.value.children[0];
+    field.setCustomValidity('');
+    
+    changeSearchCondition(value, searchParams);
 }
 
 const blockUsers = async () => {
@@ -280,11 +274,36 @@ const search = () => {
     callSearch();
 }
 
+const getCleanSearchParams = () => {
+    let params = {
+        ...searchParams
+    }
+
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
+    } else if(params.searchFor === 'subscribers') {
+        params.value = Number(params.value);
+    }
+
+    return params;
+}
 const callSearch = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
 
-    skapi.getUsers(searchParams, { 
+    let params = getCleanSearchParams();
+
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
+    }
+
+    skapi.getUsers(params, { 
         refresh: true, 
         limit: fetchLimit 
     }).then((res) => {
@@ -383,13 +402,15 @@ async function getMoreUsers() {
     if (getMoreUsersQueue instanceof Promise) {
         return;
     }
+    
+    let params = getCleanSearchParams();
 
     getMoreUsersQueue = skapi.getUsers(
-        route.query.search ? searchParams :
+        route.query.search ? params :
         {
             service: serviceId,
             searchFor: 'timestamp',
-            condition: '>',
+            condition: '>=',
             value: 0
         }, { fetchMore: true, limit: fetchLimit }).catch(err => {
             fetchingData.value = false;
@@ -417,7 +438,6 @@ const mobileScrollHandler = (e) => {
 
 function getUsers(refresh = false) {
     // initial table fetch
-
     if (!refresh && serviceUsers.value) {
         // bypass if already fetched
         fetchingData.value = false;
@@ -430,7 +450,7 @@ function getUsers(refresh = false) {
     let params = {
         service: serviceId,
         searchFor: 'timestamp',
-        condition: '>',
+        condition: '>=',
         value: 0
     };
 
@@ -452,6 +472,12 @@ function getUsers(refresh = false) {
 }
 
 // get users on created
+if(route.query.search) {
+    searchParams.searchFor = route.query.search;
+    searchParams.condition = route.query.condition;
+    searchParams.value = route.query.value;
+}
+
 if(route.query.search) {
     navbarBackDestination.value = () => {
         pageTitle.value = "Users";
