@@ -180,8 +180,8 @@ const callSearch = () => {
         }
     }
 
-    skapi.getUsers(params, { 
-        refresh: true, 
+    skapi.getUsers(params, {
+        fetchMore: false,
         limit: fetchLimit 
     }).then((res) => {
         console.log(res.list);
