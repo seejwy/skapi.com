@@ -161,12 +161,12 @@ provide('fetchingData', ref(false));
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service';
 
-let overlay;
+let overlay = ref(null);
 
 onMounted(() => {
     awaitConnection.then(()=>{
         if(!state.user) {
-            overlay?.open();
+            overlay.value.open();
         }
         recordTables.value = null;
     });
