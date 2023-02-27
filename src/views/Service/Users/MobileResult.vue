@@ -596,7 +596,7 @@ onBeforeRouteLeave((to, from) => {
 
 .no-users-found {
     text-align: center;
-    padding: 32px 0;
+    padding: 60px 0 32px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
     align-items: center;

@@ -49,13 +49,11 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
                 span &nbsp;
 
     template(v-else)
-        .noRecords(v-if='!searchResult.list.length')
-            div
-                sui-flextext(min-size='16' max-size='32') No Records
-                br
+        div(v-if='!searchResult.list.length')
+            .no-records-found
+                .title No Records
                 p There was no record matching the query:
-                .showOnTablet(v-if='route.query?.access_group' style="text-align: left")
-                    br
+                .query.showOnTablet(v-if='route.query?.access_group')
                     span Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
                     template(v-if='route.query.search_type === "user" && route.query?.table')
                         br
@@ -426,26 +424,35 @@ function displayRecord(r) {
             }
         }
     }
-
-    .noRecords {
-        padding: 32px 0;
+        
+    .no-records-found {
         text-align: center;
-        display: flex;
-        justify-content: center;
+        padding: 32px 0;
+        border-radius: 0 0 8px 8px;
+        color: rgba(255, 255, 255, .4);
         align-items: center;
-        flex-wrap: wrap;
-        background-color: #333333;
-        margin-top: 1.5em;
-        border-radius: 8px;
+        text-align: center;
 
-        &>* {
-            opacity: 0.6;
+        @media @tablet {        
+            padding: 60px 0 32px 0;
         }
-
+        
+        .title {
+            font-size: 28px;
+        }
+        
         p {
-            margin: 0;
+            margin: 20px 0 0 0;
+        }
+        
+        .query {
+            margin-top: 16px;
+            text-align: center;
+            color: rgba(255, 255, 255, .6);
         }
     }
+
+
 
     .paginator {
         margin-top: 24px;
