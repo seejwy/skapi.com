@@ -20,11 +20,11 @@ export const changeSearchCondition = (value, searchParams) => {
 export const visibleFields = reactive({
     suspended: {
         text: 'Block',
-        show: state.viewport.value === 'desktop' ? true : false,
+        show: state.viewport === 'desktop' ? true : false,
     },
     group: {
         text: 'Status',
-        show: state.viewport.value === 'desktop' ? true : false,
+        show: state.viewport === 'desktop' ? true : false,
     },
     user_id: {
         text: 'User ID',
@@ -32,11 +32,11 @@ export const visibleFields = reactive({
     },
     name: {
         text: 'Name',
-        show: state.viewport.value === 'desktop' ? true : false,
+        show: state.viewport === 'desktop' ? true : false,
     },
     email: {
         text: 'Email',
-        show: state.viewport.value === 'desktop' ? true : false,
+        show: state.viewport === 'desktop' ? true : false,
     },
     address: {
         text: 'Address',
