@@ -461,8 +461,6 @@ if(route.query.search) {
 
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
-        appStyle.mainPadding = '0';
-        pageTitle.value = null;
         router.replace({name: 'usersSearch', query: route.query});
     } else {
         pageTitle.value = 'Users';
