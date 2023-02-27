@@ -600,12 +600,7 @@ onBeforeRouteLeave((to, from) => {
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
     align-items: center;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     text-align: center;
-    left: 0;
-    right: 0;
     
     .title {
         font-size: 28px;
