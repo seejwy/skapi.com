@@ -335,7 +335,7 @@ const toggleMobileDesktopSearchView = () => {
     } else {
         pageTitle.value = 'Users';
         appStyle.mainPadding = null;
-        router.replace({name: 'users'});
+        router.replace({name: 'users', query: route.query});
     }
 }
 onMounted(() => {
