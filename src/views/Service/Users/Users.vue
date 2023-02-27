@@ -71,7 +71,7 @@
             template(v-else)
                 sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                     option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
-        Icon.refresh(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
+        Icon.refresh(v-if="viewport === 'desktop' && !route.query.search" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
@@ -566,7 +566,7 @@ onBeforeRouteLeave((to, from) => {
         display: flex;
         justify-content: space-between;
         font-weight: bold;
-        padding: 14px 36px 0 20px;
+        padding: 20px 36px 0 20px;
         background: #434343;
         border-radius: 8px 8px 0 0;
 
@@ -757,8 +757,7 @@ onBeforeRouteLeave((to, from) => {
 
 .no-users-found {
     text-align: center;
-    padding: 32px 0 60px 0;
-    background-color: #4A4A4A;
+    padding: 40px 0 60px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
 
@@ -768,6 +767,10 @@ onBeforeRouteLeave((to, from) => {
     
     p {
         margin: 20px 0 0 0;
+    }
+
+    @media @tablet {    
+        padding: 60px 0;
     }
 }
 

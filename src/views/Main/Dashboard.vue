@@ -22,6 +22,7 @@ div(v-else-if="state?.user")
                     .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
                         .title {{  key }}
                         .value {{ value || '-' }}
+    .container.empty.animation-skeleton(v-else-if="isFetchingServices")
     .container.empty(v-else)
         .title No Services
         span Get started by creating a new service. 
@@ -40,7 +41,7 @@ sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="backgro
 Login(v-else)
 </template>
 <script setup>
-import { inject, ref, watch, nextTick, onUpdated, onMounted } from 'vue';
+import { inject, ref, watch, nextTick, onUpdated, onMounted, computed } from 'vue';
 import { state, skapi, dateFormat, awaitConnection } from '@/main';
 import Login from './Login.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -58,6 +59,7 @@ let serviceList = ref(null);
 let overlay = ref(null);
 const newServiceWindow = ref(null);
 const isOpen = ref(false);
+const isFetchingServices = ref(true);
 
 const filterServiceDetails = (service) => {
     return {
@@ -95,7 +97,7 @@ async function getServices(gs) {
 
     try {
         let services = await gs;
-
+        isFetchingServices.value = false;
         if(serviceList.value === null) {
             serviceList.value = [];
             for(let region in services) {

@@ -49,7 +49,7 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
     template(v-else)
         div(v-if='!searchResult.list.length')
             .no-records-found
-                .title No Records
+                .title No Records Found
                 p There was no record matching the query:
                 .query.showOnTablet(v-if='route.query?.access_group')
                     span Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
@@ -425,7 +425,7 @@ function displayRecord(r) {
         
     .no-records-found {
         text-align: center;
-        padding: 32px 0;
+        padding: 60px 0 36px 0;
         border-radius: 0 0 8px 8px;
         color: rgba(255, 255, 255, .4);
         align-items: center;
