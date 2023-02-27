@@ -34,9 +34,7 @@ div(v-else-if="state?.user")
     //-         Icon.close(@click="state.showVerificationNotification = false") X2
     sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isOpen = false")
         div.overlay
-            .close(@click="isOpen = false")
-                Icon X2
-            NewService
+            NewService(@close="isOpen = false")
 sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
     Login
 Login(v-else)

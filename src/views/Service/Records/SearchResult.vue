@@ -15,8 +15,6 @@ RecordSearch#recordSearch.hideOnTablet
 .hideOnTablet(style="clear:both;")
 
 sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
-    .close-record-overlay(@click="()=>viewRecord.close()")
-        Icon X2
     .view-record-overlay
         ViewRecord(:record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close()")
 

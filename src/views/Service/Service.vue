@@ -81,8 +81,6 @@ template(v-else)
                     .goto Go to Mail >
     sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isEdit = false")
         div.overlay
-            .close(@click="isEdit = false")
-                Icon X2
             EditService(@close="isEdit = false")
 </template>
 <script setup>

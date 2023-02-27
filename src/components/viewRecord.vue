@@ -98,7 +98,8 @@
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
 	.foot(v-if='!isMobileUrl')
-		sui-button.line-button(@click="editRecord") Edit
+		sui-button.line-button(type="button" @click="emit('close', '');" style="margin-right: 16px;") Close
+		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit")
 	form(ref="formEl")
 		.head(:class="{'mobile-head': isMobileUrl}")
