@@ -145,7 +145,7 @@ const toggleService = async() => {
                 service.value.active = res.active;
             });
         } else {
-            togglePromise.value = skapi.enableService(service.value.service).then(() => {
+            togglePromise.value = skapi.enableService(service.value.service).then((res) => {
                 togglePromise.value = null;
                 service.value.active = res.active;
             });
