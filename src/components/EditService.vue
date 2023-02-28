@@ -188,7 +188,7 @@ watch(() => state.viewport, (viewport) => {
 onBeforeUnmount(() => {
     appStyle.background = null;
     appStyle.navBackground = '#293fe6';
-    pageTitle.value = 'skapi';
+    pageTitle.value = `Service "${service.value.name}"`;
     navbarMobileRightButton.value = null;
     navbarBackDestination.value = null;
 });
