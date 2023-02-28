@@ -35,9 +35,9 @@
         router-link(:to="{name: 'records'}")
             Icon folder_open
 
-        router-link(to='/')
+        //- router-link(to='/')
             //(:to="{name: 'mail'}")
-            Icon mail
+            //- Icon mail
 //- Transition(name="toast")
 //-     .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
 //-         Icon warning_bell
