@@ -234,8 +234,8 @@ const unblockUsers = async () => {
 }
 
 const deleteUsers = async () => {
-    let deletePromise = selectedUsers.value.map((user) => {
-        return skapi.deleteAccount({service: serviceId, user});
+    let deletePromise = selectedUsers.value.map((userId) => {
+        return skapi.deleteAccount({service: serviceId, userId});
     });
 
     await Promise.all(deletePromise);
