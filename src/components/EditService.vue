@@ -11,7 +11,7 @@
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         .input
             label CORS
-            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required)
+            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
         .input
             label API Key
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="apiKey" @input="(e) => apiKey = e.target.value")
@@ -90,6 +90,22 @@ const buttonCallback = async () => {
             val: 'Save',
             callback: buttonCallback
         };
+    }
+}
+
+const validateCors = (event) => {
+    let isValid = true;
+    cors.value.split(',').forEach(url => {
+        if(!skapi.validate.url(url.trim())) {
+            isValid = false;
+        }
+    });
+
+    if(isValid) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid CORS');
+		event.target.reportValidity();
     }
 }
 
