@@ -18,7 +18,7 @@
         hr
         div(style="text-align: right; margin-bottom: 20px;")
             sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
-        sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
+        sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning") Save
 sui-overlay(ref="deleteConfirmOverlay")
     .popup
@@ -29,9 +29,8 @@ sui-overlay(ref="deleteConfirmOverlay")
             p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
             p To confirm deletion, enter ServicFsae ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
-
         .foot
-            sui-button(@click="()=> { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}") No 
+            sui-button(@click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
             sui-button.line-button(@click="deleteService") Yes
 
 sui-overlay(ref="deleteErrorOverlay")
@@ -159,11 +158,11 @@ const toggleService = async() => {
 
 const deleteServiceAsk = () => {
     if(promiseRunning.value) return;
-    promiseRunning.value = true;
     deleteConfirmOverlay.value.open();
 }
 
 const deleteService = () => {
+    promiseRunning.value = true;
     if(confirmationCode.value !== service.value.service) {
         confirmationCode.value = '';
         errorMessage.value = "Your service code did not match.";
