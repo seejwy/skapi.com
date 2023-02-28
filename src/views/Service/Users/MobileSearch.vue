@@ -2,31 +2,48 @@
 form(
     @submit.prevent="search")
     // navbar for mobile search
-    .mobile-search-nav(v-if='state.viewport === "mobile"')
-        Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'users'})") left
+    SearchNavBar(v-if='viewport === "mobile"')
+        template(v-slot:left)
+            Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'users'})") left
         sui-input(
             ref="searchField"
             type="search"
             autocomplete="off"
+            :placeholder="placeholder(searchParams.searchFor)" 
             :value="searchParams.value"
             @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
             required)
-        Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search
+        template(v-slot:right) 
+            Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search     
+        
 .mobile-search-type
     sui-select(
         name='search_type'
         :value="searchParams.searchFor"
-        @input="e => {changeSearchType(e.target.value);}")
-            option(value="user_id" selected) Search By User ID
-            option(value="email") Search By Email
-            option(value="name") Search By Name
+        @input="e => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
+        option(value="user_id") Search By User ID
+        option(value="email") Search By Email
+        option(value="phone_number") Search By Phone
+        option(value="address") Search By Address
+        option(value="gender") Search By Gender
+        option(value="name") Search By Name
+        option(value="locale") Search By Locale
+        option(value="timestamp") Search By Date Created
+        option(value="birthdate") Search By Birth Date
+        option(value="subscribers") Search By Subscribers
+    sui-select(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers' || searchParams.searchFor === 'birthdate'" style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
+        option(value=">=" selected) &gt;=
+        option(value="<=") &lt;=
+        option(value="=") =
 </template>
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted, computed, ref, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { changeSearchCondition, getValidationMessage, placeholder } from './users';
 import { state, skapi } from '@/main';
 
 import Icon from '@/components/Icon.vue';
+import SearchNavBar from '@/components/SearchNavBar.vue';
 
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
@@ -48,20 +65,21 @@ const searchParams = reactive({
 const changeSearchType = (value) => {
     let field = searchField.value.children[0];
     field.setCustomValidity('');
-
-    searchParams.searchFor = value;
-    if(value === 'user_id') searchParams.condition = '=';
-    else searchParams.condition = '>=';
+    
+    changeSearchCondition(value, searchParams);
 }
 
 const search = () => {
     let field = searchField.value.children[0];
-    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid USER ID');
+    
+    let errorMessage = getValidationMessage(searchParams);
+    if(errorMessage) {
+        field.setCustomValidity(errorMessage);
         field.reportValidity();
-    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid email');
-        field.reportValidity();
+    }
+
+    if(!field.checkValidity()) {
+        return;
     }
 
     if(field.checkValidity()) {
@@ -82,54 +100,12 @@ onBeforeUnmount(() => {
 });
 </script>
 <style lang="less" scoped>
-.mobile-search-nav {
-    position: sticky;
-    top: 0;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 28px;
-    background-color: #333;
-    z-index: 1;
-    padding: 0 8px;
-
-    &::after {
-        display: block;
-        position: absolute;
-        width: 100%;
-        left: 0;
-        bottom: 0;
-        content: '';
-        height: 1px;
-        background-color: rgba(255 255 255 / 60%);
-        box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .back-button {
-        display: inline;
-        height: 32px;
-        width: 32px;
-        color: rgba(255, 255, 255, .4);
-    }
-
-    sui-input {
-        box-shadow: none;
-        width: 100%;
-
-        input:focus {
-            outline: none;
-        }
-
-        &+span {
-            position: absolute;
-            right: 8px;
-        }
-    }
-}
-
 .mobile-search-type {
-    padding: 0 8px;
-
+    display: flex;
+    margin: 8px 0;
+    padding: 8px var(--side-padding);
+    gap: 16px;
+    
     sui-select {
         width: 100%;
         background: rgba(255, 255, 255, 0.08);

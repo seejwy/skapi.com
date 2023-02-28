@@ -1,6 +1,13 @@
 <template lang="pug">
+SearchNavBar(v-if='viewport === "mobile"')
+    div {{ mobilePageTitle }}
+    template(v-slot:right) 
+        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'})}") X2
+
 template(v-if="fetchingData || !groupedUserList?.length")
-    .no-users-found(v-if="!fetchingData") No users found
+    .no-users-found(v-if="!fetchingData") 
+        .title No users found
+        p There were no users matching the query.
 .table-outer-wrapper(v-else)
     .table-actions
         .header-actions
@@ -68,8 +75,10 @@ template(v-if="fetchingData || !groupedUserList?.length")
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
+import { visibleFields } from './users';
 
 import Icon from '@/components/Icon.vue';
+import SearchNavBar from '@/components/SearchNavBar.vue';
 
 const viewport = inject('viewport');
 let route = useRoute();
@@ -83,7 +92,7 @@ let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const appStyle = inject('appStyle');
-
+const navbarBackDestination = inject('navbarBackDestination');
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
 const searchParams = reactive({
@@ -92,14 +101,6 @@ const searchParams = reactive({
     condition: '=',
     value: ''
 });
-
-const navbarBackDestination = inject('navbarBackDestination');
-
-const changeSearchType = (value) => {
-    searchParams.searchFor = value;
-    if(value === 'user_id') searchParams.condition = '=';
-    else searchParams.condition = '>=';
-}
 
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
@@ -150,35 +151,37 @@ const groupedUserList = computed(() => {
     return groupArray(serviceUsers.value.list, numberOfUsersPerPage, numberOfPagePerBatch);
 });
 
-const search = () => {
-    let field = searchField.value.children[0];
-
-    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid USER ID');
-        field.reportValidity();
-    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid email');
-        field.reportValidity();
+const getCleanSearchParams = () => {
+    let params = {
+        ...searchParams
     }
 
-    if(!field.checkValidity()) {
-        return;
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
+    } else if(params.searchFor === 'subscribers') {
+        params.value = Number(params.value);
     }
 
-    callSearch();
+    return params;
 }
-
 const callSearch = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
-    if(route.query.search) {
-        searchParams.searchFor = route.query.search;
-        searchParams.condition = route.query.condition;
-        searchParams.value = route.query.value;
+
+    let params = getCleanSearchParams();
+
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
     }
 
-    skapi.getUsers(searchParams, { 
-        refresh: true, 
+    skapi.getUsers(params, {
+        fetchMore: false,
         limit: fetchLimit 
     }).then((res) => {
         console.log(res.list);
@@ -189,37 +192,8 @@ const callSearch = () => {
         };
     });
 }
+
 const mobileVisibleField = ref('user_id');
-let visibleFields = reactive({
-    suspended: {
-        text: 'Block',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    group: {
-        text: 'Status',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    user_id: {
-        text: 'User ID',
-        show: true,
-    },
-    name: {
-        text: 'Name',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    email: {
-        text: 'Email',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    address: {
-        text: 'Address',
-        show: false,
-    },
-    gender: {
-        text: 'Gender',
-        show: false,
-    },
-});
 
 let showSetting = ref(false);
 const computedVisibleFields = computed(() => {
@@ -243,6 +217,7 @@ const selectAllHandler = (e) => {
     }
 }
 let pageTitle = inject('pageTitle');
+const mobilePageTitle = ref('');
 pageTitle.value = 'Users';
 
 // flag
@@ -340,12 +315,13 @@ function getUsers(refresh = false) {
 }
 
 // get users on created
+if(route.query.search) {
+    searchParams.searchFor = route.query.search;
+    searchParams.condition = route.query.condition;
+    searchParams.value = route.query.value;
+}
 
 if(route.query.search) {
-    navbarBackDestination.value = () => {
-        pageTitle.value = "Users";
-        router.push({name: 'users'});
-    };
     callSearch();
 } else {
     getUsers();
@@ -353,15 +329,13 @@ if(route.query.search) {
 
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
-        let type = (function(route) {
-            if(route === 'user_id') return "User ID";
-            return route.charAt(0).toUpperCase() + route.slice(1);
-        })(route.query.search);
-
-        pageTitle.value = `${type} : ${route.query.value}`;
+        appStyle.mainPadding = '0';
+        pageTitle.value = null;
+        mobilePageTitle.value = `${visibleFields[route.query.search].text} : ${route.query.value}`;
     } else {
         pageTitle.value = 'Users';
-        router.replace({name: 'users'});
+        appStyle.mainPadding = null;
+        router.replace({name: 'users', query: route.query});
     }
 }
 onMounted(() => {
@@ -451,6 +425,7 @@ onBeforeRouteLeave((to, from) => {
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+    padding: 0 var(--side-padding, 0);
 
     .table-actions {
         display: flex;
@@ -621,17 +596,19 @@ onBeforeRouteLeave((to, from) => {
 
 .no-users-found {
     text-align: center;
-    padding: 32px 0;
+    padding: 60px 0 32px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
-    font-size: 28px;
     align-items: center;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     text-align: center;
-    left: 0;
-    right: 0;
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    p {
+        margin: 20px 0 0 0;
+    }
 }
 
 .paginator {
@@ -696,7 +673,7 @@ onBeforeRouteLeave((to, from) => {
     }
 
     .table-outer-wrapper {
-        margin: auto -16px;
+        margin: auto -20px;
         border-radius: 0;
         box-shadow: none;
         border: none;
@@ -708,12 +685,6 @@ onBeforeRouteLeave((to, from) => {
                 margin: -14px 0;
             }
         }
-    }
-}
-
-@media @phone {
-    .table-outer-wrapper {
-        margin: auto -8px;
     }
 }
 

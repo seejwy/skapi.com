@@ -45,6 +45,11 @@
 
   @media @tablet {
     --head-space: 40px;
+    --side-padding: 20px;
+  }
+
+  @media @phone {
+    --side-padding: 16px;
   }
 }
 
@@ -122,27 +127,25 @@ body {
 main {
   max-width: 1000px;
   margin: auto;
-  padding: 0 24px 80px;
+  padding: 0 var(--side-padding, 24px) 80px;
   box-sizing: content-box;
-
-  @media @tablet {
-    padding: 0 16px 80px;
-  }
-
-  @media @phone {
-    padding: 0 8px 80px;
-  }
 
   .head-space-helper {
     margin-top: var(--head-space);
   }
   
   .page-header {
-      margin-bottom: 20px;
+      margin-bottom: 60px;
 
       h1, h2 {
         font-size: 28px;
         margin: 0;
+      }
+
+      @media @phone {
+        h2 {
+          font-size: 20px;
+        }
       }
 
       p { 
@@ -161,11 +164,9 @@ main {
 
       @media @tablet {      
 
-        h1 {
+        h1:not(.fixed) {
           display: none;
         }
-
-        margin-bottom: 40px;
       }
   }
 }
@@ -262,7 +263,33 @@ sui-input[type=submit] {
     }
   }
 }
+
+sui-input[type=checkbox] {
+  filter: none;
+  border-radius: 2px;
+  border-width: 2px;
+  cursor: pointer;
+
+  &[checked] {
+    border: none;
+    color: #fff;
+    background: var(--primary-color);
+    box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%);
+  }
+}
+
 .dashboard {
+  sui-input[type=checkbox] {
+    border-color: #ffffff;
+  
+    &[checked] {
+      color: rgba(0, 0, 0, 0.5);
+      background: #ffffff;
+    }
+  }
+}
+
+.dashboard { 
   sui-input {
     input::placeholder {
       color: rgba(255, 255, 255, 0.4);
@@ -316,7 +343,7 @@ sui-button {
   border: none;
   box-shadow: none;
 
-  &:hover {
+  &:not([disabled]):hover {
     background: #FFFFFF14;
   }
 }

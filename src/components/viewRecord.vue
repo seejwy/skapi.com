@@ -98,7 +98,8 @@
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
 	.foot(v-if='!isMobileUrl')
-		sui-button.line-button(@click="editRecord") Edit
+		sui-button.line-button(type="button" @click="emit('close', '');" style="margin-right: 16px;") Close
+		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit")
 	form(ref="formEl")
 		.head(:class="{'mobile-head': isMobileUrl}")
@@ -171,7 +172,7 @@
 						label
 							sui-input(
 								type="checkbox" 
-								style="margin-right: 8px; color:white;"
+								style="margin-right: 8px;"
 								@change="e=>form.reference.reference_limit = e.target.checked ? null : 0"
 								:checked="form.reference?.reference_limit !== 0 ? true : null")
 
@@ -183,7 +184,7 @@
 							label
 								span Allow Multiple Reference
 								sui-input#allow_multiple_reference(
-									style="color:white; margin-left: 8px"
+									style="margin-left: 8px"
 									type="checkbox"
 									@input="(e)=>form.reference.allow_multiple_reference = e.target.checked"
 									:checked="form.reference.allow_multiple_reference ? true : null")
@@ -327,10 +328,6 @@ const isMobileUrl = route.query?.id;
 watch(() => props.record, () => {
 	indexValueType.value = typeof props.record?.index?.value || 'string';
 });
-
-if(state.viewport === 'mobile') {
-	appStyle.background = '#333333';
-}
 
 const editRecord = () => {
 	if (!props?.record) {
@@ -610,9 +607,6 @@ const close = () => {
 	recordToOpen.value = null;
 };
 
-onBeforeUnmount(() => {
-	appStyle.background = null;
-})
 defineExpose({
 	close,
 	editRecord,
@@ -729,6 +723,24 @@ defineExpose({
 		.data-row {
 			margin-bottom: 72px;
 
+			& .data-row:nth-child(2) {
+				margin-top: 72px;
+
+				&::before {
+					content: '';
+					display: block;
+					position: relative;
+					top: -36px;
+					height: 2px;
+					width: 100%;
+					background-color: rgba(255, 255, 255, 0.08);
+				}
+			}
+
+			& .data-row:last-child {
+				margin-bottom: 0;
+			}
+			
 			.action {
 				float: right;
 			}
@@ -984,25 +996,11 @@ defineExpose({
 				}
 			}
 
-			sui-input:not([type=radio]) {
+			sui-input:not([type=radio]):not([type=checkbox]) {
 				background: rgba(255, 255, 255, 0.08);
 				border: 1px solid rgba(255, 255, 255, 0.2);
 				box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 				border-radius: 5px;
-
-				&[type=checkbox] {
-					filter: none;
-					border-radius: 2px;
-					border-width: 2px;
-					border-color: rgba(255, 255, 255, 1);
-
-					&[checked] {
-						border: none;
-						color: rgba(0, 0, 0, 0.5);
-						background: rgba(255, 255, 255, 1);
-						box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
-					}
-				}
 			}
 
 			sui-select {

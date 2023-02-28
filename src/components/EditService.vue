@@ -18,6 +18,7 @@
         hr
         div(style="text-align: right; margin-bottom: 20px;")
             sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
+        sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning") Save
 sui-overlay(ref="deleteConfirmOverlay")
     .popup
@@ -26,7 +27,7 @@ sui-overlay(ref="deleteConfirmOverlay")
             div Deleting Service?
         .body 
             p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
-            p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
+            p To confirm deletion, enter ServicFsae ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
 
         .foot

@@ -90,7 +90,7 @@ const validatePasswordConfirm = (event) => {
 
 function signup() {
     promiseRunning.value = true;
-    skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: `${import.meta.env.VITE_BASE_URL}/success`}).then(result => {
+    skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: '/success'}).then(result => {
         router.push('/confirmation');
     }).catch(e => {
         console.log("SIGNUP", {e});
@@ -122,6 +122,8 @@ function signup() {
     align-items: center;
     justify-content: center;
     padding: 60px 0;
+    min-height: calc(100vh - 140px);
+
     @media @tablet {
         align-items: flex-start;
         padding: 0;
@@ -137,6 +139,7 @@ function signup() {
     border: 1px solid #808080;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
+    margin-top: 60px;
 
     @media @tablet {
         width: 100%;

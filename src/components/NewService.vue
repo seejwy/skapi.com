@@ -4,6 +4,7 @@
         .overlay-container-title.hideOnTablet Create a New Service
         .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
         sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
+        sui-button.line-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
         SubmitButton(:loading="isCreatingService") Create Service
 </template>
 <!-- script below -->
@@ -17,6 +18,7 @@ import SubmitButton from './SubmitButton.vue';
 
 let route = useRoute();
 let router = useRouter();
+const emit = defineEmits(['close']);
 const isCreatingService = ref(false);
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
@@ -1327,6 +1329,7 @@ const createNewService = async () => {
     &-title {
         font-weight: bold;
         font-size: 28px;
+        margin-bottom: 40px;
     }
 
     &-text {
@@ -1340,6 +1343,10 @@ const createNewService = async () => {
         margin-bottom: 40px;
         width: 100%;
         background-color: rgba(255, 255, 255, .08);
+
+        input::placeholder {
+            color: rgba(255, 255, 255, .4);
+        }
 
         &[type=submit] {    
             display: inline-block;        

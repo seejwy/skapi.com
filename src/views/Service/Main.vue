@@ -38,13 +38,13 @@
         router-link(to='/')
             //(:to="{name: 'mail'}")
             Icon mail
-Transition(name="toast")
-    .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
-        Icon warning_bell
-        .title Email Verfication is Needed
-        div
-        .body Please verify your email to prevent your services from shutting down.
-        Icon.close(@click="state.showVerificationNotification = false") X2
+//- Transition(name="toast")
+//-     .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
+//-         Icon warning_bell
+//-         .title Email Verfication is Needed
+//-         div
+//-         .body Please verify your email to prevent your services from shutting down.
+//-         Icon.close(@click="state.showVerificationNotification = false") X2
 </template>
 
 <style lang="less">
@@ -161,12 +161,12 @@ provide('fetchingData', ref(false));
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service';
 
-let overlay;
+let overlay = ref(null);
 
 onMounted(() => {
     awaitConnection.then(()=>{
         if(!state.user) {
-            overlay?.open();
+            overlay.value.open();
         }
         recordTables.value = null;
     });

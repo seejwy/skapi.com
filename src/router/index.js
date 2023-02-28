@@ -116,7 +116,7 @@ const router = createRouter({
                   component: ()=>import('../views/Service/Users/MobileSearch.vue')
                 },
                 {
-                  path: ':search',
+                  path: 'mobile',
                   name: 'usersSearch',
                   component: ()=>import('../views/Service/Users/MobileResult.vue')
                 },

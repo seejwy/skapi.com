@@ -13,8 +13,6 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;' @click='()=>addRecord
 
 // record view
 sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
-    .close-record-overlay(@click="()=>viewRecord.close()")
-        Icon X2
     .view-record-overlay
         ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close()")
 
@@ -41,7 +39,7 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
             template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList.length)")
                 template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1].length)")
                     // when v-for by number, it starts with 1
-                    .tableWrapper(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
+                    .table-wrapper(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
                         .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
                             span {{ t.table }}
                             div
@@ -368,7 +366,7 @@ onBeforeUnmount(() => {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25),
     inset 1px 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
-    margin: 0;
+    margin: 20px 0 0 0;
     padding: 24px 20px;
 
     @media @tablet {
@@ -383,16 +381,19 @@ onBeforeUnmount(() => {
     }
 
     .header {
-        padding: 0 16px;
+        padding: 0 16px 0 16px;
         color: rgba(255, 255, 255, 0.4);
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        height: 52px;
+
+        & + .table-wrapper {
+            margin-top: 24px;
+        }
     }
 
-    .tableWrapper {
-        background-color: #262626;
+    .table-wrapper {
+        background-color: #333333;
         border-radius: 8px;
 
         .records {
@@ -500,9 +501,8 @@ onBeforeUnmount(() => {
     }
 
     .no-records {
-        background-color: #4A4A4A;
         color: rgba(255, 255, 255, 0.4);
-        padding: 32px 0;
+        padding: 60px 0 60px 0;
         margin: 0 -20px -24px -20px;
         border-radius: 0 0 8px 8px;
         text-align: center;

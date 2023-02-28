@@ -45,49 +45,4 @@ provide('recordToOpen', ref(null));
         transform: translate(-50%, -50%);
     }
 }
-
-.mobile-search-nav {
-    position: sticky;
-    top: 0;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 28px;
-    background-color: #333;
-    z-index: 1;
-    padding: 0 8px;
-
-    &::after {
-        display: block;
-        position: absolute;
-        width: 100%;
-        left: 0;
-        bottom: 0;
-        content: '';
-        height: 1px;
-        background-color: rgba(255 255 255 / 60%);
-        box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .back-button {
-        display: inline;
-        height: 32px;
-        width: 32px;
-        color: rgba(255, 255, 255, .4);
-    }
-
-    sui-input {
-        box-shadow: none;
-        width: 100%;
-
-        input:focus {
-            outline: none;
-        }
-
-        &+span {
-            position: absolute;
-            right: 8px;
-        }
-    }
-}
 </style>

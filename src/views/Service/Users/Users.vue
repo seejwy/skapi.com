@@ -7,35 +7,55 @@
     div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'")
     form(@submit.prevent="search")
-        .select-input(style='width: 400px;margin: 8px 0;' @click.stop)
-            .select-field
-                sui-select(name='search_type' :value="searchParams.searchFor" @change="(e) => changeSearchType(e.target.value)")
-                    option(value="user_id" selected) User ID
-                    option(value="email") Email
-                    option(value="name") Name
-            .input-field
-                sui-input(
-                    ref="searchField" 
-                    type="search" 
-                    autocomplete="off" 
-                    placeholder="Search" 
-                    :value="searchParams.value" 
-                    @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
-                    required)
+        .search-input-wrapper
+            sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
+                option(value="user_id") User ID
+                option(value="email") Email
+                option(value="phone_number") Phone
+                option(value="address") Address
+                option(value="gender") Gender
+                option(value="name") Name
+                option(value="locale") Locale
+                option(value="timestamp") Date Created
+                option(value="birthdate") Birth Date
+                option(value="subscribers") Subscribers
+        
+            .select-input(@click.stop)
+                .input-field
+                    sui-input(
+                        ref="searchField" 
+                        type="search" 
+                        autocomplete="off" 
+                        :placeholder="placeholder(searchParams.searchFor)" 
+                        :value="searchParams.value" 
+                        @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
+                        required)
+                .select-field(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers' || searchParams.searchFor === 'birthdate'")
+                    sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
+                        option(value=">" v-if="searchParams.searchFor === 'birthdate'") &gt;
+                        option(value=">=" v-if="searchParams.searchFor !== 'birthdate'") &gt;=
+                        option(value="<" v-if="searchParams.searchFor === 'birthdate'") &lt;
+                        option(value="<=" v-if="searchParams.searchFor !== 'birthdate'") &lt;=
+                        option(value="=") =
     
     .actions
         sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon block
-            span.hideOnTablet block
+            span.hide-when-pre-tablet block
         sui-button.text-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
             Icon unblock
-            span.hideOnTablet unblock
+            span.hide-when-pre-tablet unblock
         sui-button.text-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
             Icon trash
-            span.hideOnTablet delete
+            span.hide-when-pre-tablet delete
 
 .table-outer-wrapper
-    .table-actions
+    .search-query(v-if="route.query.search && viewport === 'desktop'")
+        span Result of {{ visibleFields[route.query.search].text }} : "{{ route.query.value }}" {{ route.query.condition }}
+        .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
+            span(style="vertical-align:middle;") Clear
+            Icon X2
+    .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
         .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
@@ -51,7 +71,7 @@
             template(v-else)
                 sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                     option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
-        Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
+        Icon.refresh(v-if="viewport === 'desktop' && !route.query.search" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
@@ -62,7 +82,7 @@
 
     .table-wrapper
         table
-            thead
+            thead(v-if="groupedUserList?.length && !fetchingData")
                 tr(:class="{rounded: fetchingData || null}")
                     th
                         sui-input(v-if="viewport === 'desktop'" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
@@ -105,7 +125,7 @@
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
     .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
-        template(v-if="searchParams.value === ''")     
+        template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
             p You have no existing users yet
         template(v-else) 
@@ -147,6 +167,7 @@
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
+import { changeSearchCondition, visibleFields, getValidationMessage, placeholder } from './users';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
@@ -167,21 +188,21 @@ const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
 const searchParams = reactive({
     service: serviceId,
-    searchFor: 'user_id',
-    condition: '=',
+    searchFor: 'timestamp',
+    condition: '>=',
     value: ''
 });
-
 const navbarBackDestination = inject('navbarBackDestination');
-
-const changeSearchType = (value) => {
-    searchParams.searchFor = value;
-    if(value === 'user_id') searchParams.condition = '=';
-    else searchParams.condition = '>=';
-}
 
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
+}
+
+const changeSearchType = (value) => {
+    let field = searchField.value.children[0];
+    field.setCustomValidity('');
+    
+    changeSearchCondition(value, searchParams);
 }
 
 const blockUsers = async () => {
@@ -231,12 +252,10 @@ const groupedUserList = computed(() => {
 
 const search = () => {
     let field = searchField.value.children[0];
-
-    if(searchParams.searchFor === 'user_id' && !skapi.validate.userId(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid USER ID');
-        field.reportValidity();
-    } else if(searchParams.searchFor === 'email' && !skapi.validate.email(searchParams.value)) {
-        field.setCustomValidity('Please enter a valid email');
+    
+    let errorMessage = getValidationMessage(searchParams);
+    if(errorMessage) {
+        field.setCustomValidity(errorMessage);
         field.reportValidity();
     }
 
@@ -244,20 +263,49 @@ const search = () => {
         return;
     }
 
+    router.push({
+        name:"users",
+        query: {
+            search: searchParams.searchFor, 
+            condition: searchParams.condition, 
+            value: searchParams.value
+        }
+    });
+
     callSearch();
 }
 
+const getCleanSearchParams = () => {
+    let params = {
+        ...searchParams
+    }
+
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
+    } else if(params.searchFor === 'subscribers') {
+        params.value = Number(params.value);
+    }
+
+    return params;
+}
 const callSearch = () => {
     fetchingData.value = true;
     serviceUsers.value = null;
-    if(route.query.search) {
-        searchParams.searchFor = route.query.search;
-        searchParams.condition = route.query.condition;
-        searchParams.value = route.query.value;
+
+    let params = getCleanSearchParams();
+
+    if(params.searchFor === 'timestamp') {
+        if(params.value === '') params.value = 0;
+        else {
+            params.value = new Date(params.value).getTime();
+        }
     }
 
-    skapi.getUsers(searchParams, { 
-        refresh: true, 
+    skapi.getUsers(params, {
+        fetchMore: false,
         limit: fetchLimit 
     }).then((res) => {
         console.log(res.list);
@@ -269,43 +317,16 @@ const callSearch = () => {
     });
 }
 const mobileVisibleField = ref('user_id');
-let visibleFields = reactive({
-    suspended: {
-        text: 'Block',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    group: {
-        text: 'Status',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    user_id: {
-        text: 'User ID',
-        show: true,
-    },
-    name: {
-        text: 'Name',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    email: {
-        text: 'Email',
-        show: viewport.value === 'desktop' ? true : false,
-    },
-    address: {
-        text: 'Address',
-        show: false,
-    },
-    gender: {
-        text: 'Gender',
-        show: false,
-    },
-});
 
 let showSetting = ref(false);
+
 const computedVisibleFields = computed(() => {
     if(viewport.value === 'desktop') return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
     return [mobileVisibleField.value];
 });
+
 const selectedUsers = ref([]);
+
 const userSelectionHandler = (e) => {
     if (e.target.checked) {
         selectedUsers.value.push(e.target.value);
@@ -313,6 +334,7 @@ const userSelectionHandler = (e) => {
         selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
     }
 };
+
 const selectAllHandler = (e) => {
     selectedUsers.value = [];
     if (e.target.checked) {
@@ -321,6 +343,7 @@ const selectAllHandler = (e) => {
         });
     }
 };
+
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'Users';
 
@@ -333,6 +356,7 @@ let serviceUsers = inject('serviceUsers');
 let searchResult = inject('searchResult');
 
 let getMoreUsersQueue = null;
+
 async function getMoreUsers() {
     if (serviceUsers.value.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
         return;
@@ -349,13 +373,15 @@ async function getMoreUsers() {
     if (getMoreUsersQueue instanceof Promise) {
         return;
     }
-
+    
+    let params = getCleanSearchParams();
 
     getMoreUsersQueue = skapi.getUsers(
+        route.query.search ? params :
         {
             service: serviceId,
             searchFor: 'timestamp',
-            condition: '>',
+            condition: '>=',
             value: 0
         }, { fetchMore: true, limit: fetchLimit }).catch(err => {
             fetchingData.value = false;
@@ -375,7 +401,6 @@ async function getMoreUsers() {
     fetchingData.value = false;
 }
 
-
 const mobileScrollHandler = (e) => {
     if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
         getMoreUsers();
@@ -384,7 +409,6 @@ const mobileScrollHandler = (e) => {
 
 function getUsers(refresh = false) {
     // initial table fetch
-
     if (!refresh && serviceUsers.value) {
         // bypass if already fetched
         fetchingData.value = false;
@@ -397,11 +421,11 @@ function getUsers(refresh = false) {
     let params = {
         service: serviceId,
         searchFor: 'timestamp',
-        condition: '>',
+        condition: '>=',
         value: 0
     };
 
-    skapi.getUsers(params, { limit: fetchLimit })
+    skapi.getUsers(route.query.search ? searchParams : params, { limit: fetchLimit })
         .then(t => {
             serviceUsers.value = {
                 endOfList: t.endOfList,
@@ -419,6 +443,11 @@ function getUsers(refresh = false) {
 }
 
 // get users on created
+if(route.query.search) {
+    searchParams.searchFor = route.query.search;
+    searchParams.condition = route.query.condition;
+    searchParams.value = route.query.value;
+}
 
 if(route.query.search) {
     navbarBackDestination.value = () => {
@@ -432,21 +461,17 @@ if(route.query.search) {
 
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
-        let type = (function(route) {
-            if(route === 'user_id') return "User ID";
-            return route.charAt(0).toUpperCase() + route.slice(1);
-        })(route.query.search);
-
-        pageTitle.value = `${type} : ${route.query.value}`;
+        router.replace({name: 'usersSearch', query: route.query});
     } else {
         pageTitle.value = 'Users';
-        router.replace({name: 'users'});
     }
 }
+
 onMounted(() => {
     window.addEventListener('scroll', mobileScrollHandler, { passive: true });
     toggleMobileDesktopSearchView();
 });
+
 watch(() => viewport.value, (viewport) => {
     selectedUsers.value = [];
     toggleMobileDesktopSearchView();
@@ -456,11 +481,21 @@ watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () 
     selectedUsers.value = [];
 });
 
+watch(() => route.query, () => {
+    if(route.query.search) {
+        searchParams.searchFor = route.query.search;
+        searchParams.condition = route.query.condition;
+        searchParams.value = route.query.value;
+    } else {
+        getUsers(true);
+    }
+})
+
 document.body.classList.add('table');
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
     window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
-})
+});
 
 onBeforeRouteLeave((to, from) => {
     if(from.params.search && !to.params.search) {
@@ -508,8 +543,6 @@ onBeforeRouteLeave((to, from) => {
         }
 
         sui-input {
-            padding: 0;
-
             input::placeholder {
                 background-image: url(/src/assets/img/icons/search.svg);
                 background-size: contain;
@@ -523,22 +556,52 @@ onBeforeRouteLeave((to, from) => {
 
 .table-outer-wrapper {
     position: relative;
-    margin-top: 36px;
+    margin-top: 20px;
     background-color: #434343;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+
+    .search-query {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        padding: 24px 36px 0 20px;
+        background: #434343;
+        border-radius: 8px 8px 0 0;
+
+        & + .table-actions {
+            border-radius: 0;
+        }
+
+        svg {
+            margin-left: 4px;
+        }
+    }
 
     .table-actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
         background: #434343;
-        padding: 14px 14px 14px 20px;
+        padding: 24px 36px 24px 20px;
         border-radius: 8px 8px 0 0;
+        color: rgba(255, 255, 255, 0.6);
+
+        @media @tablet {        
+            padding: 14px 16px 14px 20px;
+        }
 
         &>* {
             cursor: pointer;
+        }
+
+        &.rounded-border {
+            border-radius: 8px;
+        }
+
+        .refresh {
+            color: #fff;
         }
 
         .header-actions {
@@ -589,11 +652,6 @@ onBeforeRouteLeave((to, from) => {
                 margin-left: 12px;
             }
         }
-
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
     }
 }
 
@@ -604,12 +662,7 @@ onBeforeRouteLeave((to, from) => {
     table {
         min-width: 100%;
         border-collapse: collapse;
-
-        sui-input {
-            color: #fff;
-            cursor: pointer;
-        }
-
+        
         thead,
         tbody {
             tr {
@@ -643,6 +696,7 @@ onBeforeRouteLeave((to, from) => {
             th {
                 position: sticky;
                 background-color: #434343;
+                color: rgba(255, 255, 255, 0.6);
                 top: 0;
                 text-align: left;
 
@@ -703,8 +757,7 @@ onBeforeRouteLeave((to, from) => {
 
 .no-users-found {
     text-align: center;
-    padding: 32px 0;
-    background-color: #4A4A4A;
+    padding: 40px 0 60px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
 
@@ -714,6 +767,10 @@ onBeforeRouteLeave((to, from) => {
     
     p {
         margin: 20px 0 0 0;
+    }
+
+    @media @tablet {    
+        padding: 60px 0;
     }
 }
 
@@ -781,7 +838,7 @@ onBeforeRouteLeave((to, from) => {
     }
 
     .table-outer-wrapper {
-        margin: auto -16px;
+        margin: auto -20px;
         border-radius: 0;
         box-shadow: none;
         border: none;
@@ -799,7 +856,7 @@ onBeforeRouteLeave((to, from) => {
 
 @media @phone {
     .table-outer-wrapper {
-        margin: auto -8px;
+        margin: auto -16px;
     }
 }
 
@@ -832,6 +889,87 @@ onBeforeRouteLeave((to, from) => {
     .v-leave-to {
         opacity: 0;
         transform: translateY(100px);
+    }
+}
+
+.search-input-wrapper {
+    margin: 8px 0px;
+
+    & > sui-select {
+        background: rgba(255, 255, 255, 0.08);
+    }
+}
+.select-input {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--input-box-shadow);
+  border-radius: 4px;
+  display: inline-flex;
+  height: calc(100% + 9.6px + 9.6px);
+  align-items: center;
+  max-width: 100%;
+  width: 300px;
+  margin-left: 16px;
+  position: relative;
+
+  &>* {
+    display: inline-block;
+    position: relative;
+  }
+
+  &>*:first-child {
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      vertical-align: middle;
+      background-color: rgba(255, 255, 255, .2);
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+    }
+  }
+
+  &>.select-field {
+    sui-select {
+      width: 8em;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+  }
+
+  &>.input-field {
+    display: inline-flex;
+    flex-grow: 1;
+    align-items: center;
+
+    sui-input {
+      width: 100%;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+
+    sui-input {
+      input {
+        color: #fff;
+        margin-left: 12px;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+}
+
+.hide-when-pre-tablet {
+    @media screen and (max-width: 870px) {
+        display: none;
     }
 }
 </style>

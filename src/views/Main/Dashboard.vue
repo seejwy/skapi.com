@@ -4,7 +4,7 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
-        h1 Services
+        h1.fixed Services
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
         .action
             sui-button.with-icon(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
@@ -22,27 +22,26 @@ div(v-else-if="state?.user")
                     .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
                         .title {{  key }}
                         .value {{ value || '-' }}
+    .container.empty.animation-skeleton(v-else-if="isFetchingServices")
     .container.empty(v-else)
         .title No Services
         span Get started by creating a new service. 
-    Transition(name="toast")
-        .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
-            Icon warning_bell
-            .title Email Verfication is Needed
-            div
-            .body Please verify your email to prevent your services from shutting down.
-            Icon.close(@click="state.showVerificationNotification = false") X2
+    //- Transition(name="toast")
+    //-     .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
+    //-         Icon warning_bell
+    //-         .title Email Verfication is Needed
+    //-         div
+    //-         .body Please verify your email to prevent your services from shutting down.
+    //-         Icon.close(@click="state.showVerificationNotification = false") X2
     sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isOpen = false")
         div.overlay
-            .close(@click="isOpen = false")
-                Icon X2
-            NewService
+            NewService(@close="isOpen = false")
 sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
     Login
 Login(v-else)
 </template>
 <script setup>
-import { inject, ref, watch, nextTick, onUpdated } from 'vue';
+import { inject, ref, watch, nextTick, onUpdated, onMounted, computed } from 'vue';
 import { state, skapi, dateFormat, awaitConnection } from '@/main';
 import Login from './Login.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -57,9 +56,10 @@ let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
-let overlay;
+let overlay = ref(null);
 const newServiceWindow = ref(null);
 const isOpen = ref(false);
+const isFetchingServices = ref(true);
 
 const filterServiceDetails = (service) => {
     return {
@@ -74,10 +74,18 @@ const openNewServiceWindow = () => {
     else newServiceWindow.value.open();
 }
 
+onMounted(() => {
+    awaitConnection.then(()=>{
+        if(!state.user && state.viewport === 'desktop') {
+            overlay.value.open();
+        }
+    });
+});
+
 onUpdated(() => {
     awaitConnection.then(()=>{
         if(!state.user && state.viewport === 'desktop') {
-            overlay.open();
+            overlay.value.open();
         }
     });
 });
@@ -89,7 +97,7 @@ async function getServices(gs) {
 
     try {
         let services = await gs;
-
+        isFetchingServices.value = false;
         if(serviceList.value === null) {
             serviceList.value = [];
             for(let region in services) {

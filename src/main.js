@@ -2,8 +2,6 @@ import { createApp, reactive, watch } from 'vue';
 import App from './App.vue';
 import router from './router';
 import './assets/main.less';
-// import { defineCustomElements } from 'skateui/loader';
-// defineCustomElements(window);
 
 // init state
 const state = reactive({

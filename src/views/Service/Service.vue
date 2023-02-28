@@ -29,7 +29,6 @@ template(v-else)
                 h2 Service Setting 
             .actions(@click="edit")
                 Icon pencil
-                span Edit
         .inner-container 
             .title-actions-wrapper.hideOnTablet
                 .title-wrapper
@@ -59,31 +58,29 @@ template(v-else)
                 .title-wrapper
                     h2 Manage your Service 
             .service-grid 
-                .service-grid-item
+                RouterLink(:to="{name: 'users'}").service-grid-item
                     .content
                         .title
                             Icon users
                             span Authentication
                         .body Users are data that your service user's will store and read from your service database. 
-                    RouterLink(:to="{name: 'users'}") Go to Users >
-                .service-grid-item  
+                    .goto Go to Users >
+                RouterLink(:to="{name: 'records'}").service-grid-item  
                     .content
                         .title
                             Icon folder_open
                             span Record
                         .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
-                    RouterLink(:to="{name: 'records'}") Go to Records >
-                .service-grid-item 
+                    .goto Go to Records >
+                RouterLink(to="/").service-grid-item 
                     .content
                         .title
                             Icon mail
                             span Email System
                         .body Users are data that your service user's will store and read from your service database. 
-                    RouterLink(to="/") Go to Mail >
+                    .goto Go to Mail >
     sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isEdit = false")
         div.overlay
-            .close(@click="isEdit = false")
-                Icon X2
             EditService(@close="isEdit = false")
 </template>
 <script setup>
@@ -243,7 +240,7 @@ watch(() => isEdit.value, async () => {
     .title-actions-wrapper {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
 
         h2 {        
             font-size: 20px;
@@ -289,10 +286,6 @@ watch(() => isEdit.value, async () => {
         }
     }
 
-    @media @phone {    
-        margin: 16px 0;
-    }
-
     &:last-child {
         margin-bottom: 0;
     }
@@ -300,11 +293,21 @@ watch(() => isEdit.value, async () => {
 
 .information-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 160px);
-    column-gap: 16px;
-    row-gap: 40px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 28px;
+
+    @media @tablet {   
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media @phone {
+        grid-template-columns: 1fr;
+    }
 
     &-item {
+        min-width: 0;
+
         .name {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
@@ -314,17 +317,16 @@ watch(() => isEdit.value, async () => {
         .value {
             font-weight: bold;
             color: rgba(255, 255, 255, 0.85);
+            word-break: break-all;
         }
-
-        &.span-2 {
-            grid-column: span 2;
-        }
-
+        
         @media @phone {
+        // @media screen and (max-width: 520px) {
             &.span-2 {
-                grid-column: span 1;
+                grid-column: span 2;
             }
         }
+
     }
 }
 
@@ -370,7 +372,7 @@ watch(() => isEdit.value, async () => {
 .setting-grid {
     display: grid;
     column-gap: 12px;
-    row-gap:36px;
+    row-gap:28px;
     grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
 
     &-item {
@@ -462,13 +464,19 @@ watch(() => isEdit.value, async () => {
             }
         }
 
-        a {
+        .goto {
             text-align: left;
             margin-top: 40px;
             color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
             text-decoration: none;
         }
+    }
+    a.service-grid-item {
+        text-align: left;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 14px;
+        text-decoration: none;
     }
 
     @media screen and (max-width: 940px) {

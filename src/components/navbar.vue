@@ -3,7 +3,8 @@ sui-nav#top-nav(auto-hide)
     .nav_align
         .title
             Icon.showOnTablet.clickable.back-button(v-if='!props.isParentLevel' @click="toParent") left
-            span.title-text(:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null" v-html="pageTitle || ''")
+            img.logo(v-if="pageTitle === 'skapi'" src="@/assets/img/logo.svg")
+            span.title-text(v-else:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null" v-html="pageTitle || ''")
         .menu
             .hideOnTablet
                 slot
@@ -65,16 +66,11 @@ sui-nav#top-nav(auto-hide)
 
 sui-nav#top-nav {
     box-shadow: none;
-    padding: 0 24px;
+    padding: 0 var(--side-padding, 24px);
     color: #fff;
 
     @media @tablet {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-        padding: 0 16px;
-    }
-
-    @media @phone {
-        padding: 0 8px;
     }
 
     &>.nav_align {
@@ -129,6 +125,10 @@ sui-nav#top-nav {
                     user-select: none;
                     font-size: 20px;
                     vertical-align: middle;
+
+                    @media @tablet {
+                        font-weight: bold;
+                    }
                 }
             }
         }
@@ -137,6 +137,10 @@ sui-nav#top-nav {
     .dashboard & > .nav_align .menu ul li a{
         color: rgba(255, 255, 255, .6);
     }
+}
+
+.logo {
+    height: 35px;
 }
 </style>
 <script setup>

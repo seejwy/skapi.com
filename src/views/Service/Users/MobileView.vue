@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
 @import '@/assets/variables.less';
 .head {
     background-color: #595959;
-    margin: 0 -16px;
+    margin: 0 -20px;
     .tab {
         background-color: #333333;
         display: inline-block;
@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
     }
 
     @media @phone {
-        margin: 0 -8px;
+        margin: 0 -16px;
     }
 }
 .container {
@@ -141,11 +141,11 @@ onBeforeUnmount(() => {
     }
 
     @media @tablet {
-        margin: 0 -16px;
+        margin: 0 -20px;
     }
     
     @media @phone {
-        margin: 0 -8px;
+        margin: 0 -16px;
     }
 }
 </style>

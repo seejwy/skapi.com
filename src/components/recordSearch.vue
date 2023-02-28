@@ -4,8 +4,9 @@ form(
     :action="'/dashboard/' + serviceId + '/records/search'"
     @submit.prevent="submitSearch")
     // navbar for mobile search
-    .mobile-search-nav(v-if='viewport === "mobile"')
-        Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'records'})") left
+    SearchNavBar(v-if='viewport === "mobile"')
+        template(v-slot:left)    
+            Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'records'})") left
         sui-input(
             type="search"
             :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -16,7 +17,8 @@ form(
             @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
             @mounted="focusMe"
             autocomplete="off")
-        Icon.showOnTablet.placeholder-icon(v-if="!searchForm.value" style='width:32px;') search
+        template(v-slot:right) 
+            Icon.showOnTablet.placeholder-icon(style='width:32px;') search
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='searchForm.isAdvanced = false')
@@ -44,7 +46,7 @@ form(
                     autocomplete="off")
                 Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") filter
 
-        .mobileSearchType(v-else)
+        .mobile-search-type(v-else)
             sui-select(
                 name='search_type'
                 :value="searchForm.type"
@@ -195,7 +197,8 @@ form(
 import { inject, reactive, ref, watch } from 'vue';
 import { skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
-import NavBar from '@/components/navbar.vue';
+
+import SearchNavBar from '@/components/SearchNavBar.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
@@ -417,9 +420,9 @@ switch (route.name) {
 @import '@/assets/variables.less';
 
 form {
-    .mobileSearchType {
+    .mobile-search-type {
         width: 100%;
-        padding: 8px;
+        padding: 8px var(--side-padding);
 
         sui-select {
             width: 100%;
@@ -474,7 +477,7 @@ form {
         align-items: center;
         color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
-        padding: 8px;
+        padding: 8px var(--side-padding);
 
         hr {
             flex-grow: 1;
@@ -562,5 +565,70 @@ form {
     flex-shrink: 0;
     margin-right: 12px;
     color: rgba(255, 255, 255, .6);
+}
+
+.select-input {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--input-box-shadow);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  position: relative;
+
+  &>* {
+    display: inline-block;
+    position: relative;
+  }
+
+  &>*:first-child {
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      vertical-align: middle;
+      background-color: rgba(255, 255, 255, .2);
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+    }
+  }
+
+  &>.select-field {
+    sui-select {
+      width: 8em;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+  }
+
+  &>.input-field {
+    display: inline-flex;
+    flex-grow: 1;
+    align-items: center;
+
+    sui-input {
+      width: 100%;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
+    }
+
+    sui-input {
+      input {
+        color: #fff;
+        margin-left: 12px;
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
 }
 </style>

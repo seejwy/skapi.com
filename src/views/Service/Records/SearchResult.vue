@@ -1,18 +1,20 @@
 <template lang="pug">
-.recordPageHead.hideOnTablet
+SearchNavBar(v-if='viewport === "mobile"')
+    div {{ searchTitle }}
+    template(v-slot:right) 
+        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchRecord'})}") X2
+
+.page-header.head-space-helper.hideOnTablet 
     h1 Record
-    span This is some text
-    br
-    sui-button.line-button(style="float:right") Read Doc
-    div(style="clear:both;")
+    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+    .action
+        sui-button.line-button Read Doc
 
 // search form
 RecordSearch#recordSearch.hideOnTablet
 .hideOnTablet(style="clear:both;")
 
 sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
-    .close-record-overlay(@click="()=>viewRecord.close()")
-        Icon X2
     .view-record-overlay
         ViewRecord(:record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close()")
 
@@ -45,13 +47,11 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
                 span &nbsp;
 
     template(v-else)
-        .noRecords(v-if='!searchResult.list.length')
-            div
-                sui-flextext(min-size='16' max-size='32') No Records
-                br
+        div(v-if='!searchResult.list.length')
+            .no-records-found
+                .title No Records Found
                 p There was no record matching the query:
-                .showOnTablet(v-if='route.query?.access_group' style="text-align: left")
-                    br
+                .query.showOnTablet(v-if='route.query?.access_group')
                     span Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
                     template(v-if='route.query.search_type === "user" && route.query?.table')
                         br
@@ -112,6 +112,8 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
 import { inject, ref, watch, computed, nextTick, onBeforeUnmount, onMounted } from 'vue';
 import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
+
+import SearchNavBar from '@/components/SearchNavBar.vue';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
@@ -128,7 +130,6 @@ let record = inject('recordToOpen');
 record.value = null;
 
 function adjustBackgroundColor(n) {
-    console.log("Adjusting", n);
     if (n === 'mobile') {
         // remove padding for zebra list to extend to full width
         appStyle.mainPadding = '0';
@@ -154,8 +155,11 @@ let pageTitle = inject('pageTitle');
 let searchTitle = computed(() => {
     let s = `${fetchingData.value ? "Searching" : viewport.value === 'desktop' ? "Result of" : ''}${fetchingData.value ? '' : ' ' + route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type === 'record' ? 'record_id' : route.query.search_type]}"${fetchingData.value ? ' ...' : ''}`;
     let capitalized = s.trim().replace(/^\w/, c => c.toUpperCase());
-    pageTitle.value = viewport.value === 'desktop' ? 'Records' : capitalized;
-
+    if(viewport.value === 'desktop') {
+        pageTitle.value = viewport.value === 'desktop' ? 'Records' : capitalized;
+    } else {
+        pageTitle.value = null;
+    }
     return capitalized;
 });
 
@@ -296,7 +300,7 @@ function displayRecord(r) {
     inset 1px 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     margin: 0;
-    margin-top: 36px;
+    margin-top: 20px;
     padding: 24px 20px;
 
     @media @tablet {
@@ -374,7 +378,7 @@ function displayRecord(r) {
     }
 
     .recordWrapper {
-        background-color: #262626;
+        background-color: #333333;
         border-radius: 8px;
         margin-top: 1.5em;
 
@@ -418,26 +422,35 @@ function displayRecord(r) {
             }
         }
     }
-
-    .noRecords {
-        padding: 32px 0;
+        
+    .no-records-found {
         text-align: center;
-        display: flex;
-        justify-content: center;
+        padding: 60px 0 36px 0;
+        border-radius: 0 0 8px 8px;
+        color: rgba(255, 255, 255, .4);
         align-items: center;
-        flex-wrap: wrap;
-        background-color: #262626;
-        margin-top: 1.5em;
-        border-radius: 8px;
+        text-align: center;
 
-        &>* {
-            opacity: 0.6;
+        @media @tablet {        
+            padding: 60px 0 32px 0;
         }
-
+        
+        .title {
+            font-size: 28px;
+        }
+        
         p {
-            margin: 0;
+            margin: 20px 0 0 0;
+        }
+        
+        .query {
+            margin-top: 16px;
+            text-align: center;
+            color: rgba(255, 255, 255, .6);
         }
     }
+
+
 
     .paginator {
         margin-top: 24px;
