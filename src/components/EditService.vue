@@ -109,6 +109,10 @@ const save = async () => {
         throw e;
     } finally {
         promiseRunning.value = false;
+        service.value.name = serviceName.value;
+        service.value.cors = cors.value;
+        service.value.api_key = apiKey.value;
+
         emit('close', '');
     }
     return res;
@@ -120,12 +124,14 @@ const toggleService = async() => {
     promiseRunning.value = true;
     try {
         if(service.value.active > 0) {
-            togglePromise.value = skapi.disableService(service.value.service).then(() => {
+            togglePromise.value = skapi.disableService(service.value.service).then((res) => {
                 togglePromise.value = null;
+                service.value.active = res.active;
             });
         } else {
             togglePromise.value = skapi.enableService(service.value.service).then(() => {
                 togglePromise.value = null;
+                service.value.active = res.active;
             });
         }
     } catch(e) {
