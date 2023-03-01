@@ -26,12 +26,7 @@ let awaitConnection = skapi.getConnection().then(c => {
 watch(() => state.user, user => {
     if (user) {
         state.getServices = new Promise(async res => {
-            let services = window.sessionStorage.getItem(user.user_id);
-            if (services && services !== 'null') {
-                state.services = JSON.parse(services);
-                skapi.services = state.services;
-            }
-            else {
+            if (!state.services) {
                 state.services = (await skapi.getServices());
             }
             res(state.services);
