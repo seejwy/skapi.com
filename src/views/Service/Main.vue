@@ -184,11 +184,12 @@ function getServices(gs) {
             service.value = 404
             return;
         }
-
-        for (let s of services[region]) {
-            if (s.service === serviceId) {
-                service.value = s;
-                return s;
+        if(services[region]) {
+            for (let s of services[region]) {
+                if (s.service === serviceId) {
+                    service.value = s;
+                    return s;
+                }
             }
         }
 
