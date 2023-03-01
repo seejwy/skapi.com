@@ -16,15 +16,13 @@
                     a.clickable(@click='()=>skapi.AdminLogout().then(() => state.user = null)') Logout
 
         main#app-main(v-if='state.connection')
-            div(v-if="state.services === null")
-                // fetching
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
 
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
-            Login(v-else)
+            Login(v-else-if="!state.user")
     .sidebar(v-if="state.user")
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
 
@@ -167,7 +165,7 @@ let overlay = ref(null);
 
 onMounted(() => {
     awaitConnection.then(()=>{
-        if(!state.user) {
+        if(!state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
         recordTables.value = null;
