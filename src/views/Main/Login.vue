@@ -208,4 +208,12 @@ function login() {
         font-weight: bold;
     }
 }
+.dashboard [type=checkbox] {
+    border-color: rgba(0, 0, 0, 0.25);
+
+    &[checked] {
+      color: rgba(255, 255, 255, 0.6);
+      background: rgba(0, 0, 0, 0.25);
+    }
+}
 </style>
