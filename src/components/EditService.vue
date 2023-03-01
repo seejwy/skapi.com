@@ -5,7 +5,7 @@
         .toggle
             span Enable/Disable
             .toggle-bar 
-                .toggle-ball(@click="toggleService" :class="{'active': service.active > 0}")
+                .toggle-ball(@click="toggleService" :class="{'active': isServiceEnabled}")
         .input
             label Name of Service
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
@@ -64,6 +64,7 @@ let navbarBackDestination = inject('navbarBackDestination');
 const serviceName = ref('');
 const cors = ref('');
 const apiKey = ref('');
+const isServiceEnabled = ref(false);
 const togglePromise = ref(null);
 const promiseRunning = ref(false);
 const deleteConfirmOverlay = ref(null);
@@ -74,6 +75,7 @@ const deleteErrorOverlay = ref(null);
 serviceName.value = service.value.name;
 cors.value = service.value.cors;
 apiKey.value = service.value.api_key;
+isServiceEnabled.value = service.value.active > 0;
 
 const buttonCallback = async () => {
     navbarMobileRightButton.value = {
@@ -141,12 +143,12 @@ const toggleService = async() => {
         if(service.value.active > 0) {
             togglePromise.value = skapi.disableService(service.value.service).then((res) => {
                 togglePromise.value = null;
-                service.value.active = res.active;
+                isServiceEnabled.value = false;
             });
         } else {
             togglePromise.value = skapi.enableService(service.value.service).then((res) => {
                 togglePromise.value = null;
-                service.value.active = res.active;
+                isServiceEnabled.value = true;
             });
         }
     } catch(e) {
