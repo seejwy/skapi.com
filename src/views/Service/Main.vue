@@ -16,6 +16,8 @@
                     a.clickable(@click='()=>skapi.AdminLogout().then(() => state.user = null)') Logout
 
         main#app-main(v-if='state.connection')
+            div(v-if="state.services === null")
+                // fetching
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
