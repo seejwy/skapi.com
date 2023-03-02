@@ -11,7 +11,7 @@ import { skapi } from '@/main';
 import Icon from '../../../components/Icon.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 
-let viewRecord = null;
+let viewRecord = ref(null);
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
