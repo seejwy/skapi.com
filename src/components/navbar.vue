@@ -115,6 +115,7 @@ sui-nav#top-nav {
                 width: 32px;
                 color: rgba(255, 255, 255, .4);
                 margin-right: 4px;
+                margin-left: -8px;
             }
 
             span {

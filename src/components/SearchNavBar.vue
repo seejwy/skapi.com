@@ -34,7 +34,9 @@
         display: inline;
         height: 32px;
         width: 32px;
-        color: rgba(255, 255, 255, .4);
+        color: rgba(255, 255, 255, .4);    
+        flex-shrink: 0;
+        margin-left: -8px;
     }
 
     sui-input {
