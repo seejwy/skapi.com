@@ -167,8 +167,6 @@
         div(v-if="isFabOpen" @click.stop)
             sui-button.fab(@click="router.push({name: 'mobileSearchUser'})")
                 Icon search
-            sui-button.fab
-                Icon plus2
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
