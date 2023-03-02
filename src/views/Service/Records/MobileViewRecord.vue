@@ -5,19 +5,19 @@ div(v-else style="text-align: center; padding: 1em;")
     Icon.animation-rotation(style="display:inline-block;width:32px;height:32px;") refresh
 </template>
 <script setup>
-import { inject, watch, onBeforeUnmount, onMounted } from 'vue';
+import { inject, watch, onBeforeUnmount, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { skapi } from '@/main';
 import Icon from '../../../components/Icon.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 
-let viewRecord = null;
+let viewRecord = ref(null);
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
 
 let editCallback = () => {
-    viewRecord.editRecord();
+    viewRecord.value.editRecord();
     navbarMobileRightButton.value = {
         type: 'text',
         val: 'Save',

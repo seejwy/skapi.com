@@ -141,6 +141,7 @@ sui-nav#top-nav {
 
 .logo {
     height: 35px;
+    vertical-align: middle;
 }
 </style>
 <script setup>

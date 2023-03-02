@@ -22,7 +22,7 @@
 
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
-            Login(v-else)
+            Login(v-else-if="!state.user")
     .sidebar(v-if="state.user")
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
 
@@ -35,9 +35,9 @@
         router-link(:to="{name: 'records'}")
             Icon folder_open
 
-        router-link(to='/')
+        //- router-link(to='/')
             //(:to="{name: 'mail'}")
-            Icon mail
+            //- Icon mail
 //- Transition(name="toast")
 //-     .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
 //-         Icon warning_bell
@@ -165,7 +165,7 @@ let overlay = ref(null);
 
 onMounted(() => {
     awaitConnection.then(()=>{
-        if(!state.user) {
+        if(!state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
         recordTables.value = null;
@@ -184,11 +184,12 @@ function getServices(gs) {
             service.value = 404
             return;
         }
-
-        for (let s of services[region]) {
-            if (s.service === serviceId) {
-                service.value = s;
-                return s;
+        if(services[region]) {
+            for (let s of services[region]) {
+                if (s.service === serviceId) {
+                    service.value = s;
+                    return s;
+                }
             }
         }
 

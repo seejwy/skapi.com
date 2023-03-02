@@ -76,7 +76,7 @@ let router = useRouter();
 // set page title
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
-let email = ref('jinyoon@broadwayinc.com');
+let email = ref('');
 let code = ref('');
 let password = ref('');
 let passwordConfirm = ref('');

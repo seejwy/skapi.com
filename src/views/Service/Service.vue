@@ -72,7 +72,7 @@ template(v-else)
                             span Record
                         .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
                     .goto Go to Records >
-                RouterLink(to="/").service-grid-item 
+                //- RouterLink(to="/").service-grid-item 
                     .content
                         .title
                             Icon mail

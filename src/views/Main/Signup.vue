@@ -50,9 +50,9 @@ onBeforeMount(async() => {
 
 let form = reactive({
     username: '',
-    email: 'jinyoon+confirm@broadwayinc.com',
-    password: '123123',
-    password_confirm: '123123',
+    email: '',
+    password: '',
+    password_confirm: '',
 });
 
 watch(() => state.user, u => {

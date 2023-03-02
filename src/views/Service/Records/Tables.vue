@@ -117,6 +117,7 @@ import { tableList, recordTables, refreshTables, getMoreRecords } from './record
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
+import { state } from '../../../main';
 
 let openRecord = ref(null);
 let recordToOpen = inject('recordToOpen');
@@ -124,9 +125,9 @@ const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
+const service = inject('service');
 
 let pageTitle = inject('pageTitle');
-pageTitle.value = 'Records';
 
 // flag
 let fetchingData = inject('fetchingData');
@@ -284,12 +285,21 @@ function viewRecordList(t) {
 
 // watchers
 let appStyle = inject('appStyle');
-watch(viewport, n => {
-    // close opened table on viewport change
-    for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
-        t.opened = false;
+
+watch(() => state.viewport, viewport => {
+    if(viewport === 'mobile') {
+        pageTitle.value = 'Records';
+    } else {
+        pageTitle.value = `Service "${service.value.name}"`;
     }
-});
+    
+    // close opened table on viewport change
+    if(groupedTableList.value) {
+        for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
+            t.opened = false;
+        }
+    }
+}, {immediate: true});
 
 watch(currentSelectedTablePage, n => {
     // close opened table on page change

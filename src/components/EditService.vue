@@ -1,24 +1,24 @@
 <template lang="pug">
-.overlay-container
+.overlay-container(v-if="service")
     form(@submit.prevent="save")
         .overlay-container-title.hideOnTablet Service Setting
         .toggle
             span Enable/Disable
             .toggle-bar 
-                .toggle-ball(@click="toggleService" :class="{'active': service.active > 0}")
+                .toggle-ball(@click="toggleService" :class="{'active': service.active > 0 }")
         .input
             label Name of Service
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         .input
             label CORS
-            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required)
+            sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
         .input
             label API Key
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="apiKey" @input="(e) => apiKey = e.target.value")
         hr
-        div(style="text-align: right; margin-bottom: 20px;")
+        div(style="text-align: right; margin-bottom: 28px;")
             sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
-        sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
+        sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning") Save
 sui-overlay(ref="deleteConfirmOverlay")
     .popup
@@ -29,9 +29,8 @@ sui-overlay(ref="deleteConfirmOverlay")
             p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
             p To confirm deletion, enter ServicFsae ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
-
         .foot
-            sui-button(@click="()=> { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}") No 
+            sui-button(@click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
             sui-button.line-button(@click="deleteService") Yes
 
 sui-overlay(ref="deleteErrorOverlay")
@@ -93,6 +92,22 @@ const buttonCallback = async () => {
     }
 }
 
+const validateCors = (event) => {
+    let isValid = true;
+    cors.value.split(',').forEach(url => {
+        if(!skapi.validate.url(url.trim())) {
+            isValid = false;
+        }
+    });
+
+    if(isValid) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid CORS');
+		event.target.reportValidity();
+    }
+}
+
 const save = async () => {
     if(promiseRunning.value) return;
 
@@ -109,39 +124,45 @@ const save = async () => {
         throw e;
     } finally {
         promiseRunning.value = false;
+        service.value.name = serviceName.value;
+        service.value.cors = cors.value;
+        service.value.api_key = apiKey.value;
+
         emit('close', '');
     }
     return res;
 }
 
 const toggleService = async() => {
-    if((togglePromise.value instanceof Promise) || promiseRunning.value) return;
-
-    promiseRunning.value = true;
+    if(togglePromise.value instanceof Promise) return;
+    let oldStatus = service.value.active === 0 ? 0 : 1;
     try {
         if(service.value.active > 0) {
-            togglePromise.value = skapi.disableService(service.value.service).then(() => {
-                togglePromise.value = null;
-            });
+            service.value.active = 0;
+            togglePromise.value = skapi.disableService(service.value.service);
+            togglePromise.value = await togglePromise.value;
+            togglePromise.value = null;
         } else {
-            togglePromise.value = skapi.enableService(service.value.service).then(() => {
-                togglePromise.value = null;
-            });
+            service.value.active = 1;
+            togglePromise.value = skapi.enableService(service.value.service);
+            togglePromise.value = await togglePromise.value;
+            togglePromise.value = null;
         }
     } catch(e) {
-        throw e;
-    } finally {
-        promiseRunning.value = false;
+        service.value.active = oldStatus;
+        errorMessage.value = "Unable to toggle service status at this point.";
+        deleteErrorOverlay.value.open();
+        console.error(e);
     }
 }
 
 const deleteServiceAsk = () => {
     if(promiseRunning.value) return;
-    promiseRunning.value = true;
     deleteConfirmOverlay.value.open();
 }
 
 const deleteService = () => {
+    promiseRunning.value = true;
     if(confirmationCode.value !== service.value.service) {
         confirmationCode.value = '';
         errorMessage.value = "Your service code did not match.";
@@ -188,7 +209,7 @@ watch(() => state.viewport, (viewport) => {
 onBeforeUnmount(() => {
     appStyle.background = null;
     appStyle.navBackground = '#293fe6';
-    pageTitle.value = 'skapi';
+    pageTitle.value = `Service "${service.value.name}"`;
     navbarMobileRightButton.value = null;
     navbarBackDestination.value = null;
 });
@@ -281,7 +302,7 @@ onBeforeUnmount(() => {
 }
 .delete-button {
     padding: 0;
-    margin-top: 20px;
+    margin-top: 4px;
     color: rgba(255, 255, 255, 0.85);
 
     &:hover {

@@ -55,9 +55,9 @@
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
-    .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
+    .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData && !route.query.search}")
         .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
-        .header-actions(@click="showSetting = true")
+        .header-actions(v-if="!route.query.search || groupedUserList?.length" @click="showSetting = true")
             div.dropdown
                 span Headers
                 Icon down2
@@ -71,7 +71,8 @@
             template(v-else)
                 sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                     option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
-        Icon.refresh(v-if="viewport === 'desktop' && !route.query.search" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
+        .header-actions(v-else)
+        Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
@@ -81,7 +82,11 @@
                 Icon trash
 
     .table-wrapper
-        table
+        table(v-if="viewport === 'mobile' && fetchingData")
+            tbody
+                tr(v-for="x in numberOfSkeletons()").animation-skeleton
+                    td
+        table(v-else)
             thead(v-if="groupedUserList?.length && !fetchingData")
                 tr(:class="{rounded: fetchingData || null}")
                     th
@@ -179,6 +184,7 @@ let router = useRouter();
 let serviceId = route.params.service;
 let searchValue = ref('');
 const searchField = ref(null);
+const service = inject('service');
 
 let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
@@ -234,8 +240,8 @@ const unblockUsers = async () => {
 }
 
 const deleteUsers = async () => {
-    let deletePromise = selectedUsers.value.map((user) => {
-        return skapi.deleteAccount({service: serviceId, user});
+    let deletePromise = selectedUsers.value.map((userId) => {
+        return skapi.deleteAccount({service: serviceId, userId});
     });
 
     await Promise.all(deletePromise);
@@ -345,7 +351,6 @@ const selectAllHandler = (e) => {
 };
 
 let pageTitle = inject('pageTitle');
-pageTitle.value = 'Users';
 
 // flag
 let fetchingData = inject('fetchingData');
@@ -449,32 +454,43 @@ if(route.query.search) {
     searchParams.value = route.query.value;
 }
 
-if(route.query.search) {
-    navbarBackDestination.value = () => {
-        pageTitle.value = "Users";
-        router.push({name: 'users'});
-    };
-    callSearch();
-} else {
-    getUsers();
-}
-
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
         router.replace({name: 'usersSearch', query: route.query});
-    } else {
-        pageTitle.value = 'Users';
     }
 }
 
-onMounted(() => {
+function numberOfSkeletons() {
+    // calculated by available vertical space
+    return parseInt((window.innerHeight / 2) / 48);
+}
+
+onMounted(() => {    
+    if(route.query.search) {
+        navbarBackDestination.value = () => {
+            pageTitle.value = "Users";
+            router.push({name: 'users'});
+        };
+        callSearch();
+    } else {
+        getUsers(true);
+    }
+
     window.addEventListener('scroll', mobileScrollHandler, { passive: true });
     toggleMobileDesktopSearchView();
 });
 
 watch(() => viewport.value, (viewport) => {
+    if(viewport === 'mobile') {
+        pageTitle.value = 'Users';
+    } else {
+        pageTitle.value = `Service "${service.value.name}"`;
+    }
+
     selectedUsers.value = [];
     toggleMobileDesktopSearchView();
+}, {
+    immediate: true
 });
 
 watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
@@ -760,6 +776,7 @@ onBeforeRouteLeave((to, from) => {
     padding: 40px 0 60px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
+    background: #434343;
 
     .title {
         font-size: 28px;

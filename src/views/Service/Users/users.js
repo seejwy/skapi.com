@@ -74,6 +74,9 @@ export const getValidationMessage = (searchParams) => {
         case 'email':
             if(!skapi.validate.email(searchParams.value)) message = 'Please enter a valid email';
             break;
+        case 'phone_number':
+            if(!skapi.validate.phoneNumber(searchParams.value)) message = 'Please enter a valid phone number';
+            break;
         case 'birthdate':
         case 'timestamp':
             let regex = /\d{4}-\d{2}-\d{2}/;

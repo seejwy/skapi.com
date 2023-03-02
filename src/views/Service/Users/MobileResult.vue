@@ -3,12 +3,7 @@ SearchNavBar(v-if='viewport === "mobile"')
     div {{ mobilePageTitle }}
     template(v-slot:right) 
         Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'})}") X2
-
-template(v-if="fetchingData || !groupedUserList?.length")
-    .no-users-found(v-if="!fetchingData") 
-        .title No users found
-        p There were no users matching the query.
-.table-outer-wrapper(v-else)
+.table-outer-wrapper(v-if="fetchingData || groupedUserList?.length")
     .table-actions
         .header-actions
             div.dropdown
@@ -26,7 +21,11 @@ template(v-if="fetchingData || !groupedUserList?.length")
                 Icon trash
 
     .table-wrapper
-        table
+        table(v-if="fetchingData")
+            tbody
+                tr(v-for="x in numberOfSkeletons()").animation-skeleton
+                    td
+        table(v-else)
             thead
                 tr(:class="{rounded: fetchingData || null}")
                     th
@@ -69,7 +68,10 @@ template(v-if="fetchingData || !groupedUserList?.length")
                                         Icon(v-else) x
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
-
+template(v-else)
+    .no-users-found(v-if="!fetchingData") 
+        .title No users found
+        p There were no users matching the query.
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
@@ -135,8 +137,8 @@ const unblockUsers = async () => {
 }
 
 const deleteUsers = async () => {
-    let deletePromise = selectedUsers.value.map((user) => {
-        return skapi.deleteAccount({service: serviceId, user});
+    let deletePromise = selectedUsers.value.map((userId) => {
+        return skapi.deleteAccount({service: serviceId, userId});
     });
 
     await Promise.all(deletePromise);
@@ -338,6 +340,12 @@ const toggleMobileDesktopSearchView = () => {
         router.replace({name: 'users', query: route.query});
     }
 }
+
+function numberOfSkeletons() {
+    // calculated by available vertical space
+    return parseInt((window.innerHeight / 2) / 48);
+}
+
 onMounted(() => {
     window.addEventListener('scroll', mobileScrollHandler, { passive: true });
     toggleMobileDesktopSearchView();
@@ -421,7 +429,7 @@ onBeforeRouteLeave((to, from) => {
 .table-outer-wrapper {
     position: relative;
     margin-top: 36px;
-    background-color: #434343;
+    background-color: #333333;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -431,7 +439,7 @@ onBeforeRouteLeave((to, from) => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: #3B3B3B;
+        background: #333333;
         padding: 14px 14px 14px 20px;
         border-radius: 8px 8px 0 0;
 
@@ -508,8 +516,6 @@ onBeforeRouteLeave((to, from) => {
         thead,
         tbody {
             tr {
-                background-color: #3B3B3B;
-
                 td,
                 th {          
                     padding: 12px;      

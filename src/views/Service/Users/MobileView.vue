@@ -23,7 +23,8 @@ let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 const router = useRouter();
 const route = useRoute();
-
+const navbarBackDestination = inject('navbarBackDestination');
+navbarBackDestination.value = 'back';
 pageTitle.value = route.params.user_id;
 let user = ref(null);
 let serviceId = route.params.service;
