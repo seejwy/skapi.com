@@ -16,7 +16,7 @@
             label API Key
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="apiKey" @input="(e) => apiKey = e.target.value")
         hr
-        div(style="text-align: right; margin-bottom: 20px;")
+        div(style="text-align: right; margin-bottom: 28px;")
             sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
         sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning") Save
@@ -302,7 +302,7 @@ onBeforeUnmount(() => {
 }
 .delete-button {
     padding: 0;
-    margin-top: 20px;
+    margin-top: 4px;
     color: rgba(255, 255, 255, 0.85);
 
     &:hover {
