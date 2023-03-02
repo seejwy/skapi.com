@@ -506,12 +506,16 @@ form {
             position: relative;
             margin-top: 1em;
             border-radius: 0;
-            padding: 0 8px;
+            padding: 0 20px;
             width: 100%;
             border: none;
             box-shadow: none;
             background-color: transparent;
             top: unset;
+        }
+
+        @media @phone {
+            padding: 0 16px;
         }
 
         .formLabel {
