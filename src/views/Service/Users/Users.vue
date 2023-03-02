@@ -55,7 +55,7 @@
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
-    .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
+    .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData && !route.query.search}")
         .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
         .header-actions(@click="showSetting = true")
             div.dropdown
@@ -766,6 +766,7 @@ onBeforeRouteLeave((to, from) => {
     padding: 40px 0 60px 0;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);
+    background: #434343;
 
     .title {
         font-size: 28px;
