@@ -286,8 +286,10 @@ function viewRecordList(t) {
 let appStyle = inject('appStyle');
 watch(viewport, n => {
     // close opened table on viewport change
-    for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
-        t.opened = false;
+    if(groupedTableList.value) {
+        for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
+            t.opened = false;
+        }
     }
 });
 
