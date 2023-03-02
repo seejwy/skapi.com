@@ -27,7 +27,7 @@ let editCallback = () => {
                 val: 'loading',
                 cssClass: 'animation-rotation--slow-in-out'
             };
-            viewRecord.save().then(() => {
+            viewRecord.value.save().then(() => {
                 navbarMobileRightButton.value = {
                     type: 'text',
                     val: 'Edit',
