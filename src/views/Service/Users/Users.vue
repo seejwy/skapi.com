@@ -179,6 +179,7 @@ let router = useRouter();
 let serviceId = route.params.service;
 let searchValue = ref('');
 const searchField = ref(null);
+const service = inject('service');
 
 let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
@@ -345,7 +346,6 @@ const selectAllHandler = (e) => {
 };
 
 let pageTitle = inject('pageTitle');
-pageTitle.value = 'Users';
 
 // flag
 let fetchingData = inject('fetchingData');
@@ -462,8 +462,6 @@ if(route.query.search) {
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
         router.replace({name: 'usersSearch', query: route.query});
-    } else {
-        pageTitle.value = 'Users';
     }
 }
 
@@ -473,8 +471,16 @@ onMounted(() => {
 });
 
 watch(() => viewport.value, (viewport) => {
+    if(viewport === 'mobile') {
+        pageTitle.value = 'Users';
+    } else {
+        pageTitle.value = `Service "${service.value.name}"`;
+    }
+
     selectedUsers.value = [];
     toggleMobileDesktopSearchView();
+}, {
+    immediate: true
 });
 
 watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
