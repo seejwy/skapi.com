@@ -1,5 +1,5 @@
 <template lang="pug">
-.overlay-container
+.overlay-container(v-if="service")
     form(@submit.prevent="save")
         .overlay-container-title.hideOnTablet Service Setting
         .toggle
@@ -134,23 +134,25 @@ const save = async () => {
 }
 
 const toggleService = async() => {
-    if((togglePromise.value instanceof Promise) || promiseRunning.value) return;
-
-    promiseRunning.value = true;
+    if(togglePromise.value instanceof Promise) return;
+    let oldStatus = service.value.active === 0 ? 0 : 1;
     try {
         if(service.value.active > 0) {
-            togglePromise.value = skapi.disableService(service.value.service).then((res) => {
-                togglePromise.value = null;
-            });
+            service.value.active = 0;
+            togglePromise.value = skapi.disableService(service.value.service);
+            togglePromise.value = await togglePromise.value;
+            togglePromise.value = null;
         } else {
-            togglePromise.value = skapi.enableService(service.value.service).then((res) => {
-                togglePromise.value = null;
-            });
+            service.value.active = 1;
+            togglePromise.value = skapi.enableService(service.value.service);
+            togglePromise.value = await togglePromise.value;
+            togglePromise.value = null;
         }
     } catch(e) {
-        throw e;
-    } finally {
-        promiseRunning.value = false;
+        service.value.active = oldStatus;
+        errorMessage.value = "Unable to toggle service status at this point.";
+        deleteErrorOverlay.value.open();
+        console.error(e);
     }
 }
 

@@ -154,7 +154,7 @@ let route = useRoute();
 let serviceId = route.params.service;
 let service = ref(null);
 
-provide('service', computed(() => service));
+provide('service', service);
 provide('serviceUsers', ref(null));
 provide('fetchingData', ref(false));
 
