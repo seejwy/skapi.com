@@ -17,7 +17,7 @@ let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
 
 let editCallback = () => {
-    viewRecord.editRecord();
+    viewRecord.value.editRecord();
     navbarMobileRightButton.value = {
         type: 'text',
         val: 'Save',

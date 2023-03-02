@@ -82,7 +82,11 @@
                 Icon trash
 
     .table-wrapper
-        table
+        table(v-if="viewport === 'mobile' && fetchingData")
+            tbody
+                tr(v-for="x in numberOfSkeletons()").animation-skeleton
+                    td
+        table(v-else)
             thead(v-if="groupedUserList?.length && !fetchingData")
                 tr(:class="{rounded: fetchingData || null}")
                     th
@@ -464,6 +468,11 @@ const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
         router.replace({name: 'usersSearch', query: route.query});
     }
+}
+
+function numberOfSkeletons() {
+    // calculated by available vertical space
+    return parseInt((window.innerHeight / 2) / 48);
 }
 
 onMounted(() => {
