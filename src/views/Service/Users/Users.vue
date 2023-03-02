@@ -454,16 +454,6 @@ if(route.query.search) {
     searchParams.value = route.query.value;
 }
 
-if(route.query.search) {
-    navbarBackDestination.value = () => {
-        pageTitle.value = "Users";
-        router.push({name: 'users'});
-    };
-    callSearch();
-} else {
-    getUsers();
-}
-
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
         router.replace({name: 'usersSearch', query: route.query});
@@ -475,7 +465,17 @@ function numberOfSkeletons() {
     return parseInt((window.innerHeight / 2) / 48);
 }
 
-onMounted(() => {
+onMounted(() => {    
+    if(route.query.search) {
+        navbarBackDestination.value = () => {
+            pageTitle.value = "Users";
+            router.push({name: 'users'});
+        };
+        callSearch();
+    } else {
+        getUsers(true);
+    }
+
     window.addEventListener('scroll', mobileScrollHandler, { passive: true });
     toggleMobileDesktopSearchView();
 });
