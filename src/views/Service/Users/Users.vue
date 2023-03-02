@@ -57,7 +57,7 @@
             Icon X2
     .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData && !route.query.search}")
         .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
-        .header-actions(@click="showSetting = true")
+        .header-actions(v-if="!route.query.search || groupedUserList?.length" @click="showSetting = true")
             div.dropdown
                 span Headers
                 Icon down2
@@ -71,7 +71,8 @@
             template(v-else)
                 sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                     option(v-for="(field, key) in visibleFields" :value="key") {{  field.text  }}
-        Icon.refresh(v-if="viewport === 'desktop' && !route.query.search" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
+        .header-actions(v-else)
+        Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
