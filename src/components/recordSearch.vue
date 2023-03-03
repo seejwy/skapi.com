@@ -557,11 +557,18 @@ form {
                 color: inherit;
             }
         }
+
+        sui-select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid #8C8C8C;
+            box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
+        }
     }
 }
 
 .placeholder-icon {
-    opacity: 0.6;
+    color: rgba(255, 255, 255, .4);
     flex-shrink: 0;
 }
 
