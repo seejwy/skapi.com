@@ -40,14 +40,21 @@ div(v-else-if="state?.user")
             hr   
             .title Subscription
             .value(v-if="state.viewport === 'desktop'")
-                label
-                    sui-input(type="checkbox" :disabled="isEdit ? null : true" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
-                    span I agree to receive information and news letters from Skapi via Email.
+                template(v-if="isEdit")
+                    label
+                        sui-input(type="checkbox" :disabled="state.user.email_verified ? null : true" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
+                        span I agree to receive information and news letters from Skapi via Email.
+                template(v-else)
+                    template(v-if="settings.email_subscription") Subscribed
+                    template(v-else) Not Subscribed
             .mobile-value(v-if="state.viewport === 'mobile'")
-                label
-                    sui-input(type="checkbox" :disabled="isEdit ? null : true" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
-                    span I agree to receive information and news letters from Skapi via Email.
-                
+                template(v-if="isEdit")
+                    label
+                        sui-input(type="checkbox" :disabled="state.user.email_verified ? null : true" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
+                        span I agree to receive information and news letters from Skapi via Email.
+                template(v-else)
+                    template(v-if="settings.email_subscription") Subscribed
+                    template(v-else) Not Subscribed
                 .actions(v-if="settings.email_subscription.isEdit")
                     span.cancel(@click="settings.email_subscription.isEdit = false") Cancel
                     span.save(@click="settings.email_subscription.isEdit = false") Save
