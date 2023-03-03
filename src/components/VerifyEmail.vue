@@ -36,9 +36,10 @@ const verificationCode = ref({
 });
 
 const verifyEmail = () => {
-    // skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
-    //     console.log({res})
-    // });
+    skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
+        state.user.email_verified = true;
+    });
+
     if(state.viewport === 'desktop') emit('close');
     else router.replace('');
 }
@@ -57,9 +58,8 @@ const resendCode = async () => {
 
         }, 1000);
         secondsTillReady.value = 30;
-        await skapi.verifyEmail();
 
-        
+        await skapi.verifyEmail();
     } catch(e) {
         console.log({e:e});
         // if(e.code === 'LimitExceededException') {

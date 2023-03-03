@@ -23,17 +23,17 @@ div(v-else-if="state?.user")
                 sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
                 template(v-else)
                     span {{  state.user.email }}
-                    .email-status(v-if="state.user.email_verified" :class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
+                    .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
                         Icon warning
                         span(v-if="state.user.email_verified") Verified
                         span(v-else) Unverified
-            .actions(v-if="!isEdit" @click="state.viewport === 'desktop' ? emailOverlay.open() : router.replace('?page=verify')")
+            .actions(v-if="!state.user.email_verified || isEdit" @click="openVerifyEmail")
                 span Verify Email
             .mobile-value(v-if="state.viewport === 'mobile'")            
                 sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
                 template(v-else)
                     span {{  state.user.email }}
-                    .email-status(v-if="state.user.email_verified" :class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
+                    .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
                         Icon warning
                         span(v-if="state.user.email_verified") Verified
                         span(v-else) Unverified
@@ -108,17 +108,25 @@ let settings = ref({
 const passwordOverlay = ref(null);
 const emailOverlay = ref(null);
 const isSaving = ref(false);
+const openVerifyEmail = async () => {
+    try {
+        await skapi.verifyEmail();
+        if(state.viewport === 'desktop') emailOverlay.value.open();
+        else router.replace('?page=verify');
+    } catch(e) {
+        console.log({e})
+    }
+}
 const updateUserSettings = async () => {
     try {
         isSaving.value = true;
         let res = await skapi.updateProfile({
             name: settings.value.name,
+            email: settings.value.email,
             email_subscription: settings.value.email_subscription
         });
 
-        settings.value.name = res.name;
-        settings.value.email = res.email;
-        settings.value.email_subscription = res.email_subscription;
+        state.user = res;
     } catch(e) {
         console.log({e});
     } finally {
