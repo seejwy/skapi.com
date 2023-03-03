@@ -8,9 +8,6 @@
             .value(:class="key.class") 
                 Icon(v-if="key.icon") {{ key.icon(user[key.key]) }}
                 span {{ key.filter ? key.filter(user[key.key]) : user[key.key] || '-'}}
-       
-    template(v-else)
-        div fetching
 </template>
 <script setup>
 import { inject, ref, reactive, watch, onBeforeUnmount } from 'vue';
