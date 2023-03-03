@@ -97,6 +97,11 @@ const verifyPassword = async () => {
         processStep.value = 1;
     } catch(e) {
         console.log({e: e.code});
+        if(e.code === 'NotAuthorizedException') {
+            password.value.current.error = 'Current password is incorrect';
+        } else if(e.code === 'LimitExceededException') {
+            password.value.current.error = 'Your password change limit has exceeded. Verify your password again later.';
+        }
     }
 }
 
@@ -121,6 +126,9 @@ const changePassword = async () => {
         processStep.value = 2;
     } catch(e) {
         console.log({e: e.code});
+        if(e.code === 'LimitExceededException') {
+            password.value.confirm.error = 'Your password change limit has exceeded.';
+        }
     }
 }
 
