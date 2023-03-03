@@ -1,6 +1,7 @@
 <template lang="pug">
 div(v-if='!state?.connection')
     // is loading...
+ChangePassword(v-if="state?.user && route.query.page === 'password'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
         h1.fixed Account Settings
@@ -8,7 +9,7 @@ div(v-else-if="state?.user")
         form.settings(@submit.prevent="updateUserSettings")
             .title Name
             .value(v-if="state.viewport === 'desktop'") 
-                input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
+                sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
                 span(v-else) {{  state.user.name }}
             .actions
             .mobile-value(v-if="state.viewport === 'mobile'")
@@ -53,7 +54,7 @@ div(v-else-if="state?.user")
             .title Password
             .value(v-if="state.viewport === 'desktop'")
             .actions
-                span(@click="passwordOverlay.open()") Change Password
+                span(@click="state.viewport === 'desktop' ? passwordOverlay.open() : router.replace('?page=password')") Change Password
             .mobile-value(v-if="state.viewport === 'mobile'")
             hr
             .submit
@@ -70,46 +71,7 @@ sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="backgro
     Login
 Login(v-else)
 sui-overlay(ref="passwordOverlay" style="background: rgba(0, 0, 0, 0.6);")
-    form.container(v-if="processStep < 2" @submit.prevent="changePassword")
-        h2 Change Password
-        template(v-if="processStep === 0")
-            p Please enter you current password.
-            .input
-                label Current Password
-                PasswordInput(@input="(e) => password.current.value = e.target.value" :value="password.current.value")
-                .error(v-if="password.current.error")
-                    Icon warning
-                    span {{ password.current.error }}
-            .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
-                sui-button(type="button" :loading="promiseRunning" @click.prevent="verifyPassword") Continue
-            .step-wrapper
-                .step.active
-                .step
-        template(v-else-if="processStep === 1")
-            p Please enter you current password.
-            .input
-                label New Password
-                PasswordInput(@input="(e) => password.new.value = e.target.value" :value="password.new.value")
-            .input
-                label New Password Confirm
-                PasswordInput(@input="(e) => password.confirm.value = e.target.value" :value="password.confirm.value")
-                .error(v-if="password.confirm.error")
-                    Icon warning
-                    span {{ password.confirm.error }}
-            .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
-                SubmitButton(:loading="promiseRunning") Change Password
-            .step-wrapper
-                .step.clickable(@click="processStep = 0")
-                .step.active
-    .container.success(v-else)
-        Icon check_circle
-        h2 Password Change Success
-        p Your password has been changed successfully. Please login with new password.
-        .actions
-            sui-button(@click="logout") Login
-
+    ChangePassword(@close="passwordOverlay.close()")
 sui-overlay(ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
     form.container(@submit.prevent="verifyEmail")
         h2 Verify Email
@@ -138,6 +100,8 @@ import { useRoute, useRouter } from 'vue-router';
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
+import ChangePassword from '@/components/ChangePassword.vue';
+
 import { skapi } from '../../main';
 
 let router = useRouter();
@@ -155,21 +119,6 @@ let settings = ref({
     email: ''
 });
 
-const password = ref({
-    current: {
-        value: '',
-        error: ''
-    },
-    new: {
-        value: ''
-    },
-    confirm: {
-        value: '',
-        error: ''
-    }
-});
-
-
 const verificationCode = ref({
     value: '',
     error: ''
@@ -177,68 +126,7 @@ const verificationCode = ref({
 
 const passwordOverlay = ref(null);
 const emailOverlay = ref(null);
-const processStep = ref(0);
 const secondsTillReady = ref(null);
-
-const verifyPassword = async () => {
-    password.value.current.error = '';
-
-    if(password.value.current.value.length < 6) {
-        password.value.current.error = 'Password must be at least 6 characters'
-        return false;
-    }
-
-    try {
-        await skapi.changePassword({
-            current_password: password.value.current.value,
-            new_password: password.value.current.value
-        });
-
-        processStep.value = 1;
-    } catch(e) {
-        console.log({e: e.code});
-    }
-}
-
-const closePasswordChange = () => {
-    passwordOverlay.value.close(); 
-    processStep.value = 0;
-    password.value.current.value = '';
-    password.value.confirm.value = '';
-    password.value.new.value = '';
-    password.value.current.error = '';
-    password.value.confirm.error = '';
-}
-const changePassword = async () => {
-    password.value.confirm.error = '';
-
-    if(password.value.new.value.length < 6) {
-        password.value.confirm.error = 'Password must be at least 6 characters';
-        return false;
-    }
-    if(password.value.new.value !== password.value.confirm.value) {
-        password.value.confirm.error = 'Your password does not match';
-        return false;
-    }
-
-    try {
-        await skapi.changePassword({
-            current_password: password.value.current.value,
-            new_password: password.value.new.value
-        });
-
-        processStep.value = 2;
-    } catch(e) {
-        console.log({e: e.code});
-    }
-}
-
-const logout = () => {
-    skapi.AdminLogout().then(() => {
-        state.user = null;
-        router.push('dashboard');
-    });
-}
 
 const resendCode = async () => {
     if(secondsTillReady.value !== null) return false;
