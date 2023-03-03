@@ -62,9 +62,9 @@ const resendCode = async () => {
         await skapi.verifyEmail();
     } catch(e) {
         console.log({e:e});
-        // if(e.code === 'LimitExceededException') {
-        //     forgotError.value = "Limit exceeded. Please try again later.";
-        // }
+        if(e.code === 'LimitExceededException') {
+            verificationCode.value.error = "Limit exceeded. Please try again later.";
+        }
     }
 }
 
