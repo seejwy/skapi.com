@@ -1,7 +1,7 @@
 <template lang="pug">
-form.form.container(v-if="processStep < 2" @submit.prevent="changePassword")
+.form.container(v-if="processStep < 2")
     h2 Change Password
-    template(v-if="processStep === 0")
+    form(v-if="processStep === 0" @submit.prevent="verifyPassword")
         p Please enter you current password.
         .input
             label Current Password
@@ -15,7 +15,7 @@ form.form.container(v-if="processStep < 2" @submit.prevent="changePassword")
         .step-wrapper
             .step.active
             .step
-    template(v-else-if="processStep === 1")
+    form(v-else-if="processStep === 1" @submit.prevent="changePassword")
         p Please enter you current password.
         .input
             label New Password
