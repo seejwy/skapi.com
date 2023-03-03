@@ -129,6 +129,9 @@ const updateUserSettings = async () => {
         state.user = res;
     } catch(e) {
         console.log({e});
+        settings.value.name = state.user.name;
+        settings.value.email = state.user.email;
+        settings.value.email_subscription = state.user.email_subscription;
     } finally {
         isEdit.value = false;
         isSaving.value = false;
