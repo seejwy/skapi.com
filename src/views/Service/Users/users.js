@@ -23,8 +23,12 @@ export const visibleFields = reactive({
         show: state.viewport === 'desktop' ? true : false,
     },
     group: {
-        text: 'Status',
+        text: 'Active',
         show: state.viewport === 'desktop' ? true : false,
+    },
+    access_group: {
+        text: 'Access',
+        show: false,
     },
     user_id: {
         text: 'User ID',

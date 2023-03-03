@@ -105,6 +105,9 @@
                             template(v-else-if="key === 'group'")                     
                                 Icon(v-if="user[key] > 0") check_circle
                                 Icon(v-else) x
+                            template(v-else-if="key === 'access_group'")
+                                span(v-if="user['group'] === 99") Admin
+                                span(v-else) User
                             template(v-else) {{ user[key] || '-' }}
                         td(v-if="computedVisibleFields.length <= 2")
                     //- Below code needs to change to page list not full users list
@@ -127,6 +130,9 @@
                                     template(v-else-if="key === 'group'")                     
                                         Icon(v-if="user[key] > 0") check_circle
                                         Icon(v-else) x
+                                    template(v-else-if="key === 'access_group'")
+                                        span(v-if="user['group'] === 99") Admin
+                                        span(v-else) User
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
     .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
