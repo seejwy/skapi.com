@@ -1,6 +1,6 @@
 <template lang="pug">
 .overlay-container(v-if="service")
-    form(@submit.prevent="save")
+    form(@submit.prevent="save" @keydown.enter.prevent="")
         .overlay-container-title.hideOnTablet Service Setting
         .toggle
             span Enable/Disable
@@ -21,7 +21,7 @@
         sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning") Save
 sui-overlay(ref="deleteConfirmOverlay")
-    .popup
+    form.popup(@submit.prevent="deleteService")
         .title
             Icon warning
             div Deleting Service?
@@ -31,7 +31,7 @@ sui-overlay(ref="deleteConfirmOverlay")
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
         .foot
             sui-button(@click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
-            sui-button.line-button(@click="deleteService") Yes
+            sui-button.line-button Yes
 sui-overlay(ref="disableConfirmOverlay")
     .popup
         .title

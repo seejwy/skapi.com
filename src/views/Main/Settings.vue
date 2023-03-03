@@ -7,7 +7,7 @@ div(v-else-if="state?.user")
     .page-header.head-space-helper
         h1.fixed Account Settings
     .settings-wrapper
-        form.settings(@submit.prevent="updateUserSettings")
+        form.settings(@submit.prevent="updateUserSettings" @keydown.enter.prevent="")
             .title Name
             .value(v-if="state.viewport === 'desktop'") 
                 sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
