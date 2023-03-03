@@ -134,8 +134,14 @@ const logout = () => {
 watch(() => state.viewport, (viewport) => {
     if(viewport === 'desktop' && route.query.page === 'password') {
         router.replace('');
+    } else if(viewport === 'mobile') {
+        emit('close');
     }
-})
+});
+
+onBeforeUnmount(() => {
+    router.replace('');
+});
 </script>
 
 <style lang="less" scoped>
