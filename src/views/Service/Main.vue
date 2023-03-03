@@ -10,7 +10,7 @@
                     router-link(to="/dashboard" tag="li") Dashboard
 
                 li
-                    router-link(to="/" tag="li") Account Settings
+                    router-link(to="/account-settings" tag="li") Account Settings
 
                 li
                     a.clickable(@click='()=>skapi.AdminLogout().then(() => state.user = null)') Logout
