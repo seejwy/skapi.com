@@ -7,9 +7,9 @@
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
 				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
 
-			.action(v-if='!isMobileUrl' @click="deleteConfirmOverlay.open")
+			.action(@click="deleteConfirmOverlay.open")
 				Icon trash
-				span delete
+				span(v-if='!isMobileUrl') delete
 	.content(:class="{desktop:!isMobileUrl}")
 		.grid(v-if="view === 'information'")
 			.grid-item.title Record ID 
@@ -671,7 +671,7 @@ defineExpose({
 			gap: 4px;
 			padding: 0 20px;
 			cursor: pointer;
-			color: rgba(255, 255, 255, .6);
+			color: #fff;
 
 			svg {
 				width: 20px;
