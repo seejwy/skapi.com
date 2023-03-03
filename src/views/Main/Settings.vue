@@ -324,6 +324,7 @@ onMounted(() => {
     border-radius: 8px;
 
     @media @tablet {
+        background-color: #fff;
         padding: 0;
         margin: 0 -20px;
         border-radius: 0;
