@@ -5,7 +5,7 @@
         .toggle
             span Enable/Disable
             .toggle-bar 
-                .toggle-ball(@click="toggleService" :class="{'active': service.active > 0 }")
+                .toggle-ball(@click="toggleServiceConfirm" :class="{'active': service.active > 0 }")
         .input
             label Name of Service
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
@@ -32,7 +32,18 @@ sui-overlay(ref="deleteConfirmOverlay")
         .foot
             sui-button(@click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
             sui-button.line-button(@click="deleteService") Yes
-
+sui-overlay(ref="disableConfirmOverlay")
+    .popup
+        .title
+            Icon warning
+            div(v-if="service.active > 0") Disabling Service?
+            div(v-else) Enabling Service?
+        .body 
+            p(v-if="service.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
+            p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
+        .foot
+            sui-button(@click="()=> { disableConfirmOverlay.close(); }") No 
+            sui-button.line-button(@click="toggleService") Yes
 sui-overlay(ref="deleteErrorOverlay")
     .popup
         .title
@@ -67,6 +78,7 @@ const apiKey = ref('');
 const togglePromise = ref(null);
 const promiseRunning = ref(false);
 const deleteConfirmOverlay = ref(null);
+const disableConfirmOverlay = ref(null);
 const confirmationCode = ref('');
 const errorMessage = ref('');
 const deleteErrorOverlay = ref(null);
@@ -133,7 +145,12 @@ const save = async () => {
     return res;
 }
 
+const toggleServiceConfirm = () => {
+    disableConfirmOverlay.value.open();
+}
+
 const toggleService = async() => {
+    disableConfirmOverlay.value.close();
     if(togglePromise.value instanceof Promise) return;
     let oldStatus = service.value.active === 0 ? 0 : 1;
     try {
