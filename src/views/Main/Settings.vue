@@ -1,7 +1,8 @@
 <template lang="pug">
 div(v-if='!state?.connection')
     // is loading...
-ChangePassword(v-if="state?.user && route.query.page === 'password'")
+ChangePassword(v-if="state?.user && state.viewport === 'mobile' && route.query.page === 'password'")
+VerifyEmail(v-else-if="state?.user && state.viewport === 'mobile' && route.query.page === 'verify'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
         h1.fixed Account Settings
@@ -26,7 +27,7 @@ div(v-else-if="state?.user")
                         Icon warning
                         span(v-if="state.user.email_verified") Verified
                         span(v-else) Unverified
-            .actions(v-if="!isEdit" @click="emailOverlay.open()")
+            .actions(v-if="!isEdit" @click="state.viewport === 'desktop' ? emailOverlay.open() : router.replace('?page=verify')")
                 span Verify Email
             .mobile-value(v-if="state.viewport === 'mobile'")            
                 sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
@@ -70,26 +71,10 @@ div(v-else-if="state?.user")
 sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
     Login
 Login(v-else)
-sui-overlay(ref="passwordOverlay" style="background: rgba(0, 0, 0, 0.6);")
-    ChangePassword(@close="passwordOverlay.close()")
-sui-overlay(ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
-    form.container(@submit.prevent="verifyEmail")
-        h2 Verify Email
-        p Verification Email has been sent. Please check your email and enter the verification code.
-        .input
-            label Verification Code
-            sui-input(type="text" placeholder="Verification Code" @input="(e) => verificationCode.value = e.target.value" :value="verificationCode.value")
-        .input
-            label Haven't got any code?
-            sui-button.line-button(type="button" @click="resendCode" :disabled="secondsTillReady")
-                template(v-if="secondsTillReady") Code has been sent
-                template(v-else) Re-send Code
-            .error(v-if="verificationCode.error")
-                    Icon warning
-                    span {{ verificationCode.error }}
-        .actions
-            sui-button.line-button Cancel
-            SubmitButton(:loading="promiseRunning") Verify
+sui-overlay(v-if="state.viewport === 'desktop'" ref="passwordOverlay" style="background: rgba(0, 0, 0, 0.6);")
+    ChangePassword(v-if="state.viewport === 'desktop'" @close="passwordOverlay.close()")
+sui-overlay(v-if="state.viewport === 'desktop'" ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
+    VerifyEmail(@close="emailOverlay.close()")
 </template>
 <script setup>
 import { inject, ref, onMounted } from 'vue';
@@ -101,6 +86,7 @@ import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import ChangePassword from '@/components/ChangePassword.vue';
+import VerifyEmail from '@/components/VerifyEmail.vue';
 
 import { skapi } from '../../main';
 
@@ -119,46 +105,8 @@ let settings = ref({
     email: ''
 });
 
-const verificationCode = ref({
-    value: '',
-    error: ''
-})
-
 const passwordOverlay = ref(null);
 const emailOverlay = ref(null);
-const secondsTillReady = ref(null);
-
-const resendCode = async () => {
-    if(secondsTillReady.value !== null) return false;
-
-    try {
-        let countDown = setInterval(() => {
-            if(secondsTillReady.value > 0) secondsTillReady.value--;
-            else {
-                secondsTillReady.value = null;
-                clearInterval(countDown);
-            }
-
-        }, 1000);
-        secondsTillReady.value = 30;
-        await skapi.verifyEmail();
-
-        
-    } catch(e) {
-        console.log({e:e});
-        // if(e.code === 'LimitExceededException') {
-        //     forgotError.value = "Limit exceeded. Please try again later.";
-        // }
-    }
-}
-
-const verifyEmail = () => {
-    skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
-        console.log({res})
-    });
-    emailOverlay.value.close();
-}
-
 const isSaving = ref(false);
 const updateUserSettings = async () => {
     try {
@@ -431,14 +379,6 @@ onMounted(() => {
             &.active {
                 background-color: var(--primary-color);
             }
-        }
-    }
-
-    &.success {
-        svg {
-            color: #5AD858;
-            width: 56px;
-            height: 56px;
         }
     }
 }
