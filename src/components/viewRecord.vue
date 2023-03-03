@@ -123,7 +123,7 @@
 							Icon(slot="tool") question
 							div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
 
-					sui-input(:value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => form.reference.record_id = e.target.value")
+					sui-input(ref="referenceIdField" :value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => { form.reference.record_id = e.target.value; e.target.setCustomValidity(''); }")
 				.section
 					.name Access Group
 					sui-select(:value="form.table.access_group.toString()" @change="(e) => form.table.access_group = e.target.value" style="min-width: 160px;")
@@ -141,7 +141,10 @@
 					sui-input(
 						:required="form.index.value !== '' ? true : null"
 						:value="form.index.name"
-						@input="(e)=> form.index.name = e.target.value")
+						pattern="[^' ']+"
+						@input="(e)=> form.index.name = e.target.value"
+						@invalid="(e) => e.target.setCustomValidity('Index name must not have spaces')"
+						)
 
 			.row
 				.section
@@ -318,6 +321,7 @@ const view = ref('information');
 const isEdit = ref(false);
 const isSaving = ref(false);
 const formEl = ref(null);
+const referenceIdField = ref(null);
 const form = ref({});
 const data = ref([]);
 const indexValueType = ref('string');
@@ -517,7 +521,12 @@ const save = async () => {
 
 	} catch (e) {
 		// do some error message
+		console.log(e.code);
 		isSaving.value = false;
+		if(e.code === 'NOT_EXISTS') {
+			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
+			referenceIdField.value.querySelector('input').reportValidity();
+		}
 		throw e;
 	};
 };
