@@ -303,11 +303,12 @@ sui-overlay(ref="exitEditOverlay")
 </template>
 <script setup>
 import { ref, computed, watch, nextTick, inject, onBeforeUnmount } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import { skapi, state, dateFormat, getSize } from '@/main';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
 import TagsInput from '@/components/TagsInput.vue';
 import Icon from '@/components/Icon.vue';
+import router from '../router';
 
 const route = useRoute();
 const appStyle = inject('appStyle');
@@ -423,6 +424,22 @@ const editRecord = () => {
 	isEdit.value = true;
 };
 
+const deleteRecord = () => {
+	try {
+		skapi.deleteRecords({
+			service: serviceId,
+			record_id: [props.record.record_id]
+		});
+	} catch(e) {
+		console.log({e});
+	}
+	
+	deleteConfirmOverlay.value.close();
+	if(state.viewport === 'desktop') emit('close');
+	else {
+		router.replace(router.options.history.state.back);
+	}
+}
 const save = async () => {
 	isSaving.value = true;
 	if (!formEl.value.checkValidity()) {
