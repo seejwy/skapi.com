@@ -16,7 +16,7 @@ sui-nav#top-nav(auto-hide)
                     @click='navbarMobileRightButton?.callback') {{ navbarMobileRightButton.val }}
                 span.showOnTablet.clickable(
                     v-if="navbarMobileRightButton.type === 'text'"
-                    style="height: 28px;"
+                    style="height: 28px; font-weight: bold;"
                     :class="navbarMobileRightButton?.cssClass || null"
                     @click='navbarMobileRightButton?.callback') {{ navbarMobileRightButton.val }}
             Icon.showOnTablet.clickable(v-else style="height: 28px; width: 28px;" @click='open') menu_horizontal
