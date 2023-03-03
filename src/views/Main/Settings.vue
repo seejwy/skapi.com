@@ -27,7 +27,7 @@ div(v-else-if="state?.user")
                         Icon warning
                         span(v-if="state.user.email_verified") Verified
                         span(v-else) Unverified
-            .actions(v-if="!state.user.email_verified || isEdit" @click="openVerifyEmail")
+            .actions(v-if="!state.user.email_verified" @click="openVerifyEmail")
                 span Verify Email
             .mobile-value(v-if="state.viewport === 'mobile'")            
                 sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
