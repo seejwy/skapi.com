@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
 }
 .container {
     background-color: #333333;
-    padding: 32px 12px;
+    padding: 32px 20px;
 
     .label {
         color: #fff;
@@ -143,6 +143,7 @@ onBeforeUnmount(() => {
     }
     
     @media @phone {
+        padding: 31px 16px;
         margin: 0 -16px;
     }
 }
