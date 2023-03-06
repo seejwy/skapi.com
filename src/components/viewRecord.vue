@@ -1111,6 +1111,7 @@ defineExpose({
 
 	.title {
 		color: #FF8D3B;
+        font-weight: bold;
 
 		&>div {
 			margin-top: 12px;

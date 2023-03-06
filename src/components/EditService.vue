@@ -344,6 +344,7 @@ onBeforeUnmount(() => {
 
 	.title {
         color: #F04E4E;
+        font-weight: bold;
 
 		&>div {
 			margin-top: 12px;
