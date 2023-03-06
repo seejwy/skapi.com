@@ -568,7 +568,7 @@ form {
 }
 
 .placeholder-icon {
-    color: rgba(255, 255, 255, .4);
+    color: #fff;
     flex-shrink: 0;
 }
 
