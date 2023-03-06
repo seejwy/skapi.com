@@ -16,8 +16,7 @@ let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
 
-let editCallback = () => {
-    viewRecord.value.editRecord();
+let setMobileButton = () => {
     navbarMobileRightButton.value = {
         type: 'text',
         val: 'Save',
@@ -27,15 +26,27 @@ let editCallback = () => {
                 val: 'loading',
                 cssClass: 'animation-rotation--slow-in-out'
             };
-            viewRecord.value.save().then(() => {
-                navbarMobileRightButton.value = {
-                    type: 'text',
-                    val: 'Edit',
-                    callback: editCallback
-                };
+            viewRecord.value.save().then((res) => {
+                if(res) {
+                    navbarMobileRightButton.value = {
+                        type: 'text',
+                        val: 'Edit',
+                        callback: editCallback
+                    };
+                } else {
+                    setMobileButton();
+                }
+            }).catch((e) => {
+                console.log({e});
+                setMobileButton();
             });
         }
     };
+}
+
+let editCallback = () => {
+    viewRecord.value.editRecord();
+    setMobileButton();
 };
 
 navbarMobileRightButton.value = {

@@ -329,7 +329,7 @@ const indexValueType = ref('string');
 let isNewRecord = false;
 
 const isMobileUrl = route.query?.id;
-
+const navbarMobileRightButton = inject('navbarMobileRightButton');
 watch(() => props.record, () => {
 	indexValueType.value = typeof props.record?.index?.value || 'string';
 });
@@ -440,6 +440,7 @@ const deleteRecord = () => {
 		router.replace(router.options.history.state.back);
 	}
 }
+
 const save = async () => {
 	isSaving.value = true;
 	if (!formEl.value.checkValidity()) {
