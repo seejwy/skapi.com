@@ -229,6 +229,7 @@ onMounted(() => {
     .actions {
         justify-self: end;
         color: var(--primary-color);
+        font-weight: bold;
         cursor: pointer;
         white-space: nowrap;
 
