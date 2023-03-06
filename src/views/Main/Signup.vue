@@ -3,11 +3,11 @@
     form.container(@submit.prevent="signup")
         h1 Signup
         .input
-            label User Name
-            sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your username")
-        .input
             label Email
             sui-input(@change="validateEmail" :value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com" required)
+        .input
+            label Name
+            sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
         .input
             label Password            
             PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
