@@ -7,7 +7,7 @@ div(v-else-if="state?.user")
         h1.fixed Services
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
         .action
-            sui-button.with-icon(type="button" @click="state.viewport === 'desktop' ? isOpen = true : router.push('?new=service');")
+            sui-button.with-icon(type="button" @click="state.user.email_verified ? state.viewport === 'desktop' ? isOpen = true : router.push('?new=service') : null" :disabled="!state.user.email_verified || null")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList?.length")
@@ -26,13 +26,13 @@ div(v-else-if="state?.user")
     .container.empty(v-else)
         .title No Services
         span Get started by creating a new service. 
-    //- Transition(name="toast")
-    //-     .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
-    //-         Icon warning_bell
-    //-         .title Email Verfication is Needed
-    //-         div
-    //-         .body Please verify your email to prevent your services from shutting down.
-    //-         Icon.close(@click="state.showVerificationNotification = false") X2
+    Transition(name="toast")
+        .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
+            Icon warning_bell
+            .title Email Verfication is Needed
+            div
+            .body Please verify your email to prevent your services from shutting down.
+            Icon.close(@click="state.showVerificationNotification = false") X2
     sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isOpen = false")
         div.overlay
             NewService(@close="isOpen = false")

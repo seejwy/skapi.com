@@ -39,13 +39,13 @@
                         option(value="=") =
     
     .actions
-        sui-button.text-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
+        sui-button.text-button(@click="blockUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon block
             span.hide-when-pre-tablet block
-        sui-button.text-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
+        sui-button.text-button(@click="unblockUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon unblock
             span.hide-when-pre-tablet unblock
-        sui-button.text-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
+        sui-button.text-button(@click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon trash
             span.hide-when-pre-tablet delete
 
@@ -177,7 +177,7 @@
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { changeSearchCondition, visibleFields, getValidationMessage, placeholder } from './users';
-import { skapi, groupArray } from '@/main';
+import { skapi, state, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
@@ -216,6 +216,8 @@ const changeSearchType = (value) => {
 }
 
 const blockUsers = async () => {
+    if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
+    
     let blockPromise = selectedUsers.value.map((user) => {
         return skapi.blockAccount({service: serviceId, userId: user});
     });
@@ -230,6 +232,8 @@ const blockUsers = async () => {
 }
 
 const unblockUsers = async () => {
+    if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
+
     let unblockPromise = selectedUsers.value.map((user) => {
         return skapi.unblockAccount({service: serviceId, userId: user});
     });
@@ -244,6 +248,8 @@ const unblockUsers = async () => {
 }
 
 const deleteUsers = async () => {
+    if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
+    
     let deletePromise = selectedUsers.value.map((userId) => {
         return skapi.deleteAccount({service: serviceId, userId});
     });

@@ -19,7 +19,7 @@
         div(style="text-align: right; margin-bottom: 28px;")
             sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
         sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
-        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning") Save
+        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning" :disabled="!state.user.email_verified || null") Save
 sui-overlay(ref="deleteConfirmOverlay")
     form.popup(@submit.prevent="deleteService")
         .title
