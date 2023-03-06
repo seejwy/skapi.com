@@ -272,6 +272,7 @@ onMounted(() => {
 
         & > sui-input {
             width: 100%;
+            background-color: #fff;
         }
     }
 
