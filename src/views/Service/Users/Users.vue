@@ -249,12 +249,22 @@ const unblockUsers = async () => {
 
 const deleteUsers = async () => {
     if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
-    
+
     let deletePromise = selectedUsers.value.map((userId) => {
         return skapi.deleteAccount({service: serviceId, userId});
     });
 
-    await Promise.all(deletePromise);
+    try {
+        await Promise.all(deletePromise);
+        
+        selectedUsers.value.forEach((user) => {
+            let idx = serviceUsers.value.list.findIndex((res) => res.user_id === user);
+            serviceUsers.value.list.splice(idx, 1);
+        });
+        selectedUsers.value = [];
+    } catch(e) {
+        console.log({e});
+    }
 }
 
 const groupedUserList = computed(() => {
