@@ -62,7 +62,7 @@ template(v-else)
                     .content
                         .title
                             Icon users
-                            span Authentication
+                            span Users
                         .body Users are data that your service user's will store and read from your service database. 
                     .goto Go to Users >
                 RouterLink(:to="{name: 'records'}").service-grid-item  
