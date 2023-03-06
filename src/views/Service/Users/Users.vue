@@ -91,6 +91,7 @@
                 tr(:class="{rounded: fetchingData || null}")
                     th
                         sui-input(v-if="viewport === 'desktop'" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                    th(v-if="viewport === 'mobile'" style="width: 52px;") Block
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
             tbody(v-if="groupedUserList?.length")
@@ -123,11 +124,11 @@
                             tr(v-for="(user, userIndex) in page" :key="user['user_id']")
                                 td
                                     sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                                td(v-if="viewport === 'mobile'" style="width: 52px;")
+                                    Icon(v-if="user['suspended']?.includes('suspended')" style="opacity: 40%;") block
+                                    Icon(v-else) unblock
                                 td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}"  @click="openUser(user['user_id'])") 
-                                    template(v-if="key === 'suspended'")
-                                        Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
-                                        Icon(v-else) unblock
-                                    template(v-else-if="key === 'group'")                     
+                                    template(v-if="key === 'group'")                     
                                         Icon(v-if="user[key] > 0") check_circle
                                         Icon(v-else) x
                                     template(v-else-if="key === 'access_group'")
