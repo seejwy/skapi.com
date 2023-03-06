@@ -194,6 +194,16 @@ watch(() => state.viewport, (viewport) => {
         border-radius: 8px;
         color: unset;
         text-decoration: unset;
+
+        &:hover {
+            background: #8C8C8C;
+        }
+
+        @media @tablet {
+            &:hover {
+                background: #595959;
+            }
+        }
         
         &:not(:last-child) {
             margin-bottom: 24px;
