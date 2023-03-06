@@ -5,7 +5,7 @@
         .toggle
             span Enable/Disable
             .toggle-bar 
-                .toggle-ball(@click="toggleServiceConfirm" :class="{'active': service.active > 0 }")
+                .toggle-ball(@click="serviceStatus > 0 ? serviceStatus = 0 : serviceStatus = 1;" :class="{'active': serviceStatus > 0 }")
         .input
             label Name of Service
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
@@ -72,6 +72,7 @@ let pageTitle = inject('pageTitle');
 let service = inject('service');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
 let navbarBackDestination = inject('navbarBackDestination');
+const serviceStatus = ref(0);
 const serviceName = ref('');
 const cors = ref('');
 const apiKey = ref('');
@@ -86,6 +87,7 @@ const deleteErrorOverlay = ref(null);
 serviceName.value = service.value.name;
 cors.value = service.value.cors;
 apiKey.value = service.value.api_key;
+serviceStatus.value = service.value.active;
 
 const buttonCallback = async () => {
     navbarMobileRightButton.value = {
@@ -122,7 +124,12 @@ const validateCors = (event) => {
 
 const save = async () => {
     if(promiseRunning.value) return;
+    if(serviceStatus.value !== service.value.active) disableConfirmOverlay.value.open();
+    else await saveFunction();
+    
+}
 
+const saveFunction = async () => {
     promiseRunning.value = true;
     let res;
 
@@ -145,13 +152,10 @@ const save = async () => {
     return res;
 }
 
-const toggleServiceConfirm = () => {
-    disableConfirmOverlay.value.open();
-}
-
 const toggleService = async() => {
     disableConfirmOverlay.value.close();
     if(togglePromise.value instanceof Promise) return;
+    promiseRunning.value = true;
     let oldStatus = service.value.active === 0 ? 0 : 1;
     try {
         if(service.value.active > 0) {
@@ -165,6 +169,8 @@ const toggleService = async() => {
             togglePromise.value = await togglePromise.value;
             togglePromise.value = null;
         }
+
+        await saveFunction();
     } catch(e) {
         service.value.active = oldStatus;
         errorMessage.value = "Unable to toggle service status at this point.";
