@@ -66,7 +66,9 @@ div(v-else-if="state?.user")
             .mobile-value(v-if="state.viewport === 'mobile'")
             hr
             .submit
-                SubmitButton(v-if="isEdit" :loading="isSaving") Save
+                template(v-if="isEdit")
+                    sui-button.line-button(type="button" @click="cancelEdit") Cancel
+                    SubmitButton(:loading="isSaving") Save
                 sui-button(v-else type="button" @click="isEdit = true") Edit Account
     Transition(name="toast")
         .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
@@ -123,6 +125,12 @@ const openVerifyEmail = async () => {
     } catch(e) {
         console.log({e})
     }
+}
+const cancelEdit = () => {
+    isEdit.value = false;
+    settings.value.name = state.user.name;
+    settings.value.email = state.user.email;
+    settings.value.email_subscription = state.user.email_subscription;
 }
 const updateUserSettings = async () => {
     try {
