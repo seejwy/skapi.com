@@ -225,14 +225,14 @@
 						Icon trash
 				.data-values
 					template(v-if="record.type === 'file'")
-						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, keyIndex, index)" @click="openFileInput")
-							input(hidden type="file" @change="e=>addFiles(e, keyIndex, index)" multiple)
+						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, recordIndex, index)" @click="openFileInput")
+							input(hidden type="file" @change="e=>addFiles(e, recordIndex, index)" multiple)
 							div
 								Icon attached
 								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
 								sui-button.line-button(@click.prevent.stop="" type="button") Upload
 						template(v-for="(file, index) in record.data")
-							.value.file(v-if="file.md5")
+							.value.file(v-if="file.md5 || file.lastModified")
 								Icon attached
 								span
 									.filename {{ file.name || file.filename }}
@@ -403,6 +403,7 @@ const editRecord = () => {
 			let typeSplitFiles = getDataByTypes(recordData[key]).data;
 			if (typeSplitFiles.files.length) {
 				data.value.push({ key, type: 'file', data: typeSplitFiles.files });
+			} else if(typeSplitFiles.json) {
 				typeSplitFiles.json.forEach(value => {
 
 					if (Array.isArray(value)) {
@@ -561,8 +562,12 @@ const onDrop = (event, keyIndex, index) => {
 
 const addFiles = (event, keyIndex, index) => {
 	const files = event.target.files;
-	let fileData = data.value[keyIndex].data[index].data;
-	data.value[keyIndex].data[index].data = [...fileData, ...files];
+	let fileData = data.value[keyIndex].data;
+	if(Array.isArray(fileData) && fileData[0].md5) {
+		data.value[keyIndex].data = [...fileData, ...files];
+	} else {
+		data.value[keyIndex].data = [...files];
+	}
 	event.target.value = '';
 };
 
