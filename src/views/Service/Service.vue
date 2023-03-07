@@ -19,8 +19,7 @@ template(v-else)
                     Icon information
                     h2 Service Information
                 .actions(@click="deleteServiceAsk")
-                    Icon trash
-                    span Delete Service
+                    span(style="font-size:14px") Delete Service
             .information-grid
                 .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
                     .name {{ info.name }}
