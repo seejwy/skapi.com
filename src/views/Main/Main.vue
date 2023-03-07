@@ -2,7 +2,7 @@
 NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 2;background-color: var(--app-nav-bg-color);')
     ul.inline-vertical-middle(@click='bypassSameRoute')
         li
-            router-link(to="/") Documentation
+            router-link(to="/docs") Documentation
 
         li(v-if='state.user')
             router-link(to="/dashboard") Dashboard

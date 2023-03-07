@@ -25,7 +25,6 @@ sui-nav#top-nav(auto-hide)
         // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
         #nav-overlay(@click="()=>close(true)")
             slot
-
 </template>
 <style lang="less">
 @import '@/assets/variables.less';
@@ -98,6 +97,10 @@ sui-nav#top-nav {
                     a {
                         text-decoration: none;
                         color: #fff;
+
+                        &.router-link-active {
+                            font-weight: bold;
+                        }
                     }
                 }
             }

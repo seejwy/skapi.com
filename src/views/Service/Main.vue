@@ -4,10 +4,10 @@
         NavBar(v-if="pageTitle" style='background-color: #505050;z-index: 2;')
             ul.inline-vertical-middle
                 li
-                    router-link(to="/" tag="li") Documentation
+                    router-link(to="/docs" tag="li") Documentation
 
                 li
-                    router-link(to="/dashboard" tag="li") Dashboard
+                    router-link(to="/dashboard" :class="{'router-link-active': route.matched[0].path === '/dashboard'}") Dashboard
 
                 li
                     router-link(to="/account-settings" tag="li") Account Settings
