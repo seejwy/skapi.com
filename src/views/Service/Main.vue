@@ -146,7 +146,7 @@ Transition(name="toast")
                 display: none;
                 margin: 6px;
                 font-weight: normal;
-                font-size: 20px;
+                font-size: 16px;
                 white-space: nowrap;
                 line-height: 24px;
             }
@@ -166,7 +166,7 @@ Transition(name="toast")
                 .hover-logo {
                     display: block;
                     height: 35px;
-                    margin: 14px 14px;
+                    margin: 14px 14px 11px 14px;
                 }
                 svg {
                     display: none;
@@ -174,9 +174,15 @@ Transition(name="toast")
 
                 a {
                     background: transparent;
-
+                    display: block;
+                    width: 100%;
+                    margin: 0;
+                    border-radius: 4px;
+                    padding: 14px 8px;
+                    border-radius: 0;
                     &:hover {
 
+                        background: rgba(255, 255, 255, .2);
                         span{
                             font-weight: bold;
                         }
