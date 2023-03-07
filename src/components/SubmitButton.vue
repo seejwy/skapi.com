@@ -14,8 +14,9 @@ sui-button {
 	width: auto;
 
 	&[disabled] {
-		box-shadow: rgb(255 255 255 / 65%) -1px -1px 2px inset, rgb(0 0 0 / 25%) 1px 1px 2px inset, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
-		filter: grayscale(1) contrast(0.25) invert(1) brightness(1.3);
+		box-shadow: rgb(255 255 255 / 50%) 1px 1px 2px inset, rgb(0 0 0 / 25%) -1px -1px 2px inset, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
+		background-color: var(--primary-color);
+		filter: none;
 	}
 }
 svg {
