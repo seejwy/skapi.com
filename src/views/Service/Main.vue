@@ -3,7 +3,7 @@
     .sideScreen
         NavBar(v-if="pageTitle" style='background-color: #505050;z-index: 2;')
             ul.inline-vertical-middle
-                li
+                li.showOnTablet
                     router-link(to="/" tag="li")
                         img(src="@/assets/img/logo-small.svg" style="width: 40px; height: 40px;")
                 li
@@ -83,7 +83,7 @@ Transition(name="toast")
 
         @media @ipad {
             height: unset;
-            width: 100%;
+            width: unset;
             border-radius: 12px 12px 0 0;
             display: flex;
             justify-content: space-between;
@@ -92,6 +92,8 @@ Transition(name="toast")
             bottom: 0px;
             position: fixed;
             top: unset;
+            left: 0;
+            right: 0;
         }
 
         height: 100%;
@@ -99,7 +101,6 @@ Transition(name="toast")
         width: 52px;
         position: sticky;
         top: 0;
-        transition: width .2s ease-in;
         &>* {
             display: inline-block;
             color: #fff;
@@ -145,42 +146,49 @@ Transition(name="toast")
                 display: none;
                 margin: 6px;
                 font-weight: normal;
-                font-size: 16px;
+                font-size: 20px;
                 white-space: nowrap;
                 line-height: 24px;
             }
         }
+        @media screen and (min-width: 1024px) {
+            
+            transition: width .2s ease-in;
+            max-width: 170px;
+            
+            &:hover {
+                flex-shrink: 0;
+                width: 170px;
 
-        &:hover {
-            width: 150px;
+                .logo {
+                    display: none;
+                }
+                .hover-logo {
+                    display: block;
+                    height: 35px;
+                    margin: 14px 14px;
+                }
+                svg {
+                    display: none;
+                }
 
-            .logo {
-                display: none;
-            }
-            .hover-logo {
-                display: block;
-                height: 35px;
-                margin: 14px 14px;
-            }
-            svg {
-                display: none;
-            }
+                a {
+                    background: transparent;
 
-            a {
-                background: transparent;
+                    &:hover {
 
-                &:hover {
-
-                    span{
-                        font-weight: bold;
+                        span{
+                            font-weight: bold;
+                        }
                     }
                 }
-            }
 
-            a span {
-                display: inline-block;
+                a span {
+                    display: inline-block;
+                }
             }
         }
+        
     }
 
     .sideScreen {
