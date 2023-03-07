@@ -211,6 +211,7 @@ onMounted(() => {
     & > .title {
         font-weight: bold;
         padding: 28px 0;
+        color: rgba(0, 0, 0, .65);
     }
 
     .value,
