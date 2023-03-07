@@ -7,7 +7,7 @@
                     router-link(to="/docs" tag="li") Documentation
 
                 li
-                    router-link(to="/dashboard" :class="{'router-link-active': route.matched[0].path === '/dashboard'}") Dashboard
+                    router-link(to="/dashboard" :class="{'router-link-active': route.path.split('/')[1] === 'dashboard'}") Dashboard
 
                 li
                     router-link(to="/account-settings" tag="li") Account Settings
