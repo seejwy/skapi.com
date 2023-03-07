@@ -2,7 +2,7 @@
 .overlay-container(v-if="service")
     form(@submit.prevent="save" @keydown.enter.prevent="")
         .overlay-container-title.hideOnTablet Service Setting
-        .toggle
+        .toggle(style="margin-bottom: 40px")
             span Enable/Disable
             .toggle-bar 
                 .toggle-ball(@click="serviceStatus > 0 ? serviceStatus = 0 : serviceStatus = 1;" :class="{'active': serviceStatus > 0 }")
@@ -12,10 +12,9 @@
         .input
             label CORS
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
-        .input
+        .input(style="margin-bottom: 40px;")
             label API Key
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="apiKey" @input="(e) => apiKey = e.target.value")
-        hr
         sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning" :disabled="!state.user.email_verified || null") Save
 sui-overlay(ref="disableConfirmOverlay")
