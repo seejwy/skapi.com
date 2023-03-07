@@ -1,7 +1,7 @@
 <template lang="pug">
 NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 2;background-color: var(--app-nav-bg-color);')
     ul.inline-vertical-middle(@click='bypassSameRoute')
-        li
+        li.showOnTablet
             router-link(to="/" tag="li")
                 img(src="@/assets/img/logo-small.svg" style="width: 40px; height: 40px;")
         li
