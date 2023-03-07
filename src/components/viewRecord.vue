@@ -9,7 +9,6 @@
 
 			.action(@click="deleteConfirmOverlay.open")
 				Icon trash
-				span(v-if='!isMobileUrl') delete
 	.content(:class="{desktop:!isMobileUrl}")
 		.grid(v-if="view === 'information'")
 			.grid-item.title Record ID 
