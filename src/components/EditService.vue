@@ -2,7 +2,7 @@
 .overlay-container(v-if="service")
     form(@submit.prevent="save" @keydown.enter.prevent="")
         .overlay-container-title.hideOnTablet Service Setting
-        .toggle
+        .toggle(style="margin-bottom: 40px")
             span Enable/Disable
             .toggle-bar 
                 .toggle-ball(@click="serviceStatus > 0 ? serviceStatus = 0 : serviceStatus = 1;" :class="{'active': serviceStatus > 0 }")
@@ -12,46 +12,31 @@
         .input
             label CORS
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
-        .input
+        .input(style="margin-bottom: 40px;")
             label API Key
             sui-input(type="text" :disabled="isCreatingService ? 'true' : null" :value="apiKey" @input="(e) => apiKey = e.target.value")
-        hr
-        div(style="text-align: right; margin-bottom: 28px;")
-            sui-button.text-button.delete-button(type="button" @click="deleteServiceAsk") Delete Service
         sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning" :disabled="!state.user.email_verified || null") Save
-sui-overlay(ref="deleteConfirmOverlay")
-    form.popup(@submit.prevent="deleteService")
-        .title
-            Icon warning
-            div Deleting Service?
-        .body 
-            p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
-            p To confirm deletion, enter ServicFsae ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
-            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
-        .foot
-            sui-button(@click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
-            sui-button.line-button Yes
 sui-overlay(ref="disableConfirmOverlay")
     .popup
         .title
             Icon warning
-            div(v-if="service.active > 0") Disabling Service?
+            div(v-if="service?.active > 0") Disabling Service?
             div(v-else) Enabling Service?
         .body 
-            p(v-if="service.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
+            p(v-if="service?.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
             sui-button(@click="()=> { disableConfirmOverlay.close(); }") No 
             sui-button.line-button(@click="toggleService") Yes
-sui-overlay(ref="deleteErrorOverlay")
+sui-overlay(ref="disableErrorOverlay")
     .popup
         .title
             Icon warning
             div Something went wrong!
         .body {{ errorMessage }}
         .foot
-            sui-button(@click="()=> { deleteErrorOverlay.close(); promiseRunning = false; }") Ok
+            sui-button(@click="()=> { disableErrorOverlay.close(); promiseRunning = false; }") Ok
 </template>
 <!-- script below -->
 <script setup>
@@ -78,11 +63,9 @@ const cors = ref('');
 const apiKey = ref('');
 const togglePromise = ref(null);
 const promiseRunning = ref(false);
-const deleteConfirmOverlay = ref(null);
 const disableConfirmOverlay = ref(null);
-const confirmationCode = ref('');
 const errorMessage = ref('');
-const deleteErrorOverlay = ref(null);
+const disableErrorOverlay = ref(null);
 
 serviceName.value = service.value.name;
 cors.value = service.value.cors;
@@ -174,38 +157,9 @@ const toggleService = async() => {
     } catch(e) {
         service.value.active = oldStatus;
         errorMessage.value = "Unable to toggle service status at this point.";
-        deleteErrorOverlay.value.open();
+        disableErrorOverlay.value.open();
         console.error(e);
     }
-}
-
-const deleteServiceAsk = () => {
-    if(promiseRunning.value) return;
-    deleteConfirmOverlay.value.open();
-}
-
-const deleteService = () => {
-    promiseRunning.value = true;
-    if(confirmationCode.value !== service.value.service) {
-        confirmationCode.value = '';
-        errorMessage.value = "Your service code did not match.";
-        deleteConfirmOverlay.value.close();
-        deleteErrorOverlay.value.open();
-        promiseRunning.value = false;
-        return;
-    }
-
-    skapi.deleteService(service.value.service).then(() => {
-        deleteConfirmOverlay.value.close();
-        router.replace('/dashboard');
-    }).catch(() => {
-        errorMessage.value = "Please disable your service before deleting it.";
-        deleteConfirmOverlay.value.close();
-        deleteErrorOverlay.value.open();
-    }).finally(() => {    
-        confirmationCode.value = '';
-        promiseRunning.value = false;
-    });
 }
 
 if(state.viewport === 'mobile') {

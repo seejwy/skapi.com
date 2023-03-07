@@ -133,6 +133,12 @@ const cancelEdit = () => {
     settings.value.email_subscription = state.user.email_subscription;
 }
 const updateUserSettings = async () => {
+    if(state.user.name === settings.value.name && state.user.email === settings.value.email && state.user.email_subscription === settings.value.email_subscription) {
+        isEdit.value = false;
+        isSaving.value = false;
+        return true;
+    }
+
     try {
         isSaving.value = true;
         let res = await skapi.updateProfile({
@@ -205,6 +211,7 @@ onMounted(() => {
     & > .title {
         font-weight: bold;
         padding: 28px 0;
+        color: rgba(0, 0, 0, .65);
     }
 
     .value,

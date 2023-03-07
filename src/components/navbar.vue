@@ -3,7 +3,7 @@ sui-nav#top-nav(auto-hide)
     .nav_align
         .title
             Icon.showOnTablet.clickable.back-button(v-if='!props.isParentLevel' @click="toParent") left
-            img.logo(v-if="pageTitle === 'skapi'" src="@/assets/img/logo.svg")
+            img.logo(v-if="pageTitle === 'skapi'" src="@/assets/img/logo.svg" @click="()=>props.isParentLevel ? router.push('/') : null")
             span.title-text(v-else:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null" v-html="pageTitle || ''")
         .menu
             .hideOnTablet
@@ -25,7 +25,6 @@ sui-nav#top-nav(auto-hide)
         // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
         #nav-overlay(@click="()=>close(true)")
             slot
-
 </template>
 <style lang="less">
 @import '@/assets/variables.less';
@@ -98,6 +97,10 @@ sui-nav#top-nav {
                     a {
                         text-decoration: none;
                         color: #fff;
+
+                        &.router-link-active {
+                            font-weight: bold;
+                        }
                     }
                 }
             }

@@ -1,5 +1,5 @@
 <template lang="pug">
-form.container(@submit.prevent="login")
+form.container.login(@submit.prevent="login")
     h1 Login
     .input
         label Email
@@ -209,11 +209,11 @@ function login() {
     }
 }
 .dashboard [type=checkbox] {
-    border-color: rgba(0, 0, 0, 0.25);
+    border-color: var(--primary-color);
 
     &[checked] {
-      color: rgba(255, 255, 255, 0.6);
-      background: rgba(0, 0, 0, 0.25);
+      color: #fff;
+      background: var(--primary-color);
     }
 }
 </style>

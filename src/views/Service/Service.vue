@@ -11,11 +11,15 @@ template(v-else)
             .title-wrapper
                 Icon information
                 h2 Service Information
+            .actions(@click="deleteServiceAsk")
+                Icon trash
         .inner-container 
             .title-actions-wrapper.hideOnTablet
                 .title-wrapper
                     Icon information
                     h2 Service Information
+                .actions(@click="deleteServiceAsk")
+                    span(style="font-size:14px") Delete Service
             .information-grid
                 .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
                     .name {{ info.name }}
@@ -82,14 +86,35 @@ template(v-else)
     sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isEdit = false")
         div.overlay
             EditService(@close="isEdit = false")
+sui-overlay(ref="deleteConfirmOverlay")
+    form.popup(@submit.prevent="deleteService")
+        .title
+            Icon warning
+            div Deleting Service?
+        .body 
+            p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
+            p To confirm deletion, enter ServicFsae ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
+            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
+        .foot
+            sui-button(type="button" @click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
+            SubmitButton.line-button(:loading="promiseRunning") Yes
+sui-overlay(ref="deleteErrorOverlay")
+    .popup
+        .title
+            Icon warning
+            div Something went wrong!
+        .body {{ deleteErrorMessage }}
+        .foot
+            sui-button(@click="()=> { deleteErrorOverlay.close(); promiseRunning = false; }") Ok
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
-import { state, regions, localeName, dateFormat } from '@/main';
+import { state, skapi, localeName, dateFormat } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import EditService from '@/components/EditService.vue';
 import Icon from '../../components/Icon.vue';
+import SubmitButton from '../../components/SubmitButton.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -99,6 +124,11 @@ let pageTitle = inject('pageTitle');
 pageTitle.value = 'Service "' + service.value.name + '"'
 
 const settingWindow = ref(null);
+const deleteConfirmOverlay = ref(null);
+const deleteErrorOverlay = ref(null);
+const promiseRunning = ref(false);
+const confirmationCode = ref('');
+const deleteErrorMessage = ref('');
 const isEdit = ref(false);
 
 const informationGrid = reactive([
@@ -179,6 +209,36 @@ const settingGrid = reactive([
 const edit = () => {
     if(state.viewport === 'desktop') isEdit.value = true;
     else router.push('?edit=service');
+}
+
+const deleteServiceAsk = () => {
+    if(promiseRunning.value) return;
+    deleteConfirmOverlay.value.open();
+}
+
+const deleteService = () => {
+    console.log("This one is called!!!", confirmationCode.value !== service.value.service, confirmationCode.value, service.value.service);
+    promiseRunning.value = true;
+    if(confirmationCode.value !== service.value.service) {
+        confirmationCode.value = '';
+        deleteErrorMessage.value = "Your service code did not match.";
+        deleteConfirmOverlay.value.close();
+        deleteErrorOverlay.value.open();
+        promiseRunning.value = false;
+        return;
+    }
+
+    skapi.deleteService(service.value.service).then(() => {
+        deleteConfirmOverlay.value.close();
+        router.replace('/dashboard');
+    }).catch(() => {
+        deleteErrorMessage.value = "Please disable your service before deleting it.";
+        deleteConfirmOverlay.value.close();
+        deleteErrorOverlay.value.open();
+    }).finally(() => {    
+        confirmationCode.value = '';
+        promiseRunning.value = false;
+    });
 }
 
 const opensettingWindow = () => {
@@ -542,5 +602,55 @@ sui-tooltip {
             text-decoration: none;
         }
     }
+}
+
+.popup {
+	background: #333333;
+	border: 1px solid #808080;
+	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+	border-radius: 8px;
+	padding: 60px 32px;
+	margin: 12px;
+	text-align: center;
+
+	svg {
+		height: 38px;
+		width: 38px;
+	}
+
+	.title {
+        color: #F04E4E;
+        font-weight: bold;
+
+		&>div {
+			margin-top: 12px;
+			font-size: 20px;
+		}
+	}
+
+	.body {
+		padding: 20px 0 28px 0;
+        line-height: 1.5;
+
+        p {
+            margin: 0 0 32px 0;
+
+            &:last-of-type {
+                margin-bottom: 24px;
+            }
+        }
+
+        sui-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+	}
+
+	.foot sui-button:first-child {
+		margin-right: 12px;
+	}
 }
 </style>
