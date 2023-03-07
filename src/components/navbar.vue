@@ -38,7 +38,7 @@ sui-nav#top-nav(auto-hide)
 
     background-color: #1F1F1F;
     height: 100vh;
-    padding: 70px 8px;
+    padding: 40px 8px;
 
     ul {
         margin: 0;
