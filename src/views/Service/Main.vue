@@ -25,15 +25,19 @@
             Login(v-else-if="!state.user")
     .sidebar(v-if="state.user")
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
+        img.hover-logo(src="@/assets/img/logo.svg")
 
         router-link(:to="{name: 'service'}")
             Icon home
+            span Service Home
 
         router-link(:to="{name: 'users'}") 
             Icon users
+            span Users
 
         router-link(:to="{name: 'records'}")
             Icon folder_open
+            span Records
 
         //- router-link(to='/')
             //(:to="{name: 'mail'}")
@@ -68,6 +72,7 @@ Transition(name="toast")
 
     .sidebar {
         background: var(--primary-color);
+        overflow: hidden;
 
         @media @tablet {        
             box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
@@ -91,7 +96,7 @@ Transition(name="toast")
         width: 52px;
         position: sticky;
         top: 0;
-
+        transition: width .2s ease-in;
         &>* {
             display: inline-block;
             color: #fff;
@@ -107,8 +112,13 @@ Transition(name="toast")
             }
         }
 
+        & .hover-logo {
+            display: none;
+        }
+
         &>a {
             display: block;
+            width: min-content;
             margin: 28px 8px;
 
             @media @ipad {
@@ -126,6 +136,46 @@ Transition(name="toast")
 
             svg {
                 margin: 6px;
+            }
+
+            span {
+                display: none;
+                margin: 6px;
+                font-weight: normal;
+                font-size: 16px;
+                white-space: nowrap;
+                line-height: 24px;
+            }
+        }
+
+        &:hover {
+            width: 150px;
+
+            .logo {
+                display: none;
+            }
+            .hover-logo {
+                display: block;
+                height: 35px;
+                margin: 14px 14px;
+            }
+            svg {
+                display: none;
+            }
+
+            a {
+                background: transparent;
+
+                &:hover {
+
+                    span{
+                        font-weight: bold;
+                    }
+                }
+            }
+
+            a span {
+                display: inline-block;
             }
         }
     }
