@@ -1,5 +1,9 @@
 <template lang="pug">
-.page-header.head-space-helper
+SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
+    div {{ mobilePageTitle }}
+    template(v-slot:right) 
+        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'})}") X2
+.page-header.head-space-helper(v-if="viewport === 'desktop' || !route.query.search")
     h1 Users
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     .action
@@ -55,7 +59,7 @@
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
-    .table-actions(:class="{'rounded-border' : !groupedUserList?.length && fetchingData && !route.query.search}")
+    .table-actions(v-if="!route.query.search || viewport === 'desktop' && fetchingData" :class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
         .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
         .header-actions(v-if="!route.query.search || groupedUserList?.length" @click="showSetting = true")
             div.dropdown
@@ -167,7 +171,7 @@
             @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
             ) right
 
-.page-action.showOnTablet(@blur="isFabOpen = false")
+.page-action(v-if="viewport === 'mobile' && !route.query.search" @blur="isFabOpen = false")
     sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen")
         Icon menu_vertical
 
@@ -183,6 +187,7 @@ import { skapi, state, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
+import SearchNavBar from '@/components/SearchNavBar.vue';
 
 const viewport = inject('viewport');
 let route = useRoute();
@@ -195,6 +200,9 @@ const service = inject('service');
 let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
+
+const appStyle = inject('appStyle');
+const mobilePageTitle = ref('');
 
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
@@ -426,7 +434,14 @@ if(route.query.search) {
 
 const toggleMobileDesktopSearchView = () => {
     if(viewport.value === 'mobile' && route.query.search) {
-        router.replace({name: 'usersSearch', query: route.query});
+        appStyle.mainPadding = '0';
+        pageTitle.value = null;
+        mobilePageTitle.value = `${visibleFields[route.query.search].text} : ${route.query.value}`;
+        appStyle.background = '#333333';
+    } else {
+        pageTitle.value = 'Users';
+        appStyle.mainPadding = null;
+        appStyle.background = null;
     }
 }
 
@@ -547,6 +562,39 @@ onBeforeRouteLeave((to, from) => {
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+
+    .mobile-search-nav + & {
+        background-color: transparent;
+        margin: 0;
+
+        @media @tablet {
+            .table-actions {
+                padding: 14px 20px 14px 20px
+            }
+        }
+
+        table {
+            tbody tr,
+            thead tr {
+                background-color: transparent;
+                th {
+                    background-color: transparent;
+                }
+            }
+                
+            tbody {
+                tr {
+                    &:nth-child(odd) {
+                        background: rgba(255, 255, 255, .04);
+                    }
+                }
+            }
+        }
+
+        .no-users-found {
+            background-color: transparent;
+        }
+    }
 
     .search-query {
         display: flex;
