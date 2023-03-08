@@ -141,11 +141,14 @@ const updateUserSettings = async () => {
 
     try {
         isSaving.value = true;
+        let isSubscribe = settings.value.email !== state.user.email ? false : settings.value.email_subscription;
         let res = await skapi.updateProfile({
             name: settings.value.name,
             email: settings.value.email,
-            email_subscription: settings.value.email_subscription
+            email_subscription: isSubscribe
         });
+        
+        settings.value.email_subscription = isSubscribe;
 
         state.user = res;
     } catch(e) {
