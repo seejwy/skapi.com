@@ -78,12 +78,16 @@ if (viewport.value === 'desktop' || record.value === null && !record_id) {
 }
 
 if (!record.value) {
-    skapi.getRecords({
-        service: route.params.service,
-        record_id
-    }).then(r => {
-        record.value = r.list[0];
-    });
+    if(record_id !== 'Add Record') {
+        skapi.getRecords({
+            service: route.params.service,
+            record_id
+        }).then(r => {
+            record.value = r.list[0];
+        });
+    } else {
+        record.value = {};
+    }
 }
 
 onMounted(() => {
