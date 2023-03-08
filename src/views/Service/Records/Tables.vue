@@ -185,6 +185,7 @@ function addRecord(mobile = false) {
 }
 
 async function displayRecord(r) {
+    console.log("This was called", r);
     if (typeof r === 'string') {
         let rec = await skapi.getRecords({
             service: serviceId,
@@ -194,8 +195,10 @@ async function displayRecord(r) {
         openRecord.value.open();
     }
     else {
-        recordToOpen.value = r;
-        openRecord.value.open();
+        if(r.record_id) {
+            recordToOpen.value = r;
+            openRecord.value.open();
+        }
     }
 }
 
