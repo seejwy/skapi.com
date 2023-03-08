@@ -43,13 +43,13 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         option(value="=") =
     
     .actions
-        sui-button.text-button(@click="blockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
+        sui-button.text-button(@click="blockUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon block
             span.hide-when-pre-tablet block
-        sui-button.text-button(@click="unblockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
+        sui-button.text-button(@click="unblockUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon unblock
             span.hide-when-pre-tablet unblock
-        sui-button.text-button(@click="deleteUsers(serviceId, selectedUsers, serviceUsers)" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
+        sui-button.text-button(@click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon trash
             span.hide-when-pre-tablet delete
 
@@ -79,11 +79,11 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         .header-actions(v-else)
         Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(@click="blockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon block
-            sui-button.icon-button(@click="unblockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon unblock
-            sui-button.icon-button(@click="deleteUsers(serviceId, selectedUsers, serviceUsers)" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
 
     .table-wrapper
@@ -182,7 +182,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
-import { changeSearchCondition, visibleFields, getValidationMessage, blockUsers, deleteUsers, unblockUsers, placeholder } from './users';
+import { changeSearchCondition, visibleFields, getValidationMessage, placeholder } from './users';
 import { skapi, state, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
@@ -448,6 +448,55 @@ const toggleMobileDesktopSearchView = () => {
 function numberOfSkeletons() {
     // calculated by available vertical space
     return parseInt((window.innerHeight / 2) / 48);
+}
+
+
+const blockUsers = async () => {
+    let blockPromise = selectedUsers.value.map((user) => {
+        return skapi.blockAccount({service: serviceId, userId: user});
+    });
+
+    await Promise.all(blockPromise);
+    selectedUsers.value.forEach((sel) => {
+        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
+            return item.user_id === sel
+        });
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:suspended';
+    });
+}
+
+const unblockUsers = async () => {
+    let unblockPromise = selectedUsers.value.map((user) => {
+        return skapi.unblockAccount({service: serviceId, userId: user});
+    });
+
+    await Promise.all(unblockPromise);
+    selectedUsers.value.forEach((sel) => {
+        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
+            return item.user_id === sel
+        });
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:approved';
+    })
+}
+
+const deleteUsers = async () => {
+    if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
+
+    let deletePromise = selectedUsers.map((userId) => {
+        return skapi.deleteAccount({service: serviceId, userId});
+    });
+
+    try {
+        await Promise.all(deletePromise);
+        
+        selectedUsers.value.forEach((user) => {
+            let idx = serviceUsers.value.list.findIndex((res) => res.user_id === user);
+            serviceUsers.value.list.splice(idx, 1);
+        });
+        selectedUsers.value = [];
+    } catch(e) {
+        console.log({e});
+    }
 }
 
 onMounted(() => {    
