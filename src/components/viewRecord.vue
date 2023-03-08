@@ -519,11 +519,14 @@ const save = async () => {
 				let tbl = recordTables.value.list[idx];
 				tbl.number_of_records++;
 				tbl.size += recordSize; // update table size
+				tbl.records.list.push(r);
 				let gotMore = await getMoreRecords(null, recordTables.value.list[idx], serviceId);
 				if (gotMore.startKey_list[gotMore.startKey_list.length - 1] === '"end"') {
 					// start over if it already reached the end
 					await getMoreRecords(null, recordTables.value.list[idx], serviceId, false);
 				}
+			} else {			
+				refreshTables(serviceId);
 			}
 		}
 		else {
