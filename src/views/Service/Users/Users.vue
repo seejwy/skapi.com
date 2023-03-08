@@ -70,8 +70,8 @@
                                 span {{  field.text }}
             template(v-else)
                 sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
-                    template(v-for="(field, key) in visibleFields" :value="key")
-                        option(v-if="key !== 'suspended'") {{  field.text  }}
+                    template(v-for="(field, key) in visibleFields")
+                        option(v-if="key !== 'suspended'" :value="key") {{  field.text  }}
         .header-actions(v-else)
         Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")

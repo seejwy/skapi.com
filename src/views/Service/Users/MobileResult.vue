@@ -10,8 +10,8 @@ SearchNavBar(v-if='viewport === "mobile"')
                 span Headers
                 Icon down2
             sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
-                template(v-for="(field, key) in visibleFields" :value="key")
-                    option(v-if="key !== 'suspended'") {{  field.text  }}
+                template(v-for="(field, key) in visibleFields")
+                    option(v-if="key !== 'suspended'" :value="key") {{  field.text  }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
