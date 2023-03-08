@@ -167,6 +167,7 @@ onMounted(() => {
 });
 
 function addRecord(mobile = false) {
+    recordToOpen.value = {};
     if (mobile) {
         router.push({
             name: 'mobileRecordView',
