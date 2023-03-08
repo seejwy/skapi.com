@@ -14,11 +14,11 @@ SearchNavBar(v-if='viewport === "mobile"')
                     option(v-if="key !== 'suspended'" :value="key") {{  field.text  }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="blockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
                 Icon block
-            sui-button.icon-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="unblockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
                 Icon unblock
-            sui-button.icon-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="deleteUsers(serviceId, selectedUsers, serviceUsers)" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
 
     .table-wrapper
@@ -78,7 +78,7 @@ template(v-else)
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
 import { skapi, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
-import { visibleFields } from './users';
+import { visibleFields, blockUsers, unblockUsers, deleteUsers } from './users';
 
 import Icon from '@/components/Icon.vue';
 import SearchNavBar from '@/components/SearchNavBar.vue';
@@ -107,42 +107,6 @@ const searchParams = reactive({
 
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
-}
-
-const blockUsers = async () => {
-    let blockPromise = selectedUsers.value.map((user) => {
-        return skapi.blockAccount({service: serviceId, userId: user});
-    });
-
-    await Promise.all(blockPromise);
-    selectedUsers.value.forEach((sel) => {
-        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
-            return item.user_id === sel
-        });
-        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:suspended';
-    });
-}
-
-const unblockUsers = async () => {
-    let unblockPromise = selectedUsers.value.map((user) => {
-        return skapi.unblockAccount({service: serviceId, userId: user});
-    });
-
-    await Promise.all(unblockPromise);
-    selectedUsers.value.forEach((sel) => {
-        let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
-            return item.user_id === sel
-        });
-        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:approved';
-    })
-}
-
-const deleteUsers = async () => {
-    let deletePromise = selectedUsers.value.map((userId) => {
-        return skapi.deleteAccount({service: serviceId, userId});
-    });
-
-    await Promise.all(deletePromise);
 }
 
 const groupedUserList = computed(() => {
