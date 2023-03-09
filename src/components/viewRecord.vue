@@ -196,7 +196,7 @@
 							input.line-input(
 								type="number"
 								min="1"
-								placeholder="Infitite"
+								placeholder="Infinite"
 								:value="form.reference.reference_limit === null ? '' : (form.reference?.reference_limit || '').toString()"
 								@input="(e) => form.reference.reference_limit = e.target.value ? parseInt(e.target.value) : null")
 
@@ -245,7 +245,8 @@
 						spellcheck="false"
 						:value="record.data"
 						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
-						@change="validateJson")
+						@change="validateJson"
+						required)
 					sui-textarea.data-input-field(
 						v-else-if="record.type === 'json'"
 						style="height: auto; white-space:pre;"
