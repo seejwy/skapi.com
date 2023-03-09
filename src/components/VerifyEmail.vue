@@ -14,7 +14,7 @@ form.form.container(@submit.prevent="verifyEmail")
                 Icon warning
                 span {{ verificationCode.error }}
     .actions
-        sui-button.line-button(type="button" @click="emit('close')") Cancel
+        sui-button.line-button(type="button" @click="state.viewport === 'desktop' ? emit('close') : router.replace('');") Cancel
         SubmitButton(:loading="promiseRunning") Verify
 </template>
 <!-- script below -->
