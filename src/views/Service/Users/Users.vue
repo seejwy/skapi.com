@@ -127,7 +127,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         template(v-for="page in batch")
                             tr(v-for="(user, userIndex) in page" :key="user['user_id']")
                                 td
-                                    sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                                    sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                                 td(v-if="viewport === 'mobile'" style="width: 52px;")
                                     Icon(v-if="user['suspended']?.includes('suspended')" style="opacity: 40%;") block
                                     Icon(v-else) unblock
