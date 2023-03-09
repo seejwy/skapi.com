@@ -100,7 +100,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                     th(v-if="computedVisibleFields.length <= 2")
             tbody(v-if="groupedUserList?.length")
                 template(v-if="viewport === 'desktop'")
-                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
+                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']" :id="user['user_id']")
                         td
                             sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
@@ -125,7 +125,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 template(v-else)
                     template(v-for="batch in groupedUserList")
                         template(v-for="page in batch")
-                            tr(v-for="(user, userIndex) in page" :key="user['user_id']")
+                            tr(v-for="(user, userIndex) in page" :key="user['user_id']" :id="user['user_id']")
                                 td
                                     sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                                 td(v-if="viewport === 'mobile'" style="width: 52px;")
@@ -571,11 +571,12 @@ const deleteUsers = async () => {
     if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
 
     let deletePromise = selectedUsers.value.map((userId) => {
+        document.getElementById(userId).classList.add('deleting');
         return skapi.deleteAccount({service: serviceId, userId});
     });
 
     try {
-        await Promise.all(deletePromise);
+        let result = await Promise.all(deletePromise);
         
         selectedUsers.value.forEach((user) => {
             let idx = serviceUsers.value.list.findIndex((res) => res.user_id === user);
@@ -585,6 +586,10 @@ const deleteUsers = async () => {
         selectedUnblockedUsers.value = [];
     } catch(e) {
         console.log({e});
+        
+        selectedUsers.value.forEach((user) => {
+            document.getElementById(user).classList.remove('deleting');
+        });
     }
 
     promiseRunning.value = false;
@@ -904,6 +909,10 @@ onBeforeRouteLeave((to, from) => {
             tr {
                 &:nth-child(odd) {
                     background: #4a4a4a;
+                }
+
+                &.deleting td {
+                    opacity: 0.3;
                 }
 
                 td {
