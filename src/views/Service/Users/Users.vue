@@ -504,7 +504,7 @@ const confirmActionDialog = async () => {
 }
 
 const blockUsers = async () => {
-    if(promiseRunning.value) return false;
+    if(promiseRunning.value || !selectedUnblockedUsers.value.length || selectedBlockedUsers.value.length || !state.user.email_verified) return false;
     try {
         actionType.value = 'block';
         await confirmActionDialog();
@@ -532,7 +532,7 @@ const blockUsers = async () => {
 }
 
 const unblockUsers = async () => {
-    if(promiseRunning.value) return false;
+    if(promiseRunning.value || !selectedBlockedUsers.value.length || selectedUnblockedUsers.value.length || !state.user.email_verified) return false;
     try {
         actionType.value = 'unblock';
         await confirmActionDialog();
@@ -559,7 +559,7 @@ const unblockUsers = async () => {
 }
 
 const deleteUsers = async () => {
-    if(promiseRunning.value) return false;
+    if(promiseRunning.value || !selectedUsers.value.length || !state.user.email_verified) return false;
     try {
         actionType.value = 'delete';
         await confirmActionDialog();
