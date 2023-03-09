@@ -1,13 +1,17 @@
 <template lang="pug">
-.head
-    .tab Information
-.container
-    template(v-if="user")
-        .label(v-for="key in info")
-            span {{ key.name || key.key }}
-            .value(:class="key.class") 
-                Icon(v-if="key.icon") {{ key.icon(user[key.key]) }}
-                span {{ key.filter ? key.filter(user[key.key]) : user[key.key] || '-'}}
+template(v-if="user")
+    .head
+        .tab Information
+    .container
+        template(v-if="user")
+            .label(v-for="key in info")
+                span {{ key.name || key.key }}
+                .value(:class="key.class") 
+                    Icon(v-if="key.icon") {{ key.icon(user[key.key]) }}
+                    span {{ key.filter ? key.filter(user[key.key]) : user[key.key] || '-'}}
+
+div(v-else style="text-align: center; padding: 1em;")
+    Icon.animation-rotation(style="display:inline-block;width:32px;height:32px;") refresh
 </template>
 <script setup>
 import { inject, ref, reactive, watch, onBeforeUnmount } from 'vue';
