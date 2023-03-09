@@ -36,9 +36,14 @@ const verificationCode = ref({
 });
 
 const verifyEmail = () => {
-    skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
-        state.user.email_verified = true;
-    });
+    try {
+        skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
+            state.user.email_verified = true;
+        });
+    } catch(e) {
+        console.log({e: e.code});
+        console.log(e.code);
+    }
 
     if(state.viewport === 'desktop') emit('close');
     else router.replace('');

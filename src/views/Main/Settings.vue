@@ -27,6 +27,7 @@ div(v-else-if="state?.user")
                         Icon warning
                         span(v-if="state.user.email_verified") Verified
                         span(v-else) Unverified
+                    .error(v-if="isVerifyErrorMessage") You have exceeded the number of tries. Please try again later.
             .actions(v-if="!state.user.email_verified" @click="openVerifyEmail")
                 span Verify Email
             .mobile-value(v-if="state.viewport === 'mobile'")            
@@ -37,6 +38,7 @@ div(v-else-if="state?.user")
                         Icon warning
                         span(v-if="state.user.email_verified") Verified
                         span(v-else) Unverified
+                    .error(v-if="isVerifyErrorMessage") You have exceeded the number of tries. Please try again later.
             hr   
             .title Subscription
             .value(v-if="state.viewport === 'desktop'")
@@ -113,6 +115,7 @@ let settings = ref({
     name: '',
     email: ''
 });
+const isVerifyErrorMessage = ref(false);
 
 const passwordOverlay = ref(null);
 const emailOverlay = ref(null);
@@ -123,7 +126,10 @@ const openVerifyEmail = async () => {
         if(state.viewport === 'desktop') emailOverlay.value.open();
         else router.replace('?page=verify');
     } catch(e) {
-        console.log({e})
+        console.log({e});
+        if(e.code === 'LimitExceededException') {
+            isVerifyErrorMessage.value = true;
+        }
     }
 }
 const cancelEdit = () => {
@@ -346,79 +352,10 @@ onMounted(() => {
         }
     }
 }
-.container {
-    text-align: center;
-    padding: 40px;
-    background: #FAFAFA;
-    color: #000000d9;
-    width: 542px;
-    max-width: 100%;
-    border: 1px solid #808080;
-    box-shadow: 4px 4px 12px #00000040;
-    border-radius: 8px;
-
-    p {
-        margin: 40px 0;
-    }
-
-    .input {
-        margin: 20px auto 12px;
-
-        label,
-        span {
-            display: block;
-            text-align: left;
-            color: rgba(0, 0, 0, 0.65);
-            margin-bottom: 8px;
-        }
-        label {
-            font-weight: bold;
-        }
-        sui-input {
-            width: 100%;
-            border: 1px solid #8C8C8C;
-        }
-        sui-button {
-            width: 100%;
-        }
-
-        .error {
-            text-align: left;
-            margin-top: 4px;
-
-            * {
-                display: inline;           
-                color: #EB1717;
-            }
-
-            span {
-                margin-left: 4px;
-            }
-        }
-    }
-    .actions {
-        margin-top: 40px;
-    }
-    .step-wrapper {
-        margin-top: 56px;
-
-        .step {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #D9D9D9;
-            margin-right: 12px;
-
-            &:last-child {
-                margin: 0;
-            }
-
-            &.active {
-                background-color: var(--primary-color);
-            }
-        }
-    }
+.error {
+    text-align: left;
+    margin-top: 4px;         
+    color: #EB1717;
 }
 
 .line-button {
