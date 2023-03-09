@@ -30,7 +30,7 @@
         img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
         img.hover-logo(src="@/assets/img/logo.svg")
 
-        router-link(:to="{name: 'service'}")
+        router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
             Icon home
             span Service Home
 
