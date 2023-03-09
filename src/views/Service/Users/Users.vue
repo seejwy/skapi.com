@@ -178,6 +178,18 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         div(v-if="isFabOpen" @click.stop)
             sui-button.fab(@click="router.push({name: 'mobileSearchUser'})")
                 Icon search
+sui-overlay(ref="confirmOverlay")
+    .popup
+        .title
+            Icon warning
+            div(v-if="actionType === 'delete'") Deleting Users
+            div(v-else-if="actionType === 'block'") Blocking Users
+            div(v-else-if="actionType === 'unblock'") Unblocking Users
+        .body 
+            p Do you wish to continue?
+        .foot
+            sui-button No 
+            sui-button.line-button Yes
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
@@ -213,6 +225,8 @@ const searchParams = reactive({
 });
 const navbarBackDestination = inject('navbarBackDestination');
 const promiseRunning = ref(false);
+const confirmOverlay = ref(null);
+const actionType = ref('');
 
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
@@ -470,9 +484,34 @@ function numberOfSkeletons() {
     return parseInt((window.innerHeight / 2) / 48);
 }
 
+const confirmActionDialog = async () => {
+    return new Promise((res, rej) => {
+        confirmOverlay.value.open();
+        const noButton = confirmOverlay.value.querySelectorAll('sui-button')[0];
+        const yesButton = confirmOverlay.value.querySelectorAll('sui-button')[1];
+
+        noButton.addEventListener('click', () => {
+            confirmOverlay.value.close();
+            rej();
+        });
+
+        yesButton.addEventListener('click', async () => {
+            confirmOverlay.value.close();
+            res();
+        });
+
+    });
+}
 
 const blockUsers = async () => {
     if(promiseRunning.value) return false;
+    try {
+        actionType.value = 'block';
+        await confirmActionDialog();
+    } catch(e) {
+        return false;
+    }
+    
     promiseRunning.value = true;
     let blockPromise = selectedUsers.value.map((user) => {
         return skapi.blockAccount({service: serviceId, userId: user});
@@ -494,6 +533,13 @@ const blockUsers = async () => {
 
 const unblockUsers = async () => {
     if(promiseRunning.value) return false;
+    try {
+        actionType.value = 'unblock';
+        await confirmActionDialog();
+    } catch(e) {
+        return false;
+    }
+
     promiseRunning.value = true;
     let unblockPromise = selectedUsers.value.map((user) => {
         return skapi.unblockAccount({service: serviceId, userId: user});
@@ -514,6 +560,13 @@ const unblockUsers = async () => {
 
 const deleteUsers = async () => {
     if(promiseRunning.value) return false;
+    try {
+        actionType.value = 'delete';
+        await confirmActionDialog();
+    } catch(e) {
+        return false;
+    }
+
     promiseRunning.value = true;
     if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
 
@@ -1095,5 +1148,55 @@ onBeforeRouteLeave((to, from) => {
     @media screen and (max-width: 870px) {
         display: none;
     }
+}
+
+.popup {
+	background: #333333;
+	border: 1px solid #808080;
+	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+	border-radius: 8px;
+	padding: 60px 32px;
+	margin: 12px;
+	text-align: center;
+
+	svg {
+		height: 38px;
+		width: 38px;
+	}
+
+	.title {
+        color: #F04E4E;
+        font-weight: bold;
+
+		&>div {
+			margin-top: 12px;
+			font-size: 20px;
+		}
+	}
+
+	.body {
+		padding: 20px 0 28px 0;
+        line-height: 1.5;
+
+        p {
+            margin: 0 0 32px 0;
+
+            &:last-of-type {
+                margin-bottom: 24px;
+            }
+        }
+
+        sui-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+	}
+
+	.foot sui-button:first-child {
+		margin-right: 12px;
+	}
 }
 </style>
