@@ -185,7 +185,6 @@ function addRecord(mobile = false) {
 }
 
 async function displayRecord(r) {
-    console.log("This was called", r);
     if (typeof r === 'string') {
         let rec = await skapi.getRecords({
             service: serviceId,

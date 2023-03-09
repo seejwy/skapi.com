@@ -93,7 +93,7 @@ function signup() {
     skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: '/success'}).then(result => {
         router.push('/confirmation');
     }).catch(e => {
-        console.log("SIGNUP", {e});
+        console.log({e});
         // console.log({e});
         // console.log({e: e.code});
         // INVALID_PARAMETER

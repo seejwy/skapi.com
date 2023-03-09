@@ -217,7 +217,6 @@ const deleteServiceAsk = () => {
 }
 
 const deleteService = () => {
-    console.log("This one is called!!!", confirmationCode.value !== service.value.service, confirmationCode.value, service.value.service);
     promiseRunning.value = true;
     if(confirmationCode.value !== service.value.service) {
         confirmationCode.value = '';
