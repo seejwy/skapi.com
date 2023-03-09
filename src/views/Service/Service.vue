@@ -11,14 +11,14 @@ template(v-else)
             .title-wrapper
                 Icon information
                 h2 Service Information
-            .actions(@click="deleteServiceAsk")
+            .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon trash
         .inner-container 
             .title-actions-wrapper.hideOnTablet
                 .title-wrapper
                     Icon information
                     h2 Service Information
-                .actions(@click="deleteServiceAsk")
+                .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
                     span(style="font-size:14px") Delete Service
             .information-grid
                 .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
@@ -31,14 +31,14 @@ template(v-else)
             .title-wrapper
                 Icon setting
                 h2 Service Setting 
-            .actions(@click="edit")
+            .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon pencil
         .inner-container 
             .title-actions-wrapper.hideOnTablet
                 .title-wrapper
                     Icon setting
                     h2 Service Setting 
-                .actions(@click="edit")
+                .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
                     Icon pencil
                     span Edit
             .setting-grid 
@@ -207,12 +207,13 @@ const settingGrid = reactive([
 ]);
 
 const edit = () => {
+    if(!state.user.email_verified) return false;
     if(state.viewport === 'desktop') isEdit.value = true;
     else router.push('?edit=service');
 }
 
 const deleteServiceAsk = () => {
-    if(promiseRunning.value) return;
+    if(promiseRunning.value || !state.user.email_verified) return;
     deleteConfirmOverlay.value.open();
 }
 
@@ -324,6 +325,10 @@ watch(() => isEdit.value, async () => {
         }
         span {
             vertical-align: middle;
+        }
+
+        &.disabled {
+            opacity: 0.4;
         }
     }
 
