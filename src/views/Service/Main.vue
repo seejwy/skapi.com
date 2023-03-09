@@ -34,11 +34,11 @@
             Icon home
             span Service Home
 
-        router-link(:to="{name: 'users'}") 
+        router-link(:to="{name: 'users'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'users'}") 
             Icon users
             span Users
 
-        router-link(:to="{name: 'records'}")
+        router-link(:to="{name: 'records'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'records'}")
             Icon folder_open
             span Records
 
@@ -133,7 +133,7 @@ Transition(name="toast")
             
             border-radius: 4px;
 
-            &.router-link-exact-active,
+            &.router-link-active-mobile,
             &:hover {
                 background: rgba(255, 255, 255, 0.2);
             }
