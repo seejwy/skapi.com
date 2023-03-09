@@ -43,16 +43,15 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         option(value="=") =
     
     .actions
-        sui-button.text-button(@click="blockUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
+        sui-button.text-button(@click="blockUsers" :disabled="((selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon block
             span.hide-when-pre-tablet block
-        sui-button.text-button(@click="unblockUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
+        sui-button.text-button(@click="unblockUsers" :disabled="((selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon unblock
             span.hide-when-pre-tablet unblock
         sui-button.text-button(@click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon trash
             span.hide-when-pre-tablet delete
-
 .table-outer-wrapper
     .search-query(v-if="route.query.search && viewport === 'desktop'")
         span Result of {{ visibleFields[route.query.search].text }} : "{{ route.query.value }}" {{ route.query.condition }}
@@ -79,9 +78,9 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         .header-actions(v-else)
         Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(@click="blockUsers" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="blockUsers" :disabled="(selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || null")
                 Icon block
-            sui-button.icon-button(@click="unblockUsers" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(@click="unblockUsers" :disabled="(selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || null")
                 Icon unblock
             sui-button.icon-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
@@ -95,7 +94,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             thead(v-if="groupedUserList?.length && !fetchingData")
                 tr(:class="{rounded: fetchingData || null}")
                     th
-                        sui-input(v-if="viewport === 'desktop'" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                        sui-input(v-if="viewport === 'desktop'" :disabled="promiseRunning || null" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
                     th(v-if="viewport === 'mobile'" style="width: 52px;") Block
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
@@ -103,7 +102,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 template(v-if="viewport === 'desktop'")
                     tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']")
                         td
-                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                            sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
                             template(v-if="key === 'suspended'")
                                 Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
@@ -213,6 +212,7 @@ const searchParams = reactive({
     value: ''
 });
 const navbarBackDestination = inject('navbarBackDestination');
+const promiseRunning = ref(false);
 
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
@@ -307,22 +307,43 @@ const computedVisibleFields = computed(() => {
     if(viewport.value === 'desktop') return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
     return [mobileVisibleField.value];
 });
+const selectedBlockedUsers = ref([]);
+const selectedUnblockedUsers = ref([]);
 
-const selectedUsers = ref([]);
+const selectedUsers = computed(() => {
+    return [...selectedBlockedUsers.value, ...selectedUnblockedUsers.value];
+});
 
 const userSelectionHandler = (e) => {
+    let user = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].find((user) => {
+        return user.user_id === e.target.value;
+    });
     if (e.target.checked) {
-        selectedUsers.value.push(e.target.value);
+        if(user.suspended.includes('suspended')) {
+            selectedBlockedUsers.value.push(e.target.value);
+        } else {
+            selectedUnblockedUsers.value.push(e.target.value);
+        }
     } else {
-        selectedUsers.value.splice(selectedUsers.value.indexOf(e.target.value), 1);
+        if(user.suspended.includes('suspended')) {
+            selectedBlockedUsers.value.splice(selectedBlockedUsers.value.indexOf(e.target.value), 1);
+        } else {
+            selectedUnblockedUsers.value.splice(selectedUnblockedUsers.value.indexOf(e.target.value), 1);
+        }
     }
 };
 
 const selectAllHandler = (e) => {
-    selectedUsers.value = [];
+    selectedBlockedUsers.value = [];
+    selectedUnblockedUsers.value = [];
+    
     if (e.target.checked) {
         groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].map(user => {
-            selectedUsers.value.push(user.user_id);
+            if(user.suspended.includes('suspended')) {
+                selectedBlockedUsers.value.push(user.user_id);
+            } else {
+                selectedUnblockedUsers.value.push(user.user_id);
+            }
         });
     }
 };
@@ -451,37 +472,52 @@ function numberOfSkeletons() {
 
 
 const blockUsers = async () => {
+    if(promiseRunning.value) return false;
+    promiseRunning.value = true;
     let blockPromise = selectedUsers.value.map((user) => {
         return skapi.blockAccount({service: serviceId, userId: user});
     });
 
     await Promise.all(blockPromise);
-    selectedUsers.value.forEach((sel) => {
+    selectedUnblockedUsers.value.forEach((sel) => {
         let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
             return item.user_id === sel
         });
         groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:suspended';
     });
+
+    selectedBlockedUsers.value = [...selectedUnblockedUsers.value];
+    selectedUnblockedUsers.value = [];
+    
+    promiseRunning.value = false;
 }
 
 const unblockUsers = async () => {
+    if(promiseRunning.value) return false;
+    promiseRunning.value = true;
     let unblockPromise = selectedUsers.value.map((user) => {
         return skapi.unblockAccount({service: serviceId, userId: user});
     });
 
     await Promise.all(unblockPromise);
-    selectedUsers.value.forEach((sel) => {
+    selectedBlockedUsers.value.forEach((sel) => {
         let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
             return item.user_id === sel
         });
         groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:approved';
-    })
+    });
+    selectedUnblockedUsers.value = [...selectedBlockedUsers.value];
+    selectedBlockedUsers.value = [];
+
+    promiseRunning.value = false;
 }
 
 const deleteUsers = async () => {
+    if(promiseRunning.value) return false;
+    promiseRunning.value = true;
     if(selectedUsers.value.length === 0 || !state.user.email_verified) return false;
 
-    let deletePromise = selectedUsers.map((userId) => {
+    let deletePromise = selectedUsers.value.map((userId) => {
         return skapi.deleteAccount({service: serviceId, userId});
     });
 
@@ -492,10 +528,13 @@ const deleteUsers = async () => {
             let idx = serviceUsers.value.list.findIndex((res) => res.user_id === user);
             serviceUsers.value.list.splice(idx, 1);
         });
-        selectedUsers.value = [];
+        selectedBlockedUsers.value = [];
+        selectedUnblockedUsers.value = [];
     } catch(e) {
         console.log({e});
     }
+
+    promiseRunning.value = false;
 }
 
 onMounted(() => {    
@@ -520,14 +559,16 @@ watch(() => viewport.value, (viewport) => {
         pageTitle.value = `Service "${service.value.name}"`;
     }
 
-    selectedUsers.value = [];
+    selectedBlockedUsers.value = [];
+    selectedUnblockedUsers.value = [];
     toggleMobileDesktopSearchView();
 }, {
     immediate: true
 });
 
 watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
-    selectedUsers.value = [];
+    selectedBlockedUsers.value = [];
+    selectedUnblockedUsers.value = [];
 });
 
 watch(() => route.query, () => {
