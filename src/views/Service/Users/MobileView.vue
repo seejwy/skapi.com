@@ -25,6 +25,7 @@ navbarBackDestination.value = 'back';
 pageTitle.value = route.params.user_id;
 let user = ref(null);
 let serviceId = route.params.service;
+let serviceUsers = inject('serviceUsers');
 
 const info = reactive([
     {
@@ -66,14 +67,22 @@ const info = reactive([
     },
 ]);
 
-skapi.getUsers({
-    service: serviceId,
-    searchFor: 'user_id',
-    condition: '=',
-    value: route.params.user_id
-}).then((res) => {
-    user.value = res.list[0];
+let userIdx = serviceUsers.value?.list.findIndex((user) => {
+    return user.user_id === route.params.user_id;
 });
+
+if(userIdx >= 0) {
+    user.value = serviceUsers.value.list[userIdx];
+} else {
+    skapi.getUsers({
+        service: serviceId,
+        searchFor: 'user_id',
+        condition: '=',
+        value: route.params.user_id
+    }).then((res) => {
+        user.value = res.list[0];
+    });
+}
 
 watch(() => state.viewport, (viewport) => {
     if(viewport === 'desktop') {
