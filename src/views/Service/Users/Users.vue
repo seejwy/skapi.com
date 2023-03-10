@@ -34,13 +34,22 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         :value="searchParams.value" 
                         @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
                         required)
-                .select-field(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers' || searchParams.searchFor === 'birthdate'")
+                .select-field(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
-                        option(value=">" v-if="searchParams.searchFor === 'birthdate'") &gt;
-                        option(value=">=" v-if="searchParams.searchFor !== 'birthdate'") &gt;=
-                        option(value="<" v-if="searchParams.searchFor === 'birthdate'") &lt;
-                        option(value="<=" v-if="searchParams.searchFor !== 'birthdate'") &lt;=
+                        option(value=">=") &gt;=
+                        option(value="<=") &lt;=
                         option(value="=") =
+                .select-field(v-else-if="searchParams.searchFor === 'birthdate'")
+                    sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
+                        option(value=">") &gt;
+                        option(value="<") &lt;
+                        option(value="=") =
+                    
+                        //- option(value=">") &gt;
+                        //- option(value=">=") &gt;=
+                        //- option(value="<") &lt;
+                        //- option(value="<=") &lt;=
+                        //- option(value="=") =
     
     .actions
         sui-button.text-button(@click="blockUsers" :disabled="((selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || !state.user.email_verified) || null")
