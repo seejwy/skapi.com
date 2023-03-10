@@ -660,10 +660,10 @@ sui-tooltip {
 	}
 
 	.foot sui-button {
-        :first-child {
+        &:first-child {
     		margin-right: 12px;
         }
-        :last-child {
+        &:last-child {
             margin-right: 0;
         }
     }
