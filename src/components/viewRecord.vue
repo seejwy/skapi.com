@@ -944,6 +944,10 @@ defineExpose({
 				border-radius: 8px;
 				height: 100px;
 
+				sui-button {
+					vertical-align: middle;
+				}
+				
 				&:only-child {
 					margin-bottom: 0;
 				}
