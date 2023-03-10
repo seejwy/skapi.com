@@ -1170,6 +1170,7 @@ onBeforeRouteLeave((to, from) => {
 	padding: 60px 32px;
 	margin: 12px;
 	text-align: center;
+    min-width: 350px;
 
 	svg {
 		height: 38px;
@@ -1189,12 +1190,12 @@ onBeforeRouteLeave((to, from) => {
 	.body {
 		padding: 20px 0 40px 0;
         line-height: 1.5;
-
+        
         p {
-            margin: 0 0 32px 0;
+            margin: 0 0 0 0;
 
-            &:last-of-type {
-                margin-bottom: 24px;
+            & + p {
+                margin-top: 24px;
             }
         }
 
