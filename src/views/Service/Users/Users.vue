@@ -1105,18 +1105,18 @@ onBeforeRouteLeave((to, from) => {
   }
 
   &>*:first-child {
-    &::after {
-      content: '';
-      display: inline-block;
-      width: 1px;
-      height: 1em;
-      vertical-align: middle;
-      background-color: rgba(255, 255, 255, .2);
-      position: absolute;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-    }
+    // &::after {
+    //   content: '';
+    //   display: inline-block;
+    //   width: 1px;
+    //   height: 1em;
+    //   vertical-align: middle;
+    //   background-color: rgba(255, 255, 255, .2);
+    //   position: absolute;
+    //   top: 50%;
+    //   right: 0;
+    //   transform: translateY(-50%);
+    // }
   }
 
   &>.select-field {
@@ -1126,6 +1126,19 @@ onBeforeRouteLeave((to, from) => {
       border: 0;
       background: transparent;
       vertical-align: middle;
+    }
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      vertical-align: middle;
+      background-color: rgba(255, 255, 255, .2);
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
     }
   }
 
