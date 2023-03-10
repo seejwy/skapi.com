@@ -1135,40 +1135,6 @@ defineExpose({
 	}
 }
 
-.popup {
-	background: #333333;
-	border: 1px solid #808080;
-	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
-	border-radius: 8px;
-	padding: 60px 32px;
-	margin: 12px;
-	text-align: center;
-    min-width: 350px;
-
-	svg {
-		height: 38px;
-		width: 38px;
-	}
-
-	.title {
-		color: #FF8D3B;
-        font-weight: bold;
-
-		&>div {
-			margin-top: 12px;
-			font-size: 20px;
-		}
-	}
-
-	.body {
-		padding: 20px 0 40px 0;
-	}
-
-	.foot sui-button:first-child {
-		margin-right: 12px;
-	}
-}
-
 .type {
 	display: inline-flex;
 	align-items: center;
