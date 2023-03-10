@@ -141,7 +141,7 @@
 						:required="form.index.value !== '' ? true : null"
 						:value="form.index.name"
 						pattern="[^' ']+"
-						@input="(e)=> form.index.name = e.target.value"
+						@input="(e)=> {form.index.name = e.target.value; e.target.setCustomValidity('')}"
 						@invalid="(e) => e.target.setCustomValidity('Index name must not have spaces')"
 						)
 
@@ -158,9 +158,9 @@
 						.section
 							.radio-container(v-if="indexValueType === 'boolean'")
 								label(@click="e => form.index.value = true") True
-									sui-input(type="radio" :checked="form.index.value === true || null")
+									sui-input(type="radio" :checked="form.index.value === true || null" name="index_value")
 								label(@click="e => form.index.value = false") False
-									sui-input(type="radio" :checked="form.index.value === false || null")
+									sui-input(type="radio" :checked="form.index.value === false || null" name="index_value")
 							sui-input(
 								v-else
 								:type="indexValueType === 'number' ? 'number' : 'text'"
