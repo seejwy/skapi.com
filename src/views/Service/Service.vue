@@ -636,8 +636,13 @@ sui-tooltip {
 		padding: 20px 0 40px 0;
         line-height: 1.5;
 
+        
         p {
-            margin: 0 0 32px 0;
+            margin: 0 0 0 0;
+
+            & + p {
+                margin-top: 24px;
+            }
 
             &:last-of-type {
                 margin-bottom: 24px;
