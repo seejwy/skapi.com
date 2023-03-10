@@ -473,7 +473,6 @@ const toggleMobileDesktopSearchView = () => {
         mobilePageTitle.value = `${visibleFields[route.query.search].text} : ${route.query.value}`;
         appStyle.background = '#333333';
     } else {
-        pageTitle.value = 'Users';
         appStyle.mainPadding = null;
         appStyle.background = null;
     }
