@@ -8,8 +8,9 @@ div(v-else-if="state?.user")
         h1.fixed Account Settings
     .settings-wrapper
         form.settings(@submit.prevent="updateUserSettings" @keydown.enter.prevent="")
+            hr(v-if="state.viewport === 'mobile'")
             .title Name
-            .value(v-if="state.viewport === 'desktop'") 
+            .value(v-if="state.viewport === 'desktop'")
                 sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
                 span(v-else) {{  state.user.name }}
             .actions
@@ -61,7 +62,7 @@ div(v-else-if="state?.user")
                     span.cancel(@click="settings.email_subscription.isEdit = false") Cancel
                     span.save(@click="settings.email_subscription.isEdit = false") Save
             hr
-            .title Password
+            .title(style="margin-bottom: 0;") Password
             .value(v-if="state.viewport === 'desktop'")
             .actions
                 span(@click="state.viewport === 'desktop' ? passwordOverlay.open() : router.replace('?page=password')") Change Password
@@ -190,6 +191,7 @@ onMounted(() => {
 .page-header {
     @media @tablet {
         text-align: center;
+        margin-bottom: 12px;
     }
 
     h1 {
@@ -227,6 +229,7 @@ onMounted(() => {
     .value,
     .mobile-value {
         & > span {
+            display: inline-block;
             margin-right: 8px;
         }
     }
@@ -317,11 +320,12 @@ onMounted(() => {
     @media @tablet {
         grid-template-columns: auto 1fr ;
         column-gap: 0;
-        padding: 20px;
+        padding: 0 20px;
 
         & > .title {
             height: auto;
-            padding: 20px 0;
+            padding: 0;
+            margin-bottom: 8px;
             .actions {
                 display: block;
             }
@@ -329,13 +333,16 @@ onMounted(() => {
 
         .mobile-value {
             grid-column: span 2;
-            padding-bottom: 28px;
+
+            & > span {
+                margin-top: 20px;
+            }
         }
         
 
         hr {    
             grid-column: span 2;
-            margin:  0 -20px;
+            margin:  28px -20px;
             width: 100vw;
         }
 
@@ -349,7 +356,7 @@ onMounted(() => {
         padding: 16px;
         
         hr {
-            margin: 0 -16px;
+            margin: 28px -16px;
         }
     }
 }
