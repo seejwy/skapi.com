@@ -616,6 +616,7 @@ sui-tooltip {
 	padding: 60px 32px;
 	margin: 12px;
 	text-align: center;
+    min-width: 350px;
 
 	svg {
 		height: 38px;
@@ -658,8 +659,13 @@ sui-tooltip {
         }
 	}
 
-	.foot sui-button:first-child {
-		margin-right: 12px;
-	}
+	.foot sui-button {
+        :first-child {
+    		margin-right: 12px;
+        }
+        :last-child {
+            margin-right: 0;
+        }
+    }
 }
 </style>

@@ -947,7 +947,7 @@ defineExpose({
 				sui-button {
 					vertical-align: middle;
 				}
-				
+
 				&:only-child {
 					margin-bottom: 0;
 				}
@@ -1140,6 +1140,7 @@ defineExpose({
 	padding: 60px 32px;
 	margin: 12px;
 	text-align: center;
+    min-width: 350px;
 
 	svg {
 		height: 38px;

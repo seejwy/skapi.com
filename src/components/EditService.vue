@@ -322,6 +322,7 @@ onBeforeUnmount(() => {
 	padding: 60px 32px;
 	margin: 12px;
 	text-align: center;
+    min-width: 350px;
 
 	svg {
 		height: 38px;
