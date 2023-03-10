@@ -339,7 +339,7 @@ onBeforeUnmount(() => {
 	}
 
 	.body {
-		padding: 20px 0 28px 0;
+		padding: 20px 0 40px 0;
         line-height: 1.5;
 
         p {

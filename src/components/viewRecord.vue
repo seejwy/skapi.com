@@ -1153,7 +1153,7 @@ defineExpose({
 	}
 
 	.body {
-		padding: 20px 0 28px 0;
+		padding: 20px 0 40px 0;
 	}
 
 	.foot sui-button:first-child {
