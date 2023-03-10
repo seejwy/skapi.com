@@ -26,7 +26,7 @@ let awaitConnection = skapi.getConnection().then(c => {
     state.connection = c;
     state.user = skapi.user;
     const ONE_DAY = 86400;
-    if(!state.user.email_verified && (Number(localStorage.getItem('showVerificationMessage')) + ONE_DAY) < new Date().getTime()) {
+    if(!state.user?.email_verified && (Number(localStorage.getItem('showVerificationMessage')) + ONE_DAY) < new Date().getTime()) {
         state.showVerificationNotification = true;
         localStorage.removeItem('showVerificationMessage');
     }
