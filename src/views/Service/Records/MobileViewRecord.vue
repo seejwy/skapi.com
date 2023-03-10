@@ -26,7 +26,7 @@ let setMobileButton = () => {
                 val: 'loading',
                 cssClass: 'animation-rotation--slow-in-out'
             };
-            viewRecord.value.save().then((res) => {
+            viewRecord.value.saveData().then((res) => {
                 if(res) {
                     navbarMobileRightButton.value = {
                         type: 'text',

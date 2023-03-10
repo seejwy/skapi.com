@@ -665,7 +665,7 @@ const close = () => {
 defineExpose({
 	close,
 	editRecord,
-	save
+	saveData
 });
 </script>
 <style lang="less" scoped>
