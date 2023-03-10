@@ -10,7 +10,11 @@ const state = reactive({
     connection: null,
     getServices: null,
     services: null,
-    showVerificationNotification: true,
+    showVerificationNotification: false,
+    setVerificationDelay: () => {
+        localStorage.setItem('showVerificationMessage', new Date().getTime());
+        state.showVerificationNotification = false;
+    },
     viewportOnChange: (v) => v
 });
 
@@ -21,6 +25,11 @@ let skapi = new Admin();
 let awaitConnection = skapi.getConnection().then(c => {
     state.connection = c;
     state.user = skapi.user;
+    const ONE_DAY = 86400;
+    if(!state.user.email_verified && (Number(localStorage.getItem('showVerificationMessage')) + ONE_DAY) < new Date().getTime()) {
+        state.showVerificationNotification = true;
+        localStorage.removeItem('showVerificationMessage');
+    }
 });
 
 watch(() => state.user, user => {

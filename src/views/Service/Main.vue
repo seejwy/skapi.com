@@ -51,7 +51,7 @@ Transition(name="toast")
         .title Email Verfication is Needed
         div
         .body Please verify your email to prevent your services from shutting down.
-        Icon.close(@click="state.showVerificationNotification = false") X2
+        Icon.close(@click="state.setVerificationDelay") X2
 </template>
 
 <style lang="less">

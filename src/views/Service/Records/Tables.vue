@@ -4,7 +4,9 @@
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
         sui-button.line-button Read Doc
-
+pre {{  state.showVerificationNotification  }}
+button(@click="state.showVerificationNotification ? state.showVerificationNotification = false : state.showVerificationNotification = true;") click {{ state.showVerificationNotification }}
+br
 // search form
 RecordSearch#recordSearch.hideOnTablet
 

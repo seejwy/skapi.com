@@ -78,7 +78,7 @@ div(v-else-if="state?.user")
             .title Email Verfication is Needed
             div
             .body Please verify your email to prevent your services from shutting down.
-            Icon.close(@click="state.showVerificationNotification = false") X2
+            Icon.close(@click="state.setVerificationDelay") X2
 sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
     Login
 Login(v-else)
@@ -157,6 +157,7 @@ const updateUserSettings = async () => {
         settings.value.email_subscription = isSubscribe;
 
         state.user = res;
+        if(!res.email_verified) state.showVerificationNotification = true;
     } catch(e) {
         console.log({e});
         settings.value.name = state.user.name;
