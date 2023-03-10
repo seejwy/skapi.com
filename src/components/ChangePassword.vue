@@ -168,6 +168,7 @@ onBeforeUnmount(() => {
 
     p {
         margin: 40px 0;
+        line-height: 1.5;
     }
 
     .input {
