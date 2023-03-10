@@ -62,7 +62,7 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
                                     br
                                     p This table will be automatically removed.
 
-                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)")
+                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}")
                                 div
                                     span.label-head RECORD:
                                     span {{ r.record_id }}
@@ -444,6 +444,10 @@ onBeforeUnmount(() => {
                         color: rgba(255, 255, 255, 0.6);
                     }
                 }
+            }
+
+            &.deleting {
+                opacity: 0.3;
             }
         }
 

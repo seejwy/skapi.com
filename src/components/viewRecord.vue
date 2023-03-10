@@ -431,16 +431,19 @@ const editRecord = () => {
 
 const deleteRecord = () => {
 	
+	let table = recordTables.value.list.find((val) => val.table === props.record.table.name);
+	let tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
+	table.records.list[tableIndex].deleting = true
+
 	skapi.deleteRecords({
 		service: serviceId,
 		record_id: [props.record.record_id]
 	}).then(() => {
-		let table = recordTables.value.list.find((val) => val.table === props.record.table.name);
-		let tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
 		table.number_of_records--;
 		table.records.list.splice(tableIndex, 1);
 	}).catch((e) => {
 		console.log({e});
+		delete table.records.list[tableIndex].deleting;
 	});
 	
 	deleteConfirmOverlay.value.close();
