@@ -225,11 +225,14 @@
 				.data-values
 					template(v-if="record.type === 'file'")
 						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, recordIndex, index)" @click="openFileInput")
-							input(hidden type="file" @change="e=>addFiles(e, recordIndex, index)" multiple)
+							input(hidden :file-key="record.key" type="file" @change="e=>addFiles(e, recordIndex, index)" multiple)
 							div
 								Icon attached
 								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
 								sui-button.line-button(@click.prevent.stop="" type="button") Upload
+							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
+								Icon warning
+								span You must upload a file 
 						template(v-for="(file, index) in record.data")
 							.value.file(v-if="file.md5 || file.lastModified")
 								Icon attached
@@ -280,7 +283,7 @@
 				sui-button(v-if="isSaving" type="button" disabled)
 					span(style="visibility: hidden;") Save
 					Icon.animation-rotation--slow-in-out(style=" position: absolute;") loading
-				sui-button(v-else type="button" @click="save") Save
+				sui-button(v-else type="button" @click="saveData") Save
 
 sui-overlay(ref="deleteConfirmOverlay")
 	.popup
@@ -304,7 +307,7 @@ sui-overlay(ref="exitEditOverlay")
 <script setup>
 import { ref, computed, watch, nextTick, inject, onBeforeUnmount } from 'vue';
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
-import { skapi, state, dateFormat, getSize } from '@/main';
+import { skapi, state, dateFormat, getSize, log } from '@/main';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
 import TagsInput from '@/components/TagsInput.vue';
 import Icon from '@/components/Icon.vue';
@@ -326,6 +329,7 @@ const referenceIdField = ref(null);
 const form = ref({});
 const data = ref([]);
 const indexValueType = ref('string');
+const fileError = ref('');
 let isNewRecord = false;
 
 const isMobileUrl = route.query?.id;
@@ -446,6 +450,13 @@ const deleteRecord = () => {
 	}
 }
 
+const saveData = async () => {
+	save().catch(err=>{
+		fileError.value = err.message;
+		view.value = 'record';
+	});
+}
+
 const save = async () => {
 	isSaving.value = true;
 	if (!formEl.value.checkValidity()) {
@@ -476,15 +487,19 @@ const save = async () => {
 						type: 'application/json'
 					}));
 				} else if (record.type === 'file') {
-					record.data.forEach(file => {
-						if (file instanceof File) {
-							form.append(record.key, file);
-						} else {
-							form.append(record.key, new Blob([JSON.stringify(file)], {
-								type: 'application/json'
-							}));
-						}
-					});
+					if(record.data) {
+						record.data.forEach(file => {
+							if (file instanceof File) {
+								form.append(record.key, file);
+							} else {
+								form.append(record.key, new Blob([JSON.stringify(file)], {
+									type: 'application/json'
+								}));
+							}
+						});
+					} else {
+						throw new Error(record.key);
+					}
 				}
 			});
 			return form;
@@ -572,6 +587,7 @@ const addFiles = (event, keyIndex, index) => {
 		data.value[keyIndex].data = [...files];
 	}
 	event.target.value = '';
+	fileError.value = '';
 };
 
 const addField = () => {
@@ -920,6 +936,7 @@ defineExpose({
 
 			.file-upload-area {
 				display: flex;
+				flex-direction: column;
 				align-items: center;
 				justify-content: center;
 				margin: 28px 0;
@@ -947,6 +964,14 @@ defineExpose({
 					height: 57px;
 					width: 57px;
 					color: rgba(255, 255, 255, .6);
+				}
+				.error {
+					color: #FF8D3B;
+					svg {
+						height: 24px;
+						width: 24px;
+						fill: #FF8D3B;
+					}
 				}
 			}
 		}
