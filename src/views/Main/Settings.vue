@@ -281,6 +281,7 @@ onMounted(() => {
 
             sui-input {
                 flex-shrink: 0;
+                margin-top: calc((1.5em - 16px) / 2);
 
                 &[disabled] {
                     border-color: #D9D9D9;
