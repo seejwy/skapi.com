@@ -291,6 +291,10 @@ onMounted(() => {
                     }
                 }
             }
+
+            span {            
+                line-height: 1.5;
+            }
         }
 
         .actions {
