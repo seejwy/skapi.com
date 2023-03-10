@@ -298,6 +298,11 @@ sui-input[type=checkbox] {
 }
 
 sui-input {
+
+  &:not([type=checkbox]) {
+    border: 1px solid #8C8C8C;
+  }
+
   input::placeholder {
     color: rgba(0, 0, 0, 0.4);
   }
