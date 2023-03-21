@@ -1,4 +1,4 @@
-import {state} from './main.js';
+import { state } from './main.js';
 export default class Admin extends Skapi {
     // default email templates
     default_templates = {
@@ -45,11 +45,11 @@ export default class Admin extends Skapi {
         'sa31': 'sa-east-1'
     };
 
-    constructor(service_id = 'us31ebid30xkr83mrn$kp1', owner = 'skapi') {
+    constructor(service_id = 'us31zettahertzesskpi', owner = 'skapi') {
         super(service_id, owner, { autoLogin: window.localStorage.getItem('remember') === 'true' });
     }
 
-    static async connect(service_id = 'us31ebid30xkr83mrn$kp1', owner = 'skapi') {
+    static async connect(service_id = 'us31zettahertzesskpi', owner = 'skapi') {
         const skapi = new Admin(service_id, owner);
         await skapi.__connection;
         return skapi;
@@ -83,7 +83,7 @@ export default class Admin extends Skapi {
         this.services = await this.request('get-services', null, {
             auth: true
         });
-        return this.services; 
+        return this.services;
     }
 
     async requireAdmin(opt = { throwError, ignoreVerification }) {
@@ -246,7 +246,7 @@ export default class Admin extends Skapi {
          *      userId: user id
          * }
          */
-        console.log({key:this.__user, session: this.session});
+        
         await this.requireAdmin({ throwError: true });
         return await this.request('block-account', { service: params.service, block: params.userId }, { auth: true });
     }
