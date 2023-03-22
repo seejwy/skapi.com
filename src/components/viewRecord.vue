@@ -92,7 +92,8 @@
 								span.type {{ typeof record.primitive }}
 								span {{ key }}
 
-							.value {{ record.primitive }}
+							.value.empty-string(v-if="typeof record.primitive === 'string' && record.primitive === ''") empty string
+							.value(v-else) {{ record.primitive }}
 			.no-data(v-else)
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
@@ -824,6 +825,11 @@ defineExpose({
 				border-radius: 8px;
 				white-space: pre-wrap;
 				word-break: break-word;
+
+				&.empty-string {
+					color: rgba(255, 255, 255, 0.4);
+					font-style: italic;
+				}
 
 				&.file {
 					display: flex;
