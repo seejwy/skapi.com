@@ -11,7 +11,7 @@
                 span {{ password.current.error }}
         .actions
             sui-button.line-button(type="button" @click="closePasswordChange") Cancel
-            sui-button(type="button" :loading="promiseRunning" @click.prevent="verifyPassword") Continue
+            SubmitButton(type="button" :loading="promiseRunning" @click.prevent="verifyPassword") Continue
         .step-wrapper
             .step.active
             .step
@@ -69,6 +69,8 @@ const password = ref({
     }
 });
 
+const promiseRunning = ref(false);
+
 const closePasswordChange = () => {
     if(state.viewport === 'desktop') emit('close');
     else router.replace('');
@@ -81,10 +83,12 @@ const closePasswordChange = () => {
 }
 
 const verifyPassword = async () => {
+    promiseRunning.value = true;
     password.value.current.error = '';
 
     if(password.value.current.value.length < 6) {
-        password.value.current.error = 'Password must be at least 6 characters'
+        password.value.current.error = 'Password must be at least 6 characters'    
+        promiseRunning.value = false;
         return false;
     }
 
@@ -102,18 +106,23 @@ const verifyPassword = async () => {
         } else if(e.code === 'LimitExceededException') {
             password.value.current.error = 'Your password change limit has exceeded. Verify your password again later.';
         }
+    } finally {
+        promiseRunning.value = false;
     }
 }
 
 const changePassword = async () => {
+    promiseRunning.value = true;
     password.value.confirm.error = '';
 
     if(password.value.new.value.length < 6) {
-        password.value.confirm.error = 'Password must be at least 6 characters';
+        password.value.confirm.error = 'Password must be at least 6 characters';   
+        promiseRunning.value = false;
         return false;
     }
     if(password.value.new.value !== password.value.confirm.value) {
-        password.value.confirm.error = 'Your password does not match';
+        password.value.confirm.error = 'Your password does not match';    
+        promiseRunning.value = false;
         return false;
     }
 
@@ -129,6 +138,8 @@ const changePassword = async () => {
         if(e.code === 'LimitExceededException') {
             password.value.confirm.error = 'Your password change limit has exceeded.';
         }
+    } finally {    
+        promiseRunning.value = false;
     }
 }
 
