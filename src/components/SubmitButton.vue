@@ -18,13 +18,14 @@ sui-button {
 		background-color: var(--primary-color);
 		filter: none;
 	}
-}
-svg {
-	position: absolute;
-	width: 24px;
-	height: 24px;
-	left: unset !important;
-	vertical-align: middle;
-	cursor: pointer;
+
+	svg {
+		position: absolute;
+		width: 24px;
+		height: 24px;
+		left: unset !important;
+		vertical-align: middle;
+		cursor: pointer;
+	}
 }
 </style>
