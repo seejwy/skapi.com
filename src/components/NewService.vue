@@ -1269,9 +1269,23 @@ const countries = {
     }
 }
 
+const states = {
+    US: {
+        OH: {
+            lat: 40.367474, 
+            long: -82.996216
+        },
+        VA: {
+            lat: 37.926868,
+            long: -78.024902
+        }
+    }
+}
+
 const getClosestRegion = () => {
     let currentLocale = skapi.connection.locale;
-    let res = "";
+    let res = '';
+
     if(regions[skapi.connection.locale]) {
         res = skapi.connection.locale;
     } else {
@@ -1284,6 +1298,21 @@ const getClosestRegion = () => {
             }
         }
     }
+    
+    if(res === 'US') {
+        let country = res;
+        let difference = null;
+        for (let state in states[country]) {
+            let distance = calculateDistance(states[country][state], countries[currentLocale]);
+            if(difference == null || distance < difference) {
+                difference = distance;
+                res = state;
+            }
+        }
+
+        return regions[country][res];
+    }
+
     return regions[res];
 }
 const calculateDistance = (locale, region) => {
@@ -1305,9 +1334,9 @@ const calculateDistance = (locale, region) => {
 
 const createNewService = async () => {
     if(isCreatingService.value) { return false; }
-    const closestRegion = getClosestRegion();
+    const serviceLocale = getClosestRegion();
     isCreatingService.value = true;
-    let res = await skapi.createService({region: closestRegion, name: serviceName.value});
+    let res = await skapi.createService({region: serviceLocale, name: serviceName.value});
     router.push(`/dashboard/${res.service}`);
 }
 
