@@ -55,7 +55,8 @@ const removeTag = (index) => {
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: -1px -1px 1px rgb(0 0 0 / 25%), inset 1px 1px 1px rgb(0 0 0 / 50%);
   border-radius: 5px;
-  padding: 9px 10px;
+  padding: 4px 4px;
+  cursor: text;
 }
 
 .tag {
@@ -78,7 +79,7 @@ const removeTag = (index) => {
 }
 
 .tag-input {
-  height: calc(30px - 6px);
+  line-height: calc(30px - 6px);
   margin: 3px;
   min-width: 5px;
 
