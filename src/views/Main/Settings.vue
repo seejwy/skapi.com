@@ -89,7 +89,7 @@ sui-overlay(v-if="state.viewport === 'desktop'" ref="emailOverlay" style="backgr
     VerifyEmail(@close="emailOverlay.close()")
 </template>
 <script setup>
-import { inject, ref, onMounted } from 'vue';
+import { inject, ref, onMounted, watch, nextTick } from 'vue';
 import { state, awaitConnection } from '@/main';
 import Login from './Login.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -173,7 +173,7 @@ const updateUserSettings = async () => {
 onMounted(() => {
     awaitConnection.then(()=>{
         if(!state.user && state.viewport === 'desktop') {
-            overlay.open();
+            overlay.value.open();
         }
 
         if(state.user) {
@@ -183,6 +183,13 @@ onMounted(() => {
         }
     });
 });
+
+watch(() => state.user, async (user) => {
+    await nextTick();
+    if(!user) {
+        overlay.value.open();
+    }
+})
 </script>
 
 <style lang="less" scoped>
