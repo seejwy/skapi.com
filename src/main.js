@@ -132,7 +132,8 @@ const groupArray = (arr, cg, pg) => {
 
 const regions = {
     US: 'us-east-1',
-    KR: 'ap-northeast-2'
+    KR: 'ap-northeast-2',
+    SG: 'ap-southeast-1',
 }
 
 const localeName = (locale) => {

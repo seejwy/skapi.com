@@ -1272,7 +1272,7 @@ const countries = {
 const getClosestRegion = () => {
     let currentLocale = skapi.connection.locale;
     let res = "";
-    if(!regions[skapi.connection.locale]) {
+    if(regions[skapi.connection.locale]) {
         res = skapi.connection.locale;
     } else {
         let difference = null;
