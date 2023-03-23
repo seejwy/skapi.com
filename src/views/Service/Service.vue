@@ -83,7 +83,7 @@ template(v-else)
                             span Email System
                         .body Users are data that your service user's will store and read from your service database. 
                     .goto Go to Mail >
-    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @click="isEdit = false")
+    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="isEdit = false")
         div.overlay
             EditService(@close="isEdit = false")
 sui-overlay(ref="deleteConfirmOverlay")

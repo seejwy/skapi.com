@@ -33,7 +33,7 @@ div(v-else-if="state?.user")
             div
             .body Please verify your email to prevent your services from shutting down.
             Icon.close(@click="state.setVerificationDelay") X2
-    sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)")
+    sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="isOpen = false")
         div.overlay
             NewService(@close="isOpen = false")
 sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
@@ -124,8 +124,6 @@ watch(() => isOpen.value, async () => {
         await nextTick();
         if(isOpen.value) {
             openNewServiceWindow();
-        } else {
-            newServiceWindow.value.close();
         }
     }
 });
