@@ -115,8 +115,6 @@ const save = async () => {
         emit('close', '');
         return;
     }
-
-    promiseRunning.value = true;
     if(serviceStatus.value !== service.value.active) {
         try {
             await toggleService();
@@ -124,7 +122,7 @@ const save = async () => {
             promiseRunning.value = false;
             return false;
         }
-    } 
+    }
     await saveFunction();
     promiseRunning.value = false;
     
@@ -132,6 +130,7 @@ const save = async () => {
 
 const saveFunction = async () => {
     let res;
+    promiseRunning.value = true;
 
     try {
         res = await skapi.updateService(service.value.service, {
@@ -166,7 +165,8 @@ const toggleService = async() => {
             rej();
         });
 
-        yesButton.addEventListener('click', async () => {
+        yesButton.addEventListener('click', async () => {    
+            promiseRunning.value = true;
             disableConfirmOverlay.value.close();
             let oldStatus = service.value.active === 0 ? 0 : 1;
             try {
