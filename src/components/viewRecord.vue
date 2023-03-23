@@ -336,7 +336,8 @@ let isNewRecord = false;
 const isMobileUrl = route.query?.id;
 const navbarMobileRightButton = inject('navbarMobileRightButton');
 watch(() => props.record, () => {
-	indexValueType.value = typeof props.record?.index?.value || 'string';
+	console.log({type: typeof props.record?.index?.value});
+	indexValueType.value = props.record?.index?.value ? typeof props.record?.index?.value : 'string';
 });
 
 const editRecord = () => {
