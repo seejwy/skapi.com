@@ -30,7 +30,8 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
         span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
         span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
         span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
-        span(v-if='route.query?.index_name') Index: {{ route.query.index_type === 'string' ? '"' + route.query.index_value + '"' : route.query.index_value }} {{ route.query.index_condition }} [{{ route.query.index_name }}]
+        span(v-if="route.query?.index_name") Index Name: {{ route.query.index_name }}
+        span(v-if='route.query?.index_name') Index Value: [ {{ route.query.index_type }} ] {{ route.query.index_condition }} {{ route.query.index_value }}
         span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
 
     // skeleton(mobile)
