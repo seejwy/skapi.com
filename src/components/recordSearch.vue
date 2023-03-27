@@ -132,13 +132,12 @@ form(
                 .inline-vertical-middle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
                     // index value (boolean)
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='typ-bool-false') False
-                        sui-input#typ-bool-false(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
+                        label.inline-vertical-middle(for='typ-bool-true') True
+                        sui-input#typ-bool-true(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
 
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='typ-bool-true') True
-                        sui-input#typ-bool-true(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
-
+                        label.inline-vertical-middle(for='typ-bool-false') False
+                        sui-input#typ-bool-false(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
                 .select-input(v-else style='width: calc(100% - 100px - 1em);')
                     // index value
                     .input-field
@@ -253,13 +252,13 @@ let advancedForm = ref(advancedFormInit());
 function parseIndexType(value) {
     advancedForm.value.index_value = {
         'string': v => v ? v.toString() : undefined,
-        'boolean': v => {
+        'boolean': () => {
             advancedForm.value.index_condition = '=';
             // value is already set from radio, else set to false if not boolean
             return (typeof advancedForm.value.index_value === 'boolean') ? advancedForm.value.index_value : false;
         },
         'number': v => v === '' ? undefined : isNaN(Number(v)) ? 0 : Number(v)
-    }[advancedForm.value.index_type](value || indexValueFormElement.value.el.value);
+    }[advancedForm.value.index_type](value || indexValueFormElement.value?.el.value);
 
     return advancedForm.value.index_value;
 }
