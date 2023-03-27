@@ -75,7 +75,8 @@ const openNewServiceWindow = () => {
 }
 
 onMounted(() => {
-    awaitConnection.then(()=>{
+    awaitConnection.then(async ()=>{
+        await nextTick();
         if(!state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
@@ -83,7 +84,8 @@ onMounted(() => {
 });
 
 onUpdated(() => {
-    awaitConnection.then(()=>{
+    awaitConnection.then(async ()=>{
+        await nextTick();
         if(!state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
