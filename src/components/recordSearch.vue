@@ -133,11 +133,11 @@ form(
                     // index value (boolean)
                     .labelRadio.clickable
                         label.inline-vertical-middle(for='typ-bool-false') False
-                        sui-input#typ-bool-false(type='radio' name='index_value' @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
+                        sui-input#typ-bool-false(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
 
                     .labelRadio.clickable
                         label.inline-vertical-middle(for='typ-bool-true') True
-                        sui-input#typ-bool-true(type='radio' name='index_value' @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
+                        sui-input#typ-bool-true(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
 
                 .select-input(v-else style='width: calc(100% - 100px - 1em);')
                     // index value
