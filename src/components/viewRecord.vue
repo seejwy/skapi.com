@@ -410,14 +410,17 @@ const editRecord = () => {
 			if (typeSplitFiles.files.length) {
 				data.value.push({ key, type: 'file', data: typeSplitFiles.files });
 			} else if(typeSplitFiles.json) {
-				typeSplitFiles.json.forEach(value => {
-
-					if (Array.isArray(value)) {
-						data.value.push({ key, type: 'json', data: JSON.stringify(value, null, 2) });
-					} else {
-						data.value.push({ key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
-					}
-				});
+				if(Array.isArray(typeSplitFiles.json)) {
+					typeSplitFiles.json.forEach(value => {
+						if (Array.isArray(value)) {
+							data.value.push({ key, type: 'json', data: JSON.stringify(value, null, 2) });
+						} else {
+							data.value.push({ key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
+						}
+					});
+				} else {
+					data.value.push({ key, type: 'json', data: typeSplitFiles.json === null ? JSON.stringify(typeSplitFiles.json) : typeSplitFiles.json });
+				}
 			} else {
 				if (typeSplitFiles.primitive !== null) {
 					data.value.push({ key, type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive });
