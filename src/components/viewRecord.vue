@@ -86,7 +86,7 @@
 								span.type JSON
 								span {{ key }}
 							.value(v-if="record.json === null") null
-							.value(v-else) {{ record.json }}
+							pre.value(v-else) {{ record.json }}
 						.data-row(v-else)
 							.name
 								span.type {{ typeof record.primitive }}
@@ -229,7 +229,7 @@
 							input(hidden :file-key="record.key" type="file" @change="e=>addFiles(e, recordIndex, index)" multiple)
 							div
 								Icon attached
-								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR  
+								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR
 								sui-button.line-button(@click.prevent.stop="" type="button") Upload
 							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
 								Icon warning
@@ -241,24 +241,13 @@
 									.filename {{ file.name || file.filename }}
 									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
 								Icon.remove(@click="record.data.splice(index, 1)") X
-
-					sui-textarea.data-input-field(
-						v-else-if="record.type === 'json'"
-						style="height: auto; white-space:pre;"
-						placeholder="Key Value"
-						spellcheck="false"
-						:value="record.data"
-						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
-						@change="validateJson"
-						required)
-					sui-textarea.data-input-field(
-						v-else-if="record.type === 'json'"
-						style="height: auto; white-space:pre;"
-						placeholder="Key Value"
-						spellcheck="false"
-						:value="record.data"
-						@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
-						@change="validateJson")
+					template(v-else-if="record.type === 'json'")
+						JsonInput(
+							placeholder="Key Value"
+							spellcheck="false"
+							@input="e => { record.data = e.target.value; e.target.setCustomValidity('')}"
+							@change="validateJson"
+							required) {{ record.data }}
 
 					.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
 						div Value:
@@ -306,11 +295,12 @@ sui-overlay(ref="exitEditOverlay")
 			sui-button.line-button(@click="confirmClose") Yes
 </template>
 <script setup>
-import { ref, computed, watch, nextTick, inject, onBeforeUnmount } from 'vue';
+import { ref, computed, watch, nextTick, inject } from 'vue';
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import { skapi, state, dateFormat, getSize, log } from '@/main';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
 import TagsInput from '@/components/TagsInput.vue';
+import JsonInput from '@/components/JsonInput.vue';
 import Icon from '@/components/Icon.vue';
 import router from '../router';
 
@@ -336,7 +326,6 @@ let isNewRecord = false;
 const isMobileUrl = route.query?.id;
 const navbarMobileRightButton = inject('navbarMobileRightButton');
 watch(() => props.record, () => {
-	console.log({type: typeof props.record?.index?.value});
 	indexValueType.value = props.record?.index?.value ? typeof props.record?.index?.value : 'string';
 });
 
@@ -413,13 +402,13 @@ const editRecord = () => {
 				if(Array.isArray(typeSplitFiles.json)) {
 					typeSplitFiles.json.forEach(value => {
 						if (Array.isArray(value)) {
-							data.value.push({ key, type: 'json', data: JSON.stringify(value, null, 2) });
+							data.value.push({ key, type: 'json', data: JSON.stringify(value) });
 						} else {
 							data.value.push({ key, type: typeof value === "object" ? 'json' : typeof value, data: value === null ? JSON.stringify(value) : value });
 						}
 					});
 				} else {
-					data.value.push({ key, type: 'json', data: typeSplitFiles.json === null ? JSON.stringify(typeSplitFiles.json) : typeSplitFiles.json });
+					data.value.push({ key, type: 'json', data: typeSplitFiles.json === null ? JSON.stringify(typeSplitFiles.json) : JSON.stringify(typeSplitFiles.json, null, " ") });
 				}
 			} else {
 				if (typeSplitFiles.primitive !== null) {
@@ -490,6 +479,7 @@ const save = async () => {
 		service: serviceId,
 		formData: form => {
 			data.value.forEach(record => {
+				record.data = record.data.replaceAll(' ', '');
 				if (record.type === 'json') {
 					form.append(record.key, new Blob([record.data], {
 						type: 'application/json'
@@ -614,7 +604,8 @@ const openFileInput = (event, index) => {
 const validateJson = (event) => {
 	if (event.target.value === '') event.target.setCustomValidity('');
 	try {
-		JSON.parse(event.target.value);
+		let value = event.target.value.replaceAll(' ', '');
+		JSON.parse(value);
 		event.target.setCustomValidity('');
 	} catch (e) {
 		event.target.setCustomValidity('Invalid JSON');
