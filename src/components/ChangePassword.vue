@@ -93,15 +93,11 @@ const verifyPassword = async () => {
     }
 
     try {
-        await skapi.changePassword({
-            current_password: password.value.current.value,
-            new_password: password.value.current.value
-        });
-
+        await skapi.login({email: state.user.email, password: password.value.current.value}, {logout: false});
         processStep.value = 1;
     } catch(e) {
         console.log({e: e.code});
-        if(e.code === 'NotAuthorizedException') {
+        if(e.code === 'INCORRECT_USERNAME_OR_PASSWORD') {
             password.value.current.error = 'Current password is incorrect';
         } else if(e.code === 'LimitExceededException') {
             password.value.current.error = 'Your password change limit has exceeded. Verify your password again later.';
