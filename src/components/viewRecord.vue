@@ -66,13 +66,20 @@
 								.name
 									span.type File
 									span {{ key }}
-
-									a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
-										Icon attached
-										span
-											.filename {{ file.filename }}
-											div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-										Icon download
+									template(v-if="props.record.table.access_group === 0")
+										a.value.file(v-for="file in record.files" :href="file.url" style="text-decoration: none;color: unset;")
+											Icon attached
+											span
+												.filename {{ file.filename }}
+												div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+											Icon download
+									template(v-else)
+										a.value.file(v-for="file in record.files" @click="download(file.url, file?.filename)" style="text-decoration: none;color: unset; cursor: pointer;")
+											Icon attached
+											span
+												.filename {{ file.filename }}
+												div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
+											Icon download
 								.data-row(v-for="value in record.json")
 									.name
 										span.type(v-if="typeof value === 'object'") JSON
@@ -569,6 +576,25 @@ const save = async () => {
 		throw e;
 	};
 };
+
+const download = async (secureUrl, fileName) => {
+	try {
+		let download = await skapi.getBlob({url: secureUrl}, {service: serviceId});
+		let reader = new FileReader();
+		reader.readAsDataURL(download);
+		reader.onload = () => {
+			const file = reader.result;
+			let a = document.createElement('a');
+			a.href = file;
+			a.download = fileName;
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}
+	} catch( e ) {
+		console.log({e});
+	}
+}
 
 const onDrop = (event, keyIndex, index) => {
 	const files = event.dataTransfer.files;
