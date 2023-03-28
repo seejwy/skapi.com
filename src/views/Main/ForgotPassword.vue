@@ -62,7 +62,7 @@
             sui-button(type="button" @click="router.push('/dashboard')") Login
 
         .navigator(v-if="step <= 2")
-            .ball(v-for="num in 2" @click="num < step ? step = num : null" :class="{'active': step === num}")
+            .ball(v-for="num in 2" @click="() => { num < step ? step = num : null; password = '';  passwordConfirm = '';}" :class="{'active': step === num}")
 
 </template>
 <script setup>
