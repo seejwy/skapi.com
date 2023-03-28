@@ -579,7 +579,7 @@ const onDrop = (event, keyIndex, index) => {
 const addFiles = (event, keyIndex, index) => {
 	const files = event.target.files;
 	let fileData = data.value[keyIndex].data;
-	if(Array.isArray(fileData) && fileData[0].md5) {
+	if(Array.isArray(fileData)) {
 		data.value[keyIndex].data = [...fileData, ...files];
 	} else {
 		data.value[keyIndex].data = [...files];
