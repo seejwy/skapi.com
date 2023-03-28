@@ -1,6 +1,6 @@
 <template lang="pug">
 .sui-input
-	sui-input(:type="type" @input="$emit('input', $event)" @change="$emit('change', $event)" :value="props.value" :placeholder="props.placeholder" :required="required || null")
+	sui-input(ref="field" :type="type" @input="$emit('input', $event)" @change="$emit('change', $event)" :value="props.value" :placeholder="props.placeholder" :required="required || null")
 	Icon(v-if="type !== 'password'" @click="type = 'password'") eye_open
 	Icon(v-else @click="type = 'text'") eye_close
 </template>
@@ -10,6 +10,21 @@ import Icon from './Icon.vue';
 
 const props = defineProps(['value', 'placeholder', 'required']);
 const type = ref('password');
+const field = ref(null);
+
+const setError = (msg) => {
+	field.value.firstChild.setCustomValidity(msg);
+	field.value.firstChild.reportValidity();
+}
+
+const clearError = () => {
+	field.value.firstChild.setCustomValidity('');
+}
+
+defineExpose({
+	clearError,
+	setError
+})
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';

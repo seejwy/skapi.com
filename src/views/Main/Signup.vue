@@ -10,10 +10,10 @@
             sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
         .input
             label Password            
-            PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
+            PasswordInput(ref="passwordField" @input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
         .input
             label Password Confirm
-            PasswordInput(@input="e=>form.password_confirm = e.target.value" :value='form.password_confirm' @change="validatePasswordConfirm" placeholder="Retype your password" :required="true")
+            PasswordInput(ref="confirmPasswordField" @input="e=>form.password_confirm = e.target.value" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true")
         .error(v-if="error")
             Icon warning
             span {{ error }}
@@ -37,6 +37,8 @@ const error = ref(null);
 const page = ref('signup');
 const secondsTillReady = ref(null);
 const promiseRunning = ref(false);
+const passwordField = ref(null);
+const confirmPasswordField = ref(null);
 
 // set page title
 let pageTitle = inject('pageTitle');
@@ -71,20 +73,13 @@ const validateEmail = (event) => {
 }
 
 const validatePassword = (event) => {
-    if(event.target.value.length >= 6 && event.target.value.length <= 60) {
-		event.target.setCustomValidity('');
+    if(event.target.value.length >= 6 && event.target.value.length <= 60 && form.password_confirm === form.password) {
+		passwordField.value.clearError();
+        confirmPasswordField.value.clearError();
+    } else if(form.password_confirm !== form.password) {
+        confirmPasswordField.value.setError('Password does not match');
     } else {
-		event.target.setCustomValidity('Invalid Password');
-		event.target.reportValidity();
-    }
-}
-
-const validatePasswordConfirm = (event) => {
-    if(event.target.value !== form.password) {
-		event.target.setCustomValidity('Password does not match');
-		event.target.reportValidity();
-    } else {
-		event.target.setCustomValidity('');
+		passwordField.value.setError('Invalid Password');
     }
 }
 
