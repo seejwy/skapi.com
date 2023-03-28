@@ -40,16 +40,18 @@
                 .input
                     label New Password
                     PasswordInput(
-                        @input="e=>password = e.target.value" 
+                        ref="passwordField"
+                        @input="e=> { password = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='password' 
                         @change="validatePassword" 
                         :required="true")
                 .input
                     label Retype New Password
                     PasswordInput(
-                        @input="e=>passwordConfirm = e.target.value" 
+                        ref="confirmPasswordField"
+                        @input="e=> { passwordConfirm = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='passwordConfirm' 
-                        @change="validatePasswordConfirm" 
+                        @change="validatePassword" 
                         :required="true")
                 .error(v-if="resetError") {{ resetError }}
                 SubmitButton(:loading="promiseRunning") Change Password
@@ -85,6 +87,8 @@ let resetError = ref(null);
 const secondsTillReady = ref(null);
 const isRequestingCode = ref(false);
 const promiseRunning = ref(false);
+const passwordField = ref(null);
+const confirmPasswordField = ref(null);
 
 let step = ref(1);
 
@@ -94,21 +98,14 @@ onBeforeMount(async() => {
     })
 });
 
-const validatePassword = (event) => {
-    if(event.target.value.length >= 6 && event.target.value.length <= 60) {
-		event.target.setCustomValidity('');
+const validatePassword = () => {
+    if(password.value.length < 6 || password.value.length > 60) {
+		passwordField.value.setError('Invalid Password');
+    } else if(passwordConfirm.value !== password.value) {
+        confirmPasswordField.value.setError('Password does not match');
     } else {
-		event.target.setCustomValidity('Invalid Password');
-		event.target.reportValidity();
-    }
-}
-
-const validatePasswordConfirm = (event) => {
-    if(event.target.value !== password.value) {
-		event.target.setCustomValidity('Password does not match');
-		event.target.reportValidity();
-    } else {
-		event.target.setCustomValidity('');
+		passwordField.value.clearError();
+        confirmPasswordField.value.clearError();
     }
 }
 

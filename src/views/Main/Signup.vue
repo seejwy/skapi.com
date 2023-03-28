@@ -10,10 +10,10 @@
             sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
         .input
             label Password            
-            PasswordInput(ref="passwordField" @input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
+            PasswordInput(ref="passwordField" @input="e=> { form.password = e.target.value; e.target.setCustomValidity(''); }" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
         .input
             label Password Confirm
-            PasswordInput(ref="confirmPasswordField" @input="e=>form.password_confirm = e.target.value" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true")
+            PasswordInput(ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); }" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true")
         .error(v-if="error")
             Icon warning
             span {{ error }}
@@ -72,14 +72,14 @@ const validateEmail = (event) => {
     }
 }
 
-const validatePassword = (event) => {
-    if(event.target.value.length >= 6 && event.target.value.length <= 60 && form.password_confirm === form.password) {
-		passwordField.value.clearError();
-        confirmPasswordField.value.clearError();
+const validatePassword = () => {
+    if(form.password.length < 6 || form.password.length > 60) {
+		passwordField.value.setError('Invalid Password');
     } else if(form.password_confirm !== form.password) {
         confirmPasswordField.value.setError('Password does not match');
     } else {
-		passwordField.value.setError('Invalid Password');
+		passwordField.value.clearError();
+        confirmPasswordField.value.clearError();
     }
 }
 
