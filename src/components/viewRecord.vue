@@ -370,7 +370,7 @@ const editRecord = () => {
 					break;
 				case 'table':
 					form.value.table = {
-						access_group: 1,
+						access_group: 0,
 						name: ''
 					};
 					break;
