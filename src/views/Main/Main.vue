@@ -29,9 +29,11 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                 li.hideOnTablet
                     sui-button.signup(@click="()=>router.push('/signup')" style="padding: 12px 16px") Sign-up
 
-main
+main(v-if="state.user")
     router-view
-
+sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+    Login
+Login(v-else)
 </template>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
@@ -44,13 +46,15 @@ sui-button.signup {
 
 <script setup>
 import NavBar from '@/components/navbar.vue';
-import { inject } from 'vue';
+import { ref, inject, onMounted, onUpdated, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { skapi, state } from '@/main';
+import { skapi, state, awaitConnection } from '@/main';
 
+import Login from './Login.vue';
 let router = useRouter();
 let route = useRoute();
 let appStyle = inject('appStyle');
+const overlay = ref(null);
 
 function bypassSameRoute(e) {
     // bypass when same route is clicked
@@ -63,4 +67,24 @@ function bypassSameRoute(e) {
         e.stopPropagation();
     }
 }
+
+onMounted(() => {
+    awaitConnection.then(async ()=>{
+        await nextTick();
+        console.log(state.user);
+        if(!state.user && state.viewport === 'desktop') {
+            overlay.value.open();
+        }
+    });
+});
+
+onUpdated(() => {
+    awaitConnection.then(async ()=>{
+        await nextTick();
+        console.log(state.user);
+        if(!state.user && state.viewport === 'desktop') {
+            overlay.value.open();
+        }
+    });
+});
 </script>

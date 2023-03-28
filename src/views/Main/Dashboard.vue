@@ -12,7 +12,7 @@ div(v-else-if="state?.user")
                 span New Service
     .container(v-if="serviceList?.length")
         template(v-for="service in serviceList")
-            router-link.service(:to='"/dashboard/" + service.service') 
+            router-link.service(:to='"/dashboard/" + service.service')
                 .settings
                     .name 
                         .indicator(:class="{'active': service.active > 0}")
@@ -36,14 +36,10 @@ div(v-else-if="state?.user")
     sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="isOpen = false")
         div.overlay
             NewService(@close="isOpen = false")
-sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
-    Login
-Login(v-else)
 </template>
 <script setup>
-import { inject, ref, watch, nextTick, onUpdated, onMounted, computed } from 'vue';
+import { inject, ref, watch, nextTick, computed } from 'vue';
 import { state, skapi, dateFormat, awaitConnection } from '@/main';
-import Login from './Login.vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import NewService from '@/components/NewService.vue';
@@ -73,24 +69,6 @@ const openNewServiceWindow = () => {
     if(state.viewport === 'mobile') router.push('?new=service');
     else newServiceWindow.value.open();
 }
-
-onMounted(() => {
-    awaitConnection.then(async ()=>{
-        await nextTick();
-        if(!state.user && state.viewport === 'desktop') {
-            overlay.value.open();
-        }
-    });
-});
-
-onUpdated(() => {
-    awaitConnection.then(async ()=>{
-        await nextTick();
-        if(!state.user && state.viewport === 'desktop') {
-            overlay.value.open();
-        }
-    });
-});
 
 async function getServices(gs) {
     if (!(gs instanceof Promise) || !state.user) {

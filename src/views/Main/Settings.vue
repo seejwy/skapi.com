@@ -80,18 +80,14 @@ div(v-else-if="state?.user")
             div
             .body Please verify your email to prevent your services from shutting down.
             Icon.close(@click="state.setVerificationDelay") X2
-sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
-    Login
-Login(v-else)
-sui-overlay(v-if="state.viewport === 'desktop'" ref="passwordOverlay" style="background: rgba(0, 0, 0, 0.6);")
-    ChangePassword(v-if="state.viewport === 'desktop'" @close="passwordOverlay.close()")
-sui-overlay(v-if="state.viewport === 'desktop'" ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
-    VerifyEmail(@close="emailOverlay.close()")
+    sui-overlay(v-if="state.viewport === 'desktop'" ref="passwordOverlay" style="background: rgba(0, 0, 0, 0.6);")
+        ChangePassword(v-if="state.viewport === 'desktop'" @close="passwordOverlay.close()")
+    sui-overlay(v-if="state.viewport === 'desktop'" ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
+        VerifyEmail(@close="emailOverlay.close()")
 </template>
 <script setup>
 import { inject, ref, onMounted, watch, nextTick } from 'vue';
 import { state, awaitConnection } from '@/main';
-import Login from './Login.vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
@@ -121,6 +117,7 @@ const isVerifyErrorMessage = ref(false);
 const passwordOverlay = ref(null);
 const emailOverlay = ref(null);
 const isSaving = ref(false);
+
 const openVerifyEmail = async () => {
     try {
         await skapi.verifyEmail();
@@ -133,12 +130,14 @@ const openVerifyEmail = async () => {
         }
     }
 }
+
 const cancelEdit = () => {
     isEdit.value = false;
     settings.value.name = state.user.name;
     settings.value.email = state.user.email;
     settings.value.email_subscription = state.user.email_subscription;
 }
+
 const updateUserSettings = async () => {
     if(state.user.name === settings.value.name && state.user.email === settings.value.email && state.user.email_subscription === settings.value.email_subscription) {
         isEdit.value = false;
@@ -172,10 +171,6 @@ const updateUserSettings = async () => {
 
 onMounted(() => {
     awaitConnection.then(()=>{
-        if(!state.user && state.viewport === 'desktop') {
-            overlay.value.open();
-        }
-
         if(state.user) {
             settings.value.email_subscription = state.user.email_subscription;
             settings.value.name = state.user.name;
