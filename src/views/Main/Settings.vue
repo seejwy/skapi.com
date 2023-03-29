@@ -19,7 +19,7 @@ div(v-else-if="state?.user")
                 span(v-else) {{  state.user.name }}
 
             hr
-            .title Email
+            .title(style="margin-bottom: 0;") Email
             .value(v-if="state.viewport === 'desktop'")
                 sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
                 template(v-else)
