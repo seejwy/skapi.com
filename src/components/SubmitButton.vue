@@ -3,6 +3,7 @@ sui-button(type="submit" :disabled="(props.loading || props.disabled) || null")
 	Icon.animation-rotation--slow-in-out(v-if="props.loading") loading
 	span(:style="{'visibility': props.loading ? 'hidden' : 'visible'}")
 		slot
+	input(type="submit" style="position: absolute; opacity: 0; visibility: hidden")
 </template>
 <script setup>
 import Icon from './Icon.vue';
