@@ -14,7 +14,7 @@ form.form.container(@submit.prevent="verifyEmail")
                 Icon warning
                 span {{ verificationCode.error }}
     .actions
-        sui-button.line-button(type="button" @click="state.viewport === 'desktop' ? emit('close') : router.replace('');") Cancel
+        sui-button.line-button(type="button" @click="close") Cancel
         SubmitButton(:loading="promiseRunning") Verify
 </template>
 <!-- script below -->
@@ -36,17 +36,21 @@ const verificationCode = ref({
 });
 
 const verifyEmail = () => {
-    try {
-        skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
-            state.user.email_verified = true;
-        });
-    } catch(e) {
+    promiseRunning.value = true;
+    skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
+        state.user.email_verified = true;
+        verificationCode.value.value = '';
+        verificationCode.value.error = '';
+
+        if(state.viewport === 'desktop') emit('close');
+        else router.replace('');
+    }).catch((e) => {
         console.log({e: e.code});
         console.log(e.code);
-    }
-
-    if(state.viewport === 'desktop') emit('close');
-    else router.replace('');
+        verificationCode.value.error = 'Verification Failed';
+    }).finally(() => {    
+        promiseRunning.value = false;
+    });
 }
 
 const secondsTillReady = ref(null);
@@ -71,6 +75,13 @@ const resendCode = async () => {
             verificationCode.value.error = "Limit exceeded. Please try again later.";
         }
     }
+}
+
+const close = () => {
+    verificationCode.value.value = '';
+    verificationCode.value.error = '';
+
+    state.viewport === 'desktop' ? emit('close') : router.replace('');
 }
 
 watch(() => state.viewport, (viewport) => {
