@@ -94,7 +94,7 @@ sui-overlay(ref="deleteConfirmOverlay")
         .body 
             p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
             p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
-            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
+            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value" :disabled="promiseRunning || null")
         .foot
             sui-button(type="button" @click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
             SubmitButton(:loading="promiseRunning" class="line-button") Yes
