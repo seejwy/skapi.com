@@ -111,7 +111,11 @@ const validatePassword = () => {
 
 const forgotPassword = () => {
     promiseRunning.value = true;
+    code.value = '';
+    password.value = '';
+    passwordConfirm.value = '';
     forgotError.value = null;
+    
     skapi.forgotPassword({email: email.value}).then(res => {
         step.value++;
     }).catch(e => {
