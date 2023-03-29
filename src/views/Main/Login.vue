@@ -19,7 +19,7 @@ form.container.login(@submit.prevent="login")
                 @input="(e)=>rememberme = e.target.checked"
 				:checked="rememberme ? true : null")
             span Stay logged in
-        RouterLink(to="/forgotpassword") Forgot Email & Password?
+        RouterLink(:to="{name: 'forgotpassword'}") Forgot Email & Password?
     .error(v-if="error")
         Icon warning
         span {{ error }}
@@ -131,9 +131,13 @@ function login() {
     @media @tablet {  
         margin: var(--head-space) auto 0;
         background: #FFF;
-        padding: 0;
+        padding: 0 20px;
         border: 0;
         box-shadow: none;
+    }
+    
+    @media @tablet {  
+        padding: 0 16px;
     }
 
     h1 {
