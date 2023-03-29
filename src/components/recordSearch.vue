@@ -639,4 +639,7 @@ form {
     }
   }
 }
+input {
+    -webkit-appearance: none;
+}
 </style>
