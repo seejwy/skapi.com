@@ -97,7 +97,7 @@ sui-overlay(ref="deleteConfirmOverlay")
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
         .foot
             sui-button(type="button" @click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
-            SubmitButton(:loading="promiseRunning" :class="{'line-button': !promiseRunning}") Yes
+            SubmitButton(:loading="promiseRunning" class="line-button") Yes
 sui-overlay(ref="deleteErrorOverlay")
     .popup
         .title
