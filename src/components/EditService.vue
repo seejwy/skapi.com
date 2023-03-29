@@ -1,6 +1,6 @@
 <template lang="pug">
 .overlay-container(v-if="service")
-    form(@submit.prevent="save" @keydown.enter.prevent="")
+    form(@submit.prevent="save" @keydown.enter.prevent="" action="")
         .overlay-container-title.hideOnTablet Service Setting
         .toggle(style="margin-bottom: 40px")
             span Enable/Disable

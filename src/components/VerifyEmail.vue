@@ -1,5 +1,5 @@
 <template lang="pug">
-form.form.container(@submit.prevent="verifyEmail")
+form.form.container(@submit.prevent="verifyEmail" action="")
     h2 Verify Email
     p Verification Email has been sent. Please check your email and enter the verification code.
     .input

@@ -87,7 +87,7 @@ template(v-else)
         div.overlay
             EditService(@close="isEdit = false")
 sui-overlay(ref="deleteConfirmOverlay")
-    form.popup(@submit.prevent="deleteService")
+    form.popup(@submit.prevent="deleteService" action="")
         .title
             Icon warning
             div Deleting Service?

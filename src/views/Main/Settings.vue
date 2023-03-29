@@ -7,7 +7,7 @@ div(v-else-if="state?.user")
     .page-header.head-space-helper
         h1.fixed Account Settings
     .settings-wrapper
-        form.settings(@submit.prevent="updateUserSettings" @keydown.enter.prevent="")
+        form.settings(@submit.prevent="updateUserSettings" @keydown.enter.prevent="" action="")
             hr(v-if="state.viewport === 'mobile'")
             .title Name
             .value(v-if="state.viewport === 'desktop'")

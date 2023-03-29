@@ -1,6 +1,6 @@
 <template lang="pug">
 .wrapper
-    form.container(@submit.prevent="signup")
+    form.container(@submit.prevent="signup" action="")
         h1 Signup
         .input
             label Email

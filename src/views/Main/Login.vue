@@ -1,5 +1,5 @@
 <template lang="pug">
-form.container.login(@submit.prevent="login")
+form.container.login(@submit.prevent="login" action="")
     h1 Login
     .input
         label Email
