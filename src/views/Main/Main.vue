@@ -29,7 +29,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                 li.hideOnTablet
                     sui-button.signup(@click="()=>router.push('/signup')" style="padding: 12px 16px") Sign-up
 
-main(v-if="state.user")
+main(v-if="noLoginNeeded()")
     router-view
 sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
     Login
@@ -56,6 +56,20 @@ let route = useRoute();
 let appStyle = inject('appStyle');
 const overlay = ref(null);
 
+const noLoginNeeded = () => {
+    if(!state.user) {
+        switch(route.name) {
+            case 'forgotpassword':
+            case 'signup':
+                return true;
+        }
+
+        return false;
+    } else {
+        return true;
+    }
+}
+
 function bypassSameRoute(e) {
     // bypass when same route is clicked
     let routeName = {
@@ -71,7 +85,6 @@ function bypassSameRoute(e) {
 onMounted(() => {
     awaitConnection.then(async ()=>{
         await nextTick();
-        console.log(state.user);
         if(!state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
@@ -81,7 +94,6 @@ onMounted(() => {
 onUpdated(() => {
     awaitConnection.then(async ()=>{
         await nextTick();
-        console.log(state.user);
         if(!state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
