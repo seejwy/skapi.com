@@ -34,6 +34,7 @@ const verificationCode = ref({
     value: '',
     error: ''
 });
+const promiseRunning = ref(false);
 
 const verifyEmail = () => {
     promiseRunning.value = true;
