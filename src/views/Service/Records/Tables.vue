@@ -39,42 +39,43 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close()' style="backgrou
             template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList.length)")
                 template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1].length)")
                     // when v-for by number, it starts with 1
-                    .table-wrapper(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
-                        .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
-                            span {{ t.table }}
-                            div
-                                span {{getSize(t.size)}}
-                                span {{t.number_of_records}}
-
-                            template(v-if='t.records')
-                                template(v-if="viewport === 'desktop'")
-                                    Icon.clickable(v-if="!t.opened") plus
-                                    Icon.clickable(v-else) minus
-
-                                Icon.clickable(v-else style="color: rgba(255, 255, 255, .6)") right
-
-                            Icon.animation-rotation(v-else) refresh
-
-                        div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
-                            .noRecords(v-if='!t.records.list.length')
+                    template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
+                        .table-wrapper(v-if="t.number_of_records")
+                            .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
+                                span {{ t.table }}
                                 div
-                                    sui-flextext(min-size='14' max-size='24') No Records
-                                    br
-                                    p This table will be automatically removed.
+                                    span {{getSize(t.size)}}
+                                    span {{t.number_of_records}}
 
-                            .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}")
-                                div
-                                    span.label-head RECORD:
-                                    span {{ r.record_id }}
-                                div
-                                    span.label-head USER:
-                                    span {{ r.user_id }}
-                                div
-                                    span.label-head UPLOADED:
-                                    span {{ dateFormat(r.uploaded) }}
+                                template(v-if='t.records')
+                                    template(v-if="viewport === 'desktop'")
+                                        Icon.clickable(v-if="!t.opened") plus
+                                        Icon.clickable(v-else) minus
 
-                            .load-more(v-if="!t.records.endOfList")
-                                Icon.animation-rotation refresh
+                                    Icon.clickable(v-else style="color: rgba(255, 255, 255, .6)") right
+
+                                Icon.animation-rotation(v-else) refresh
+
+                            div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
+                                .noRecords(v-if='!t.records.list.length')
+                                    div
+                                        sui-flextext(min-size='14' max-size='24') No Records
+                                        br
+                                        p This table will be automatically removed.
+
+                                .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}")
+                                    div
+                                        span.label-head RECORD:
+                                        span {{ r.record_id }}
+                                    div
+                                        span.label-head USER:
+                                        span {{ r.user_id }}
+                                    div
+                                        span.label-head UPLOADED:
+                                        span {{ dateFormat(r.uploaded) }}
+
+                                .load-more(v-if="!t.records.endOfList")
+                                    Icon.animation-rotation refresh
 
                 .paginator.hideOnTablet
                     Icon.arrow(
