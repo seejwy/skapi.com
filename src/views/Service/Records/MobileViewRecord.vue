@@ -1,6 +1,9 @@
 <template lang="pug">
 template(v-if="record")
     ViewRecord(ref='viewRecord' :record='record')
+.no-records-found(v-else-if="hasNoRecords")
+    .title Record Not Found
+    p Record does not exist
 div(v-else style="text-align: center; padding: 1em;")
     Icon.animation-rotation(style="display:inline-block;width:32px;height:32px;") refresh
 </template>
@@ -15,6 +18,7 @@ let viewRecord = ref(null);
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
+const hasNoRecords = ref(false);
 
 let setMobileButton = () => {
     navbarMobileRightButton.value = {
@@ -83,7 +87,11 @@ if (!record.value) {
             service: route.params.service,
             record_id
         }).then(r => {
-            record.value = r.list[0];
+            if(r.list.length) {
+                record.value = r.list[0];
+            } else {
+                hasNoRecords.value = true;
+            }
         });
     } else {
         record.value = {};
@@ -112,3 +120,21 @@ watch(viewport, n => {
     }
 });
 </script>
+<style lang="less">
+.no-records-found {
+    text-align: center;
+    border-radius: 0 0 8px 8px;
+    color: rgba(255, 255, 255, .4);
+    align-items: center;
+    text-align: center;
+    padding: 60px 0 32px 0;
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    p {
+        margin: 20px 0 0 0;
+    }
+}
+</style>
