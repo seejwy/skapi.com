@@ -313,6 +313,7 @@ import router from '../router';
 
 const route = useRoute();
 const appStyle = inject('appStyle');
+let pageTitle = inject('pageTitle');
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const deleteConfirmOverlay = ref(null);
@@ -476,7 +477,8 @@ const deleteRecord = () => {
 const saveData = async () => {
 	try {
 		let res = await save();
-		router.push({
+		pageTitle.value = res.record_id;
+		router.replace({
             name: 'mobileRecordView',
             query: {
                 id: res.record_id
