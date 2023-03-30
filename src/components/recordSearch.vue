@@ -389,28 +389,16 @@ function search(searchParams) {
 }
 
 watch(() => route.query, n => {
-    if (route.name === 'recordSearch') {
+    if (route.name === 'recordSearch' && !searchResult.value) {
         search(n);
     }
     else if (route.name === 'records') {
         advancedForm.value = advancedFormInit();
         searchForm.value = '';
     }
+}, {
+    immediate: true
 });
-
-switch (route.name) {
-    case 'recordSearch':
-        // always do new search
-        search(route.query);
-        break;
-    case 'recordList':
-        // always do new search if there is no fetched data
-        if (searchResult.value === null) {
-            search(route.query);
-        }
-        break;
-}
-
 </script>
 
 <style lang="less" scoped>
