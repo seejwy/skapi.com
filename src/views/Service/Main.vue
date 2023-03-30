@@ -226,7 +226,7 @@ provide('serviceUsers', ref(null));
 provide('fetchingData', ref(false));
 
 let pageTitle = inject('pageTitle');
-pageTitle.value = 'Service';
+pageTitle.value = ' ';
 
 let overlay = ref(null);
 
