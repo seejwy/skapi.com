@@ -474,10 +474,12 @@ const deleteRecord = () => {
 }
 
 const saveData = async () => {
-	save().catch(err=>{
+	try {
+		await save();
+	} catch(e) {
 		fileError.value = err.message;
 		view.value = 'record';
-	});
+	}
 }
 
 const save = async () => {

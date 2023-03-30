@@ -31,15 +31,11 @@ let setMobileButton = () => {
                 cssClass: 'animation-rotation--slow-in-out'
             };
             viewRecord.value.saveData().then((res) => {
-                if(res) {
-                    navbarMobileRightButton.value = {
-                        type: 'text',
-                        val: 'Edit',
-                        callback: editCallback
-                    };
-                } else {
-                    setMobileButton();
-                }
+                navbarMobileRightButton.value = {
+                    type: 'text',
+                    val: 'Edit',
+                    callback: editCallback
+                };
             }).catch((e) => {
                 console.log({e});
                 setMobileButton();
