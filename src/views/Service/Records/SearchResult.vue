@@ -110,7 +110,7 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onBeforeUnmount, onMounted } from 'vue';
+import { inject, ref, watch, computed, nextTick, onBeforeUnmount } from 'vue';
 import { skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -238,7 +238,7 @@ async function fetchMoreRecords() {
     fetchingData.value = true;
     promiseQueue = skapi.getRecords(searchResult.value.params, { fetchMore: true, limit: fetchLimit });
 
-    await promiseQueue;
+    promiseQueue = await promiseQueue;
 
     for (let rec of promiseQueue.list) {
         searchResult.value.list.push(rec);
