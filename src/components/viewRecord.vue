@@ -475,7 +475,13 @@ const deleteRecord = () => {
 
 const saveData = async () => {
 	try {
-		await save();
+		let res = await save();
+		router.push({
+            name: 'mobileRecordView',
+            query: {
+                id: res.record_id
+            }
+        });
 	} catch(e) {
 		fileError.value = err.message;
 		view.value = 'record';
