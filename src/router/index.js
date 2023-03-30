@@ -97,7 +97,7 @@ const router = createRouter({
                 {
                   path: 'list',
                   name: 'recordList',
-                  component: ()=>import('../views/Service/Records/SearchResult.vue')
+                  component: ()=>import('../views/Service/Records/TableRecord.vue')
                 }
               ]
             },
