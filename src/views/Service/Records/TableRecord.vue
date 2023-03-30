@@ -23,7 +23,7 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
                 p There are no records in this table
         template(v-else)
             .recordWrapper
-                .records(v-for="r in searchResult.list" style="cursor:pointer;" @click="()=>displayRecord(r)")
+                .records(v-for="r in searchResult.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :style="{opacity: r.deleting ? '0.3' : null}")
                     div
                         span.label RECORD:
                         span {{ r.record_id }}
