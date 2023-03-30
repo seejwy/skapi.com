@@ -11,7 +11,7 @@
 				Icon trash
 	.content(:class="{desktop:!isMobileUrl}")
 		.grid(v-if="view === 'information'")
-			.grid-item.title Record ID 
+			.grid-item.title Record ID
 			.grid-item {{ props.record.record_id }}
 			.grid-item.title Table Name
 			.grid-item {{ props.record.table.name }}
@@ -434,7 +434,7 @@ const editRecord = () => {
 const deleteRecord = () => {
 	let table, tableIndex;
 
-	if(recordTables.value) {
+	if(recordTables.value && !searchResult.value) {
 		table = recordTables.value.list.find((val) => val.table === props.record.table.name);
 		tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
 		table.records.list[tableIndex].deleting = true;
