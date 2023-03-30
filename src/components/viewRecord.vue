@@ -317,6 +317,7 @@ const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const deleteConfirmOverlay = ref(null);
 const exitEditOverlay = ref(null);
+const searchResult = inject('searchResult');
 
 const serviceId = route.params.service;
 const view = ref('information');
@@ -431,21 +432,40 @@ const editRecord = () => {
 };
 
 const deleteRecord = () => {
-	
-	let table = recordTables.value.list.find((val) => val.table === props.record.table.name);
-	let tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
-	table.records.list[tableIndex].deleting = true
+	let table, tableIndex;
 
-	skapi.deleteRecords({
-		service: serviceId,
-		record_id: [props.record.record_id]
-	}).then(() => {
-		table.number_of_records--;
-		table.records.list.splice(tableIndex, 1);
-	}).catch((e) => {
-		console.log({e});
-		delete table.records.list[tableIndex].deleting;
-	});
+	if(recordTables.value) {
+		table = recordTables.value.list.find((val) => val.table === props.record.table.name);
+		tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
+		table.records.list[tableIndex].deleting = true;
+		
+		skapi.deleteRecords({
+			service: serviceId,
+			record_id: [props.record.record_id]
+		}).then(() => {
+			table.number_of_records--;
+			table.records.list.splice(tableIndex, 1);
+		}).catch((e) => {
+			console.log({e});
+			delete table.records.list[tableIndex].deleting;
+		});
+	} else {
+		tableIndex = searchResult.value.list.findIndex((val) => {
+			console.log({val});
+			console.log({props: props.record});
+			return val.table.name === props.record.table.name
+		});
+		searchResult.value.list[0].deleting = true;		
+
+		skapi.deleteRecords({
+			service: serviceId,
+			record_id: [props.record.record_id]
+		}).then(() => {
+			searchResult.value.list.splice(tableIndex, 1);
+		}).catch((e) => {
+			console.log({e});
+		});
+	}
 	
 	deleteConfirmOverlay.value.close();
 	if(state.viewport === 'desktop') emit('close');
