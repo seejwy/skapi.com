@@ -84,7 +84,7 @@ pageTitle.value = route.query.table;
 let searchResult = inject('searchResult');
 
 // for paginators
-let fetchLimit = 1;
+let fetchLimit = 50;
 
 function numberOfSkeletons() {
     // calculated by available vertical space
