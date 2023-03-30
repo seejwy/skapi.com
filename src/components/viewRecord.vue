@@ -451,11 +451,10 @@ const deleteRecord = () => {
 		});
 	} else {
 		tableIndex = searchResult.value.list.findIndex((val) => {
-			console.log({val});
-			console.log({props: props.record});
-			return val.table.name === props.record.table.name
+			return val.record_id === props.record.record_id;
 		});
-		searchResult.value.list[0].deleting = true;		
+
+		searchResult.value.list[tableIndex].deleting = true;		
 
 		skapi.deleteRecords({
 			service: serviceId,
