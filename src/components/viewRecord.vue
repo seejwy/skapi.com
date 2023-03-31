@@ -276,11 +276,7 @@
 
 		.foot(v-if='!isMobileUrl')
 			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").line-button Cancel
-			div(style="display: inline-block")
-				sui-button(v-if="isSaving" type="button" disabled)
-					span(style="visibility: hidden;") Save
-					Icon.animation-rotation--slow-in-out(style=" position: absolute;") loading
-				sui-button(v-else type="button" @click="saveData") Save
+			SubmitButton(:loading="isSaving") Save
 
 sui-overlay(ref="deleteConfirmOverlay")
 	.popup
