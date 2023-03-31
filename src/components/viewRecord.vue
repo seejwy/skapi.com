@@ -572,6 +572,7 @@ const save = async () => {
 				let idx = tableList.indexOf(r.table.name);
 				let tbl = recordTables.value.list[idx];
 				tbl.number_of_records++;
+				r.data = ref(r.data);
 				tbl.records.list.push(r);
 				let gotMore = await getMoreRecords(null, recordTables.value.list[idx], serviceId);
 				if (gotMore.startKey_list[gotMore.startKey_list.length - 1] === '"end"') {
