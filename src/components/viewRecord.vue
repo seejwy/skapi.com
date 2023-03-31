@@ -108,7 +108,7 @@
 		sui-button.line-button(type="button" @click="emit('close', '');" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit")
-	form(ref="formEl")
+	form(ref="formEl" @submit.prevent="saveData" @keypress.enter.prevent="")
 		.head(:class="{'mobile-head': isMobileUrl}")
 			.title {{ !isMobileUrl ? form.record_id || 'Add Record' : ''}}
 			.menu
