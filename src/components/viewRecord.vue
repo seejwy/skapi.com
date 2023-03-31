@@ -434,10 +434,16 @@ const editRecord = () => {
 
 const deleteRecord = () => {
 	let table, tableIndex;
-
-	if(recordTables.value && !searchResult.value) {
+	if(recordTables.value) {
 		table = recordTables.value.list.find((val) => val.table === props.record.table.name);
 		tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
+	} else {
+		tableIndex = searchResult.value.list.findIndex((val) => {
+			return val.record_id === props.record.record_id;
+		});
+	}
+
+	if(recordTables.value && !searchResult.value) {
 		table.records.list[tableIndex].deleting = true;
 		
 		skapi.deleteRecords({
@@ -451,10 +457,6 @@ const deleteRecord = () => {
 			delete table.records.list[tableIndex].deleting;
 		});
 	} else {
-		tableIndex = searchResult.value.list.findIndex((val) => {
-			return val.record_id === props.record.record_id;
-		});
-
 		searchResult.value.list[tableIndex].deleting = true;		
 
 		skapi.deleteRecords({
@@ -462,6 +464,7 @@ const deleteRecord = () => {
 			record_id: [props.record.record_id]
 		}).then(() => {
 			searchResult.value.list.splice(tableIndex, 1);
+			if(recordTables.value) table.number_of_records--;
 		}).catch((e) => {
 			console.log({e});
 		});
@@ -485,7 +488,8 @@ const saveData = async () => {
             }
         });
 	} catch(e) {
-		fileError.value = err.message;
+		console.log({e});
+		fileError.value = e;
 		view.value = 'record';
 	}
 }
@@ -561,14 +565,13 @@ const save = async () => {
 	config.table.access_group = Number(config.table.access_group);
 
 	try {
+		let currentTable = props.record?.table?.name;
 		let r = await skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, config);
 		if (isNewRecord) {
-			let recordSize = skapi.recordSizeCalculator(r);
 			if (tableList.includes(r.table.name)) {
 				let idx = tableList.indexOf(r.table.name);
 				let tbl = recordTables.value.list[idx];
 				tbl.number_of_records++;
-				tbl.size += recordSize; // update table size
 				tbl.records.list.push(r);
 				let gotMore = await getMoreRecords(null, recordTables.value.list[idx], serviceId);
 				if (gotMore.startKey_list[gotMore.startKey_list.length - 1] === '"end"') {
@@ -590,13 +593,33 @@ const save = async () => {
 		for (let k in r) {
 			props.record[k] = r[k];
 		}
+		
+		if(!isNewRecord && props.record?.table?.name !== currentTable) {
+			recordTables.value.list.forEach(table => {
+				if(table.table === currentTable) {
+					let idx = table.records.list.findIndex((record) => {
+						return record.record_id === props.record_id
+					});
+
+					table.records.list.splice(idx, 1);
+					table.number_of_records--;
+				} else if(table.table === props.record.table.name) {
+					table.number_of_records++;
+					let idx = table.records.list.findIndex((record) => {
+						return record.uploaded > props.record.uploaded
+					});
+
+					table.records.list.splice(idx, 0, r);
+				}
+			});
+		}
 
 		isSaving.value = false;
 		isEdit.value = false;
 		return r;
 	} catch (e) {
 		// do some error message
-		console.log(e.code);
+		console.log({e});
 		isSaving.value = false;
 		if(e.code === 'NOT_EXISTS') {
 			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');

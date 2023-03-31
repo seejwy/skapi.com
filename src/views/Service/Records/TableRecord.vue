@@ -149,7 +149,6 @@ async function fetchMoreRecords() {
     promiseQueue = skapi.getRecords(params, { fetchMore: true, limit: fetchLimit });
 
     let result = await promiseQueue;
-    console.log({result});
     for (let rec of result.list) {
         searchResult.value.list.push(rec);
     }
