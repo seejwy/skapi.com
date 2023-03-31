@@ -11,7 +11,7 @@ SearchNavBar(v-if='viewport === "mobile"')
                 Icon down2
             sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                 template(v-for="(field, key) in visibleFields")
-                    option(v-if="key !== 'suspended'" :value="key") {{  field.text  }}
+                    option(v-if="key !== 'approved'" :value="key") {{  field.text  }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
             sui-button.icon-button(@click="blockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
@@ -39,7 +39,7 @@ SearchNavBar(v-if='viewport === "mobile"')
                         td
                             sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                            template(v-if="key === 'suspended'")
+                            template(v-if="key === 'approved'")
                                 Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
                                 Icon(v-else) unblock
                             template(v-else-if="key === 'group'")                     
@@ -61,7 +61,7 @@ SearchNavBar(v-if='viewport === "mobile"')
                                 td
                                     sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                                 td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                                    template(v-if="key === 'suspended'")
+                                    template(v-if="key === 'approved'")
                                         Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
                                         Icon(v-else) unblock
                                     template(v-else-if="key === 'group'")                     

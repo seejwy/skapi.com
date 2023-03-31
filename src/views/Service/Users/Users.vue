@@ -83,7 +83,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             template(v-else)
                 sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                     template(v-for="(field, key) in visibleFields")
-                        option(v-if="key !== 'suspended'" :value="key") {{  field.text  }}
+                        option(v-if="key !== 'approved'" :value="key") {{  field.text  }}
         .header-actions(v-else)
         Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
@@ -113,7 +113,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         td
                             sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                            template(v-if="key === 'suspended'")
+                            template(v-if="key === 'approved'")
                                 Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
                                 Icon(v-else) unblock
                             template(v-else-if="key === 'group'")                     
@@ -138,7 +138,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                                 td
                                     sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                                 td(v-if="viewport === 'mobile'" style="width: 52px;")
-                                    Icon(v-if="user['suspended']?.includes('suspended')" style="opacity: 40%;") block
+                                    Icon(v-if="user['approved']?.includes('suspended')" style="opacity: 40%;") block
                                     Icon(v-else) unblock
                                 td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}"  @click="openUser(user['user_id'])") 
                                     template(v-if="key === 'group'")                     
@@ -342,13 +342,13 @@ const userSelectionHandler = (e) => {
         return user.user_id === e.target.value;
     });
     if (e.target.checked) {
-        if(user.suspended.includes('suspended')) {
+        if(user.approved.includes('suspended')) {
             selectedBlockedUsers.value.push(e.target.value);
         } else {
             selectedUnblockedUsers.value.push(e.target.value);
         }
     } else {
-        if(user.suspended.includes('suspended')) {
+        if(user.approved.includes('suspended')) {
             selectedBlockedUsers.value.splice(selectedBlockedUsers.value.indexOf(e.target.value), 1);
         } else {
             selectedUnblockedUsers.value.splice(selectedUnblockedUsers.value.indexOf(e.target.value), 1);
@@ -362,7 +362,7 @@ const selectAllHandler = (e) => {
     
     if (e.target.checked) {
         groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].map(user => {
-            if(user.suspended.includes('suspended')) {
+            if(user.approved.includes('suspended')) {
                 selectedBlockedUsers.value.push(user.user_id);
             } else {
                 selectedUnblockedUsers.value.push(user.user_id);
@@ -530,7 +530,7 @@ const blockUsers = async () => {
         let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
             return item.user_id === sel
         });
-        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:suspended';
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].approved = 'admin:suspended';
     });
 
     selectedBlockedUsers.value = [...selectedUnblockedUsers.value];
@@ -558,7 +558,7 @@ const unblockUsers = async () => {
         let idx = groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value].findIndex((item) => {
             return item.user_id === sel
         });
-        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].suspended = 'admin:approved';
+        groupedUserList.value[currentSelectedUsersBatch.value][currentSelectedUsersPage.value][idx].approved = 'admin:approved';
     });
     selectedUnblockedUsers.value = [...selectedBlockedUsers.value];
     selectedBlockedUsers.value = [];

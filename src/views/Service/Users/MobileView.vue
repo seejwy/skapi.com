@@ -40,7 +40,7 @@ const info = reactive([
         key: 'name'
     },
     {
-        key: 'suspended',
+        key: 'approved',
         name: 'Block/Unblocked',
         icon: (value) => {
             return value.includes('approved') ? 'unblock' : 'block';
