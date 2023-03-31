@@ -305,6 +305,7 @@ import { tableList, getMoreRecords, recordTables, refreshTables } from '../views
 import TagsInput from '@/components/TagsInput.vue';
 import JsonInput from '@/components/JsonInput.vue';
 import Icon from '@/components/Icon.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 import router from '../router';
 
 const route = useRoute();
