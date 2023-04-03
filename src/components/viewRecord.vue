@@ -688,7 +688,7 @@ const addFiles = (event, keyIndex, index) => {
 	if(Array.isArray(fileData) && fileData) {
 		fileData.forEach(file => {
 			if(file instanceof File) {
-				fileSize += file.size;
+				fileSize += file.size / 1000;
 			}
 		});
 	}
