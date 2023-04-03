@@ -1108,7 +1108,7 @@ defineExpose({
 			}
 			.file-size-limit {
 				font-size: 14px;
-				margin: -24px 0 -9px 0;
+				margin: -20px 0 -5px 0;
 				opacity: .6;
 			}
 		}
