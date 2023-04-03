@@ -342,7 +342,6 @@ const data = ref([]);
 const indexValueType = ref('string');
 const fileError = ref('');
 let isNewRecord = false;
-console.log({navigator, a: navigator.oscpu});
 const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || navigator?.oscpu.includes('Windows') ? 3.9 : 4;
 
 const isMobileUrl = route.query?.id;
