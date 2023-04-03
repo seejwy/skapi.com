@@ -296,6 +296,14 @@ sui-overlay(ref="exitEditOverlay")
 		.foot
 			sui-button(@click="()=>exitEditOverlay.close()") No 
 			sui-button.line-button(@click="confirmClose") Yes
+sui-overlay(ref="filesizeExceedsOverlay")
+	.popup
+		.title
+			Icon warning
+			div File Size Exceeded
+		.body Your total file size exceeds 5MB.
+		.foot
+			sui-button(@click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
 import { ref, computed, watch, nextTick, inject } from 'vue';
@@ -314,6 +322,7 @@ let pageTitle = inject('pageTitle');
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const deleteConfirmOverlay = ref(null);
+const filesizeExceedsOverlay = ref(null);
 const exitEditOverlay = ref(null);
 const searchResult = inject('searchResult');
 
@@ -655,13 +664,26 @@ const onDrop = (event, keyIndex, index) => {
 const addFiles = (event, keyIndex, index) => {
 	const files = event.target.files;
 	let fileData = data.value[keyIndex].data;
+	let fileCollection = [];
 	if(Array.isArray(fileData)) {
-		data.value[keyIndex].data = [...fileData, ...files];
+		fileCollection = [...fileData, ...files];
 	} else {
-		data.value[keyIndex].data = [...files];
+		fileCollection = [...files];
 	}
-	event.target.value = '';
-	fileError.value = '';
+	
+	let fileSize = 0;
+
+	fileCollection.forEach((file) => {
+		fileSize += Math.round(file.size / 1024);
+	})
+	
+	if(fileSize > 5120) {
+		filesizeExceedsOverlay.value.open();
+	} else {
+		data.value[keyIndex].data = fileCollection
+		event.target.value = '';
+		fileError.value = '';
+	}
 };
 
 const addField = () => {
