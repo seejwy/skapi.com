@@ -108,7 +108,7 @@
 		sui-button.line-button(type="button" @click="() => { emit('close', ''); view = 'information'; }" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit")
-	form(ref="formEl" @submit.prevent="saveData" @keypress.enter.prevent="")
+	form(ref="formEl")
 		.head(:class="{'mobile-head': isMobileUrl}")
 			.title {{ !isMobileUrl ? form.record_id || 'Add Record' : ''}}
 			.menu
@@ -276,7 +276,11 @@
 
 		.foot(v-if='!isMobileUrl')
 			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").line-button Cancel
-			SubmitButton(:loading="isSaving") Save
+			div(style="display: inline-block")
+				sui-button(v-if="isSaving" type="button" disabled)
+					span(style="visibility: hidden;") Save
+					Icon.animation-rotation--slow-in-out(style=" position: absolute;") loading
+				sui-button(v-else type="button" @click="save") Save
 
 sui-overlay(ref="deleteConfirmOverlay")
 	.popup
@@ -486,13 +490,17 @@ const deleteRecord = () => {
 const saveData = async () => {
 	try {
 		let res = await save();
-		pageTitle.value = res.record_id;
-		router.replace({
-            name: 'mobileRecordView',
-            query: {
-                id: res.record_id
-            }
-        });
+		if(res) {
+			pageTitle.value = res.record_id;
+			router.replace({
+				name: 'mobileRecordView',
+				query: {
+					id: res.record_id
+				}
+			});
+		} else {
+			return false;
+		}
 	} catch(e) {
 		console.log({e});
 		fileError.value = e;
@@ -525,7 +533,7 @@ const save = async () => {
 		service: serviceId,
 		formData: form => {
 			data.value.forEach(record => {
-				if (record.type === 'json') {				
+				if (record.type === 'json') {			
 					record.data = record.data.replaceAll(' ', '');
 					form.append(record.key, new Blob([record.data], {
 						type: 'application/json'

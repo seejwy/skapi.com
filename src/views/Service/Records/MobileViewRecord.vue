@@ -25,21 +25,26 @@ let setMobileButton = () => {
         type: 'text',
         val: 'Save',
         callback: () => {
+            viewRecord.value.saveData().then((res) => {
+                if(res) {
+                    navbarMobileRightButton.value = {
+                        type: 'text',
+                        val: 'Edit',
+                        callback: editCallback
+                    };
+                } else {
+                    setMobileButton();
+                }
+            }).catch((e) => {
+                console.log({e});
+                setMobileButton();
+            });
+            
             navbarMobileRightButton.value = {
                 type: 'icon',
                 val: 'loading',
                 cssClass: 'animation-rotation--slow-in-out'
             };
-            viewRecord.value.saveData().then((res) => {
-                navbarMobileRightButton.value = {
-                    type: 'text',
-                    val: 'Edit',
-                    callback: editCallback
-                };
-            }).catch((e) => {
-                console.log({e});
-                setMobileButton();
-            });
         }
     };
 }
