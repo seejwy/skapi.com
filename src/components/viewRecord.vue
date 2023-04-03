@@ -417,7 +417,9 @@ const editRecord = () => {
 			let typeSplitFiles = getDataByTypes(recordData[key]).data;
 			if (typeSplitFiles.files.length) {
 				data.value.push({ key, type: 'file', data: typeSplitFiles.files });
-			} else if(typeSplitFiles.json) {
+			}
+
+			if(typeSplitFiles.json) {
 				if(Array.isArray(typeSplitFiles.json)) {
 					typeSplitFiles.json.forEach(value => {
 						if (Array.isArray(value)) {
