@@ -269,7 +269,7 @@
 
 					sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
 
-					sui-textarea.data-input-field(v-else style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value") {{  record.data  }}
+					sui-input.data-input-field(v-else style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value") {{  record.data  }}
 
 			div
 				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
