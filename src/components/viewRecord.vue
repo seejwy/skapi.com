@@ -498,6 +498,8 @@ const saveData = async () => {
 					id: res.record_id
 				}
 			});
+			
+			return res;
 		} else {
 			return false;
 		}
