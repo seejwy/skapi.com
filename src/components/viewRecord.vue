@@ -240,7 +240,8 @@
 								sui-button.line-button(@click.prevent.stop="" type="button") Upload
 							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
 								Icon warning
-								span You must upload a file 
+								span You must upload a file
+						.file-size-limit Max Upload Size {{fileSizeLimit}} MB
 						template(v-for="(file, index) in record.data")
 							.value.file(v-if="file.md5 || file.lastModified")
 								Icon attached
@@ -305,7 +306,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 		.title
 			Icon warning
 			div File Size Exceeded
-		.body Your total file size exceeds 5MB.
+		.body Your total file size exceeds {{ fileSizeLimit }}MB.
 		.foot
 			sui-button(@click="()=>filesizeExceedsOverlay.close()") OK
 </template>
@@ -341,6 +342,8 @@ const data = ref([]);
 const indexValueType = ref('string');
 const fileError = ref('');
 let isNewRecord = false;
+console.log({navigator, a: navigator.oscpu});
+const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || navigator?.oscpu.includes('Windows') ? 3.9 : 4;
 
 const isMobileUrl = route.query?.id;
 const navbarMobileRightButton = inject('navbarMobileRightButton');
@@ -683,7 +686,7 @@ const addFiles = (event, keyIndex, index) => {
 	let fileCollection = [...files];
 	let fileSize = 0;
 
-	if(fileData) {
+	if(Array.isArray(fileData) && fileData) {
 		fileData.forEach(file => {
 			if(file instanceof File) {
 				fileSize += file.size;
@@ -692,10 +695,10 @@ const addFiles = (event, keyIndex, index) => {
 	}
 
 	fileCollection.forEach((file) => {
-		fileSize += Math.round(file.size / 1024);
-	})
+		fileSize += file.size / 1000;
+	});
 	
-	if(fileSize > 5120) {
+	if(fileSize > 4000) {
 		filesizeExceedsOverlay.value.open();
 	} else {
 		if(Array.isArray(fileData)) {
@@ -1102,6 +1105,10 @@ defineExpose({
 						fill: #FF8D3B;
 					}
 				}
+			}
+			.file-size-limit {
+				margin: -24px 0 -9px 0;
+				opacity: .6;
 			}
 		}
 
