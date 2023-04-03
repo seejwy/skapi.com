@@ -498,7 +498,7 @@ const saveData = async () => {
 					id: res.record_id
 				}
 			});
-			
+
 			return res;
 		} else {
 			return false;
@@ -677,14 +677,16 @@ const onDrop = (event, keyIndex, index) => {
 const addFiles = (event, keyIndex, index) => {
 	const files = event.target.files;
 	let fileData = data.value[keyIndex].data;
-	let fileCollection = [];
-	if(Array.isArray(fileData)) {
-		fileCollection = [...fileData, ...files];
-	} else {
-		fileCollection = [...files];
-	}
-	
+	let fileCollection = [...files];
 	let fileSize = 0;
+
+	if(fileData) {
+		fileData.forEach(file => {
+			if(file instanceof File) {
+				fileSize += file.size;
+			}
+		});
+	}
 
 	fileCollection.forEach((file) => {
 		fileSize += Math.round(file.size / 1024);
@@ -693,6 +695,11 @@ const addFiles = (event, keyIndex, index) => {
 	if(fileSize > 5120) {
 		filesizeExceedsOverlay.value.open();
 	} else {
+		if(Array.isArray(fileData)) {
+			fileCollection = [...fileData, ...fileCollection];
+		} else {
+			fileCollection = [...fileCollection];
+		}
 		data.value[keyIndex].data = fileCollection
 		event.target.value = '';
 		fileError.value = '';
