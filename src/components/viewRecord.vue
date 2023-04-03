@@ -241,7 +241,7 @@
 							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
 								Icon warning
 								span You must upload a file
-						.file-size-limit Max Upload Size {{fileSizeLimit}} MB
+						.file-size-limit The total size per upload must be less than {{fileSizeLimit}} MB
 						template(v-for="(file, index) in record.data")
 							.value.file(v-if="file.md5 || file.lastModified")
 								Icon attached
@@ -1107,6 +1107,7 @@ defineExpose({
 				}
 			}
 			.file-size-limit {
+				font-size: 14px;
 				margin: -24px 0 -9px 0;
 				opacity: .6;
 			}
