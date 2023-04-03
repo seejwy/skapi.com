@@ -485,6 +485,7 @@ const deleteRecord = () => {
 	else {
 		router.replace(router.options.history.state.back);
 	}
+	view.value = 'information';
 }
 
 const saveData = async () => {
