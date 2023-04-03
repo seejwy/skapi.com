@@ -698,6 +698,7 @@ const addFiles = (event, keyIndex, index) => {
 	});
 	
 	if(fileSize > 4000) {
+		event.target.value = null;
 		filesizeExceedsOverlay.value.open();
 	} else {
 		if(Array.isArray(fileData)) {
