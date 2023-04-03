@@ -533,7 +533,10 @@ const save = async () => {
 		service: serviceId,
 		formData: form => {
 			data.value.forEach(record => {
-				if (record.type === 'json') {			
+				if (record.type === 'json') {
+					if(typeof record.data !== 'string' && !isNaN(record.data)) {
+						record.data = JSON.stringify(record.data);
+					}
 					record.data = record.data.replaceAll(' ', '');
 					form.append(record.key, new Blob([record.data], {
 						type: 'application/json'
