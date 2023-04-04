@@ -512,7 +512,7 @@ const saveData = async () => {
 		}
 	} catch(e) {
 		console.log({e});
-		fileError.value = e;
+		fileError.value = e.message;
 		view.value = 'record';
 	}
 }
