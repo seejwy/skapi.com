@@ -438,7 +438,7 @@ const editRecord = () => {
 			} else {
 				if (typeSplitFiles.primitive !== null) {
 					data.value.push({ key, type: typeof typeSplitFiles.primitive, data: typeSplitFiles.primitive });
-				} else {
+				} else if (typeSplitFiles.json) {
 					data.value.push({ key, type: 'json', data: JSON.stringify(typeSplitFiles.json, null, 2) });
 				}
 			}
