@@ -551,7 +551,7 @@ const save = async () => {
 						type: 'application/json'
 					}));
 				} else if (record.type === 'file') {
-					if(record.data) {
+					if(record.data.length) {
 						record.data.forEach(file => {
 							if (file instanceof File) {
 								form.append(record.key, file);
