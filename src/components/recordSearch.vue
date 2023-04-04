@@ -255,7 +255,7 @@ function parseIndexType(value) {
         'boolean': () => {
             advancedForm.value.index_condition = '=';
             // value is already set from radio, else set to false if not boolean
-            return (typeof advancedForm.value.index_value === 'boolean') ? advancedForm.value.index_value : false;
+            return (typeof advancedForm.value.index_value === 'boolean' || typeof value === 'boolean') ? advancedForm.value.index_value : advancedForm.value.index_value === 'true' || value === 'true' ? true : false;
         },
         'number': v => v === '' ? undefined : isNaN(Number(v)) ? 0 : Number(v)
     }[advancedForm.value.index_type](value || indexValueFormElement.value?.el.value);
@@ -389,7 +389,7 @@ function search(searchParams) {
 }
 
 watch(() => route.query, n => {
-    if (route.name === 'recordSearch' && !searchResult.value) {
+    if (route.name === 'recordSearch') {
         search(n);
     }
     else if (route.name === 'records') {
