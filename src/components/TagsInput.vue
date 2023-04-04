@@ -5,7 +5,7 @@ input(type="hidden" :value="tagArray?.join(',')")
     span {{ tag }}
     Icon(@click="removeTag(index)") X
     //- do not remove the extra space in .tag-input
-  .tag-input(ref="input" contenteditable="true" tabindex="0" @keydown.enter.space.prevent="addTag" @keydown.delete="deleteTag" @blur="addTag")  
+  .tag-input(ref="input" contenteditable="true" tabindex="0" @keydown.enter.space.prevent="addTag" @input="addTag" @keydown.delete="deleteTag" @blur="addTag")  
 </template>
 <script setup>
 import { reactive, ref } from 'vue';
@@ -21,9 +21,11 @@ if(props.value) {
 
 const input = ref(null);
 
-const addTag = () => {
-  if(input.value.innerHTML) {
-    tagArray.value.push(input.value.innerHTML);
+const addTag = (e) => {
+  if(e.type === 'input' && e.data !== ' ') return;
+  let string = input.value.innerHTML.replace('&nbsp;', '');
+  if(string) {
+    tagArray.value.push(string);
     input.value.innerHTML = '';
   }
 
