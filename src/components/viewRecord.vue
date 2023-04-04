@@ -562,7 +562,14 @@ const save = async () => {
 							}
 						});
 					} else {
-						throw new Error(record.key);
+						function NoFileError(key) {
+							this.name = 'NO_FILE';
+							this.message = key;
+						}
+
+						NoFileError.prototype = Error.prototype;
+
+						throw new NoFileError(record.key);
 					}
 				}
 			});
@@ -651,8 +658,11 @@ const save = async () => {
 		if(e.code === 'NOT_EXISTS') {
 			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
 			referenceIdField.value.querySelector('input').reportValidity();
+		} 
+		if(e?.name === 'NO_FILE') {		
+			fileError.value = e.message;
+			throw e;
 		}
-		throw e;
 	};
 };
 
@@ -703,7 +713,7 @@ const addFiles = (event, keyIndex, index) => {
 	fileCollection.forEach((file) => {
 		currentTotalFileSize.value += file.size / 1000;
 	});
-	
+
 	if(currentTotalFileSize.value > 4000) {
 		event.target.value = null;
 		filesizeExceedsOverlay.value.open();
