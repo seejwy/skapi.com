@@ -108,7 +108,7 @@
 		sui-button.line-button(type="button" @click="() => { emit('close', ''); view = 'information'; }" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit")
-	form(ref="formEl")
+	form(ref="formConfig")
 		.head(:class="{'mobile-head': isMobileUrl}")
 			.title {{ !isMobileUrl ? form.record_id || 'Add Record' : ''}}
 			.menu
@@ -214,6 +214,7 @@
 			//- 		.name Access 
 			//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
+	form(ref="formEl")
 		.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
 			.data-row(v-for="(record, recordIndex) in data")
 				.data-name-action
@@ -335,6 +336,7 @@ const serviceId = route.params.service;
 const view = ref('information');
 const isEdit = ref(false);
 const isSaving = ref(false);
+const formConfig = ref(null);
 const formEl = ref(null);
 const referenceIdField = ref(null);
 const form = ref({});
@@ -519,6 +521,21 @@ const saveData = async () => {
 
 const save = async () => {
 	isSaving.value = true;
+
+	if(view.value === 'record') {
+		if(formEl.value.checkValidity()) {
+			view.value = 'information';
+			await nextTick();
+			formConfig.value.reportValidity();
+			if(!formConfig.value.checkValidity()) {
+				isSaving.value = false;
+				return false;
+			}
+
+			view.value = 'record';
+		}
+	} 
+	
 	if (!formEl.value.checkValidity()) {
 		let currentPageIsValid = true;
 
