@@ -342,7 +342,9 @@ const data = ref([]);
 const indexValueType = ref('string');
 const fileError = ref('');
 let isNewRecord = false;
-const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || navigator?.oscpu.includes('Windows') ? 3.9 : 4;
+// const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || navigator?.oscpu.includes('Windows') ? 3.9 : 4;
+const fileSizeLimit = 3.9;
+const currentTotalFileSize = ref(0);
 
 const isMobileUrl = route.query?.id;
 const navbarMobileRightButton = inject('navbarMobileRightButton');
@@ -683,21 +685,26 @@ const addFiles = (event, keyIndex, index) => {
 	const files = event.target.files;
 	let fileData = data.value[keyIndex].data;
 	let fileCollection = [...files];
-	let fileSize = 0;
+	currentTotalFileSize.value = 0;
 
-	if(Array.isArray(fileData) && fileData) {
-		fileData.forEach(file => {
-			if(file instanceof File) {
-				fileSize += file.size / 1000;
+	data.value.forEach((key) => {
+		if (key.type === 'file') {
+			if(Array.isArray(key.data)) {
+				key.data.forEach((file) => {
+					if(file instanceof File) {
+						console.log(file.size);
+						currentTotalFileSize.value += file.size / 1000;
+					}
+				});
 			}
-		});
-	}
+		}
+	});
 
 	fileCollection.forEach((file) => {
-		fileSize += file.size / 1000;
+		currentTotalFileSize.value += file.size / 1000;
 	});
 	
-	if(fileSize > 4000) {
+	if(currentTotalFileSize.value > 4000) {
 		event.target.value = null;
 		filesizeExceedsOverlay.value.open();
 	} else {
