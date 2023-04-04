@@ -18,7 +18,7 @@ export const changeSearchCondition = (value, searchParams) => {
 }
 
 export const visibleFields = reactive({
-    suspended: {
+    approved: {
         text: 'Block',
         show: state.viewport === 'desktop' ? true : false,
     },
