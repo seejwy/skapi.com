@@ -22,10 +22,12 @@ div(v-else-if="state?.user")
                     .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
                         .title {{  key }}
                         .value {{ value || '-' }}
-    .container.empty.animation-skeleton(v-else-if="isFetchingServices")
+    .container.empty(v-else-if="isFetchingServices")
+        Icon.animation-rotation(style="position: absolute; right: 24px; top: 24px; fill: var(--primary-color)") refresh
     .container.empty(v-else)
-        .title No Services
-        span Get started by creating a new service. 
+        div(style="position: absolute; width: 100%;")
+            .title No Services
+            span Get started by creating a new service. 
     Transition(name="toast")
         .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
             Icon warning_bell
@@ -152,10 +154,12 @@ watch(() => state.viewport, (viewport) => {
 // }
 .container {
     &.empty {
+        position: relative;
         background: #F5F5F5;
         padding: 84px 0;
         border-radius: 8px;
         text-align: center;
+        min-height: 220px;
 
         .title {
             font-size: 28px;
