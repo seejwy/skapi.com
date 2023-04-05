@@ -111,7 +111,7 @@ form(
                     style='width:100%'
                     name="index_name"
                     placeholder="Index Name"
-                    :required="advancedForm.index_value !== undefined || null"
+                    :required="advancedForm.index_value"
                     :value="advancedForm.index_name"
                     @input="e => advancedForm.index_name = e.target.value")
 
@@ -147,8 +147,8 @@ form(
                             name="index_value"
                             :type="advancedForm.index_type === 'number' ? 'number' : 'text'"
                             placeholder="Index value"
-                            :required="advancedForm.index_name !== undefined || null"
-                            :value='advancedForm.index_value === undefined || (typeof advancedForm.index_value === "boolean") ? "" : advancedForm.index_value.toString()'
+                            :required="advancedForm.index_name"
+                            :value="advancedForm.index_value"
                             @input="()=>parseIndexType()")
 
                     .select-field(style='overflow:hidden;flex-shrink: 0;')
