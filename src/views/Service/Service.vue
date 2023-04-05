@@ -222,18 +222,18 @@ const deleteService = () => {
     if(confirmationCode.value !== service.value.service) {
         confirmationCode.value = '';
         deleteErrorMessage.value = "Your service code did not match.";
-        deleteConfirmOverlay.value.close();
+        if(deleteConfirmOverlay.value) deleteConfirmOverlay.value.close();
         deleteErrorOverlay.value.open();
         promiseRunning.value = false;
         return;
     }
 
     skapi.deleteService(service.value.service).then(() => {
-        deleteConfirmOverlay.value.close();
+        if(deleteConfirmOverlay.value) deleteConfirmOverlay.value.close();
         router.replace('/dashboard');
     }).catch(() => {
         deleteErrorMessage.value = "Please disable your service before deleting it.";
-        deleteConfirmOverlay.value.close();
+        if(deleteConfirmOverlay.value) deleteConfirmOverlay.value.close();
         deleteErrorOverlay.value.open();
     }).finally(() => {    
         confirmationCode.value = '';
