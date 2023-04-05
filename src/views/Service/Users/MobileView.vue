@@ -31,6 +31,8 @@ let user = ref(null);
 let serviceId = route.params.service;
 let serviceUsers = inject('serviceUsers');
 
+appStyle.mainPadding = null;
+
 const info = reactive([
     {
         key: 'user_id',
