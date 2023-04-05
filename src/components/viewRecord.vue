@@ -523,6 +523,7 @@ const save = async () => {
 	isSaving.value = true;
 
 	if(view.value === 'record') {
+		formEl.value.reportValidity();
 		if(formEl.value.checkValidity()) {
 			view.value = 'information';
 			await nextTick();
@@ -533,28 +534,28 @@ const save = async () => {
 			}
 
 			view.value = 'record';
+		} else {
+			isSaving.value = false;
+			return false;
 		}
-	} 
-	
-	if (!formEl.value.checkValidity()) {
-		let currentPageIsValid = true;
-
-		document.querySelectorAll(`${view.value === 'information' ? '#setting' : '#record'} sui-input input, sui-textarea textarea`).forEach((el) => {
-			if (currentPageIsValid && !el.reportValidity()) {
-				currentPageIsValid = false;
-			}
-		});
-
-		if (currentPageIsValid) {
-			view.value = view.value === 'information' ? 'record' : 'information';
+	} else {
+		formConfig.value.reportValidity();
+		if(formConfig.value.checkValidity()) {
+			view.value = 'record';
 			await nextTick();
 			formEl.value.reportValidity();
+			if(!formEl.value.checkValidity()) {
+				isSaving.value = false;
+				return false;
+			}
+
+			view.value = 'information';
+		} else {
+			isSaving.value = false;
+			return false;
 		}
-
-		isSaving.value = false;
-		return false;
 	}
-
+	
 	let config = Object.assign({}, form.value, {
 		service: serviceId,
 		formData: form => {
