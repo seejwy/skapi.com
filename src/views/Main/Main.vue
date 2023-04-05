@@ -61,6 +61,8 @@ const noLoginNeeded = () => {
         switch(route.name) {
             case 'forgotpassword':
             case 'signup':
+            case 'confirmation':
+            case 'success':
                 return true;
         }
 
@@ -85,7 +87,7 @@ function bypassSameRoute(e) {
 onMounted(() => {
     awaitConnection.then(async ()=>{
         await nextTick();
-        if(!state.user && state.viewport === 'desktop') {
+        if(!noLoginNeeded() && !state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
     });
@@ -94,7 +96,7 @@ onMounted(() => {
 onUpdated(() => {
     awaitConnection.then(async ()=>{
         await nextTick();
-        if(!state.user && state.viewport === 'desktop') {
+        if(!noLoginNeeded() && !state.user && state.viewport === 'desktop') {
             overlay.value.open();
         }
     });
