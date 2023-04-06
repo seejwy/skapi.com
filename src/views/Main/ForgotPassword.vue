@@ -110,6 +110,7 @@ const validatePassword = () => {
 }
 
 const forgotPassword = () => {
+    if(promiseRunning.value) return false;
     promiseRunning.value = true;
     code.value = '';
     password.value = '';
