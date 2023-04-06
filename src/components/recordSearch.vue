@@ -111,7 +111,7 @@ form(
                     style='width:100%'
                     name="index_name"
                     placeholder="Index Name"
-                    :required="advancedForm.index_value ? true : null"
+                    :required="advancedForm.index_value === undefined ? null : true"
                     :value="advancedForm.index_name"
                     @input="e => advancedForm.index_name = e.target.value")
 
