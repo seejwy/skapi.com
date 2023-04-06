@@ -49,6 +49,7 @@ div(v-else-if="state?.user")
                         span I agree to receive information and news letters from Skapi via Email.
                 template(v-else-if="settings.email_subscription !== ''")
                     template(v-if="settings.email_subscription") Subscribed
+                        span(v-if="!state.user.email_verified" style="margin-left: 10px; color: #FF8D3B;")   ( Needs Verification )
                     template(v-else) Not Subscribed
             .mobile-value(v-if="state.viewport === 'mobile'")
                 template(v-if="isEdit")
@@ -153,14 +154,16 @@ const updateUserSettings = async () => {
             email: settings.value.email
         });
 
-        if(settings.value.email_subscription) {
-            await skapi.subscribeNewsletter({group: 1});
-            settings.value.email_subscription = true;
-        } else {
-            await skapi.unsubscribeNewsletter({group: 1});
-            settings.value.email_subscription = false;
+        if(state.user.email_subscription !== settings.value.email_subscription) {
+            if(settings.value.email_subscription) {
+                await skapi.subscribeNewsletter({group: 1});
+                settings.value.email_subscription = true;
+            } else {
+                await skapi.unsubscribeNewsletter({group: 1});
+                settings.value.email_subscription = false;
+            }
         }
-        
+
         state.user = res;
         if(!res.email_verified) state.showVerificationNotification = true;
 
