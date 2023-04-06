@@ -313,7 +313,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 			sui-button(@click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
-import { ref, computed, watch, nextTick, inject } from 'vue';
+import { ref, computed, nextTick, inject } from 'vue';
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import { skapi, state, dateFormat, getSize, log } from '@/main';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
@@ -352,15 +352,13 @@ const currentTotalFileSize = ref(0);
 
 const isMobileUrl = route.query?.id;
 const navbarMobileRightButton = inject('navbarMobileRightButton');
-watch(() => props.record, () => {
-	indexValueType.value = props.record?.index?.value ? typeof props.record?.index?.value : 'string';
-});
 
 const editRecord = () => {
 	if (!props?.record) {
 		return;
 	}
 
+	indexValueType.value = props.record?.index?.value !== '' ? typeof props.record?.index?.value : 'string';
 	isNewRecord = !props.record?.record_id;
 
 	data.value = [];
