@@ -146,6 +146,7 @@
 				.section(style="width: 100%;")
 					.name Index Name 
 					sui-input(
+						ref="indexNameField"
 						:required="form.index.value !== '' ? true : null"
 						:value="form.index.name"
 						pattern="[^' ']+"
@@ -165,16 +166,16 @@
 								option(value="boolean") Boolean
 						.section
 							.radio-container(v-if="indexValueType === 'boolean'")
-								label(@click="e => form.index.value = true") True
-									sui-input(type="radio" :checked="form.index.value === true || null" name="index_value")
-								label(@click="e => form.index.value = false") False
-									sui-input(type="radio" :checked="form.index.value === false || null" name="index_value")
+								label True
+									sui-input(@change="form.index.value = true" type="radio" :checked="form.index.value === true || null" name="index_value")
+								label False
+									sui-input(@change="form.index.value = false" type="radio" :checked="form.index.value === false || null" name="index_value")
 							sui-input(
 								v-else
 								:type="indexValueType === 'number' ? 'number' : 'text'"
 								:required="form.index.name !== '' ? true : null"
 								:value="form.index.value"
-								@input="(e)=> form.index.value = e.target.value")
+								@input="(e)=> { form.index.value = e.target.value; !e.target.value ? indexNameField.children[0].setCustomValidity('') : null; }")
 
 			.row
 				.section
@@ -339,6 +340,7 @@ const isSaving = ref(false);
 const formConfig = ref(null);
 const formEl = ref(null);
 const referenceIdField = ref(null);
+const indexNameField = ref(null);
 const form = ref({});
 const data = ref([]);
 const indexValueType = ref('string');

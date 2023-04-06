@@ -111,7 +111,7 @@ form(
                     style='width:100%'
                     name="index_name"
                     placeholder="Index Name"
-                    :required="advancedForm.index_value"
+                    :required="advancedForm.index_value ? true : null"
                     :value="advancedForm.index_name"
                     @input="e => advancedForm.index_name = e.target.value")
 
@@ -147,7 +147,7 @@ form(
                             name="index_value"
                             :type="advancedForm.index_type === 'number' ? 'number' : 'text'"
                             placeholder="Index value"
-                            :required="advancedForm.index_name"
+                            :required="advancedForm.index_name ? true : null"
                             :value="advancedForm.index_value"
                             @input="()=>parseIndexType()")
 
