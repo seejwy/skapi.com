@@ -357,8 +357,7 @@ const editRecord = () => {
 	if (!props?.record) {
 		return;
 	}
-
-	indexValueType.value = props.record?.index?.value !== '' ? typeof props.record?.index?.value : 'string';
+	indexValueType.value = props.record?.index?.value !== '' && props.record?.index?.value !== undefined ? typeof props.record?.index?.value : 'string';
 	isNewRecord = !props.record?.record_id;
 
 	data.value = [];
