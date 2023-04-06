@@ -576,7 +576,8 @@ form {
   align-items: center;
   max-width: 100%;
   position: relative;
-
+  vertical-align: middle;
+  
   &>* {
     display: inline-block;
     position: relative;
