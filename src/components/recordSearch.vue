@@ -38,7 +38,7 @@ form(
                 sui-input(
                     type="search"
                     :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
-                    placeholder="Search"
+                    placeholder="      Search"
                     :required='searchForm.isAdvanced ? "true" : null'
                     :value="searchForm.value"
                     @input="e=>{ searchForm.value = e.target.value; }"
