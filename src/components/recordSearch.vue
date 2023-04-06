@@ -444,10 +444,12 @@ form {
     .input-field.search {
         input::placeholder {
             background-image: url(/src/assets/img/icons/search.svg);
-            background-size: contain;
-            background-position: 1px center;
+            background-size: 20px;
+            background-position: 10px center;
             background-repeat: no-repeat;
-            text-indent: 26px;
+        }
+        input::-webkit-input-placeholder {
+            background-position: 0 center;
         }
     }
 
