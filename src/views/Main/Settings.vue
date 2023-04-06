@@ -47,7 +47,7 @@ div(v-else-if="state?.user")
                     label
                         sui-input(type="checkbox" :disabled="state.user.email_verified ? null : true" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
                         span I agree to receive information and news letters from Skapi via Email.
-                template(v-else)
+                template(v-else-if="settings.email_subscription !== ''")
                     template(v-if="settings.email_subscription") Subscribed
                     template(v-else) Not Subscribed
             .mobile-value(v-if="state.viewport === 'mobile'")
@@ -150,14 +150,20 @@ const updateUserSettings = async () => {
         let isSubscribe = settings.value.email !== state.user.email ? false : settings.value.email_subscription;
         let res = await skapi.updateProfile({
             name: settings.value.name,
-            email: settings.value.email,
-            email_subscription: isSubscribe
+            email: settings.value.email
         });
-        
-        settings.value.email_subscription = isSubscribe;
 
+        if(settings.value.email_subscription) {
+            await skapi.subscribeNewsletter({group: 1});
+            settings.value.email_subscription = true;
+        } else {
+            await skapi.unsubscribeNewsletter({group: 1});
+            settings.value.email_subscription = false;
+        }
+        
         state.user = res;
         if(!res.email_verified) state.showVerificationNotification = true;
+
     } catch(e) {
         console.log({e});
         settings.value.name = state.user.name;
@@ -170,9 +176,11 @@ const updateUserSettings = async () => {
 }
 
 onMounted(() => {
-    awaitConnection.then(()=>{
+    awaitConnection.then(async()=>{
         if(state.user) {
-            settings.value.email_subscription = state.user.email_subscription;
+            let subscriptions = await skapi.getNewsletterSubscription();
+            state.user.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
+            settings.value.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
             settings.value.name = state.user.name;
             settings.value.email = state.user.email;
         }
