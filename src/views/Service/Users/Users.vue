@@ -1109,7 +1109,8 @@ onBeforeRouteLeave((to, from) => {
   width: 300px;
   margin-left: 16px;
   position: relative;
-
+  vertical-align: middle;
+  
   &>* {
     display: inline-block;
     position: relative;
