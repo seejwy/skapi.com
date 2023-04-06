@@ -255,9 +255,12 @@ function parseIndexType(value) {
         'boolean': () => {
             advancedForm.value.index_condition = '=';
             // value is already set from radio, else set to false if not boolean
-            return (typeof advancedForm.value.index_value === 'boolean' || typeof value === 'boolean') ? advancedForm.value.index_value : advancedForm.value.index_value === 'true' || value === 'true' ? true : false;
+            if(advancedForm.value.index_value !== false) {
+                return true;
+            }
+            return false;
         },
-        'number': v => v === '' ? undefined : isNaN(Number(v)) ? 0 : Number(v)
+        'number': v => v === '' ? undefined : isNaN(Number(v)) ? undefined : Number(v)
     }[advancedForm.value.index_type](value || indexValueFormElement.value?.el.value);
 
     return advancedForm.value.index_value;
