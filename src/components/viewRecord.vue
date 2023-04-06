@@ -159,7 +159,7 @@
 					.name Index Value
 					.row(style="row-gap: 16px;")
 						.section(style="flex-grow: 0")
-							sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => indexValueType = e.target.value")
+							sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => { indexValueType = e.target.value; form.index.value = indexValueType === 'boolean' ? true : ''; indexNameField.children[0].setCustomValidity('') }")
 								option(disabled) Value Type
 								option(value="string") String
 								option(value="number") Number
