@@ -105,7 +105,7 @@
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
 	.foot(v-if='!isMobileUrl')
-		sui-button.line-button(type="button" @click="() => { emit('close', ''); view = 'information'; }" style="margin-right: 16px;") Close
+		sui-button.line-button(type="button" @click="close" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit")
 	form(ref="formConfig")
