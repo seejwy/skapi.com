@@ -255,7 +255,7 @@ function parseIndexType(value) {
         'boolean': () => {
             advancedForm.value.index_condition = '=';
             // value is already set from radio, else set to false if not boolean
-            if(advancedForm.value.index_value !== false) {
+            if(value !== "false" && advancedForm.value.index_value !== false) {
                 return true;
             }
             return false;
@@ -577,7 +577,7 @@ form {
   max-width: 100%;
   position: relative;
   vertical-align: middle;
-  
+
   &>* {
     display: inline-block;
     position: relative;
