@@ -30,7 +30,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         ref="searchField" 
                         type="search" 
                         autocomplete="off" 
-                        :placeholder="placeholder(searchParams.searchFor)" 
+                        :placeholder="`      ${placeholder(searchParams.searchFor)}`" 
                         :value="searchParams.value" 
                         @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
                         required)
@@ -704,10 +704,12 @@ onBeforeRouteLeave((to, from) => {
         sui-input {
             input::placeholder {
                 background-image: url(/src/assets/img/icons/search.svg);
-                background-size: contain;
-                background-position: 1px center;
+                background-size: 20px;
+                background-position: 10px center;
                 background-repeat: no-repeat;
-                text-indent: 26px;
+            }
+            input::-webkit-input-placeholder {
+                background-position: 0 center;
             }
         }
     }
