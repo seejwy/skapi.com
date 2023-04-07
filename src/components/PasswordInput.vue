@@ -1,6 +1,6 @@
 <template lang="pug">
 .sui-input
-	sui-input(ref="field" :type="type" @input="$emit('input', $event)" @change="$emit('change', $event)" :value="props.value" :placeholder="props.placeholder" :required="required || null")
+	sui-input(ref="field" :type="type" @input="$emit('input', $event)" @change="$emit('change', $event)" :value="props.value" :placeholder="props.placeholder" :required="required || null" :autocomplete="props.autocomplete")
 	Icon(v-if="type !== 'password'" @click="type = 'password'") eye_open
 	Icon(v-else @click="type = 'text'") eye_close
 </template>
@@ -8,7 +8,7 @@
 import { ref } from 'vue';
 import Icon from './Icon.vue';
 
-const props = defineProps(['value', 'placeholder', 'required']);
+const props = defineProps(['value', 'placeholder', 'required', 'autocomplete']);
 const type = ref('password');
 const field = ref(null);
 
