@@ -453,7 +453,11 @@ const deleteRecord = () => {
 	let table, tableIndex;
 	if(recordTables.value) {
 		table = recordTables.value.list.find((val) => val.table === props.record.table.name);
-		tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
+		if(table.records?.list) {
+			tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
+		} else {
+			tableIndex = table.records.value.list.findIndex((record) => record.record_id === props.record.record_id);
+		}
 	} else {
 		tableIndex = searchResult.value.list.findIndex((val) => {
 			return val.record_id === props.record.record_id;
@@ -469,6 +473,7 @@ const deleteRecord = () => {
 		}).then(() => {
 			table.number_of_records--;
 			table.records.list.splice(tableIndex, 1);
+			console.log(table.records.list.length);
 		}).catch((e) => {
 			console.log({e});
 			delete table.records.list[tableIndex].deleting;
