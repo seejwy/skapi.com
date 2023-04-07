@@ -346,8 +346,8 @@ const data = ref([]);
 const indexValueType = ref('string');
 const fileError = ref('');
 let isNewRecord = false;
-// const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || navigator?.oscpu.includes('Windows') ? 3.9 : 4;
-const fileSizeLimit = 3.9;
+const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || navigator?.oscpu?.includes('Windows') ? 3.9 : 4;
+
 const currentTotalFileSize = ref(0);
 
 const isMobileUrl = route.query?.id;
