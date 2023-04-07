@@ -1185,4 +1185,8 @@ onBeforeRouteLeave((to, from) => {
         display: none;
     }
 }
+
+input {
+    -webkit-appearance: none;
+}
 </style>
