@@ -627,6 +627,7 @@ const save = async () => {
 		let currentTable = props.record?.table?.name;
 		let r = await skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, config);
 		if (isNewRecord) {
+			console.log("This is a new record")
 			if (tableList.includes(r.table.name)) {
 				let idx = tableList.indexOf(r.table.name);
 				let tbl = recordTables.value.list[idx];
@@ -657,7 +658,7 @@ const save = async () => {
 		}
 		
 		if(!isNewRecord && props.record?.table?.name !== currentTable) {
-			recordTables.value.list.forEach(table => {
+			recordTables.value.list.forEach((table, index) => {
 				if(table.table === currentTable) {
 					let idx = table.records.list.findIndex((record) => {
 						return record.record_id === props.record_id
@@ -665,6 +666,9 @@ const save = async () => {
 
 					table.records.list.splice(idx, 1);
 					table.number_of_records--;
+					if(table.number_of_records <= 0) {
+						recordTables.value.list.splice(index, 1);
+					}
 				} else if(table.table === props.record.table.name) {
 					table.number_of_records++;
 					let idx = table.records.list.findIndex((record) => {
@@ -672,6 +676,8 @@ const save = async () => {
 					});
 
 					table.records.list.splice(idx, 0, r);
+				} else {
+					refreshTables(serviceId);
 				}
 			});
 		}
