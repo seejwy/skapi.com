@@ -20,6 +20,7 @@ form(
         name='search_type'
         :value="searchParams.searchFor"
         @input="e => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
+        option(value="timestamp") Search By Date Created
         option(value="user_id") Search By User ID
         option(value="email") Search By Email
         option(value="phone_number") Search By Phone
@@ -27,7 +28,6 @@ form(
         option(value="gender") Search By Gender
         option(value="name") Search By Name
         option(value="locale") Search By Locale
-        option(value="timestamp") Search By Date Created
         option(value="birthdate") Search By Birth Date
     sui-select(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'birthdate'" style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
         option(value=">=" selected) &gt;=

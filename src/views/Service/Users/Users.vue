@@ -13,6 +13,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
     form(@submit.prevent="search" action="")
         .search-input-wrapper
             sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
+                option(value="timestamp") Date Created
                 option(value="user_id") User ID
                 option(value="email") Email
                 option(value="phone_number") Phone
@@ -20,7 +21,6 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 option(value="gender") Gender
                 option(value="name") Name
                 option(value="locale") Locale
-                option(value="timestamp") Date Created
                 option(value="birthdate") Birth Date
         
             .select-input(@click.stop)
