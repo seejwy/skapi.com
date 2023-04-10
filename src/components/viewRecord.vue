@@ -475,8 +475,14 @@ const deleteRecord = () => {
 		}).then(() => {
 			table.number_of_records--;
 			table.records.list.splice(tableIndex, 1);
-			if(recordTables.value.list.length <= 1 && table.records.list.length === 0) {			
-				recordTables.value.list.pop();
+			if(table.records.list.length === 0) {
+				let indexToDelete = recordTables.value.list.findIndex(t => {
+					return t.table.toString() === table.table;
+				});
+
+				if(indexToDelete >= 0) {
+					recordTables.value.list.splice(indexToDelete, 1);
+				}
 			}
 		}).catch((e) => {
 			console.log({e});
