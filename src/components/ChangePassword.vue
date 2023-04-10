@@ -2,7 +2,8 @@
 .form.container(v-if="processStep < 2")
     h2 Change Password
     form(v-if="processStep === 0" @submit.prevent="verifyPassword" action="")
-        p Please enter you current password.
+        p Please enter your current password.
+        input(type="email" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0")
         .input
             label Current Password
             PasswordInput(@input="(e) => password.current.value = e.target.value" :value="password.current.value")
