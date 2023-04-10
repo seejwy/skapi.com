@@ -112,4 +112,7 @@ onBeforeUnmount(() => {
         box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
     }
 }
+input {
+    -webkit-appearance: none;
+}
 </style>
