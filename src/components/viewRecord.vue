@@ -425,6 +425,7 @@ const editRecord = () => {
 			}
 
 			if(typeSplitFiles.json) {
+				console.log({value: typeSplitFiles.json});
 				if(Array.isArray(typeSplitFiles.json)) {
 					typeSplitFiles.json.forEach(value => {
 						if (Array.isArray(value)) {
@@ -434,6 +435,7 @@ const editRecord = () => {
 						}
 					});
 				} else {
+					console.log(JSON.stringify(typeSplitFiles.json));
 					data.value.push({ key, type: 'json', data: typeSplitFiles.json === null ? JSON.stringify(typeSplitFiles.json) : JSON.stringify(typeSplitFiles.json, null, " ") });
 				}
 			} else {
@@ -621,13 +623,15 @@ const save = async () => {
 			if (tableList.includes(r.table.name)) {
 				let idx = tableList.indexOf(r.table.name);
 				let tbl = recordTables.value.list[idx];
-				tbl.number_of_records++;
-				r.data = ref(r.data);
-				tbl.records.list.push(r);
-				let gotMore = await getMoreRecords(null, recordTables.value.list[idx], serviceId);
-				if (gotMore.startKey_list[gotMore.startKey_list.length - 1] === '"end"') {
-					// start over if it already reached the end
-					await getMoreRecords(null, recordTables.value.list[idx], serviceId, false);
+				if(tbl) {
+					tbl.number_of_records++;
+					r.data = ref(r.data);
+					tbl.records.list.push(r);
+					let gotMore = await getMoreRecords(null, recordTables.value.list[idx], serviceId);
+					if (gotMore.startKey_list[gotMore.startKey_list.length - 1] === '"end"') {
+						// start over if it already reached the end
+						await getMoreRecords(null, recordTables.value.list[idx], serviceId, false);
+					}
 				}
 			} else {			
 				refreshTables(serviceId);
@@ -680,6 +684,7 @@ const save = async () => {
 			fileError.value = e.message;
 			throw e;
 		}
+		throw e;
 	};
 };
 
