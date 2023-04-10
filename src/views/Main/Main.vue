@@ -63,6 +63,7 @@ const noLoginNeeded = () => {
             case 'signup':
             case 'confirmation':
             case 'success':
+            case 'home':
                 return true;
         }
 
