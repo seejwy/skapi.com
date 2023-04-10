@@ -608,7 +608,7 @@ const save = async () => {
 			return form;
 		}
 	});
-
+	
 	if (!config.index?.name) {
 		config.index = null; // set to null to remove index
 	} else {
@@ -639,15 +639,41 @@ const save = async () => {
 				if(tbl) {
 					tbl.number_of_records++;
 					r.data = ref(r.data);
-					tbl.records.list.push(r);
-					let gotMore = await getMoreRecords(null, recordTables.value.list[idx], serviceId);
-					if (gotMore.startKey_list[gotMore.startKey_list.length - 1] === '"end"') {
-						// start over if it already reached the end
-						await getMoreRecords(null, recordTables.value.list[idx], serviceId, false);
+					if(tbl.records.startKey === 'end') {
+						tbl.records.list.push(r);
 					}
 				}
-			} else {			
-				refreshTables(serviceId);
+			} else {
+				if(recordTables.value.endOfList) {
+					let positionFound = false;
+					let index = 0;
+					while(!positionFound && index < recordTables.value.list.length) {
+						console.log(recordTables.value.list.length, index, index+1);
+						if(index + 1 <= recordTables.value.list.length && r.table.name > recordTables.value.list[index].table && r.table.name < recordTables.value.list[index+1]?.table) {
+							recordTables.value.list.splice(index + 1, 0, {
+								number_of_records: 1,
+								opened: true,
+								records: ref({endOfList: true, startKey: 'end', startKey_list: ['end'], list:[r]}),
+								service: serviceId,
+								size: 0,
+								table: r.table.name
+							});
+							positionFound = true;
+						} 
+						index++;
+					}
+					
+					if(!positionFound) {
+						recordTables.value.list.push({
+								number_of_records: 1,
+								opened: true,
+								records: ref({endOfList: true, startKey: 'end', startKey_list: ['end'], list:[r]}),
+								service: serviceId,
+								size: 0,
+								table: r.table.name
+							});
+					}
+				}
 			}
 		}
 		else {
