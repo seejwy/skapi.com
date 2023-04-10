@@ -234,7 +234,7 @@
 						Icon trash
 				.data-values
 					template(v-if="record.type === 'file'")
-						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, recordIndex, index)" @click="openFileInput")
+						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, recordIndex)" @click="openFileInput")
 							input(hidden :file-key="record.key" type="file" @change="e=>addFiles(e, recordIndex, index)" multiple)
 							div
 								Icon attached
@@ -725,16 +725,18 @@ const download = async (secureUrl, fileName) => {
 	}
 }
 
-const onDrop = (event, keyIndex, index) => {
+const onDrop = (event, keyIndex) => {
+    event.preventDefault();
 	const files = event.dataTransfer.files;
-	let fileData = data.value[keyIndex].data[index].data;
-	data.value[keyIndex].data[index].data = [...fileData, ...files];
+	let fileData = data.value[keyIndex].data || [];
+	fileData = [...fileData, ...files];
+
+	if(checkFileSize(event, fileData)) {
+		data.value[keyIndex].data = fileData;
+	}
 };
 
-const addFiles = (event, keyIndex, index) => {
-	const files = event.target.files;
-	let fileData = data.value[keyIndex].data;
-	let fileCollection = [...files];
+const checkFileSize = (event, fileCollection) => {
 	currentTotalFileSize.value = 0;
 
 	data.value.forEach((key) => {
@@ -757,7 +759,19 @@ const addFiles = (event, keyIndex, index) => {
 	if(currentTotalFileSize.value > 4000) {
 		event.target.value = null;
 		filesizeExceedsOverlay.value.open();
-	} else {
+
+		return false;
+	}
+
+	return true;
+}
+
+const addFiles = (event, keyIndex, index) => {
+	const files = event.target.files;
+	let fileData = data.value[keyIndex].data;
+	let fileCollection = [...files];
+
+	if(checkFileSize(event, fileCollection)) {
 		if(Array.isArray(fileData)) {
 			fileCollection = [...fileData, ...fileCollection];
 		} else {
