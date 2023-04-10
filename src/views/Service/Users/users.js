@@ -46,6 +46,10 @@ export const visibleFields = reactive({
         text: 'Address',
         show: false,
     },
+    phone_number: {
+        text: 'Phone',
+        show: false
+    },
     gender: {
         text: 'Gender',
         show: false,
