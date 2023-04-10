@@ -128,8 +128,6 @@ const getCleanSearchParams = () => {
         else {
             params.value = new Date(params.value).getTime();
         }
-    } else if(params.searchFor === 'subscribers') {
-        params.value = Number(params.value);
     }
 
     return params;

@@ -22,7 +22,6 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 option(value="locale") Locale
                 option(value="timestamp") Date Created
                 option(value="birthdate") Birth Date
-                option(value="subscribers") Subscribers
         
             .select-input(@click.stop)
                 .input-field
@@ -34,7 +33,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         :value="searchParams.value" 
                         @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
                         required)
-                .select-field(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers'")
+                .select-field(v-if="searchParams.searchFor === 'timestamp'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
                         option(value=">=") &gt;=
                         option(value="<=") &lt;=
@@ -292,8 +291,6 @@ const getCleanSearchParams = () => {
         else {
             params.value = new Date(params.value).getTime();
         }
-    } else if(params.searchFor === 'subscribers') {
-        params.value = Number(params.value);
     }
 
     return params;

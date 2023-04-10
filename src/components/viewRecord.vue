@@ -633,7 +633,6 @@ const save = async () => {
 		let currentTable = props.record?.table?.name;
 		let r = await skapi.postRecord(Object.keys(data.value).length ? formEl.value : null, config);
 		if (isNewRecord) {
-			console.log("This is a new record")
 			if (tableList.includes(r.table.name)) {
 				let idx = tableList.indexOf(r.table.name);
 				let tbl = recordTables.value.list[idx];

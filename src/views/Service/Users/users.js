@@ -61,11 +61,7 @@ export const visibleFields = reactive({
     locale: {
         text: 'Locale',
         show: false,
-    },
-    subscribers: {
-        text: 'Subscribers',
-        show: false,
-    },
+    }
 });
 
 export const getValidationMessage = (searchParams) => {

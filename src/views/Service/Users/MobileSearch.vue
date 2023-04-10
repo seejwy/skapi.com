@@ -30,8 +30,7 @@ form(
         option(value="locale") Search By Locale
         option(value="timestamp") Search By Date Created
         option(value="birthdate") Search By Birth Date
-        option(value="subscribers") Search By Subscribers
-    sui-select(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'subscribers' || searchParams.searchFor === 'birthdate'" style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
+    sui-select(v-if="searchParams.searchFor === 'timestamp' || searchParams.searchFor === 'birthdate'" style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
         option(value=">=" selected) &gt;=
         option(value="<=") &lt;=
         option(value="=") =
