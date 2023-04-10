@@ -475,7 +475,9 @@ const deleteRecord = () => {
 		}).then(() => {
 			table.number_of_records--;
 			table.records.list.splice(tableIndex, 1);
-			console.log(table.records.list.length);
+			if(recordTables.value.list.length <= 1 && table.records.list.length === 0) {			
+				recordTables.value.list.pop();
+			}
 		}).catch((e) => {
 			console.log({e});
 			delete table.records.list[tableIndex].deleting;
