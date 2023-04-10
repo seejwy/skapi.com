@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { skapi, state } from '@/main';
+import { skapi, state, countries } from '@/main';
 
 export const changeSearchCondition = (value, searchParams) => {
     switch(value) {
@@ -91,7 +91,7 @@ export const getValidationMessage = (searchParams) => {
 }
 
 export const placeholder = (type) => {
-    let placeholder = 'Search';
+    let placeholder = type.charAt(0).toUpperCase() + type.replace('_', ' ').slice(1);
 
     switch(type) {
         case 'timestamp':
@@ -99,7 +99,14 @@ export const placeholder = (type) => {
             placeholder = 'YYYY-MM-DD';
             break;
         case 'locale':
-            placeholder = '2 digit country code e.g. KR'
+            placeholder = '2 digit country code e.g. KR';
+            break;
+        case 'email':
+            placeholder ='someone@email.com';
+            break;
+        case 'phone_number':
+            placeholder = `eg ${countries[skapi.connection.locale].phone}1234567890`;
+            break;
     }
 
     return placeholder;

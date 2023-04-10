@@ -14,8 +14,7 @@ form(
             @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
             required)
         template(v-slot:right) 
-            Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search     
-        
+            Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search
 .mobile-search-type
     sui-select(
         name='search_type'
