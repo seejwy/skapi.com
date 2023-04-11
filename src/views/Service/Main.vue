@@ -16,7 +16,7 @@
                     router-link(to="/account-settings" tag="li") Account Settings
 
                 li
-                    a.clickable(@click='()=>skapi.AdminLogout().then(() => state.user = null)') Logout
+                    a.clickable(@click="logout") Logout
 
         main#app-main(v-if='state.connection')
             NotExists(v-if='service === 404')
@@ -209,7 +209,7 @@ import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';
 
 import { provide, inject, watch, ref, onMounted, onBeforeUnmount } from 'vue';
-import { skapi, state, log, awaitConnection } from '@/main';
+import { skapi, state, log, logout, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import { recordTables } from './Records/records.js';
 

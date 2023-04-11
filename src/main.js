@@ -1622,4 +1622,9 @@ const localeName = (locale) => {
     return name;
 }
 
-export { skapi, state, getSize, dateFormat, log, groupArray, localeName, countries, regions, awaitConnection };
+const logout = async () => {
+    await router.push({name: 'home'});
+    skapi.AdminLogout().then(() => {state.user = null;})
+}
+
+export { skapi, state, getSize, dateFormat, log, groupArray, localeName, countries, regions, awaitConnection, logout };

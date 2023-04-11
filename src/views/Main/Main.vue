@@ -17,7 +17,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                     router-link(to="/account-settings") Account Settings
 
                 li
-                    a.clickable(@click='()=>skapi.AdminLogout().then(() => state.user = null)') Logout
+                    a.clickable(@click="logout") Logout
 
             template(v-else)
                 li
@@ -48,7 +48,7 @@ sui-button.signup {
 import NavBar from '@/components/navbar.vue';
 import { ref, inject, onMounted, onUpdated, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { skapi, state, awaitConnection } from '@/main';
+import { skapi, state, logout, awaitConnection } from '@/main';
 
 import Login from './Login.vue';
 let router = useRouter();
