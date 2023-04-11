@@ -399,6 +399,10 @@ function displayRecord(r) {
                 background-color: rgba(255, 255, 255, 0.04);
             }
 
+            &:first-child {
+                border-radius: 8px 8px 0 0;
+            }
+            
             &:last-child {
                 border-radius: 0 0 8px 8px;
             }
