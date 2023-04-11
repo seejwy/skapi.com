@@ -255,7 +255,7 @@ function focusMe(e) {
 function advancedFormInit() {
     // return fresh object
     return {
-        access_group: 1,
+        access_group: 0,
         table: undefined,
         subscription: null,
         index_type: 'string',
