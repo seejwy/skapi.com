@@ -21,7 +21,7 @@ form(
             Icon.showOnTablet.placeholder-icon(style='width:32px;') search
 
     // mask clicker for closing advanced search
-    .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='searchForm.isAdvanced = false')
+    .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='openAdvancedForm')
     .select-input.isMobile(style='width: 400px;margin: 8px 0;' @click.stop)
         template(v-if="viewport === 'desktop'")
             // main search
@@ -44,7 +44,7 @@ form(
                     @input="e=>{ searchForm.value = e.target.value; }"
                     @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
                     autocomplete="off")
-                Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="searchForm.type === 'record' ? searchForm.isAdvanced = false : searchForm.isAdvanced = !searchForm.isAdvanced") filter
+                Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="openAdvancedForm") filter
 
         .mobile-search-type(v-else)
             sui-select(
@@ -61,7 +61,7 @@ form(
             Icon.showOnTablet down2
 
         // advanced search
-        .advanced-form(v-if='searchForm.isAdvanced && searchForm.type !== "record"')
+        .advanced-form(ref="advancedFormEl" v-if='searchForm.isAdvanced && searchForm.type !== "record"')
             .formLabel Access Group
             .form
                 .labelRadio.clickable
@@ -217,6 +217,25 @@ function submitSearch(ev) {
     let url = `/dashboard/${serviceId}/records/search?${query}`;
     router.push(url);
     searchForm.isAdvanced = false;
+}
+const advancedFormEl = ref(null);
+
+const setBodyHeight = () => {
+    let neededHeight = window.pageYOffset + advancedFormEl.value?.getBoundingClientRect().top + advancedFormEl.value.offsetHeight;
+    document.querySelector('.servicePageShell').style.height = neededHeight + 'px';
+    window.removeEventListener('scroll', setBodyHeight, true);
+}
+
+const openAdvancedForm = async () => {
+    if(searchForm.type === 'record') {
+        searchForm.isAdvanced = false;
+    } else if(searchForm.isAdvanced) {
+        searchForm.isAdvanced = false;
+        document.querySelector('.servicePageShell').style.height = null;
+    } else {
+        searchForm.isAdvanced = true;
+        window.addEventListener('scroll', setBodyHeight, true);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////
