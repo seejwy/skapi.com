@@ -113,6 +113,7 @@ form(
                     placeholder="Index Name"
                     :required="advancedForm.index_value === undefined ? null : true"
                     :value="advancedForm.index_name"
+                    pattern="[a-zA-Z0-9.]+"
                     @input="e => advancedForm.index_name = e.target.value")
 
                 br
@@ -147,6 +148,7 @@ form(
                             name="index_value"
                             :type="advancedForm.index_type === 'number' ? 'number' : 'text'"
                             placeholder="Index value"
+                            pattern="[a-zA-Z0-9' ']+"
                             :required="advancedForm.index_name ? true : null"
                             :value="advancedForm.index_value"
                             @input="()=>parseIndexType()")
@@ -173,7 +175,7 @@ form(
                     name='tag'
                     placeholder="Tag Name"
                     :value="advancedForm.tag || ''"
-                    @input="e => advancedForm.tag = e.target.value")
+                    @input="tagInput")
 
             template(v-if='searchForm.type === "table"')
                 .formLabel Reference ID
@@ -238,6 +240,16 @@ const openAdvancedForm = async () => {
         searchForm.isAdvanced = true;
         window.addEventListener('scroll', setBodyHeight, true);
     }
+}
+
+const tagInput = (e) => {
+    if(!(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/).test(e.target.value)) {
+        e.target.setCustomValidity('');
+        advancedForm.tag = e.target.value;
+    } else {
+        e.target.setCustomValidity('No special characters are allowed');
+    }
+
 }
 
 ////////////////////////////////////////////////////////////////////
