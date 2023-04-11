@@ -222,8 +222,10 @@ const advancedFormEl = ref(null);
 
 const setBodyHeight = () => {
     let neededHeight = window.pageYOffset + advancedFormEl.value?.getBoundingClientRect().top + advancedFormEl.value.offsetHeight;
-    document.querySelector('.servicePageShell').style.height = neededHeight + 'px';
-    window.removeEventListener('scroll', setBodyHeight, true);
+    if(document.querySelector('.servicePageShell').offsetHeight < neededHeight) {
+        document.querySelector('.servicePageShell').style.height = neededHeight + 20 + 'px';
+        window.removeEventListener('scroll', setBodyHeight, true);
+    }
 }
 
 const openAdvancedForm = async () => {
