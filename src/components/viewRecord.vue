@@ -881,7 +881,6 @@ const close = () => {
 	isEdit.value = false;
 	view.value = 'information';
 	emit('close');
-	recordToOpen.value = null;
 };
 
 defineExpose({

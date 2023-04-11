@@ -1,7 +1,7 @@
 <template lang="pug">
 sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
-        ViewRecord(:record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close()")
+        ViewRecord(:record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
 .record-container#data-container
     .recordWrapper.animation-skeleton(v-if='searchResult === null')

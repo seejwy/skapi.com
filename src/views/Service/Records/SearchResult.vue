@@ -14,7 +14,7 @@ SearchNavBar(v-if='viewport === "mobile"')
 RecordSearch#recordSearch.hideOnTablet
 .hideOnTablet(style="clear:both;")
 
-sui-overlay(ref='openRecord' @click='()=>{ openRecord.close(); recordToOpen = null; }' style="background-color:rgba(0 0 0 / 60%)")
+sui-overlay(ref='openRecord' @click="()=> openRecord.close(() => { recordToOpen = null })" style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
         ViewRecord(:record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close()")
 
