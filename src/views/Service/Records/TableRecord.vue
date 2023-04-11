@@ -33,6 +33,18 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
                     div
                         span.label UPLOADED: 
                         span {{ dateFormat(r.uploaded) }}
+            .recordWrapper.animation-skeleton(v-if="promiseQueue")
+                .records.clickable(v-for="t in numberOfSkeletons()")
+                    div
+                        span.label &nbsp; 
+                        span &nbsp;
+                    div
+                        span.label &nbsp;
+                        span &nbsp;
+                    div
+                        span.label &nbsp;
+                        span &nbsp;
+
 </template>
 <!-- script below -->
 <script setup>
@@ -132,29 +144,31 @@ onBeforeUnmount(() => {
 
 let openRecord = ref(null);
 
-let promiseQueue = null;
+let promiseQueue = ref(null);
 
 async function fetchMoreRecords() {
-    let params = {
-        service: serviceId,
-        table: {
-            name: route.query.table
+    if(!searchResult.value.endOfList) {
+        let params = {
+            service: serviceId,
+            table: {
+                name: route.query.table
+            }
+        };
+
+        if (promiseQueue.value instanceof Promise) {
+            return;
         }
-    };
 
-    if (promiseQueue instanceof Promise) {
-        return;
+        promiseQueue.value = skapi.getRecords(params, { fetchMore: true, limit: fetchLimit });
+        let result = await promiseQueue.value;
+        for (let rec of result.list) {
+            searchResult.value.list.push(rec);
+        }
+
+        searchResult.value.endOfList = result.endOfList;
+        promiseQueue.value = null;
+        result = null;
     }
-
-    promiseQueue = skapi.getRecords(params, { fetchMore: true, limit: fetchLimit });
-
-    let result = await promiseQueue;
-    for (let rec of result.list) {
-        searchResult.value.list.push(rec);
-    }
-
-    searchResult.value.endOfList = result.endOfList;
-    result = null;
 }
 
 let recordToOpen = inject('recordToOpen');
