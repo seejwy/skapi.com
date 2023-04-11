@@ -12,7 +12,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
 .actions-wrapper(v-if="viewport === 'desktop'")
     form(@submit.prevent="search" action="")
         .search-input-wrapper
-            sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
+            sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); searchParams.value = '';}")
                 option(value="timestamp") Date Created
                 option(value="user_id") User ID
                 option(value="email") Email
