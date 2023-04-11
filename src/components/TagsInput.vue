@@ -33,12 +33,12 @@ const addTag = (e) => {
   if(e.type === 'input' && e.data !== ' ') return;
   let string = input.value.innerHTML.replace('&nbsp;', '');
   
-  if(string && !(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/.test(string))) {
+  if(string && !(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string))) {
     tagArray.value.push(string);
     input.value.innerHTML = '';
   }
 
-  if((/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/.test(string))) {
+  if((/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string))) {
     inputError.value = true;
   } else {    
     inputError.value = false;
