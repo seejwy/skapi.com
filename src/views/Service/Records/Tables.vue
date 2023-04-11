@@ -76,7 +76,8 @@ sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close(() => { recordToOp
 
                                 .load-more(v-if="!t.records.endOfList")
                                     Icon.animation-rotation refresh
-
+                    .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
+                         span &nbsp;
                 .paginator.hideOnTablet
                     Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
@@ -325,8 +326,22 @@ watch(currentSelectedTableBatch, n => {
 });
 
 document.body.classList.add('table');
+
+function scrollEventMobile(event) {
+    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+        // scrolled to bottom
+        getMoreTables();
+    }
+}
+
+window.addEventListener('scroll', scrollEventMobile, { passive: true });
+
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
+    window.removeEventListener('scroll', scrollEventMobile, { passive: true });
+    // set padding to original value
+    appStyle.mainPadding = null;
+    appStyle.background = null;
 });
 </script>
 
