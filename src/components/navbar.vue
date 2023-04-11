@@ -4,7 +4,7 @@ sui-nav#top-nav(auto-hide)
         .title
             Icon.showOnTablet.clickable.back-button(v-if='!props.isParentLevel' @click="toParent") left
             img.logo(v-if="pageTitle === 'skapi'" src="@/assets/img/logo.svg" @click="()=>props.isParentLevel ? router.push('/') : null")
-            span.title-text(v-else:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : null" v-html="pageTitle || ''")
+            span.title-text(v-else:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : gotoService()" v-html="pageTitle || ''")
         .menu
             .hideOnTablet
                 slot
@@ -151,6 +151,8 @@ sui-nav#top-nav {
 <script setup>
 import { inject, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { state } from '@/main';
+
 import Icon from '@/components/Icon.vue';
 
 const props = defineProps(['isParentLevel']);
@@ -182,6 +184,12 @@ function toParent() {
         let path = route.fullPath.split('/');
         path.pop();
         router.push(path.join('/'));
+    }
+}
+
+function gotoService() {
+    if(state.viewport === 'desktop') {
+        router.push('/dashboard/' + route.params.service);
     }
 }
 
