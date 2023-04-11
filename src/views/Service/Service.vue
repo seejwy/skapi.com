@@ -324,6 +324,7 @@ watch(() => state.viewport, () => {
 
     .actions {
         cursor: pointer;
+        user-select: none;
         svg {
             margin-right: 4px;
         }
