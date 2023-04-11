@@ -209,6 +209,10 @@ let viewport = inject('viewport');
 
 function submitSearch(ev) {
     // using vue route instead of vanila get request to prevent browser refresh
+    if(searchForm.type === 'user' && !searchForm.isAdvanced) {
+        searchForm.isAdvanced = true;
+        return false
+    }
     let data = new FormData(ev.currentTarget);
     let queryParts = [];
     let entries = data.entries();
@@ -411,8 +415,6 @@ function search(searchParams) {
     if (viewport.value === 'mobile') {
         searchResult.value = null;
     }
-
-    console.log({params});
 
     skapi.getRecords(params, { limit: 50 })
         .then(r => {
