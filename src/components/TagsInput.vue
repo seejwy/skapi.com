@@ -6,6 +6,9 @@ input(type="hidden" :value="tagArray?.join(',')")
     Icon(@click="removeTag(index)") X
     //- do not remove the extra space in .tag-input
   .tag-input(ref="input" contenteditable="true" tabindex="0" @keydown.enter.space.prevent="addTag" @input="addTag" @keydown.delete="deleteTag" @blur="addTag")  
+.error(v-if="inputError")
+  Icon warning
+  span  No special characters are allowed
 </template>
 <script setup>
 import { reactive, ref } from 'vue';
@@ -13,6 +16,7 @@ import Icon from './Icon.vue';
 
 const props = defineProps(['value']);
 const emits = defineEmits(['change']);
+const inputError = ref(false);
 let tagArray = ref([]);
 
 if(props.value) {
@@ -22,11 +26,22 @@ if(props.value) {
 const input = ref(null);
 
 const addTag = (e) => {
+  if(e.type === 'input') {
+    console.log(e);
+    e.data.match()
+  }
   if(e.type === 'input' && e.data !== ' ') return;
   let string = input.value.innerHTML.replace('&nbsp;', '');
-  if(string) {
+  
+  if(string && !(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/.test(string))) {
     tagArray.value.push(string);
     input.value.innerHTML = '';
+  }
+
+  if((/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/.test(string))) {
+    inputError.value = true;
+  } else {    
+    inputError.value = false;
   }
 
   emits('change', tagArray);
@@ -88,6 +103,12 @@ const removeTag = (index) => {
   &:focus {
     outline: none;
   }
+}
+
+.error {
+  color: #F04E4E;
+  font-size: 14px;
+  margin-top: 4px;
 }
 </style>
   

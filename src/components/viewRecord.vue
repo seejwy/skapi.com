@@ -149,9 +149,9 @@
 						ref="indexNameField"
 						:required="form.index.value !== '' ? true : null"
 						:value="form.index.name"
-						pattern="[^' ']+"
+						pattern="[a-zA-Z0-9.]+"
 						@input="(e)=> {form.index.name = e.target.value; e.target.setCustomValidity('')}"
-						@invalid="(e) => e.target.setCustomValidity('Index name must not have spaces')"
+						@invalid="(e) => e.target.setCustomValidity('Index name must not have spaces or special characters')"
 						)
 
 			.row
@@ -175,7 +175,9 @@
 								:type="indexValueType === 'number' ? 'number' : 'text'"
 								:required="form.index.name !== '' ? true : null"
 								:value="form.index.value"
-								@input="(e)=> { form.index.value = e.target.value; !e.target.value ? indexNameField.children[0].setCustomValidity('') : null; }")
+								pattern="[a-zA-Z0-9' ']+"
+								@invalid="(e) => e.target.setCustomValidity('Index value must not have special characters')"
+								@input="(e)=> { form.index.value = e.target.value; e.target.setCustomValidity(''); !e.target.value ? indexNameField.children[0].setCustomValidity('') : null; }")
 
 			.row
 				.section
