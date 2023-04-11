@@ -254,6 +254,10 @@ watch(() => isEdit.value, async () => {
         }
     }
 });
+
+watch(() => state.viewport, () => {
+    if(isEdit.value) isEdit.value = false;
+});
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
