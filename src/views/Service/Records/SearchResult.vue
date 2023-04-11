@@ -85,6 +85,18 @@ sui-overlay(ref='openRecord' @click="()=> openRecord.close(() => { recordToOpen 
                             div
                                 span.label UPLOADED: 
                                 span {{ dateFormat(r.uploaded) }}
+                                .recordWrapper.animation-skeleton.showOnTablet(v-if='searchResult === null')
+            .recordWrapper.animation-skeleton.showOnTablet(v-if="fetchingData")
+                .records.clickable(v-for="t in numberOfSkeletons()")
+                    div
+                        span.label &nbsp; 
+                        span &nbsp;
+                    div
+                        span.label &nbsp;
+                        span &nbsp;
+                    div
+                        span.label &nbsp;
+                        span &nbsp;
 
             .paginator.hideOnTablet
                 Icon.arrow(
