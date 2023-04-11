@@ -402,9 +402,13 @@ function displayRecord(r) {
             &:first-child {
                 border-radius: 8px 8px 0 0;
             }
-            
+
             &:last-child {
                 border-radius: 0 0 8px 8px;
+            }
+
+            &:only-child {
+                border-radius: 8px;
             }
 
             &:hover {
