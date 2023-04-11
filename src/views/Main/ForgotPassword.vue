@@ -26,7 +26,7 @@
                     sui-input(
                         type="text"
                         :value="code"
-                        @input="(e) => code = e.target.value"
+                        @input="(e) => { code = e.target.value; resetError = null; }"
                         placeholder="Enter verification code"
                         required)
                 .input
