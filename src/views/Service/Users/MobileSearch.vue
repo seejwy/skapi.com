@@ -19,7 +19,7 @@ form(
     sui-select(
         name='search_type'
         :value="searchParams.searchFor"
-        @input="e => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); }")
+        @input="e => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); searchParams.value = ''}")
         option(value="timestamp") Search By Date Created
         option(value="user_id") Search By User ID
         option(value="email") Search By Email

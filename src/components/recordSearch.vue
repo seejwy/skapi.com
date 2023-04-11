@@ -50,7 +50,7 @@ form(
             sui-select(
                 name='search_type'
                 :value="searchForm.type"
-                @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
+                @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; searchForm.value = ''; }")
                 option(value="table" selected) Search By Table Name
                 option(value="user") Search By User ID
                 option(value="record") Search By Record ID
