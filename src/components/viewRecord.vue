@@ -266,11 +266,11 @@
 						div
 							label
 								span True
-								sui-input(type="radio" :name="record.key" value="true" :checked="record.data === true ? true : null")
+								sui-input(type="radio" :name="record.key" value="true" :checked="record.data !== false ? true : null")
 						div
 							label 
 								span False
-								sui-input(type="radio" :name="record.key" value="false" :checked="record.data !== true ? true : null")
+								sui-input(type="radio" :name="record.key" value="false" :checked="record.data === false ? true : null")
 
 					sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
 
