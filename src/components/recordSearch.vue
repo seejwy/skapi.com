@@ -379,7 +379,7 @@ function search(searchParams) {
                             }
                             else {
                                 params.table.subscription = {
-                                    user_id: value,
+                                    user_id: value.trim(),
                                     group: val ? 1 : 0
                                 };
                             }
@@ -389,10 +389,12 @@ function search(searchParams) {
                     }
                     else {
                         if (k === 'table') {
-                            advancedForm.value[k] = value;
-                            params.table.name = value;
-                        }
-                        else {
+                            advancedForm.value[k] = value.trim();
+                            params.table.name = value.trim();
+                        } else if (k === 'record_id') {
+                            advancedForm.value[k] = value.trim();
+                            params.record_id = value.trim();
+                        } else {
                             params[k] = value;
                         }
                     }
@@ -409,6 +411,9 @@ function search(searchParams) {
     if (viewport.value === 'mobile') {
         searchResult.value = null;
     }
+
+    console.log({params});
+
     skapi.getRecords(params, { limit: 50 })
         .then(r => {
             searchResult.value = r;
