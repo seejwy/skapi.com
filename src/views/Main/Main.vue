@@ -21,7 +21,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
 
             template(v-else)
                 li
-                    router-link(to="/dashboard") Dashboard
+                    router-link(to="/dashboard") Login
 
                 li.showOnTablet
                     router-link(to="/signup") Sign-up
