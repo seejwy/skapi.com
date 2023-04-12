@@ -1077,6 +1077,7 @@ defineExpose({
 
 						&.remove {
 							cursor: pointer;
+							color: #fff;
 						}
 					}
 				}
@@ -1151,7 +1152,6 @@ defineExpose({
 				.action {
 					cursor: pointer;
 					font-weight: bold;
-					color: rgba(255, 255, 255, .6);
 
 					svg {
 						width: 20px;
@@ -1245,7 +1245,7 @@ defineExpose({
 
 			sui-input[type=radio] {
 				cursor: pointer;
-				color: rgba(255, 255, 255, .6);
+				color: #fff;
 			}
 		}
 

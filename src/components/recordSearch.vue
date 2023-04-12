@@ -568,7 +568,6 @@ form {
         .labelRadio {
             display: inline-flex;
             align-items: center;
-            opacity: 0.6;
 
             &:not(:last-child) {
                 margin-right: 1.5em;
@@ -584,7 +583,7 @@ form {
             }
 
             &>sui-input[type="radio"] {
-                color: inherit;
+                color: #fff;
             }
         }
 
