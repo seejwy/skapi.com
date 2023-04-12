@@ -1,38 +1,58 @@
 <template lang="pug">
 .form.container(v-if="processStep < 2")
     h2 Change Password
-    form(v-if="processStep === 0" @submit.prevent="verifyPassword" action="")
-        p Please enter your current password.
-        input(type="email" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0")
-        .input
-            label Current Password
-            PasswordInput(@input="(e) => password.current.value = e.target.value" :value="password.current.value")
-            .error(v-if="password.current.error")
-                Icon warning
-                span {{ password.current.error }}
-        .actions
-            sui-button.line-button(type="button" @click="closePasswordChange") Cancel
-            SubmitButton(type="button" :loading="promiseRunning" @click.prevent="verifyPassword") Continue
-        .step-wrapper
-            .step.active
-            .step
-    form(v-else-if="processStep === 1" @submit.prevent="changePassword" action="")
-        p Please enter you current password.
-        .input
-            label New Password
-            PasswordInput(@input="(e) => password.new.value = e.target.value" :value="password.new.value")
-        .input
-            label New Password Confirm
-            PasswordInput(@input="(e) => password.confirm.value = e.target.value" :value="password.confirm.value")
-            .error(v-if="password.confirm.error")
-                Icon warning
-                span {{ password.confirm.error }}
-        .actions
-            sui-button.line-button(type="button" @click="closePasswordChange") Cancel
-            SubmitButton(:loading="promiseRunning") Change Password
-        .step-wrapper
-            .step.clickable(@click="processStep = 0")
-            .step.active
+    template(v-if="processStep === 0")
+        form(@submit.prevent="verifyPassword" action="")
+            p Please enter your current password.
+            input(type="email" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0")
+            .input
+                label Current Password
+                PasswordInput(
+                    ref="currentPasswordField"
+                    @input="(e) => { password.current.value = e.target.value; e.target.setCustomValidity(''); password.current.error = ''}" 
+                    :value="password.current.value"
+                    @change="validatePassword"
+                    autocomplete="current-password"
+                    :required="true")
+                .error(v-if="password.current.error")
+                    Icon warning
+                    span {{ password.current.error }}
+            .actions
+                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                SubmitButton(type="submit" :loading="promiseRunning") Continue
+            .step-wrapper
+                .step.active
+                .step
+    template(v-else-if="processStep === 1")
+        form(@submit.prevent="changePassword" action="")
+            p Please enter your new password.
+            input(type="email" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0;")
+            .input
+                label New Password
+                PasswordInput(
+                    @input="(e) => { password.new.value = e.target.value; e.target.setCustomValidity(''); }" 
+                    :value="password.new.value" 
+                    @change="validatePassword"
+                    autocomplete="new-password"
+                    :required="true")
+            .input
+                label New Password Confirm
+                PasswordInput(
+                    ref="newPasswordConfirmField"
+                    @input="(e) => { password.confirm.value = e.target.value; e.target.setCustomValidity(''); }" 
+                    :value="password.confirm.value" 
+                    @change="validatePassword"
+                    autocomplete="new-password"
+                    :required="true")
+                .error(v-if="password.confirm.error")
+                    Icon warning
+                    span {{ password.confirm.error }}
+            .actions
+                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                SubmitButton(:loading="promiseRunning") Change Password
+            .step-wrapper
+                .step.clickable(@click="processStep = 0")
+                .step.active
 .form.container.success(v-else)
     Icon check_circle
     h2 Password Change Success
@@ -55,7 +75,8 @@ const route = useRoute();
 
 const emit = defineEmits(['close']);
 const processStep = ref(0);
-
+const currentPasswordField = ref(null);
+const newPasswordConfirmField = ref(null);
 const password = ref({
     current: {
         value: '',
@@ -83,15 +104,20 @@ const closePasswordChange = () => {
     password.value.confirm.error = '';
 }
 
+const validatePassword = () => {
+    if(password.value.current.value.length < 6 || password.value.current.value.length > 60) {
+		currentPasswordField.value.setError('Invalid Password');
+    } else if(password.value.new.value !== password.value.confirm.value) {
+        newPasswordConfirmField.value.setError('Password does not match');
+    } else {
+        if(currentPasswordField.value) currentPasswordField.value.clearError();
+        if(newPasswordConfirmField.value) newPasswordConfirmField.value.clearError();
+    }
+}
+
 const verifyPassword = async () => {
     promiseRunning.value = true;
     password.value.current.error = '';
-
-    if(password.value.current.value.length < 6) {
-        password.value.current.error = 'Password must be at least 6 characters'    
-        promiseRunning.value = false;
-        return false;
-    }
 
     try {
         await skapi.login({email: state.user.email, password: password.value.current.value}, {logout: false});
@@ -112,11 +138,6 @@ const changePassword = async () => {
     promiseRunning.value = true;
     password.value.confirm.error = '';
 
-    if(password.value.new.value.length < 6) {
-        password.value.confirm.error = 'Password must be at least 6 characters';   
-        promiseRunning.value = false;
-        return false;
-    }
     if(password.value.new.value !== password.value.confirm.value) {
         password.value.confirm.error = 'Your password does not match';    
         promiseRunning.value = false;
