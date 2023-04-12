@@ -95,22 +95,4 @@ function bypassSameRoute(e) {
         e.stopPropagation();
     }
 }
-
-onMounted(() => {
-    awaitConnection.then(async ()=>{
-        await nextTick();
-        if(!noLoginNeeded() && !state.user && state.viewport === 'desktop') {
-            overlay.value.open();
-        }
-    });
-});
-
-onUpdated(() => {
-    awaitConnection.then(async ()=>{
-        await nextTick();
-        if(!noLoginNeeded() && !state.user && state.viewport === 'desktop') {
-            overlay.value.open();
-        }
-    });
-});
 </script>
