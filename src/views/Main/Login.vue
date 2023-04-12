@@ -127,7 +127,8 @@ function login() {
     border: 1px solid #808080;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
-
+    margin: auto;
+    
     @media @tablet {  
         margin: var(--head-space) auto 0;
         background: #FFF;

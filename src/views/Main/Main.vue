@@ -31,12 +31,23 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
 
 main(v-if="noLoginNeeded()")
     router-view
-sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
-    Login
-Login(v-else)
+main(v-else)
+    .wrapper
+        Login
 </template>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
+
+@media @tablet_excl {
+    main .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 0;
+        min-height: calc(100vh - 140px);
+    }
+}
+
 sui-button.signup {
     background-color: #fff;
     color: var(--primary-color);
