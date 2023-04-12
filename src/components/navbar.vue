@@ -137,10 +137,6 @@ sui-nav#top-nav {
             }
         }
     }
-    
-    .dashboard & > .nav_align .menu ul li a{
-        color: rgba(255, 255, 255, .6);
-    }
 }
 
 .logo {
