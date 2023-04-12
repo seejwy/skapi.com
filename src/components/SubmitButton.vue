@@ -1,6 +1,7 @@
 <template lang="pug">
-sui-button(type="submit" :disabled="(props.loading || props.disabled) || null")
-	Icon.animation-rotation--slow-in-out(v-if="props.loading") loading
+sui-button(type="submit" :disabled="(props.loading || props.disabled) || null")  
+	svg(v-if="props.loading" width="20", height="20")
+		circle(cx="10", cy="10", r="8", stroke="#FFF", stroke-width="2.5", fill="none", stroke-linecap="round")
 	span(:style="{'visibility': props.loading ? 'hidden' : 'visible'}")
 		slot
 	input(type="submit" style="position: absolute; opacity: 0; visibility: hidden")
@@ -27,6 +28,26 @@ sui-button {
 		left: unset !important;
 		vertical-align: middle;
 		cursor: pointer;
+
+		circle {
+            stroke-dasharray: 50;
+            stroke-dashoffset: 30;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            animation: animate 2s ease-in-out infinite;
+        }
+
+        @keyframes animate {
+            0% {
+                stroke-dashoffset: 50;
+            }
+            50% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: -50;
+            }
+        }
 	}
 }
 </style>
