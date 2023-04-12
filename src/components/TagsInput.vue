@@ -25,25 +25,25 @@ if(props.value) {
 
 const input = ref(null);
 
+const tagIsValid = (string) => {
+  return !(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string));
+}
+
 const addTag = (e) => {
-  if(e.type === 'input') {
-    console.log(e);
-    e.data.match()
-  }
-  if(e.type === 'input' && e.data !== ' ') return;
   let string = input.value.innerHTML.replace('&nbsp;', '');
+
+  if(tagIsValid(string)) {
+    inputError.value = false;
+  } else {    
+    inputError.value = true;
+  }
+
+  if(e.type === 'input' && e.data !== ' ') return;
   
-  if(string && !(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string))) {
+  if(string && tagIsValid(string)) {
     tagArray.value.push(string);
     input.value.innerHTML = '';
   }
-
-  if((/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string))) {
-    inputError.value = true;
-  } else {    
-    inputError.value = false;
-  }
-
   emits('change', tagArray);
 }
 
