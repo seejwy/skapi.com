@@ -226,7 +226,7 @@ onBeforeUnmount(() => {
 
             * {
                 display: inline;           
-                color: #EB1717;
+                color: #F04E4E;
             }
 
             span {

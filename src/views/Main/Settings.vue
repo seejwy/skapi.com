@@ -282,7 +282,7 @@ watch(() => state.user, async (user) => {
 
         .cancel {
             margin-right: 28px;
-            color: #EB1717;
+            color: #F04E4E;
         }
     }
 
@@ -382,7 +382,7 @@ watch(() => state.user, async (user) => {
 .error {
     text-align: left;
     margin-top: 4px;         
-    color: #EB1717;
+    color: #F04E4E;
 }
 
 .line-button {

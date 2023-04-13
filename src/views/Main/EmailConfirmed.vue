@@ -114,7 +114,7 @@ pageTitle.value = 'skapi';
 
     .error {
         text-align: left;
-        color: #EB1717;
+        color: #F04E4E;
         margin-bottom: 27px;
 
         svg {

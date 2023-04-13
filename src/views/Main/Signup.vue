@@ -193,7 +193,7 @@ function signup() {
 
     .error {
         text-align: left;
-        color: #EB1717;
+        color: #F04E4E;
         margin: 20px auto;
 
         svg {
