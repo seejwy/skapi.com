@@ -88,6 +88,7 @@ const validatePassword = (event) => {
 }
 
 function login() {
+    error.value = '';
     promiseRunning.value = true;
     skapi.AdminLogin(form, null, rememberme.value).then(u => {
         state.user = u;
