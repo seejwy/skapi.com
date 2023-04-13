@@ -26,7 +26,6 @@
     template(v-else-if="processStep === 1")
         form(@submit.prevent="changePassword" action="")
             p Please enter your new password.
-            input(type="email" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0;")
             .input
                 label New Password
                 PasswordInput(
@@ -42,7 +41,7 @@
                     @input="(e) => { password.confirm.value = e.target.value; e.target.setCustomValidity(''); }" 
                     :value="password.confirm.value" 
                     @change="validatePassword"
-                    autocomplete="new-password"
+                    autocomplete="confirm-password"
                     :required="true")
                 .error(v-if="password.confirm.error")
                     Icon warning
@@ -58,7 +57,7 @@
     h2 Password Change Success
     p Your password has been changed successfully. Please login with new password.
     .actions
-        sui-button(@click="logout") Login
+        sui-button(type="button" @click="logout") Login
 </template>
 <!-- script below -->
 <script setup>
@@ -161,10 +160,10 @@ const changePassword = async () => {
     }
 }
 
-const logout = () => {
+const logout = async () => {
+    await router.push('dashboard');
     skapi.AdminLogout().then(() => {
         state.user = null;
-        router.push('dashboard');
     });
 }
 
