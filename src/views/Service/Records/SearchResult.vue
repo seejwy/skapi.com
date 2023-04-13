@@ -16,7 +16,7 @@ RecordSearch#recordSearch.hideOnTablet
 
 sui-overlay(ref='openRecord' @click="()=> openRecord.close(() => { recordToOpen = null })" style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
-        ViewRecord(:record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close()")
+        ViewRecord(v-if="recordToOpen" :record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
 .record-container#data-container
     .header.hideOnTablet

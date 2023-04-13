@@ -12,9 +12,9 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;' @click='()=>addRecord
 .hideOnTablet(style="clear:both;")
 
 // record view
-sui-overlay(ref='openRecord' @mousedown='()=>viewRecord.close(() => { recordToOpen = null })' style="background-color:rgba(0 0 0 / 60%)")
+sui-overlay(ref='openRecord' @mousedown='()=>openRecord.close(() => { recordToOpen = null; })' style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
-        ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close()")
+        ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close(() => { recordToOpen = null; })")
 
 .table-container#data-container
     .header.label-head

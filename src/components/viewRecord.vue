@@ -315,7 +315,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 			sui-button(@click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
-import { ref, computed, nextTick, inject } from 'vue';
+import { ref, nextTick, inject, onMounted } from 'vue';
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import { skapi, state, dateFormat, getSize, log } from '@/main';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
@@ -867,7 +867,6 @@ const getDataByTypes = (record) => {
 const confirmClose = () => {
 	exitEditOverlay.value.close();
 	isEdit.value = false;
-	view.value = 'information';
 	emit('close');
 };
 
@@ -879,9 +878,12 @@ const close = () => {
 		return false;
 	}
 	isEdit.value = false;
-	view.value = 'information';
 	emit('close');
 };
+
+onMounted(() => {
+	view.value = 'information';
+})
 
 defineExpose({
 	close,
