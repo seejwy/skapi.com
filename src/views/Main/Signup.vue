@@ -4,7 +4,7 @@
         h1 Signup
         .input
             label Email
-            sui-input(@change="validateEmail" :value='form.email' @input="e=>form.email = e.target.value" placeholder="E.g. someone@gmail.com" required)
+            sui-input(@change="validateEmail" :value='form.email' @input="e=> { form.email = e.target.value; error = '' }" placeholder="E.g. someone@gmail.com" required)
         .input
             label Name
             sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
@@ -84,6 +84,7 @@ const validatePassword = () => {
 }
 
 function signup() {
+    error.value = '';
     promiseRunning.value = true;
     skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: '/success'}).then(result => {
         router.push('/confirmation');
