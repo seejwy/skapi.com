@@ -34,7 +34,7 @@ async function resendSignupConfirmation() {
 
     }, 1000);
     try {
-        let x = await skapi.resendSignupConfirmation();
+        let x = await skapi.resendSignupConfirmation('/success');
     } catch(e) {
         console.log({e: e});
         if(e.code === 'INVALID_REQUEST') {
