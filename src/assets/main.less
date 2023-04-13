@@ -283,6 +283,13 @@ sui-input[type=checkbox] {
 }
 
 sui-input {
+  background-color: white;
+
+  &[type=checkbox],
+  &[type=radio] {
+    background-color: transparent;
+  }
+
   input::placeholder {
     color: rgba(0, 0, 0, 0.4);
   }
