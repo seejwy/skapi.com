@@ -61,7 +61,7 @@
             p.
                 Skapi's e-mail endpoint addresses makes sending newsletters and setting up welcome e-mails easier.
         div
-            a(href="/docs/index.html" target="_blank")
+            a(href="https://docs.skapi.com" target="_blank")
                 sui-button Read the Docs
     hr
     h2 Getting Started

@@ -3,7 +3,8 @@
     h1 Record
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
-        sui-button.line-button Read Doc
+        a(href="https://docs.skapi.com" target="_blank")
+            sui-button.line-button Read Doc
 br
 // search form
 RecordSearch#recordSearch.hideOnTablet

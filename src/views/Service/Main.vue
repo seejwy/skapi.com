@@ -7,7 +7,7 @@
                     router-link(to="/" tag="li")
                         img(src="@/assets/img/logo-small.svg" style="width: 40px; height: 40px;")
                 li
-                    router-link(to="/docs" tag="li") Documentation
+                    a(href="https://docs.skapi.com" target="_blank") Documentation
 
                 li
                     router-link(to="/dashboard" :class="{'router-link-active': route.path.split('/')[1] === 'dashboard'}") Dashboard

@@ -5,7 +5,8 @@ template(v-else)
         h2 How to start my service?
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
         div.action
-            sui-button.line-button Read Doc
+            a(href="https://docs.skapi.com" target="_blank")
+                sui-button.line-button Read Doc
     .container
         .title-actions-wrapper.showOnTablet
             .title-wrapper

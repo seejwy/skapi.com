@@ -5,7 +5,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
             router-link(to="/" tag="li")
                 img(src="@/assets/img/logo-small.svg" style="width: 40px; height: 40px;")
         li
-            router-link(to="/docs") Documentation
+                a(href="https://docs.skapi.com" target="_blank") Documentation
 
         li(v-if='state.user')
             router-link(to="/dashboard") Dashboard
