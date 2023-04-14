@@ -4,6 +4,7 @@ import Login from '../views/Main/Login.vue';
 import Signup from '../views/Main/Signup.vue';
 import ResendConfirmation from '../views/Main/ResendConfirmation.vue';
 import EmailConfirmed from '../views/Main/EmailConfirmed.vue';
+import DeleteConfirmed from '../views/Main/DeleteConfirmed.vue';
 import ForgotPassword from '../views/Main/ForgotPassword.vue';
 import Main from '../views/Main/Main.vue';
 import Dashboard from '../views/Main/Dashboard.vue';
@@ -50,6 +51,11 @@ const router = createRouter({
           path: 'success',
           name: 'success',
           component: EmailConfirmed
+        },
+        {
+          path: 'deleted',
+          name: 'deleted',
+          component: DeleteConfirmed
         },
         {
           path: "/:catchAll(.*)",

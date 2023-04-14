@@ -74,6 +74,10 @@ div(v-else-if="state?.user")
                     sui-button.line-button(type="button" @click="cancelEdit") Cancel
                     SubmitButton(:loading="isSaving") Save
                 sui-button(v-else type="button" @click="isEdit = true") Edit Account
+    
+    .settings-wrapper.delete 
+        div(@click="openDeletePopup") Delete Your Account
+            Icon(style="height: 20px; width: 20px; margin-left: 8px;") trash
     Transition(name="toast")
         .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
             Icon warning_bell
@@ -85,6 +89,8 @@ div(v-else-if="state?.user")
         ChangePassword(v-if="state.viewport === 'desktop'" @close="passwordOverlay.close()")
     sui-overlay(v-if="state.viewport === 'desktop'" ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
         VerifyEmail(@close="emailOverlay.close()")
+    sui-overlay(v-if="state.viewport === 'desktop' && isDelete" ref="deleteAccountOverlay" style="background: rgba(0, 0, 0, 0.6);")
+        DeleteAccount(@close="deleteAccountOverlay.close(() => isDelete = false)")
 </template>
 <script setup>
 import { inject, ref, onMounted, watch, nextTick } from 'vue';
@@ -96,6 +102,7 @@ import SubmitButton from '@/components/SubmitButton.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import ChangePassword from '@/components/ChangePassword.vue';
 import VerifyEmail from '@/components/VerifyEmail.vue';
+import DeleteAccount from '@/components/DeleteAccount.vue';
 
 import { skapi } from '../../main';
 
@@ -108,6 +115,7 @@ pageTitle.value = 'skapi';
 let serviceList = ref(null);
 let overlay = ref(null);
 const isEdit = ref(false);
+const isDelete = ref(false);
 let settings = ref({
     email_subscription: '',
     name: '',
@@ -115,10 +123,16 @@ let settings = ref({
 });
 const isVerifyErrorMessage = ref(false);
 
+const deleteAccountOverlay = ref(null);
 const passwordOverlay = ref(null);
 const emailOverlay = ref(null);
 const isSaving = ref(false);
 
+const openDeletePopup = async () => {
+    isDelete.value = true;
+    await nextTick();
+    deleteAccountOverlay.value.open();
+}
 const openVerifyEmail = async () => {
     try {
         await skapi.verifyEmail();
@@ -178,6 +192,18 @@ const updateUserSettings = async () => {
     }
 }
 
+const deleteAccount = async () => {
+    let res = await skapi.postRecord(null, {
+        table: {
+            name: 'reason'
+        }, 
+        index: {
+            name: 'NR',
+            value: true
+        }
+    });
+}
+
 onMounted(() => {
     awaitConnection.then(async()=>{
         if(state.user) {
@@ -195,7 +221,7 @@ watch(() => state.user, async (user) => {
     if(!user) {
         overlay.value.open();
     }
-})
+});
 </script>
 
 <style lang="less" scoped>
@@ -225,6 +251,19 @@ watch(() => state.user, async (user) => {
 
     @media @phone {
         margin: 0 -16px;
+    }
+
+    &.delete {
+        line-height: 52px;
+        margin-top: 24px;
+        padding: 0 37px;
+        user-select: none;
+        font-weight: bold;    
+        color: rgba(0, 0, 0, 0.65);
+
+        & > {
+            cursor: pointer;
+        }
     }
 }
 .settings {
