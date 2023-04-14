@@ -17,6 +17,13 @@
         .error(v-if="error")
             Icon warning
             span {{ error }}
+        .input.checkbox
+            Label 
+                sui-input(type="checkbox" 
+                    @input="(e)=> form.subscribe = e.target.checked"
+                    :checked="rememberme ? true : null")
+                span I agree to receive information and news letters from Skapi via Email.
+
         SubmitButton(:loading="promiseRunning") Create Account
         div Already have an account?&nbsp;
             RouterLink(to="/dashboard") Login
@@ -55,6 +62,7 @@ let form = reactive({
     email: '',
     password: '',
     password_confirm: '',
+    subscribe: false
 });
 
 watch(() => state.user, u => {
@@ -86,14 +94,18 @@ const validatePassword = () => {
 function signup() {
     error.value = '';
     promiseRunning.value = true;
-    skapi.signup({email: form.email, password: form.password, name: form.username}, {confirmation: '/success'}).then(result => {
+    let options = {
+        signup_confirmation: '/success',
+    }
+
+    if(form.subscribe) {
+        options.email_subscription = form.subscribe;
+    }
+    
+    skapi.signup({email: form.email, password: form.password, name: form.username}, options).then(result => {
         router.push('/confirmation');
     }).catch(e => {
         console.log({e});
-        // console.log({e});
-        // console.log({e: e.code});
-        // INVALID_PARAMETER
-        // Exists
         promiseRunning.value = false;
 
         switch(e.code) {
@@ -153,18 +165,34 @@ function signup() {
     }
 
     .input {
-        margin: 20px auto 12px;
+        text-align: left;
+        color: rgba(0, 0, 0, 0.65);
+        margin-top: 28px;
 
-        label {
-            display: block;
-            text-align: left;
-            font-weight: bold;
-            color: rgba(0, 0, 0, 0.65);
-            margin-bottom: 8px;
+        &.checkbox label {
+            display: flex;
+            cursor: pointer;
+
+            sui-input {
+                margin: 1px 8px 0 0;
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
         }
-        sui-input {
-            width: 100%;
-            border: 1px solid #8C8C8C;
+
+        &:not(.checkbox) {
+            margin: 20px auto 12px;
+
+            label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+            sui-input {
+                width: 100%;
+                border: 1px solid #8C8C8C;
+                margin-left: 0;
+            }
         }
     }
     .action {
