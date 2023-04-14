@@ -137,6 +137,11 @@ const toggleReason = (e) => {
 
 const deleteAccount = async (e) => {
     promiseRunning.value = true;
+    if(form.value.password.length < 6 || form.value.password.length > 60) {
+        form.value.error = "Password is incorrect";
+        promiseRunning.value = false;
+        return false;
+    }
     try {
         await skapi.login({email: state.user.email, password: form.value.password}, {logout: false});
         
@@ -228,7 +233,7 @@ onBeforeUnmount(() => {
     }
 
     .input {
-        margin: 20px auto 12px;
+        margin: 16px auto 12px;
 
         label,
         span {

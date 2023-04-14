@@ -3,6 +3,7 @@ div(v-if='!state?.connection')
     // is loading...
 ChangePassword(v-if="state?.user && state.viewport === 'mobile' && route.query.page === 'password'")
 VerifyEmail(v-else-if="state?.user && state.viewport === 'mobile' && route.query.page === 'verify'")
+DeleteAccount(v-else-if="state?.user && state.viewport === 'mobile' && route.query.page === 'delete'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
         h1.fixed Account Settings
@@ -74,8 +75,9 @@ div(v-else-if="state?.user")
                     sui-button.line-button(type="button" @click="cancelEdit") Cancel
                     SubmitButton(:loading="isSaving") Save
                 sui-button(v-else type="button" @click="isEdit = true") Edit Account
-    
-    .settings-wrapper.delete 
+
+    .settings-wrapper.delete     
+        hr(v-if="state.viewport === 'mobile'")
         div(@click="openDeletePopup") Delete Your Account
             Icon(style="height: 20px; width: 20px; margin-left: 8px;") trash
     Transition(name="toast")
@@ -131,7 +133,8 @@ const isSaving = ref(false);
 const openDeletePopup = async () => {
     isDelete.value = true;
     await nextTick();
-    deleteAccountOverlay.value.open();
+    if(state.viewport === 'desktop') deleteAccountOverlay.value.open();
+    else router.replace('?page=delete');
 }
 const openVerifyEmail = async () => {
     try {
@@ -263,6 +266,14 @@ watch(() => state.user, async (user) => {
 
         & > {
             cursor: pointer;
+        }
+
+        @media @phone {
+            line-height: 1;
+        }
+
+        @media @tablet {
+            padding: 0 16px;
         }
     }
 }
@@ -415,6 +426,16 @@ watch(() => state.user, async (user) => {
         
         hr {
             margin: 28px -16px;
+        }
+    }
+}
+@media @phone {
+    .delete {
+        hr {
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.06);
+            width: 100vw;
+            margin: 80px -16px 28px;
         }
     }
 }
