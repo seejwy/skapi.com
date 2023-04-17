@@ -617,7 +617,7 @@ form {
   position: relative;
   vertical-align: middle;
 
-  &>* {
+  &>.select-field {
     display: inline-block;
     position: relative;
   }
@@ -644,31 +644,6 @@ form {
       border: 0;
       background: transparent;
       vertical-align: middle;
-    }
-  }
-
-  &>.input-field {
-    display: inline-flex;
-    flex-grow: 1;
-    align-items: center;
-
-    sui-input {
-      width: 100%;
-      box-shadow: none;
-      border: 0;
-      background: transparent;
-      vertical-align: middle;
-    }
-
-    sui-input {
-      input {
-        color: #fff;
-        margin-left: 12px;
-
-        &:focus {
-          outline: none;
-        }
-      }
     }
   }
 }

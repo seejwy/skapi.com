@@ -1108,26 +1108,6 @@ onBeforeRouteLeave((to, from) => {
   margin-left: 16px;
   position: relative;
   vertical-align: middle;
-  
-  &>* {
-    display: inline-block;
-    position: relative;
-  }
-
-  &>*:first-child {
-    // &::after {
-    //   content: '';
-    //   display: inline-block;
-    //   width: 1px;
-    //   height: 1em;
-    //   vertical-align: middle;
-    //   background-color: rgba(255, 255, 255, .2);
-    //   position: absolute;
-    //   top: 50%;
-    //   right: 0;
-    //   transform: translateY(-50%);
-    // }
-  }
 
   &>.select-field {
     sui-select {
@@ -1149,31 +1129,6 @@ onBeforeRouteLeave((to, from) => {
       top: 50%;
       left: 0;
       transform: translateY(-50%);
-    }
-  }
-
-  &>.input-field {
-    display: inline-flex;
-    flex-grow: 1;
-    align-items: center;
-
-    sui-input {
-      width: 100%;
-      box-shadow: none;
-      border: 0;
-      background: transparent;
-      vertical-align: middle;
-    }
-
-    sui-input {
-      input {
-        color: #fff;
-        margin-left: 12px;
-
-        &:focus {
-          outline: none;
-        }
-      }
     }
   }
 }
