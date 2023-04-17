@@ -427,7 +427,6 @@ const editRecord = () => {
 			}
 
 			if(typeSplitFiles.json) {
-				console.log({value: typeSplitFiles.json});
 				if(Array.isArray(typeSplitFiles.json)) {
 					typeSplitFiles.json.forEach(value => {
 						if (Array.isArray(value)) {
@@ -437,7 +436,6 @@ const editRecord = () => {
 						}
 					});
 				} else {
-					console.log(JSON.stringify(typeSplitFiles.json));
 					data.value.push({ key, type: 'json', data: typeSplitFiles.json === null ? JSON.stringify(typeSplitFiles.json) : JSON.stringify(typeSplitFiles.json, null, " ") });
 				}
 			} else {
@@ -650,7 +648,6 @@ const save = async () => {
 					let positionFound = false;
 					let index = 0;
 					while(!positionFound && index < recordTables.value.list.length) {
-						console.log(recordTables.value.list.length, index, index+1);
 						if(index + 1 <= recordTables.value.list.length && r.table.name > recordTables.value.list[index].table && r.table.name < recordTables.value.list[index+1]?.table) {
 							recordTables.value.list.splice(index + 1, 0, {
 								number_of_records: 1,
