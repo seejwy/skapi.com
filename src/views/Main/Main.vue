@@ -75,6 +75,7 @@ const noLoginNeeded = () => {
             case 'confirmation':
             case 'success':
             case 'home':
+            case 'deleted':
                 return true;
         }
 
