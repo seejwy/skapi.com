@@ -3,6 +3,8 @@ import App from './App.vue';
 import router from './router';
 import './assets/main.less';
 
+// hi
+
 // init state
 const state = reactive({
     user: null,
