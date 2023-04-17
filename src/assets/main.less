@@ -283,7 +283,9 @@ sui-input[type=checkbox] {
 }
 
 sui-input {
-  background-color: white;
+  &:not([type=submit], [type=reset], [type=buton]) {
+    background-color: white;
+  }
 
   &[type=checkbox],
   &[type=radio] {
