@@ -113,6 +113,10 @@ sui-nav#top-nav {
             text-overflow: ellipsis;
             font-size: 24px;
 
+            .logo {
+                cursor: pointer;
+            }
+
             .back-button {
                 height: 32px;
                 width: 32px;
@@ -129,6 +133,7 @@ sui-nav#top-nav {
                     user-select: none;
                     font-size: 20px;
                     vertical-align: middle;
+                    cursor: pointer;
 
                     @media @tablet {
                         font-weight: bold;
