@@ -155,9 +155,16 @@ Transition(name="toast")
         }
         @media screen and (min-width: 1024px) {
             
-            transition: width .2s ease-in;
+            transition: width .2s cubic-bezier(1, 0, 0, 1);
             max-width: 170px;
             
+
+            a {
+                white-space: nowrap;
+                span {    
+                    vertical-align: middle;
+                }
+            }
             &:hover {
                 flex-shrink: 0;
                 width: 170px;
@@ -169,9 +176,6 @@ Transition(name="toast")
                     display: block;
                     height: 35px;
                     margin: 14px 14px 11px 14px;
-                }
-                svg {
-                    display: none;
                 }
 
                 a {
