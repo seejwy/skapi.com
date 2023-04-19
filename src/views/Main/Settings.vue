@@ -42,7 +42,7 @@ div(v-else-if="state?.user")
                         span(v-else) Unverified
                     .error(v-if="isVerifyErrorMessage") You have exceeded the number of tries. Please try again later.
             hr   
-            .title Subscription
+            .title Newsletter Subscription
             .value(v-if="state.viewport === 'desktop'")
                 template(v-if="isEdit")
                     label
@@ -291,6 +291,7 @@ watch(() => state.user, async (user) => {
         font-weight: bold;
         padding: 28px 0;
         color: rgba(0, 0, 0, .65);
+        white-space: nowrap;
     }
 
     .value,
