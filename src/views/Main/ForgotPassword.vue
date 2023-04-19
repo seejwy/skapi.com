@@ -257,7 +257,6 @@ const changePassword = () => {
         }
         sui-input {
             width: 100%;
-            border: 1px solid #8C8C8C;
         }
     }
     .action {
@@ -306,19 +305,6 @@ const changePassword = () => {
 
     .line-button {
         display: block;
-        color: var(--primary-color);
-
-        svg {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-        }
-    }
-
-    svg {
-        height: 56px;
-        width: 56px;
-        color: #5AD858;
     }
 }
 .navigator {

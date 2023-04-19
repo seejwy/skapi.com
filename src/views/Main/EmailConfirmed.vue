@@ -85,7 +85,6 @@ pageTitle.value = 'skapi';
         }
         sui-input {
             width: 100%;
-            border: 1px solid #8C8C8C;
         }
     }
     .action {
@@ -126,10 +125,6 @@ pageTitle.value = 'skapi';
         color: #293FE6;
         text-decoration: none;
         font-weight: bold;
-    }
-
-    .line-button {
-        color: var(--primary-color);
     }
 
     svg {

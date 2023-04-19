@@ -139,7 +139,7 @@ function login() {
     }
     
     @media @tablet {  
-        padding: 0 16px;
+        padding: 0;
     }
 
     h1 {
@@ -160,10 +160,6 @@ function login() {
         sui-input,
         .sui-input {
             width: 100%;
-        }
-
-        sui-input {    
-            border: 1px solid #8C8C8C;
         }
     }
     .action {
@@ -212,14 +208,6 @@ function login() {
         color: #293FE6;
         text-decoration: none;
         font-weight: bold;
-    }
-}
-.dashboard [type=checkbox] {
-    border-color: var(--primary-color);
-
-    &[checked] {
-      color: #fff;
-      background: var(--primary-color);
     }
 }
 </style>

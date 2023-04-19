@@ -33,7 +33,6 @@ defineExpose({
 }
 sui-input {
 	width: 100%;
-	border: 1px solid #8C8C8C;
 }
 svg {
 	position: absolute;

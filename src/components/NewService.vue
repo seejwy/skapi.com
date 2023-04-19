@@ -1,6 +1,6 @@
 <template lang="pug">
 .overlay-container
-    form(@submit.prevent="createNewService" action="")
+    form.dashboard(@submit.prevent="createNewService" action="")
         .overlay-container-title.hideOnTablet Create a New Service
         .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
         sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
@@ -143,13 +143,8 @@ const createNewService = async () => {
         display: block;
         margin-bottom: 40px;
         width: 100%;
-        background-color: rgba(255, 255, 255, .08);
 
-        input::placeholder {
-            color: rgba(255, 255, 255, .4);
-        }
-
-        &[type=submit] {    
+        &[type=submit] {
             display: inline-block;        
             width: unset;
         }

@@ -214,7 +214,6 @@ onBeforeUnmount(() => {
         }
         sui-input {
             width: 100%;
-            border: 1px solid #8C8C8C;
         }
         sui-button {
             width: 100%;
@@ -276,9 +275,6 @@ onBeforeUnmount(() => {
 }
 
 .line-button {
-    color: var(--primary-color);
-    white-space: nowrap;
-
     & ~ sui-button {
         margin-left: 16px;
     }

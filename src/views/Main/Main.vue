@@ -52,6 +52,20 @@ sui-button.signup {
     background-color: #fff;
     color: var(--primary-color);
     height: 30px;
+
+    &:hover,
+    &:focus,
+    &:active {
+        background-color: #fff;
+    }
+
+    &:hover {
+        box-shadow: rgba(255, 255, 255, 0.65) 1px 1px 2px inset, rgba(0, 0, 0, 0.25) -1px -1px 2px inset, rgba(0, 0, 0, 0.25) 0px 0px 0px 1px inset, rgba(191, 191, 191, 0.16) 0px 0px 1em 1em inset;
+    }
+
+    &:active {
+        box-shadow: rgba(128, 128, 128, 0.25) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.75) 0px 1px 3px inset, rgba(255, 255, 255, 0.25) -1px -1px 1px inset;
+    }
 }
 </style>
 
@@ -76,6 +90,7 @@ const noLoginNeeded = () => {
             case 'success':
             case 'home':
             case 'deleted':
+            case 'sample':
                 return true;
         }
 

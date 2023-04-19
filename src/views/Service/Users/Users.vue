@@ -689,8 +689,6 @@ onBeforeRouteLeave((to, from) => {
     }
 
     .input-field {
-        margin-left: 12px;
-
         .icon {
             padding-right: 12px;
 
@@ -1097,40 +1095,25 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 .select-input {
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: var(--input-box-shadow);
-  border-radius: 4px;
-  display: inline-flex;
-  height: calc(100% + 9.6px + 9.6px);
-  align-items: center;
-  max-width: 100%;
-  width: 300px;
-  margin-left: 16px;
-  position: relative;
-  vertical-align: middle;
-
-  &>.select-field {
-    sui-select {
-      width: 8em;
-      box-shadow: none;
-      border: 0;
-      background: transparent;
-      vertical-align: middle;
+    width: 300px;
+    margin-left: 16px;
+    .input-field {
+        width: 100%;
     }
 
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 1px;
-      height: 1em;
-      vertical-align: middle;
-      background-color: rgba(255, 255, 255, .2);
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
+    &>*:first-child:not(:only-child) {
+        &::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 1em;
+            vertical-align: middle;
+            background-color: rgba(255, 255, 255, .2);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
     }
-  }
 }
 
 .hide-when-pre-tablet {

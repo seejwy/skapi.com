@@ -30,5 +30,9 @@ sui-textarea {
     height: auto;
     width: 100%;
     box-shadow: none;
+
+	&:focus-within {
+		outline: 2px solid var(--primary-color);
+	}
 }
 </style>

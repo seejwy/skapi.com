@@ -272,7 +272,7 @@
 								span False
 								sui-input(type="radio" :name="record.key" value="false" :checked="record.data === false ? true : null")
 
-					sui-input.data-input-field(v-else-if="record.type === 'number'" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
+					sui-input.data-input-field(v-else-if="record.type === 'number'" style="height: auto;" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
 
 					sui-input.data-input-field(v-else type="text" style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value" :value="record.data.toString()") {{  record.data  }}
 
@@ -1092,11 +1092,6 @@ defineExpose({
 							outline: none;
 						}
 					}
-
-					&[type=radio] {
-						cursor: pointer;
-						color: #fff;
-					}
 				}
 
 				&.transparent {
@@ -1242,11 +1237,6 @@ defineExpose({
 			sui-input:not([type=checkbox]):not([type=radio]) {
 				width: 100%;
 			}
-
-			sui-input[type=radio] {
-				cursor: pointer;
-				color: #fff;
-			}
 		}
 
 		.section {
@@ -1293,20 +1283,6 @@ defineExpose({
 				sui-input {
 					margin-left: 10px;
 				}
-			}
-
-			sui-input:not([type=radio]):not([type=checkbox]) {
-				background: rgba(255, 255, 255, 0.08);
-				border: 1px solid rgba(255, 255, 255, 0.2);
-				box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
-				border-radius: 5px;
-			}
-
-			sui-select {
-				background: rgba(255, 255, 255, 0.08);
-				border: 0.5px solid #8C8C8C;
-				box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
-				border-radius: 4px;
 			}
 
 			.line-input {

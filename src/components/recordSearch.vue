@@ -189,7 +189,7 @@ form(
                         @input="e => advancedForm.reference = e.target.value")
 
             div(style='text-align:center;')
-                sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()") Reset
+                sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()")
                 sui-input(style='margin: 8px .5em;width: 6em;' type='submit' value="Search")
 
 </template>
@@ -482,6 +482,10 @@ form {
     }
 
     .input-field.search {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+
         input::placeholder {
             background-image: url(/src/assets/img/icons/search.svg);
             background-size: 20px;
@@ -494,11 +498,7 @@ form {
     }
 
     .line-button {
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.65);
-        box-shadow: none;
         margin: 8px .5em;
-        width: 6em;
     }
 
     .toggle-advanced-form {
@@ -581,10 +581,6 @@ form {
             &>label {
                 padding-right: 0.5em;
             }
-
-            &>sui-input[type="radio"] {
-                color: #fff;
-            }
         }
 
         sui-select {
@@ -608,14 +604,6 @@ form {
 }
 
 .select-input {
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: var(--input-box-shadow);
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  max-width: 100%;
-  position: relative;
-  vertical-align: middle;
 
   &>.select-field {
     display: inline-block;
@@ -632,7 +620,6 @@ form {
       background-color: rgba(255, 255, 255, .2);
       position: absolute;
       top: 50%;
-      right: 0;
       transform: translateY(-50%);
     }
   }

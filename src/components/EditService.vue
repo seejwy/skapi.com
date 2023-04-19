@@ -249,10 +249,6 @@ onBeforeUnmount(() => {
         }
         sui-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
         }
     }
     @media @tablet {

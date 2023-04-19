@@ -345,15 +345,6 @@ watch(() => state.user, async (user) => {
             sui-input {
                 flex-shrink: 0;
                 margin-top: calc((1.5em - 16px) / 2);
-
-                &[disabled] {
-                    border-color: #D9D9D9;
-
-                    &[checked] {
-                        background: rgba(0, 0, 0, 0.25);
-                        box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
-                    }
-                }
             }
 
             span {            
@@ -368,8 +359,6 @@ watch(() => state.user, async (user) => {
 
         & > sui-input {
             width: 100%;
-            background-color: #fff;
-            border: 1px solid #8C8C8C;
         }
     }
 
@@ -446,9 +435,6 @@ watch(() => state.user, async (user) => {
 }
 
 .line-button {
-    color: var(--primary-color);
-    white-space: nowrap;
-
     & ~ sui-button {
         margin-left: 16px;
     }

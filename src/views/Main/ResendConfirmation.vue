@@ -105,7 +105,6 @@ async function resendSignupConfirmation() {
         }
         sui-input {
             width: 100%;
-            border: 1px solid #8C8C8C;
         }
     }
     .action {
@@ -150,10 +149,6 @@ async function resendSignupConfirmation() {
         color: #293FE6;
         text-decoration: none;
         font-weight: bold;
-    }
-
-    .line-button {
-        color: var(--primary-color);
     }
 }
 </style>

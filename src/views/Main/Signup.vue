@@ -190,7 +190,6 @@ function signup() {
             }
             sui-input {
                 width: 100%;
-                border: 1px solid #8C8C8C;
                 margin-left: 0;
             }
         }
@@ -242,14 +241,5 @@ function signup() {
         text-decoration: none;
         font-weight: bold;
     }
-
-    // .terms {
-    //     font-size: 12px;
-    //     margin-top: 20px;
-
-    //     a {
-    //         font-weight: normal;
-    //     }
-    // }
 }
 </style>
