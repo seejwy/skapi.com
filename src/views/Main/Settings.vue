@@ -210,9 +210,13 @@ const deleteAccount = async () => {
 onMounted(() => {
     awaitConnection.then(async()=>{
         if(state.user) {
-            let subscriptions = await skapi.getNewsletterSubscription();
-            state.user.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
-            settings.value.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
+            if(!state.user.hasOwnProperty('email_subscription')) {
+                let subscriptions = await skapi.getNewsletterSubscription();
+                state.user.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
+                settings.value.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
+            } else {
+                settings.value.email_subscription = state.user.email_subscription;
+            }
             settings.value.name = state.user.name;
             settings.value.email = state.user.email;
         }
