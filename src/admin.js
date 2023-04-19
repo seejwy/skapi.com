@@ -60,13 +60,12 @@ export default class Admin extends Skapi {
             window.localStorage.setItem('remember', 'true');
         }
         else {
-            window.localStorage.removeItem('remember', 'true');
+            window.localStorage.setItem('remember', 'false');
         }
         return this.login(form, option);
     }
 
     async AdminLogout() {
-        window.localStorage.removeItem('remember', 'true');
         let r = await this.logout();
         state.services = null;
         return r;
