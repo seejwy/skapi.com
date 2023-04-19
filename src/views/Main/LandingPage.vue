@@ -1,129 +1,128 @@
 <template lang="pug">
-main
-    section.sectionBox
-        .overflow
-            .helloSkapi
-                .helloCont
-                    img.logoImg(src="@/assets/img/icons/Skapi_logo.svg")
-                    .tit
-                        .withImg 
-                            img.icon1(src="@/assets/img/icons/Asset5.svg")
-                            em Empower
-                            img.icon2(src="@/assets/img/icons/Asset4.svg")
-                            img.icon3(src="@/assets/img/icons/Asset3.svg")
-                            img.icon4(src="@/assets/img/icons/Asset2.svg")
-                        .withImg 
-                            img.icon5(src="@/assets/img/icons/Asset8.svg")
-                            em Your Website with 
-                            img.icon6(src="@/assets/img/icons/Asset7.svg")
-                            img.icon7(src="@/assets/img/icons/Asset3.svg")
-                        .withBtn
-                            span A Robust Backend API
-                            button GET STARTED
-                                img(src="@/assets/img/icons/Asset9.svg")
-                        .arrowImg 
-                            img(src="@/assets/img/icons/Asset1.svg")
-                    h3 Welcome to Skapi
-                    p 
-                        | "A robust and easy-to-use API service designed 
-                        span to help developers build faster, more efficient, and scalable applications 
-                        | . Our platform offers a suite of advanced tools and features, allowing you to streamline your development process and focus on what matters most: 
-                        span creating incredible user experiences
-                        | ."
-                    button.readBtn Read Document
-    section.sectionBox.showVideo
-        .videoCont 
-            img(src="@/assets/img/icons/video.svg")
-    section.sectionBox.features
-        .feaCont 
-            .cardTit
-                h3 Key Features
-            .cardWrap
-                .cardInner
-                    .card
-                        .icon
-                            img(src="@/assets/img/icons/Asset21.svg")
-                        .right
-                            h4.tit Serverless Architecture
-                            p.cont Embrace the simplicity of skapi's 100% serverless architecture. Say goodbye to dealing with terminals, installing frameworks on your machine, or worrying about scalability. With skapi, you can focus on building incredible web services without the hassle.
-                    .card
-                        .icon
-                            img(src="@/assets/img/icons/Asset14.png")
-                        .right
-                            h4.tit Database
-                            p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
-                    .card
-                        .icon
-                            img(src="@/assets/img/icons/Asset15.png")
-                        .right 
-                            h4.tit Authentication
-                            p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
-                    .card
-                        .icon
-                            img(src="@/assets/img/icons/Asset16.png")
-                        .right
-                            h4.tit Cloud Storage
-                            p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
-    section.sectionBox.getStart
-        .startCont 
-            h3 Getting Started
-            .levelWrap 
-                .levelBar 
-                    .lb.lb1 
-                        .num 01
-                        .dot
-                    .lb.lb2
-                        .num 02
-                        .dot
-                    .lb.lb3 
-                        .num 03
-                        .dot
-                .levelInner
-                    .level.lv1
-                        .lvCont
-                            .lvTit Create Service
-                            .lvDesc Log and Create new Service from your dashboard 
-                        .lvImg 
-                            img(src="@/assets/img/icons/lvImg1.png")
-                    .level.lv2
-                        .lvCont
-                            .lvTit Retrieve ID
-                            .lvDesc Retrieve the service ID and the owner’s ID from the dashboard
-                        .lvImg 
-                            img(src="@/assets/img/icons/lvImg2.png")
-                    .level.lv3
-                        .lvCont
-                            .lvTit Initialize Skapi
-                            .lvDesc
-                                | Import and Initialize Skapi from index.html. Replace
-                                br
-                                em ‘SERVICE_ID’ 
-                                | and 
-                                br
-                                em ‘OWNERS_ID’ 
-                                | with appropriate value.
-                        .lvImg
-                            .codeCopy(@click="codeCopy")
-                                img(src="@/assets/img/icons/copy.svg")
-                            .preCode
-                                pre
-                                    code 
-                                        |&lt;!DOCTYPE html&gt;
-                                        |  &lt;head&gt;
-                                        |    &lt;script src="https://cdn.jsdelivr.net/npm/skapi-js@latest/dist/skapi.js"&gt;&lt;/script&gt;
-                                        |  &lt;/head&gt;
-                                        |  &lt;script&gt;
-                                        |    let skapi = new Skapi('
-                                        span SERVICE_ID
-                                        | ', '
-                                        span OWNERS_ID
-                                        | ');
-                                        |  &lt;/script&gt;
-    section.sectionBox.trySkapi
-        .tryCont 
-            h3 DON’T JUST TAKE OUR WORD FOR IT
-            h2 Ready to try Skapi?
-            button.startBtn Get Started
+section.sectionBox
+    .overflow
+        .helloSkapi
+            .helloCont
+                img.logoImg(src="@/assets/img/icons/Skapi_logo.svg")
+                .tit
+                    .withImg 
+                        img.icon1(src="@/assets/img/icons/Asset5.svg")
+                        em Empower
+                        img.icon2(src="@/assets/img/icons/Asset4.svg")
+                        img.icon3(src="@/assets/img/icons/Asset3.svg")
+                        img.icon4(src="@/assets/img/icons/Asset2.svg")
+                    .withImg 
+                        img.icon5(src="@/assets/img/icons/Asset8.svg")
+                        em Your Website with 
+                        img.icon6(src="@/assets/img/icons/Asset7.svg")
+                        img.icon7(src="@/assets/img/icons/Asset3.svg")
+                    .withBtn
+                        span A Robust Backend API
+                        button GET STARTED
+                            img(src="@/assets/img/icons/Asset9.svg")
+                    .arrowImg 
+                        img(src="@/assets/img/icons/Asset1.svg")
+                h3 Welcome to Skapi
+                p 
+                    | "A robust and easy-to-use API service designed 
+                    span to help developers build faster, more efficient, and scalable applications 
+                    | . Our platform offers a suite of advanced tools and features, allowing you to streamline your development process and focus on what matters most: 
+                    span creating incredible user experiences
+                    | ."
+                button.readBtn Read Document
+section.sectionBox.showVideo
+    .videoCont 
+        img(src="@/assets/img/icons/video.svg")
+section.sectionBox.features
+    .feaCont 
+        .cardTit
+            h3 Key Features
+        .cardWrap
+            .cardInner
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset21.svg")
+                    .right
+                        h4.tit Serverless Architecture
+                        p.cont Embrace the simplicity of skapi's 100% serverless architecture. Say goodbye to dealing with terminals, installing frameworks on your machine, or worrying about scalability. With skapi, you can focus on building incredible web services without the hassle.
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset14.png")
+                    .right
+                        h4.tit Database
+                        p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset15.png")
+                    .right 
+                        h4.tit Authentication
+                        p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset16.png")
+                    .right
+                        h4.tit Cloud Storage
+                        p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+section.sectionBox.getStart
+    .startCont 
+        h3 Getting Started
+        .levelWrap 
+            .levelBar 
+                .lb.lb1 
+                    .num 01
+                    .dot
+                .lb.lb2
+                    .num 02
+                    .dot
+                .lb.lb3 
+                    .num 03
+                    .dot
+            .levelInner
+                .level.lv1
+                    .lvCont
+                        .lvTit Create Service
+                        .lvDesc Log and Create new Service from your dashboard 
+                    .lvImg 
+                        img(src="@/assets/img/icons/lvImg1.png")
+                .level.lv2
+                    .lvCont
+                        .lvTit Retrieve ID
+                        .lvDesc Retrieve the service ID and the owner’s ID from the dashboard
+                    .lvImg 
+                        img(src="@/assets/img/icons/lvImg2.png")
+                .level.lv3
+                    .lvCont
+                        .lvTit Initialize Skapi
+                        .lvDesc
+                            | Import and Initialize Skapi from index.html. Replace
+                            br
+                            em ‘SERVICE_ID’ 
+                            | and 
+                            br
+                            em ‘OWNERS_ID’ 
+                            | with appropriate value.
+                    .lvImg
+                        .codeCopy(@click="codeCopy")
+                            img(src="@/assets/img/icons/copy.svg")
+                        .preCode
+                            pre
+                                code 
+                                    |&lt;!DOCTYPE html&gt;
+                                    |  &lt;head&gt;
+                                    |    &lt;script src="https://cdn.jsdelivr.net/npm/skapi-js@latest/dist/skapi.js"&gt;&lt;/script&gt;
+                                    |  &lt;/head&gt;
+                                    |  &lt;script&gt;
+                                    |    let skapi = new Skapi('
+                                    span SERVICE_ID
+                                    | ', '
+                                    span OWNERS_ID
+                                    | ');
+                                    |  &lt;/script&gt;
+section.sectionBox.trySkapi
+    .tryCont 
+        h3 DON’T JUST TAKE OUR WORD FOR IT
+        h2 Ready to try Skapi?
+        button.startBtn Get Started
 </template>
 
 <script setup>
