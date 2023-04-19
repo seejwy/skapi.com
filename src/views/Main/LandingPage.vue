@@ -18,8 +18,9 @@ section.sectionBox
                         img.icon7(src="@/assets/img/icons/Asset3.svg")
                     .withBtn
                         span A Robust Backend API
-                        button GET STARTED
-                            img(src="@/assets/img/icons/Asset9.svg")
+                        a(href='https://docs.skapi.com' target="_blank")
+                            button GET STARTED
+                                img(src="@/assets/img/icons/Asset9.svg")
                     .arrowImg 
                         img(src="@/assets/img/icons/Asset1.svg")
                 h3 Welcome to Skapi
@@ -29,7 +30,9 @@ section.sectionBox
                     | . Our platform offers a suite of advanced tools and features, allowing you to streamline your development process and focus on what matters most: 
                     span creating incredible user experiences
                     | ."
-                button.readBtn Read Document
+                a(href='https://docs.skapi.com' target="_blank")
+                    button.readBtn Read Document
+
 section.sectionBox.showVideo
     .videoCont 
         img(src="@/assets/img/icons/video.svg")
@@ -122,7 +125,8 @@ section.sectionBox.trySkapi
     .tryCont 
         h3 DON’T JUST TAKE OUR WORD FOR IT
         h2 Ready to try Skapi?
-        button.startBtn Get Started
+        a(href='https://docs.skapi.com' target="_blank")
+            button.startBtn Get Started
 </template>
 
 <script setup>
@@ -370,19 +374,23 @@ main {
                         }
                     }
 
-                    .readBtn {
-                        position: relative;
-                        width: 180px;
-                        height: 40px;
-                        font-weight: 700;
-                        font-size: 16px;
-                        margin: 70px 0 90px 0;
-                        color: #fff;
-                        background: #293FE6;
-                        border: 0.5px solid #8C8C8C;
-                        box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
-                        border-radius: 4px;
-                        cursor: pointer;
+                    a {
+                        text-decoration: none;
+
+                        .readBtn {
+                            position: relative;
+                            width: 180px;
+                            height: 40px;
+                            font-weight: 700;
+                            font-size: 16px;
+                            margin: 70px 0 90px 0;
+                            color: #fff;
+                            background: #293FE6;
+                            border: 0.5px solid #8C8C8C;
+                            box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
+                            border-radius: 4px;
+                            cursor: pointer;
+                        }
                     }
                 }
             }
