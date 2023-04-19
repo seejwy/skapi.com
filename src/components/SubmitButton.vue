@@ -28,6 +28,7 @@ sui-button {
 
 	&[loading] {
 		filter: none;
+		opacity: 1 !important;
 	}
 }
 </style>
