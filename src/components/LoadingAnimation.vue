@@ -5,8 +5,8 @@ svg(width="16", height="16")
 <style lang="less" scoped>
 svg {
 	position: absolute;
-	width: 24px;
-	height: 24px;
+	width: 24px !important;
+	height: 24px !important;
 	left: unset !important;
 	vertical-align: middle;
 
