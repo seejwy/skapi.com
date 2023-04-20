@@ -5,7 +5,7 @@
         .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
         sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         sui-button.line-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
-        SubmitButton(:loading="isCreatingService") Create Service
+        SubmitButton(:loading="isCreatingService") Create
 </template>
 <!-- script below -->
 <script setup>
