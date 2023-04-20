@@ -27,8 +27,8 @@
                 Login
             Login(v-else-if="!state.user")
     .sidebar(v-if="state.user")
-        img.logo(src="@/assets/img/logo-small.svg" alt="Skapi")
-        img.hover-logo(src="@/assets/img/logo.svg")
+        img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
+        img.hover-logo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
 
         router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
             Icon home
@@ -110,6 +110,7 @@ Transition(name="toast")
             display: block;
             width: 32px;
             margin: 14px 10px;
+            cursor: pointer;
 
             @media @ipad {
                 display: none;
@@ -118,6 +119,7 @@ Transition(name="toast")
 
         & .hover-logo {
             display: none;
+            cursor: pointer;
         }
 
         &>a {
@@ -153,9 +155,16 @@ Transition(name="toast")
         }
         @media screen and (min-width: 1024px) {
             
-            transition: width .2s ease-in;
+            transition: width .2s cubic-bezier(1, 0, 0, 1);
             max-width: 170px;
             
+
+            a {
+                white-space: nowrap;
+                span {    
+                    vertical-align: middle;
+                }
+            }
             &:hover {
                 flex-shrink: 0;
                 width: 170px;
@@ -167,9 +176,6 @@ Transition(name="toast")
                     display: block;
                     height: 35px;
                     margin: 14px 14px 11px 14px;
-                }
-                svg {
-                    display: none;
                 }
 
                 a {

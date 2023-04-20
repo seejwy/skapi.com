@@ -41,7 +41,7 @@ import PasswordInput from '../../components/PasswordInput.vue';
 let route = useRoute();
 let router = useRouter();
 const error = ref(null);
-const rememberme = ref(false);
+const rememberme = ref(window.localStorage.getItem('remember') === 'true');
 const promiseRunning = ref(false);
 
 // set page title

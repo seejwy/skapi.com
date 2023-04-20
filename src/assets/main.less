@@ -42,6 +42,7 @@
   --app-nav-bg-color: #293fe6;
   --input-box-shadow: rgb(0 0 0 / 50%) -1px -1px 2px -1px, rgb(255 255 255 / 33%) 1px 1px 1px, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
   --head-space: 60px;
+  --dark-highlight-color: #4B8DE6;
 
   @media @tablet {
     --head-space: 40px;
@@ -229,6 +230,11 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
       border: 1px solid var(--primary-color);
       box-shadow: 0 0 0 1px var(--primary-color) inset;
       outline: 0;
+
+      .dashboard & {
+        border: 1px solid var(--dark-highlight-color);
+        box-shadow: 0 0 0 1px var(--dark-highlight-color) inset;
+      }
     }
   }
 
@@ -366,6 +372,10 @@ sui-select {
   
   &:focus-within {
     outline: 2px solid var(--primary-color);
+
+    .dashboard & {
+      outline: 2px solid var(--dark-highlight-color);
+    }
   }
 }
 
@@ -379,8 +389,8 @@ sui-button {
     outline: .5px solid #8C8C8C;
   }
 
-  &:not([disabled]):hover,
-  &:not([disabled]):focus {
+  &:not([disabled],.fab):hover,
+  &:not([disabled],.fab):focus {
     background-color: #4F61E9;
   }
   
@@ -458,6 +468,7 @@ sui-button {
 
   &.text-button {
     background-color: transparent;
+    box-shadow: none;
     color: var(--primary-color);
 
     .dashboard & {
@@ -497,6 +508,22 @@ sui-button {
       }
     }
   }
+
+  &.icon-button {
+    background: transparent;
+    outline: none;
+    padding: .6em .6em;
+
+    &[disabled] {
+      background: transparent;
+      outline: none;
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    &:not([disabled]):hover {
+      background: #FFFFFF14;
+    }
+  }
 }
 
 sui-button {
@@ -512,6 +539,7 @@ sui-button {
     margin: 0;
     padding: 0;
     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
+    outline: none;
 
     &.open-menu svg {
       height: 28px;
@@ -540,22 +568,6 @@ sui-tooltip {
   }
 }
 /** end sui-elements **/ 
-
-
-.icon-button,
-.text-button {
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-
-  &:not([disabled]):hover {
-    background: #FFFFFF14;
-  }
-}
-
-.icon-button {
-  padding: .6em .6em;
-}
 
 .toast {
   position: fixed;

@@ -42,7 +42,7 @@ div(v-else-if="state?.user")
                         span(v-else) Unverified
                     .error(v-if="isVerifyErrorMessage") You have exceeded the number of tries. Please try again later.
             hr   
-            .title Subscription
+            .title Newsletter Subscription
             .value(v-if="state.viewport === 'desktop'")
                 template(v-if="isEdit")
                     label
@@ -210,9 +210,13 @@ const deleteAccount = async () => {
 onMounted(() => {
     awaitConnection.then(async()=>{
         if(state.user) {
-            let subscriptions = await skapi.getNewsletterSubscription();
-            state.user.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
-            settings.value.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
+            if(!state.user.hasOwnProperty('email_subscription')) {
+                let subscriptions = await skapi.getNewsletterSubscription();
+                state.user.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
+                settings.value.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
+            } else {
+                settings.value.email_subscription = state.user.email_subscription;
+            }
             settings.value.name = state.user.name;
             settings.value.email = state.user.email;
         }
@@ -287,6 +291,7 @@ watch(() => state.user, async (user) => {
         font-weight: bold;
         padding: 28px 0;
         color: rgba(0, 0, 0, .65);
+        white-space: nowrap;
     }
 
     .value,

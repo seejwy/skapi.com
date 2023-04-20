@@ -1136,7 +1136,19 @@ defineExpose({
 
 				.select-input {
 					flex-grow: 1;
-					text-align: center;
+					text-align: left;
+
+					.select-field::after {
+						content: '';
+						display: inline-block;
+						width: 1px;
+						height: 1em;
+						vertical-align: middle;
+						background-color: rgba(255, 255, 255, .2);
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+					}
 
 					sui-select {
 						width: 6.5em;

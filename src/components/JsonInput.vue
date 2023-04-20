@@ -25,14 +25,13 @@ sui-textarea {
     padding: 16px 20px;
     background: #434343;
     border-radius: 8px;
-    white-space: pre-wrap;
-    word-break: break-word;	
+    white-space: pre;
     height: auto;
     width: 100%;
     box-shadow: none;
 
 	&:focus-within {
-		outline: 2px solid var(--primary-color);
+		outline: 2px solid var(--dark-highlight-color);
 	}
 }
 </style>
