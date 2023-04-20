@@ -517,6 +517,7 @@ sui-button {
     background: transparent;
     outline: none;
     padding: .6em .6em;
+    box-shadow: none;
 
     &[disabled] {
       background: transparent;
@@ -525,6 +526,10 @@ sui-button {
     }
 
     &:not([disabled]):hover {
+      background: #FFFFFF14;
+    }
+    .dashboard &:active,
+    .dashboard &:focus {
       background: #FFFFFF14;
     }
   }
