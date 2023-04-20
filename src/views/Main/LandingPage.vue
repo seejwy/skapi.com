@@ -45,25 +45,33 @@ section.sectionBox.features
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset21.svg")
-                    .right
+                    h4.tit(v-if="showThis") Serverless Architecture
+                    p.cont(v-if="showThis") Embrace the simplicity of skapi's 100% serverless architecture. Say goodbye to dealing with terminals, installing frameworks on your machine, or worrying about scalability. With skapi, you can focus on building incredible web services without the hassle.
+                    .right(v-if="!showThis")
                         h4.tit Serverless Architecture
                         p.cont Embrace the simplicity of skapi's 100% serverless architecture. Say goodbye to dealing with terminals, installing frameworks on your machine, or worrying about scalability. With skapi, you can focus on building incredible web services without the hassle.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset14.png")
-                    .right
+                    h4.tit(v-if="showThis") Database
+                    p.cont(v-if="showThis") Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
+                    .right(v-if="!showThis")
                         h4.tit Database
                         p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset15.png")
-                    .right 
+                    h4.tit(v-if="showThis") Authentication
+                    p.cont(v-if="showThis") Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+                    .right(v-if="!showThis")
                         h4.tit Authentication
                         p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset16.png")
-                    .right
+                    h4.tit(v-if="showThis") Cloud Storage
+                    p.cont(v-if="showThis") Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+                    .right(v-if="!showThis")
                         h4.tit Cloud Storage
                         p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
 section.sectionBox.getStart
@@ -121,6 +129,23 @@ section.sectionBox.getStart
                                     span OWNERS_ID
                                     | ');
                                     |  &lt;/script&gt;
+    .mlvImg
+        .codeCopy(@click="codeCopy")
+            img(src="@/assets/img/icons/copy.svg")
+        .preCode
+            pre
+                code 
+                    |&lt;!DOCTYPE html&gt;
+                    |  &lt;head&gt;
+                    |    &lt;script src="https://cdn.jsdelivr.net/npm/skapi-js@latest/dist/skapi.js"&gt;&lt;/script&gt;
+                    |  &lt;/head&gt;
+                    |  &lt;script&gt;
+                    |    let skapi = new Skapi('
+                    span SERVICE_ID
+                    | ', '
+                    span OWNERS_ID
+                    | ');
+                    |  &lt;/script&gt;
 section.sectionBox.trySkapi
     .tryCont 
         h3 DON’T JUST TAKE OUR WORD FOR IT
@@ -130,11 +155,15 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, watch, ref } from 'vue';
+import { state } from '@/main';
 
+let showThis = ref(false);
 let currentScroll = 0;
 
 function codeCopy() {
+    // let text = document.querySelector('.preCode pre code').textContent;
+    // navigator.clipboard.writeText(text);
     let doc = document.createElement('textarea');
     doc.textContent = document.querySelector('.preCode pre code').textContent;
     document.body.append(doc);
@@ -145,77 +174,59 @@ function codeCopy() {
     alert('소스가 저장되었습니다. 붙여넣기 하시면 됩니다.');
 }
 
+window.addEventListener('scroll', () => {
+    currentScroll = window.scrollY + (window.innerHeight / 1.5);
+
+    document.querySelectorAll('.lb').forEach((lb) => {
+        let num = lb.querySelector(".num");
+        let dot = lb.querySelector(".dot");
+
+        if (currentScroll >= lb.offsetTop) {
+            num.classList.add('active');
+            dot.classList.add('active');
+        } else {
+            num.classList.remove('active');
+            dot.classList.remove('active');
+        }
+    })
+})
+
+function seeMobile() {
+    let cardWrap = document.querySelector('.cardWrap');
+
+    cardWrap.style.removeProperty('left');
+    showThis.value = true;
+}
+
+function seePC() {
+    let features = document.querySelector('.features');
+    let featuresTop = features.offsetTop;
+    let cardWrap = document.querySelector('.cardWrap');
+
+    showThis.value = false;
+
+    window.addEventListener('scroll', () => {
+        currentScroll = window.scrollY + (window.innerHeight / 1.8);
+
+        let moveSpeed = -(currentScroll - featuresTop) * 1.5;
+
+        if (currentScroll >= featuresTop) {
+            cardWrap.style.left = moveSpeed + "px";
+        } else {
+            cardWrap.style.left = 0;
+        }
+    })
+}
 onMounted(() => {
-    function Mobile() { return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-    if (Mobile()) {
-        console.log('mobile')
-        let cards = document.querySelectorAll('.card');
-        
-        cards.forEach((card) => {
-            let cardTit = document.querySelector('.card .right .tit');
-            let cardCont = document.querySelector('.card .right .cont');
-            
-            card.insertBefore(cardTit, null);
-            card.insertBefore(cardCont, null);
-        })
-
-        let cardRight = document.querySelectorAll('.card .right');
-        cardRight.forEach((right) => {
-            right.remove();
-        })
-
-        let getStart = document.querySelector('.getStart');
-        let lvImg3 = document.querySelector('.lv3 .lvImg');
-        getStart.insertBefore(lvImg3, null);
-
-        window.addEventListener('scroll', () => {
-            currentScroll = window.scrollY + (window.innerHeight / 1.3);
-    
-            document.querySelectorAll('.lb').forEach((lb) => {
-                let num = lb.querySelector(".num");
-                let dot = lb.querySelector(".dot");
-    
-                if (currentScroll >= lb.offsetTop) {
-                    num.classList.add('active');
-                    dot.classList.add('active');
-                } else {
-                    num.classList.remove('active');
-                    dot.classList.remove('active');
-                }
-            })
-        })
-    } else {
-        console.log('pc')
-        let features = document.querySelector('.features');
-        let featuresTop = features.offsetTop;
-        let cardWrap = document.querySelector('.cardWrap');
-    
-        window.addEventListener('scroll', () => {
-            currentScroll = window.scrollY + (window.innerHeight / 2);
-
-            let moveSpeed = -(currentScroll - featuresTop);
-    
-            if (currentScroll >= featuresTop) {
-                cardWrap.style.left = moveSpeed + "px";
-            } else {
-                cardWrap.style.left = 0;
-            }
-    
-            document.querySelectorAll('.lb').forEach((lb) => {
-                let num = lb.querySelector(".num");
-                let dot = lb.querySelector(".dot");
-    
-                if (currentScroll >= lb.offsetTop) {
-                    num.classList.add('active');
-                    dot.classList.add('active');
-                } else {
-                    num.classList.remove('active');
-                    dot.classList.remove('active');
-                }
-            })
-        })
-    }
-
+    watch(() => state.viewport, (viewport) => {
+        if(window.innerWidth <= '650') {
+            seeMobile();
+        } else {
+            seePC();
+        }
+    }, {
+        immediate: true
+    })
 })
 </script>
 
@@ -228,7 +239,6 @@ main {
     height: 100%;
     overflow-x: hidden;
     background-color: #f5f5f5;
-
 
     .sectionBox {
         .overflow {
@@ -480,7 +490,7 @@ main {
                             }
                             .icon {
                                 width: 30%;
-                                padding: 0 30px;
+                                margin: 0 30px;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
@@ -649,7 +659,7 @@ main {
 
                             .lvCont {
                                 width: 260px;
-                                margin-left: 20px;
+                                margin: 0 20px;
                                 box-sizing: border-box;
 
                                 .lvTit {
@@ -718,6 +728,55 @@ main {
                             }
                         }
                     }
+                }
+            }
+
+            .mlvImg {
+                position: relative;
+                width: 100%;
+                display: none;
+
+                .preCode {
+                    position: relative;
+                    height: 234px;
+                    background-color: #434343;
+                    border-radius: 0;
+                    color: #fff;
+                    overflow: scroll;
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 24px;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 20px;
+
+                    span {
+                        color: #7C8CFF;
+                    }
+                }
+
+                .codeCopy {
+                    position: absolute;
+                    right: 24px;
+                    top: 24px;
+                    width: 24px;
+                    height: 24px;
+                    z-index: 99;
+
+                    img {
+                        width: 24px;
+                        height: 24px;
+                        filter: invert(100%);
+                        cursor: pointer;
+                    }
+                }
+
+                img {
+                    width: 512px;
+                    height: 300px;
+                    object-fit: cover;
+                    object-position: top;
+                    border-radius: 8px;
                 }
             }
         }
@@ -858,7 +917,7 @@ main {
 
                     .levelWrap {
                         .levelBar {
-                            width: 20%;
+                            width: 18%;
                             margin-top: 40px;
 
                             .lb {
@@ -898,6 +957,8 @@ main {
                             }
                         }
                         .levelInner {
+                            width: 82%;
+
                             .level {
                                 height: 30vw;
 
@@ -1044,6 +1105,105 @@ main {
 
             &.features {
                 width: 100%;
+
+                .feaCont {
+                    width: 100%;
+                    height: 100%;
+                    padding: 0 20px;
+                    box-sizing: border-box;
+
+                    .cardTit {
+                        width: 100%;
+                        font-size: 28px;
+                        padding-left: 0;
+
+                        h3 {
+                            margin-bottom: 28px;
+                        }
+                    }
+
+                    .cardWrap {
+                        position: relative;
+                        height: 100%;
+
+                        .cardInner {
+                            width: 100%;
+                            display: flex;
+                            flex-wrap: wrap;
+                            align-items: center;
+                            justify-content: center;
+
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+
+                            .card {
+                                width: 100%;
+                                height: auto;
+                                padding: 40px;
+                                margin: 0;
+                                margin-bottom: 28px;
+                                flex-wrap: wrap;
+                                align-items: center;
+                                justify-content: space-between;
+                                
+                                &:first-child {
+                                    .icon {
+                                        img {
+                                            width: 88px;
+                                        }
+                                    }
+                                }
+                                &:nth-child(2) {
+                                    .icon {
+                                        img {
+                                            width: 65px;
+                                        }
+                                    }
+                                    .cont {
+                                        padding-top: 20px;
+                                    }
+                                }
+                                &:nth-child(3) {
+                                    .icon {
+                                        img {
+                                            width: 77px;
+                                        }
+                                    }
+                                    .cont {
+                                        padding-top: 20px;
+                                    }
+                                }
+                                &:last-child {
+                                    margin-right: 0;
+        
+                                    .icon {
+                                        margin-bottom: 30px;
+                                        img {
+                                            width: 106px;
+                                        }
+                                    }
+                                }
+                                .icon {
+                                    width: 40%;
+                                    margin: 0;
+                                }
+                                .tit {
+                                    width: 55%;
+                                    font-size: 20px;
+                                    padding: 0;
+                                }
+                                .cont {
+                                    width: 100%;
+                                    font-size: 14px;
+                                    font-weight: 400;
+                                    line-height: 24px;
+                                    margin: 0;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             &.getStart {
@@ -1163,6 +1323,13 @@ main {
                                 justify-content: start;
                                 height: 270px;
 
+                                &.lv1 {
+                                    .lvImg {
+                                        img {
+                                            object-position: left top;
+                                        }
+                                    }
+                                }
                                 &.lv2 {
                                     padding-bottom: 61px;
 
@@ -1182,9 +1349,8 @@ main {
                                         }
                                     }
                                     .lvImg {
-                                        img {
-                                            object-position: left top;
-                                        }
+                                        display: none;
+
                                     }
                                 }
 
@@ -1212,52 +1378,8 @@ main {
                     }
                 }
 
-                .lvImg {
-                    position: relative;
-                    width: 100%;
-
-                    .preCode {
-                        position: relative;
-                        height: 234px;
-                        background-color: #434343;
-                        border-radius: 0;
-                        color: #fff;
-                        overflow: scroll;
-                        font-size: 16px;
-                        font-weight: 400;
-                        line-height: 24px;
-                        display: flex;
-                        align-items: center;
-                        padding: 0 20px;
-
-                        span {
-                            color: #7C8CFF;
-                        }
-                    }
-
-                    .codeCopy {
-                        position: absolute;
-                        right: 24px;
-                        top: 24px;
-                        width: 24px;
-                        height: 24px;
-                        z-index: 99;
-
-                        img {
-                            width: 24px;
-                            height: 24px;
-                            filter: invert(100%);
-                            cursor: pointer;
-                        }
-                    }
-
-                    img {
-                        width: 512px;
-                        height: 300px;
-                        object-fit: cover;
-                        object-position: top;
-                        border-radius: 8px;
-                    }
+                .mlvImg {
+                    display: block;
                 }
             }
         }
@@ -1329,107 +1451,107 @@ main {
                 }
             }
 
-            &.features {
-                width: 100%;
+            // &.features {
+            //     width: 100%;
 
-                .feaCont {
-                    width: 100%;
-                    height: 100%;
-                    padding: 0 20px;
-                    box-sizing: border-box;
+            //     .feaCont {
+            //         width: 100%;
+            //         height: 100%;
+            //         padding: 0 20px;
+            //         box-sizing: border-box;
 
-                    .cardTit {
-                        width: 100%;
-                        font-size: 28px;
-                        padding-left: 0;
+            //         .cardTit {
+            //             width: 100%;
+            //             font-size: 28px;
+            //             padding-left: 0;
 
-                        h3 {
-                            margin-bottom: 28px;
-                        }
-                    }
+            //             h3 {
+            //                 margin-bottom: 28px;
+            //             }
+            //         }
 
-                    .cardWrap {
-                        position: relative;
-                        height: 100%;
+            //         .cardWrap {
+            //             position: relative;
+            //             height: 100%;
 
-                        .cardInner {
-                            width: 100%;
-                            display: flex;
-                            flex-wrap: wrap;
-                            align-items: center;
-                            justify-content: center;
+            //             .cardInner {
+            //                 width: 100%;
+            //                 display: flex;
+            //                 flex-wrap: wrap;
+            //                 align-items: center;
+            //                 justify-content: center;
 
-                            &:last-child {
-                                margin-bottom: 0;
-                            }
+            //                 &:last-child {
+            //                     margin-bottom: 0;
+            //                 }
 
-                            .card {
-                                width: 350px;
-                                height: auto;
-                                padding: 40px;
-                                margin: 0;
-                                margin-bottom: 28px;
-                                flex-wrap: wrap;
-                                align-items: center;
-                                justify-content: space-between;
+            //                 .card {
+            //                     width: 350px;
+            //                     height: auto;
+            //                     padding: 40px;
+            //                     margin: 0;
+            //                     margin-bottom: 28px;
+            //                     flex-wrap: wrap;
+            //                     align-items: center;
+            //                     justify-content: space-between;
                                 
-                                &:first-child {
-                                    .icon {
-                                        img {
-                                            width: 88px;
-                                        }
-                                    }
-                                }
-                                &:nth-child(2) {
-                                    .icon {
-                                        img {
-                                            width: 65px;
-                                        }
-                                    }
-                                    .cont {
-                                        padding-top: 20px;
-                                    }
-                                }
-                                &:nth-child(3) {
-                                    .icon {
-                                        img {
-                                            width: 77px;
-                                        }
-                                    }
-                                    .cont {
-                                        padding-top: 20px;
-                                    }
-                                }
-                                &:last-child {
-                                    margin-right: 0;
+            //                     &:first-child {
+            //                         .icon {
+            //                             img {
+            //                                 width: 88px;
+            //                             }
+            //                         }
+            //                     }
+            //                     &:nth-child(2) {
+            //                         .icon {
+            //                             img {
+            //                                 width: 65px;
+            //                             }
+            //                         }
+            //                         .cont {
+            //                             padding-top: 20px;
+            //                         }
+            //                     }
+            //                     &:nth-child(3) {
+            //                         .icon {
+            //                             img {
+            //                                 width: 77px;
+            //                             }
+            //                         }
+            //                         .cont {
+            //                             padding-top: 20px;
+            //                         }
+            //                     }
+            //                     &:last-child {
+            //                         margin-right: 0;
         
-                                    .icon {
-                                        img {
-                                            width: 106px;
-                                        }
-                                    }
-                                }
-                                .icon {
-                                    width: 40%;
-                                    padding: 0;
-                                }
-                                .tit {
-                                    width: 55%;
-                                    font-size: 20px;
-                                    padding: 0;
-                                }
-                                .cont {
-                                    width: 100%;
-                                    font-size: 14px;
-                                    font-weight: 400;
-                                    line-height: 24px;
-                                    margin: 0;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            //                         .icon {
+            //                             img {
+            //                                 width: 106px;
+            //                             }
+            //                         }
+            //                     }
+            //                     .icon {
+            //                         width: 40%;
+            //                         padding: 0;
+            //                     }
+            //                     .tit {
+            //                         width: 55%;
+            //                         font-size: 20px;
+            //                         padding: 0;
+            //                     }
+            //                     .cont {
+            //                         width: 100%;
+            //                         font-size: 14px;
+            //                         font-weight: 400;
+            //                         line-height: 24px;
+            //                         margin: 0;
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
         }
     }
 }
