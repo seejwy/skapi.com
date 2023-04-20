@@ -13,8 +13,9 @@ form(
             :value="searchParams.value"
             @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
             required)
-        template(v-slot:right) 
-            Icon.showOnTablet.placeholder-icon(v-if="!searchParams.value" style='width:32px;') search
+        template(v-slot:right)
+            sui-button(type="submit").icon-button  
+                    Icon.showOnTablet.placeholder-icon search
 .mobile-search-type
     sui-select(
         name='search_type'

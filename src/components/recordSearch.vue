@@ -11,14 +11,16 @@ form(
             type="search"
             :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
             :placeholder="searchForm.type === 'table' ? 'Table name' : searchForm.type === 'user' ? 'User id' : 'Record id'"
-            :required='searchForm.isAdvanced ? "true" : null'
             :value="searchForm.value"
             @input="e=>{ searchForm.value = e.target.value; }"
             @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
             @mounted="focusMe"
-            autocomplete="off")
+            autocomplete="off"
+            required)
+            
         template(v-slot:right) 
-            Icon.showOnTablet.placeholder-icon(style='width:32px;') search
+            sui-button(type="submit").icon-button  
+                Icon.showOnTablet.placeholder-icon search
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='openAdvancedForm')
