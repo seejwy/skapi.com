@@ -24,175 +24,174 @@ form(
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='openAdvancedForm')
-    .select-input.isMobile(style='width: 400px;margin: 8px 0;' @click.stop)
-        template(v-if="viewport === 'desktop'")
-            // main search
-            .select-field
-                sui-select(
-                    name='search_type'
-                    :value="searchForm.type"
-                    @input="e => {searchForm.value = ''; searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
-                    option(value="table" selected) Table Name
-                    option(value="user") User ID
-                    option(value="record") Record ID
-
-            .input-field.search
-                sui-input(
-                    type="search"
-                    :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
-                    placeholder="      Search"
-                    :required='searchForm.isAdvanced ? "true" : null'
-                    :value="searchForm.value"
-                    @input="e=>{ searchForm.value = e.target.value; }"
-                    @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
-                    autocomplete="off")
-                Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="openAdvancedForm") filter
-
-        .mobile-search-type(v-else)
+    .select-input(v-if="viewport === 'desktop'" style="width: 400px;")
+        // main search
+        .select-field
             sui-select(
                 name='search_type'
                 :value="searchForm.type"
-                @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; searchForm.value = ''; }")
-                option(value="table" selected) Search By Table Name
-                option(value="user") Search By User ID
-                option(value="record") Search By Record ID
+                @input="e => {searchForm.value = ''; searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
+                option(value="table" selected) Table Name
+                option(value="user") User ID
+                option(value="record") Record ID
 
-        .toggle-advanced-form.showOnTablet(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
-            hr
-            span(:class="{'close': searchForm.isAdvanced }") Advanced Search
-            Icon.showOnTablet down2
+        .input-field.search
+            sui-input(
+                type="search"
+                :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
+                placeholder="      Search"
+                :required='searchForm.isAdvanced ? "true" : null'
+                :value="searchForm.value"
+                @input="e=>{ searchForm.value = e.target.value; }"
+                @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
+                autocomplete="off")
+            Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="openAdvancedForm") filter
 
-        // advanced search
-        .advanced-form(ref="advancedFormEl" v-if='searchForm.isAdvanced && searchForm.type !== "record"')
-            .formLabel Access Group
+    .mobile-search-type(v-else style="margin: 8px 0;")
+        sui-select(
+            name='search_type'
+            :value="searchForm.type"
+            @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; searchForm.value = ''; }")
+            option(value="table" selected) Search By Table Name
+            option(value="user") Search By User ID
+            option(value="record") Search By Record ID
+
+    .toggle-advanced-form.showOnTablet(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
+        hr
+        span(:class="{'close': searchForm.isAdvanced }") Advanced Search
+        Icon.showOnTablet down2
+
+    // advanced search
+    .advanced-form(ref="advancedFormEl" v-if='searchForm.isAdvanced && searchForm.type !== "record"')
+        .formLabel Access Group
+        .form
+            .labelRadio.clickable
+                label.inline-vertical-middle(for='ag-reg') Registered
+                sui-input#ag-reg(type='radio' value='1' name='access_group' @change='advancedForm.access_group = 1' :checked='advancedForm.access_group === 1 ? true : null')
+
+            .labelRadio.clickable
+                label.inline-vertical-middle(for='ag-pub') Public
+                sui-input#ag-pub(type='radio' value='0' name='access_group' @change='advancedForm.access_group = 0' :checked='advancedForm.access_group === 0 ? true : null')
+
+            .labelRadio.clickable
+                label.inline-vertical-middle(for='ag-prv') Private
+                sui-input#ag-prv(type='radio' value='private' name='access_group' @change='advancedForm.access_group = "private"' :checked='advancedForm.access_group === "private" ? true : null')
+
+        template(v-if='searchForm.type === "user"')
+            .formLabel Table Name
             .form
-                .labelRadio.clickable
-                    label.inline-vertical-middle(for='ag-reg') Registered
-                    sui-input#ag-reg(type='radio' value='1' name='access_group' @change='advancedForm.access_group = 1' :checked='advancedForm.access_group === 1 ? true : null')
-
-                .labelRadio.clickable
-                    label.inline-vertical-middle(for='ag-pub') Public
-                    sui-input#ag-pub(type='radio' value='0' name='access_group' @change='advancedForm.access_group = 0' :checked='advancedForm.access_group === 0 ? true : null')
-
-                .labelRadio.clickable
-                    label.inline-vertical-middle(for='ag-prv') Private
-                    sui-input#ag-prv(type='radio' value='private' name='access_group' @change='advancedForm.access_group = "private"' :checked='advancedForm.access_group === "private" ? true : null')
-
-            template(v-if='searchForm.type === "user"')
-                .formLabel Table Name
-                .form
-                    // table
-                    sui-input(
-                        style='width:100%'
-                        required
-                        name='table'
-                        placeholder="Table Name"
-                        :value="advancedForm.table || ''"
-                        @input="e => advancedForm.reference = e.target.value")
-
-                .formLabel Table Subscription
-                .form
-                    .inline-vertical-middle(style='vertical-align: middle;width: 100%;display:inline-block;')
-                        // subscription
-                        .labelRadio.clickable
-                            label.inline-vertical-middle(for='subscription-none') None
-                            sui-input#subscription-none(type='radio' name='subscription' value='null' @change='e=>{advancedForm.subscription = null; parseIndexType()}' :checked="advancedForm.subscription === null || null")
-
-                        .labelRadio.clickable
-                            label.inline-vertical-middle(for='subscription-public') Public
-                            sui-input#subscription-public(type='radio' name='subscription' value='false' @change='e=>{advancedForm.subscription = false; parseIndexType()}' :checked="advancedForm.subscription === false || null")
-
-                        .labelRadio.clickable
-                            label.inline-vertical-middle(for='subscription-sub') Subscribed
-                            sui-input#subscription-sub(type='radio' name='subscription' value='true' @change='e=>{advancedForm.subscription = true; parseIndexType()}' :checked="advancedForm.subscription === true || null")
-
-            .formLabel Index
-            .form
-                // index name
+                // table
                 sui-input(
                     style='width:100%'
-                    name="index_name"
-                    placeholder="Index Name"
-                    :required="advancedForm.index_value === undefined ? null : true"
-                    :value="advancedForm.index_name"
-                    pattern="[a-zA-Z0-9.]+"
-                    @input="e => advancedForm.index_name = e.target.value")
+                    required
+                    name='table'
+                    placeholder="Table Name"
+                    :value="advancedForm.table || ''"
+                    @input="e => advancedForm.reference = e.target.value")
 
-                br
-                br
-
-                // index data type
-                sui-select(
-                    name="index_type"
-                    style="vertical-align: middle; width: 100px; margin-right:1em;"
-                    :value='advancedForm.index_type'
-                    @change="e=>{ advancedForm.index_type = e.target.value; parseIndexType(); }")
-                    option(disabled) Value type
-                    option(value="string" selected) String
-                    option(value="number") Number
-                    option(value="boolean") Boolean
-
-                .inline-vertical-middle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
-                    // index value (boolean)
-                    .labelRadio.clickable
-                        label.inline-vertical-middle(for='typ-bool-true') True
-                        sui-input#typ-bool-true(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
-
-                    .labelRadio.clickable
-                        label.inline-vertical-middle(for='typ-bool-false') False
-                        sui-input#typ-bool-false(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
-                .select-input(v-else style='width: calc(100% - 100px - 1em);')
-                    // index value
-                    .input-field
-                        sui-input(
-                            autocomplete="off"
-                            ref='indexValueFormElement'
-                            name="index_value"
-                            :type="advancedForm.index_type === 'number' ? 'number' : 'text'"
-                            placeholder="Index value"
-                            pattern="[a-zA-Z0-9' ']+"
-                            :required="advancedForm.index_name ? true : null"
-                            :value="advancedForm.index_value"
-                            @input="()=>parseIndexType()")
-
-                    .select-field(style='overflow:hidden;flex-shrink: 0;')
-                        // index value condition
-                        sui-select(
-                            style='width:60px'
-                            name="index_condition"
-                            :value="advancedForm.index_condition"
-                            @change="e => advancedForm.index_condition = e.target.value")
-                            option(disabled) Condition
-                            option(value=">=") &gt;=
-                            option(value=">") &gt;
-                            option(value="=" selected) =
-                            option(value="<") &lt;
-                            option(value="<=") &lt;=
-
-            .formLabel Tag
+            .formLabel Table Subscription
             .form
-                // Tag
+                .inline-vertical-middle(style='vertical-align: middle;width: 100%;display:inline-block;')
+                    // subscription
+                    .labelRadio.clickable
+                        label.inline-vertical-middle(for='subscription-none') None
+                        sui-input#subscription-none(type='radio' name='subscription' value='null' @change='e=>{advancedForm.subscription = null; parseIndexType()}' :checked="advancedForm.subscription === null || null")
+
+                    .labelRadio.clickable
+                        label.inline-vertical-middle(for='subscription-public') Public
+                        sui-input#subscription-public(type='radio' name='subscription' value='false' @change='e=>{advancedForm.subscription = false; parseIndexType()}' :checked="advancedForm.subscription === false || null")
+
+                    .labelRadio.clickable
+                        label.inline-vertical-middle(for='subscription-sub') Subscribed
+                        sui-input#subscription-sub(type='radio' name='subscription' value='true' @change='e=>{advancedForm.subscription = true; parseIndexType()}' :checked="advancedForm.subscription === true || null")
+
+        .formLabel Index
+        .form
+            // index name
+            sui-input(
+                style='width:100%'
+                name="index_name"
+                placeholder="Index Name"
+                :required="advancedForm.index_value === undefined ? null : true"
+                :value="advancedForm.index_name"
+                pattern="[a-zA-Z0-9.]+"
+                @input="e => advancedForm.index_name = e.target.value")
+
+            br
+            br
+
+            // index data type
+            sui-select(
+                name="index_type"
+                style="vertical-align: middle; width: 100px; margin-right:1em;"
+                :value='advancedForm.index_type'
+                @change="e=>{ advancedForm.index_type = e.target.value; parseIndexType(); }")
+                option(disabled) Value type
+                option(value="string" selected) String
+                option(value="number") Number
+                option(value="boolean") Boolean
+
+            .inline-vertical-middle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
+                // index value (boolean)
+                .labelRadio.clickable
+                    label.inline-vertical-middle(for='typ-bool-true') True
+                    sui-input#typ-bool-true(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
+
+                .labelRadio.clickable
+                    label.inline-vertical-middle(for='typ-bool-false') False
+                    sui-input#typ-bool-false(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
+            .select-input(v-else style='width: calc(100% - 100px - 1em);')
+                // index value
+                .input-field
+                    sui-input(
+                        autocomplete="off"
+                        ref='indexValueFormElement'
+                        name="index_value"
+                        :type="advancedForm.index_type === 'number' ? 'number' : 'text'"
+                        placeholder="Index value"
+                        pattern="[a-zA-Z0-9' ']+"
+                        :required="advancedForm.index_name ? true : null"
+                        :value="advancedForm.index_value"
+                        @input="()=>parseIndexType()")
+
+                .select-field(style='overflow:hidden;flex-shrink: 0;')
+                    // index value condition
+                    sui-select(
+                        style='width:60px'
+                        name="index_condition"
+                        :value="advancedForm.index_condition"
+                        @change="e => advancedForm.index_condition = e.target.value")
+                        option(disabled) Condition
+                        option(value=">=") &gt;=
+                        option(value=">") &gt;
+                        option(value="=" selected) =
+                        option(value="<") &lt;
+                        option(value="<=") &lt;=
+
+        .formLabel Tag
+        .form
+            // Tag
+            sui-input(
+                style='width:100%'
+                name='tag'
+                placeholder="Tag Name"
+                :value="advancedForm.tag || ''"
+                @input="tagInput")
+
+        template(v-if='searchForm.type === "table"')
+            .formLabel Reference ID
+            .form
+                // Reference
                 sui-input(
                     style='width:100%'
-                    name='tag'
-                    placeholder="Tag Name"
-                    :value="advancedForm.tag || ''"
-                    @input="tagInput")
+                    name='reference'
+                    placeholder="Referenced Record ID"
+                    :value="advancedForm.reference || ''"
+                    @input="e => advancedForm.reference = e.target.value")
 
-            template(v-if='searchForm.type === "table"')
-                .formLabel Reference ID
-                .form
-                    // Reference
-                    sui-input(
-                        style='width:100%'
-                        name='reference'
-                        placeholder="Referenced Record ID"
-                        :value="advancedForm.reference || ''"
-                        @input="e => advancedForm.reference = e.target.value")
-
-            div(style='text-align:center;')
-                sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()")
-                sui-input(style='margin: 8px .5em;width: 6em;' type='submit' value="Search")
+        div(style='text-align:center;')
+            sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()")
+            sui-input(style='margin: 8px .5em;width: 6em;' type='submit' value="Search")
 
 </template>
 <!-- script below -->
