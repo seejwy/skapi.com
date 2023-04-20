@@ -225,14 +225,13 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
   }
 
   &:focus-within {
-    border: 0;
+
     input {
-      border: 1px solid var(--primary-color);
+      outline: 1px solid var(--primary-color);
       box-shadow: 0 0 0 1px var(--primary-color) inset;
-      outline: 0;
 
       .dashboard & {
-        border: 1px solid var(--dark-highlight-color);
+        outline: 1px solid var(--dark-highlight-color);
         box-shadow: 0 0 0 1px var(--dark-highlight-color) inset;
       }
     }
