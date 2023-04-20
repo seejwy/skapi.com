@@ -47,7 +47,7 @@
 
         &:focus-within input {
             box-shadow: none !important;
-            border: none !important;
+            outline: 0 !important;
         }
 
         &+span {
