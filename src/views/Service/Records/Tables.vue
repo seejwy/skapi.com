@@ -77,8 +77,8 @@ sui-overlay(ref='openRecord' @mousedown='()=>openRecord.close(() => { recordToOp
 
                                 .load-more(v-if="!t.records.endOfList")
                                     Icon.animation-rotation refresh
-                    .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
-                         span &nbsp;
+                .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
+                    span &nbsp;
                 .paginator.hideOnTablet
                     Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
