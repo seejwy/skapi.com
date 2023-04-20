@@ -330,10 +330,15 @@ sui-select {
     color: #fff;
   }
 
-  &:focus {
+  &:focus-within {
     // box-shadow: inset 2px 2px 0 var(--primary-color), inset -2px -2px 0 var(--primary-color);
     border-color: var(--primary-color);
     outline: 2px solid var(--primary-color);
+
+    .dashboard & {
+      border-color: var(--dark-highlight-color);
+      outline: 2px solid var(--dark-highlight-color);
+    }
   }
 }
 
