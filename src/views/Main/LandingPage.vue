@@ -232,6 +232,8 @@ onMounted(() => {
 
     if(window.matchMedia(desktopMediaQuery).matches) {
         seePC();
+    } else {
+        seeMobile();
     }
 
     window.matchMedia(desktopMediaQuery).addEventListener('change', (e) => {
