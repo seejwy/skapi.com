@@ -84,9 +84,9 @@ template(v-else)
                             span Email System
                         .body Users are data that your service user's will store and read from your service database. 
                     .goto Go to Mail >
-    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="isEdit = false")
+    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
         div.overlay
-            EditService(@close="isEdit = false")
+            EditService(@close="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
 sui-overlay(ref="deleteConfirmOverlay")
     form.popup(@submit.prevent="deleteService" action="")
         .title
@@ -95,10 +95,10 @@ sui-overlay(ref="deleteConfirmOverlay")
         .body 
             p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
             p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
-            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value" :disabled="promiseRunning || null")
+            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value" :disabled="isDisabled")
         .foot
-            sui-button(type="button" @click="()=> { if(!promiseRunning) { deleteConfirmOverlay.close(); promiseRunning = false; confirmationCode = ''}}") No 
-            SubmitButton(:loading="promiseRunning" class="line-button") Yes
+            SubmitButton(:loading="isDisabled" :disabled="isDisabled" class="text-button") Delete
+            sui-button(type="button" :disabled="isDisabled" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = 'hello'}") Cancel
 sui-overlay(ref="deleteErrorOverlay")
     .popup
         .title
@@ -106,7 +106,7 @@ sui-overlay(ref="deleteErrorOverlay")
             div Something went wrong!
         .body {{ deleteErrorMessage }}
         .foot
-            sui-button(@click="()=> { deleteErrorOverlay.close(); promiseRunning = false; }") Ok
+            sui-button(@click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
@@ -127,10 +127,10 @@ pageTitle.value = 'Service "' + service.value.name + '"'
 const settingWindow = ref(null);
 const deleteConfirmOverlay = ref(null);
 const deleteErrorOverlay = ref(null);
-const promiseRunning = ref(false);
 const confirmationCode = ref('');
 const deleteErrorMessage = ref('');
 const isEdit = ref(false);
+const isDisabled = ref(false);
 
 const informationGrid = reactive([
     {
@@ -214,18 +214,18 @@ const edit = () => {
 }
 
 const deleteServiceAsk = () => {
-    if(promiseRunning.value || !state.user.email_verified) return;
+    if(!state.user.email_verified) return;
     deleteConfirmOverlay.value.open();
 }
 
 const deleteService = () => {
-    promiseRunning.value = true;
+    isDisabled.value = true;
     if(confirmationCode.value !== service.value.service) {
         confirmationCode.value = '';
         deleteErrorMessage.value = "Your service code did not match.";
         if(deleteConfirmOverlay.value) deleteConfirmOverlay.value.close();
         deleteErrorOverlay.value.open();
-        promiseRunning.value = false;
+        isDisabled.value = false;
         return;
     }
 
@@ -238,7 +238,7 @@ const deleteService = () => {
         deleteErrorOverlay.value.open();
     }).finally(() => {    
         confirmationCode.value = '';
-        promiseRunning.value = false;
+        isDisabled.value = false;
     });
 }
 
