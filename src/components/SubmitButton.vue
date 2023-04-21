@@ -3,7 +3,7 @@ sui-button(type="submit" :disabled="(props.loading || props.disabled) || null" :
 	LoadingAnimation(v-if="props.loading")
 	span(:style="{'visibility': props.loading ? 'hidden' : 'visible'}")
 		slot
-	input(type="submit" style="position: absolute; opacity: 0; visibility: hidden")
+	input(type="submit" style="position: absolute; opacity: 0; visibility: hidden" :disabled="(props.loading || props.disabled) || null")
 </template>
 <script setup>
 import LoadingAnimation from './LoadingAnimation.vue';
