@@ -126,10 +126,12 @@ body {
 }
 
 main {
-  max-width: 1000px;
-  margin: auto;
-  padding: 0 var(--side-padding, 24px) 80px;
-  box-sizing: content-box;
+  &.app {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 var(--side-padding, 24px) 80px;
+    box-sizing: content-box;  
+  }
 
   .head-space-helper {
     margin-top: var(--head-space);
