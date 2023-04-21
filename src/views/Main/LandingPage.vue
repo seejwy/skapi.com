@@ -40,40 +40,54 @@ section.sectionBox.features
     .feaCont 
         .cardTit
             h3 Key Features
-        .cardWrap
+        .cardWrap(v-if="!showThis")
             .cardInner
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset21.svg")
-                    h4.tit(v-if="showThis") Serverless Architecture
-                    p.cont(v-if="showThis") Embrace the simplicity of skapi's 100% serverless architecture. Say goodbye to dealing with terminals, installing frameworks on your machine, or worrying about scalability. With skapi, you can focus on building incredible web services without the hassle.
-                    .right(v-if="!showThis")
+                    .right
                         h4.tit Serverless Architecture
                         p.cont Embrace the simplicity of skapi's 100% serverless architecture. Say goodbye to dealing with terminals, installing frameworks on your machine, or worrying about scalability. With skapi, you can focus on building incredible web services without the hassle.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset14.png")
-                    h4.tit(v-if="showThis") Database
-                    p.cont(v-if="showThis") Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
-                    .right(v-if="!showThis")
+                    .right
                         h4.tit Database
                         p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset15.png")
-                    h4.tit(v-if="showThis") Authentication
-                    p.cont(v-if="showThis") Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
-                    .right(v-if="!showThis")
+                    .right
                         h4.tit Authentication
                         p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset16.png")
-                    h4.tit(v-if="showThis") Cloud Storage
-                    p.cont(v-if="showThis") Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
-                    .right(v-if="!showThis")
+                    .right
                         h4.tit Cloud Storage
                         p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+        .mobile-cardWrap(v-else)
+            .cardInner
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset21.svg")
+                    h4.tit Serverless Architecture
+                    p.cont Embrace the simplicity of skapi's 100% serverless architecture. Say goodbye to dealing with terminals, installing frameworks on your machine, or worrying about scalability. With skapi, you can focus on building incredible web services without the hassle.
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset14.png")
+                    h4.tit Database
+                    p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset15.png")
+                    h4.tit Authentication
+                    p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/Asset16.png")
+                    h4.tit Cloud Storage
+                    p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
 section.sectionBox.getStart
     .startCont 
         h3 Getting Started
@@ -159,11 +173,8 @@ import { onMounted, watch, ref } from 'vue';
 import { state } from '@/main';
 
 let showThis = ref(false);
-let currentScroll = 0;
 
 function codeCopy() {
-    // let text = document.querySelector('.preCode pre code').textContent;
-    // navigator.clipboard.writeText(text);
     let doc = document.createElement('textarea');
     doc.textContent = document.querySelector('.preCode pre code').textContent;
     document.body.append(doc);
@@ -175,7 +186,7 @@ function codeCopy() {
 }
 
 window.addEventListener('scroll', () => {
-    currentScroll = window.scrollY + (window.innerHeight / 1.5);
+    let currentScroll = window.scrollY + (window.innerHeight / 1.5);
 
     document.querySelectorAll('.lb').forEach((lb) => {
         let num = lb.querySelector(".num");
@@ -191,23 +202,13 @@ window.addEventListener('scroll', () => {
     })
 })
 
-function seeMobile() {
-    let cardWrap = document.querySelector('.cardWrap');
+onMounted(() => {
 
-    cardWrap.style.removeProperty('left');
-    showThis.value = true;
-}
-
-function seePC() {
-    let features = document.querySelector('.features');
-    let featuresTop = features.offsetTop;
-    let cardWrap = document.querySelector('.cardWrap');
-
-    showThis.value = false;
-
-    window.addEventListener('scroll', () => {
-        currentScroll = window.scrollY + (window.innerHeight / 1.8);
-
+    function cardMove() {
+        let features = document.querySelector('.features');
+        let featuresTop = features.offsetTop;
+        let cardWrap = document.querySelector('.cardWrap');
+        let currentScroll = window.scrollY + (window.innerHeight / 1.8);
         let moveSpeed = -(currentScroll - featuresTop) * 1.5;
 
         if (currentScroll >= featuresTop) {
@@ -215,18 +216,41 @@ function seePC() {
         } else {
             cardWrap.style.left = 0;
         }
-    })
-}
-onMounted(() => {
-    watch(() => state.viewport, (viewport) => {
-        if(window.innerWidth <= '650') {
-            seeMobile();
-        } else {
+    }
+
+    function seeMobile() {
+        showThis.value = true;
+        window.removeEventListener('scroll', cardMove);
+    }
+
+    function seePC() {
+        showThis.value = false;
+        window.addEventListener('scroll', cardMove);
+    }
+    
+    let desktopMediaQuery = '(min-width: 769px)';
+
+    if(window.matchMedia(desktopMediaQuery).matches) {
+        seePC();
+    }
+
+    window.matchMedia(desktopMediaQuery).addEventListener('change', (e) => {
+        if(e.matches) {
             seePC();
+        } else {
+            seeMobile();
         }
-    }, {
-        immediate: true
-    })
+    });
+
+    // watch(() => state.viewport, (viewport) => {
+    //     if(viewport == 'mobile') {
+    //         seeMobile();
+    //     } else {
+    //         seePC();
+    //     }
+    // }, {
+    //     immediate: true
+    // })
 })
 </script>
 
@@ -436,7 +460,6 @@ main {
                         margin-bottom: 40px;
                     }
                 }
-
                 .cardWrap {
                     position: absolute;
                     left: 0;
@@ -510,6 +533,91 @@ main {
                                     line-height: 24px;
                                     margin: 0;
                                 }
+                            }
+                        }
+                    }
+                }
+                .mobile-cardWrap {
+                    position: relative;
+                    left: 0 !important;
+                    height: 100%;
+
+                    .cardInner {
+                        width: 100%;
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-items: center;
+                        justify-content: center;
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        .card {
+                            width: 100%;
+                            height: auto;
+                            background: #fafafa;
+                            box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+                            border-radius: 8px;
+                            padding: 40px;
+                            margin: 0;
+                            margin-bottom: 28px;
+                            flex-wrap: wrap;
+                            align-items: center;
+                            justify-content: space-between;
+                            
+                            &:first-child {
+                                .icon {
+                                    img {
+                                        width: 88px;
+                                    }
+                                }
+                            }
+                            &:nth-child(2) {
+                                .icon {
+                                    img {
+                                        width: 65px;
+                                    }
+                                }
+                                .cont {
+                                    padding-top: 20px;
+                                }
+                            }
+                            &:nth-child(3) {
+                                .icon {
+                                    img {
+                                        width: 77px;
+                                    }
+                                }
+                                .cont {
+                                    padding-top: 20px;
+                                }
+                            }
+                            &:last-child {
+                                margin-right: 0;
+    
+                                .icon {
+                                    margin-bottom: 30px;
+                                    img {
+                                        width: 106px;
+                                    }
+                                }
+                            }
+                            .icon {
+                                width: 40%;
+                                margin: 0;
+                            }
+                            .tit {
+                                width: 55%;
+                                font-size: 20px;
+                                padding: 0;
+                            }
+                            .cont {
+                                width: 100%;
+                                font-size: 14px;
+                                font-weight: 400;
+                                line-height: 24px;
+                                margin: 0;
                             }
                         }
                     }
@@ -901,7 +1009,9 @@ main {
 
                 .feaCont {
                     .cardTit {
-                        padding-left: 20px;
+                        h3 {
+                            padding-left: 20px;
+                        }
                     }
                 }
             }
@@ -1006,7 +1116,7 @@ main {
     }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 769px) {
     main {
         -ms-overflow-style: none;
         scrollbar-width: none;
@@ -1119,88 +1229,6 @@ main {
 
                         h3 {
                             margin-bottom: 28px;
-                        }
-                    }
-
-                    .cardWrap {
-                        position: relative;
-                        height: 100%;
-
-                        .cardInner {
-                            width: 100%;
-                            display: flex;
-                            flex-wrap: wrap;
-                            align-items: center;
-                            justify-content: center;
-
-                            &:last-child {
-                                margin-bottom: 0;
-                            }
-
-                            .card {
-                                width: 100%;
-                                height: auto;
-                                padding: 40px;
-                                margin: 0;
-                                margin-bottom: 28px;
-                                flex-wrap: wrap;
-                                align-items: center;
-                                justify-content: space-between;
-                                
-                                &:first-child {
-                                    .icon {
-                                        img {
-                                            width: 88px;
-                                        }
-                                    }
-                                }
-                                &:nth-child(2) {
-                                    .icon {
-                                        img {
-                                            width: 65px;
-                                        }
-                                    }
-                                    .cont {
-                                        padding-top: 20px;
-                                    }
-                                }
-                                &:nth-child(3) {
-                                    .icon {
-                                        img {
-                                            width: 77px;
-                                        }
-                                    }
-                                    .cont {
-                                        padding-top: 20px;
-                                    }
-                                }
-                                &:last-child {
-                                    margin-right: 0;
-        
-                                    .icon {
-                                        margin-bottom: 30px;
-                                        img {
-                                            width: 106px;
-                                        }
-                                    }
-                                }
-                                .icon {
-                                    width: 40%;
-                                    margin: 0;
-                                }
-                                .tit {
-                                    width: 55%;
-                                    font-size: 20px;
-                                    padding: 0;
-                                }
-                                .cont {
-                                    width: 100%;
-                                    font-size: 14px;
-                                    font-weight: 400;
-                                    line-height: 24px;
-                                    margin: 0;
-                                }
-                            }
                         }
                     }
                 }
