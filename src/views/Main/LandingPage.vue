@@ -169,8 +169,7 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted, watch, ref } from 'vue';
-import { state } from '@/main';
+import { onMounted, ref } from 'vue';
 
 let showThis = ref(false);
 
@@ -203,6 +202,7 @@ window.addEventListener('scroll', () => {
 })
 
 onMounted(() => {
+    document.querySelector('main').classList.add('landing');
 
     function cardMove() {
         let features = document.querySelector('.features');
@@ -243,28 +243,16 @@ onMounted(() => {
             seeMobile();
         }
     });
-
-    // watch(() => state.viewport, (viewport) => {
-    //     if(viewport == 'mobile') {
-    //         seeMobile();
-    //     } else {
-    //         seePC();
-    //     }
-    // }, {
-    //     immediate: true
-    // })
 })
 </script>
 
 <style lang="less">
 main {
-    max-width: unset !important;
-    margin: unset !important;
-    padding: unset !important;
-    box-sizing: unset !important;
-    height: 100%;
-    overflow-x: hidden;
-    background-color: #f5f5f5;
+    &.landing {
+        height: 100%;
+        overflow-x: hidden;
+        background-color: #f5f5f5;
+    }
 
     .sectionBox {
         .overflow {
@@ -1480,108 +1468,6 @@ main {
                     }
                 }
             }
-
-            // &.features {
-            //     width: 100%;
-
-            //     .feaCont {
-            //         width: 100%;
-            //         height: 100%;
-            //         padding: 0 20px;
-            //         box-sizing: border-box;
-
-            //         .cardTit {
-            //             width: 100%;
-            //             font-size: 28px;
-            //             padding-left: 0;
-
-            //             h3 {
-            //                 margin-bottom: 28px;
-            //             }
-            //         }
-
-            //         .cardWrap {
-            //             position: relative;
-            //             height: 100%;
-
-            //             .cardInner {
-            //                 width: 100%;
-            //                 display: flex;
-            //                 flex-wrap: wrap;
-            //                 align-items: center;
-            //                 justify-content: center;
-
-            //                 &:last-child {
-            //                     margin-bottom: 0;
-            //                 }
-
-            //                 .card {
-            //                     width: 350px;
-            //                     height: auto;
-            //                     padding: 40px;
-            //                     margin: 0;
-            //                     margin-bottom: 28px;
-            //                     flex-wrap: wrap;
-            //                     align-items: center;
-            //                     justify-content: space-between;
-                                
-            //                     &:first-child {
-            //                         .icon {
-            //                             img {
-            //                                 width: 88px;
-            //                             }
-            //                         }
-            //                     }
-            //                     &:nth-child(2) {
-            //                         .icon {
-            //                             img {
-            //                                 width: 65px;
-            //                             }
-            //                         }
-            //                         .cont {
-            //                             padding-top: 20px;
-            //                         }
-            //                     }
-            //                     &:nth-child(3) {
-            //                         .icon {
-            //                             img {
-            //                                 width: 77px;
-            //                             }
-            //                         }
-            //                         .cont {
-            //                             padding-top: 20px;
-            //                         }
-            //                     }
-            //                     &:last-child {
-            //                         margin-right: 0;
-        
-            //                         .icon {
-            //                             img {
-            //                                 width: 106px;
-            //                             }
-            //                         }
-            //                     }
-            //                     .icon {
-            //                         width: 40%;
-            //                         padding: 0;
-            //                     }
-            //                     .tit {
-            //                         width: 55%;
-            //                         font-size: 20px;
-            //                         padding: 0;
-            //                     }
-            //                     .cont {
-            //                         width: 100%;
-            //                         font-size: 14px;
-            //                         font-weight: 400;
-            //                         line-height: 24px;
-            //                         margin: 0;
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
         }
     }
 }
