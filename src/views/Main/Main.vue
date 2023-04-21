@@ -32,7 +32,7 @@ main(v-if="route.name === 'home'")
     router-view
 main.app(v-else-if="noLoginNeeded()")
     router-view
-main(v-else)
+main.app(v-else)
     .wrapper
         Login
 </template>
