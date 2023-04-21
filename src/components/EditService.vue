@@ -8,15 +8,15 @@
                 .toggle-ball(@click="toggle" :class="{'active': serviceStatus > 0 }")
         .input
             label Name of Service
-            sui-input(type="text" :disabled="promiseRunning ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
+            sui-input(type="text" :disabled="isDisabled" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         .input
             label CORS
-            sui-input(type="text" :disabled="promiseRunning ? 'true' : null" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
+            sui-input(type="text" :disabled="isDisabled" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
         .input(style="margin-bottom: 40px;")
             label API Key
-            sui-input(type="text" :disabled="promiseRunning ? 'true' : null" :value="apiKey" @input="(e) => apiKey = e.target.value")
-        sui-button.line-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="() => {if(!promiseRunning) { emit('close', ''); }}") Cancel
-        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="promiseRunning" :disabled="!state.user.email_verified || null") Save
+            sui-input(type="text" :disabled="isDisabled" :value="apiKey" @input="(e) => apiKey = e.target.value")
+        sui-button.text-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" :disabled="isDisabled" @click="emit('close', '')") Cancel
+        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="isDisabled" :disabled="isDisabled") Save
 sui-overlay(ref="disableConfirmOverlay")
     .popup
         .title
@@ -27,8 +27,8 @@ sui-overlay(ref="disableConfirmOverlay")
             p(v-if="service?.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
-            sui-button No 
-            sui-button.line-button Yes
+            sui-button.text-button(@click='confirmDisable()') Yes
+            sui-button(@click='disableConfirmOverlay.close()') No 
 sui-overlay(ref="disableErrorOverlay")
     .popup
         .title
@@ -36,7 +36,7 @@ sui-overlay(ref="disableErrorOverlay")
             div Something went wrong!
         .body {{ errorMessage }}
         .foot
-            sui-button(@click="()=> { disableErrorOverlay.close(); promiseRunning = false; }") Ok
+            sui-button(@click="()=> { disableErrorOverlay.close(); }") Ok
 </template>
 <!-- script below -->
 <script setup>
@@ -46,7 +46,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 import Icon from './Icon.vue';
 import SubmitButton from './SubmitButton.vue';
-import { checkCompatEnabled } from '@vue/compiler-core';
 
 const emit = defineEmits(['close']);
 
@@ -57,11 +56,11 @@ let pageTitle = inject('pageTitle');
 let service = inject('service');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
 let navbarBackDestination = inject('navbarBackDestination');
+let isDisabled = ref(false);
 const serviceStatus = ref(0);
 const serviceName = ref('');
 const cors = ref('');
 const apiKey = ref('');
-const promiseRunning = ref(false);
 const disableConfirmOverlay = ref(null);
 const errorMessage = ref('');
 const disableErrorOverlay = ref(null);
@@ -103,9 +102,31 @@ const validateCors = (event) => {
 		event.target.reportValidity();
     }
 }
+let confirmDisable = ()=>{
+    state.blockingPromise = new Promise(async res => {
+        disableConfirmOverlay.value.close();
+        let oldStatus = service.value.active === 0 ? 0 : 1;
+        try {
+            if(service.value.active > 0) {
+                service.value.active = 0;
+                await skapi.disableService(service.value.service);
+            } else {
+                service.value.active = 1;
+                await skapi.enableService(service.value.service);
+            }
+            await saveFunction();
+        } catch(e) {
+            service.value.active = oldStatus;
+            errorMessage.value = "Unable to toggle service status at this point.";
+            disableErrorOverlay.value.open();
+            console.error(e);
+        }
+        isDisabled.value = false;
+        res();
+    });
+}
 
 const save = async () => {
-    if(promiseRunning.value) return;
     if(
         service.value.active === serviceStatus.value &&
         service.value.name === serviceName.value &&
@@ -115,22 +136,19 @@ const save = async () => {
         emit('close', '');
         return;
     }
-    if(serviceStatus.value !== service.value.active) {
-        try {
-            await toggleService();
-        } catch(e) {
-            promiseRunning.value = false;
-            return false;
-        }
-    }
-    await saveFunction();
-    promiseRunning.value = false;
+
+    isDisabled.value = true;
     
+    if(serviceStatus.value !== service.value.active) {
+        disableConfirmOverlay.value.open();
+        return;
+    } else {
+        state.blockingPromise = saveFunction();
+    }
 }
 
 const saveFunction = async () => {
     let res;
-    promiseRunning.value = true;
 
     try {
         res = await skapi.updateService(service.value.service, {
@@ -138,54 +156,22 @@ const saveFunction = async () => {
             cors: cors.value,
             api_key: apiKey.value
         });
-    } catch(e) {
-        throw e;
-    } finally {
+        
         service.value.name = serviceName.value;
         service.value.cors = cors.value;
         service.value.api_key = apiKey.value;
-
-        emit('close', '');
+    } finally {
+        isDisabled.value = false;
     }
+        
+    emit('close', '');
+    
     return res;
 }
 
 const toggle = () => {
-    if(promiseRunning.value) return;
+    if(isDisabled.value) return;
     serviceStatus.value > 0 ? serviceStatus.value = 0 : serviceStatus.value = 1;
-}
-const toggleService = async() => {
-    return new Promise((res, rej) => {
-        disableConfirmOverlay.value.open();
-        const noButton = disableConfirmOverlay.value.querySelectorAll('sui-button')[0];
-        const yesButton = disableConfirmOverlay.value.querySelectorAll('sui-button')[1];
-
-        noButton.addEventListener('click', () => {
-            disableConfirmOverlay.value.close();
-            rej();
-        });
-
-        yesButton.addEventListener('click', async () => {    
-            promiseRunning.value = true;
-            disableConfirmOverlay.value.close();
-            let oldStatus = service.value.active === 0 ? 0 : 1;
-            try {
-                if(service.value.active > 0) {
-                    await skapi.disableService(service.value.service);
-                } else {
-                    service.value.active = 1;
-                    await skapi.enableService(service.value.service);
-                }
-                res();
-            } catch(e) {
-                service.value.active = oldStatus;
-                errorMessage.value = "Unable to toggle service status at this point.";
-                disableErrorOverlay.value.open();
-                console.error(e);
-            }
-        });
-
-    });
 }
 
 if(state.viewport === 'mobile') {
