@@ -202,7 +202,7 @@ sui-input[type=submit] {
 
 /** start sui-elements **/
 sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
-  border: 1px solid #8C8C8C;
+  border: 1px solid rgba(0, 0, 0, 0.4);
   background: #fff;
   box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
@@ -215,7 +215,7 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
   .dashboard &,
   .db-input {
     color: #fff;
-    border: 0.5px solid #8C8C8C;
+    border: 0.5px solid rgba(255, 255, 255, 0.4);
 
     input::placeholder {
       color: rgba(255, 255, 255, 0.4);
@@ -225,14 +225,13 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
   }
 
   &:focus-within {
-    border: 0;
+
     input {
-      border: 1px solid var(--primary-color);
+      outline: 1px solid var(--primary-color);
       box-shadow: 0 0 0 1px var(--primary-color) inset;
-      outline: 0;
 
       .dashboard & {
-        border: 1px solid var(--dark-highlight-color);
+        outline: 1px solid var(--dark-highlight-color);
         box-shadow: 0 0 0 1px var(--dark-highlight-color) inset;
       }
     }
@@ -323,7 +322,7 @@ sui-input[type=checkbox] {
 }
 
 sui-select {
-  border: 0.5px solid #8C8C8C;
+  border: 1px solid rgba(0, 0, 0, 0.4);
   background: rgba(255, 255, 255, 0.08);
   box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
 
@@ -331,10 +330,15 @@ sui-select {
     color: #fff;
   }
 
-  &:focus {
+  &:focus-within {
     // box-shadow: inset 2px 2px 0 var(--primary-color), inset -2px -2px 0 var(--primary-color);
     border-color: var(--primary-color);
     outline: 2px solid var(--primary-color);
+
+    .dashboard & {
+      border-color: var(--dark-highlight-color);
+      outline: 2px solid var(--dark-highlight-color);
+    }
   }
 }
 
@@ -386,7 +390,7 @@ sui-button {
   box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
 
   &:not(.text-button) {  
-    outline: .5px solid #8C8C8C;
+    border: 1px solid rgba(0, 0, 0, 0.4);
   }
 
   &:not([disabled],.fab):hover,
@@ -513,6 +517,7 @@ sui-button {
     background: transparent;
     outline: none;
     padding: .6em .6em;
+    box-shadow: none;
 
     &[disabled] {
       background: transparent;
@@ -521,6 +526,10 @@ sui-button {
     }
 
     &:not([disabled]):hover {
+      background: #FFFFFF14;
+    }
+    .dashboard &:active,
+    .dashboard &:focus {
       background: #FFFFFF14;
     }
   }

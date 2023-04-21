@@ -77,8 +77,8 @@ sui-overlay(ref='openRecord' @mousedown='()=>openRecord.close(() => { recordToOp
 
                                 .load-more(v-if="!t.records.endOfList")
                                     Icon.animation-rotation refresh
-                    .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
-                         span &nbsp;
+                .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
+                    span &nbsp;
                 .paginator.hideOnTablet
                     Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
@@ -329,7 +329,7 @@ watch(currentSelectedTableBatch, n => {
 document.body.classList.add('table');
 
 function scrollEventMobile(event) {
-    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+    if (viewport.value === 'mobile' && (window.document.documentElement.clientHeight + window.scrollY) >= document.body.offsetHeight - 60) {
         // scrolled to bottom
         getMoreTables();
     }

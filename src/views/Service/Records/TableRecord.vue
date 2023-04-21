@@ -104,7 +104,7 @@ function numberOfSkeletons() {
 }
 
 function scrollEventMobile(event) {
-    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+    if (viewport.value === 'mobile' && (window.document.documentElement.clientHeight + window.scrollY) >= document.body.offsetHeight - 60) {
         // scrolled to bottom
         fetchMoreRecords();
     }

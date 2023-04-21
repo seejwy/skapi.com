@@ -42,9 +42,12 @@
     sui-input {
         box-shadow: none;
         width: 100%;
+        background: transparent !important;
+        border: none !important;
 
-        input:focus {
-            outline: none;
+        &:focus-within input {
+            box-shadow: none !important;
+            outline: 0 !important;
         }
 
         &+span {

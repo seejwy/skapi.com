@@ -74,6 +74,13 @@ const removeTag = (index) => {
   border-radius: 5px;
   padding: 4px 4px;
   cursor: text;
+
+  &:focus-within {
+    .dashboard & {
+        border: 1px solid var(--dark-highlight-color);
+        box-shadow: 0 0 0 1px var(--dark-highlight-color) inset;
+      }
+  }
 }
 
 .tag {

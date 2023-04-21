@@ -26,24 +26,25 @@
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
             Login(v-else-if="!state.user")
-    .sidebar(v-if="state.user")
-        img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
-        img.hover-logo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
+    .sidebar-holder(v-if="state.user")
+        .sidebar
+            img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
+            img.hover-logo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
 
-        router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
-            Icon home
-            span Service Home
+            router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
+                Icon home
+                span Service Home
 
-        router-link(:to="{name: 'users'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'users'}") 
-            Icon users
-            span Users
+            router-link(:to="{name: 'users'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'users'}") 
+                Icon users
+                span Users
 
-        router-link(:to="{name: 'records'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'records'}")
-            Icon folder_open
-            span Records
+            router-link(:to="{name: 'records'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'records'}")
+                Icon folder_open
+                span Records
 
-        //- router-link(to='/')
-            //(:to="{name: 'mail'}")
+            //- router-link(to='/')
+                //(:to="{name: 'mail'}")
             //- Icon mail
 Transition(name="toast")
     .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
@@ -73,7 +74,13 @@ Transition(name="toast")
         }
     }
 
+    .sidebar-holder {
+        width: 52px;
+    }
+
     .sidebar {
+        position: absolute;
+        z-index: 10;
         background: var(--primary-color);
         overflow: hidden;
 
@@ -109,7 +116,7 @@ Transition(name="toast")
         & .logo {
             display: block;
             width: 32px;
-            margin: 14px 10px;
+            margin: 11px 10px;
             cursor: pointer;
 
             @media @ipad {

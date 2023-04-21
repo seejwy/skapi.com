@@ -24,7 +24,7 @@ div(v-else-if="state?.user")
                         .value {{ value || '-' }}
     .container.empty(v-else-if="isFetchingServices")
         Icon.animation-rotation(style="position: absolute; right: 24px; top: 24px; fill: var(--primary-color)") refresh
-    .container.empty(v-else)
+    .container.empty.no-service(v-else)
         div(style="position: absolute; width: 100%;")
             .title No Services
             span Get started by creating a new service. 
@@ -119,53 +119,38 @@ watch(() => state.viewport, (viewport) => {
 
 <style lang="less" scoped>
 @import '@/assets/variables.less';
-// .header {
-//     p, h1 {
-//         margin: 0;
-//     }
 
-//     h1 {
-//         font-size: 28px;
-//         margin-bottom: 20px;
-//     }
-
-//     & > div {
-//         display: flex;
-//         flex-direction: column;
-//         align-items: flex-start;
-//         align-items: flex-end;
-//         column-gap: 30px;
-//         row-gap: 24px;
-//         margin-bottom: 36px;
-//         line-height: 1.5;
-//     }
-
-//     p {
-//         color: rgba(0, 0, 0, 0.85);
-//     }
-
-//     sui-button {    
-//         flex-shrink: 0;
-//     }
-    
-//     sui-button svg {
-//         margin-right: 4px;
-//     }
-// }
 .container {
     &.empty {
         position: relative;
+        display: inline-flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
         background: #F5F5F5;
-        padding: 84px 0;
+        height: 175.33px;
         border-radius: 8px;
         text-align: center;
-        min-height: 220px;
+        
+        @media screen and (max-width: 825px) {
+            height: 156px;
+        }
+
+        @media @phone {
+            height: 123.33px;
+        }
+
+
 
         .title {
             font-size: 28px;
             font-weight: bold;
             color: rgba(0, 0, 0, 0.6);
             margin-bottom: 12px;
+        }
+
+        &.no-service {
+            min-height: 220px;
         }
     }
 
