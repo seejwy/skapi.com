@@ -13,12 +13,13 @@
                     :value="password.current.value"
                     @change="validatePassword"
                     autocomplete="current-password"
+                    :disabled="promiseRunning"
                     :required="true")
                 .error(v-if="password.current.error")
                     Icon warning
                     span {{ password.current.error }}
             .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                sui-button.line-button(type="button" @click="closePasswordChange" :disabled="promiseRunning") Cancel
                 SubmitButton(type="submit" :loading="promiseRunning") Continue
             .step-wrapper
                 .step.active
@@ -33,6 +34,7 @@
                     :value="password.new.value" 
                     @change="validatePassword"
                     autocomplete="new-password"
+                    :disabled="promiseRunning"
                     :required="true")
             .input
                 label New Password Confirm
@@ -42,12 +44,13 @@
                     :value="password.confirm.value" 
                     @change="validatePassword"
                     autocomplete="confirm-password"
+                    :disabled="promiseRunning"
                     :required="true")
                 .error(v-if="password.confirm.error")
                     Icon warning
                     span {{ password.confirm.error }}
             .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                sui-button.line-button(type="button" @click="closePasswordChange" :disabled="promiseRunning") Cancel
                 SubmitButton(:loading="promiseRunning") Change Password
             .step-wrapper
                 .step.clickable(@click="processStep = 0")

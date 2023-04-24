@@ -12,17 +12,17 @@ div(v-else-if="state?.user")
             hr(v-if="state.viewport === 'mobile'")
             .title Name
             .value(v-if="state.viewport === 'desktop'")
-                sui-input(v-if="isEdit" :disabled="true" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
+                sui-input(v-if="isEdit" :disabled="isSaving" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
                 span(v-else) {{  state.user.name }}
             .actions
             .mobile-value(v-if="state.viewport === 'mobile'")
-                sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
+                sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name" :disabled="isSaving")
                 span(v-else) {{  state.user.name }}
 
             hr
             .title(style="margin-bottom: 0;") Email
             .value(v-if="state.viewport === 'desktop'")
-                sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
+                sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value" :disabled="isSaving")
                 template(v-else)
                     span {{  state.user.email }}
                     .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
@@ -33,7 +33,7 @@ div(v-else-if="state?.user")
             .actions(v-if="!state.user.email_verified" @click="openVerifyEmail")
                 span Verify Email
             .mobile-value(v-if="state.viewport === 'mobile'")            
-                sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
+                sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value" :disabled="isSaving")
                 template(v-else)
                     span {{  state.user.email }}
                     .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
@@ -46,7 +46,7 @@ div(v-else-if="state?.user")
             .value(v-if="state.viewport === 'desktop'")
                 template(v-if="isEdit")
                     label
-                        sui-input(type="checkbox" :disabled="state.user.email_verified ? null : true" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
+                        sui-input(type="checkbox" :disabled="isSaving || !state.user.email_verified ? true : null" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
                         span I agree to receive information and news letters from Skapi via Email.
                 template(v-else-if="settings.email_subscription !== ''")
                     template(v-if="settings.email_subscription") Subscribed
@@ -61,18 +61,18 @@ div(v-else-if="state?.user")
                     template(v-if="settings.email_subscription") Subscribed
                     template(v-else) Not Subscribed
                 .actions(v-if="settings.email_subscription.isEdit")
-                    span.cancel(@click="settings.email_subscription.isEdit = false") Cancel
-                    span.save(@click="settings.email_subscription.isEdit = false") Save
+                    span.cancel(@click="settings.email_subscription.isEdit = false" :disabled="isSaving") Cancel
+                    span.save(@click="settings.email_subscription.isEdit = false" :disabled="isSaving") Save
             hr
             .title(style="margin-bottom: 0;") Password
             .value(v-if="state.viewport === 'desktop'")
             .actions
-                span(@click="state.viewport === 'desktop' ? passwordOverlay.open() : router.replace('?page=password')") Change Password
+                span(@click="() => { if(isSaving) return false; state.viewport === 'desktop' ? passwordOverlay.open() : router.replace('?page=password')}") Change Password
             .mobile-value(v-if="state.viewport === 'mobile'")
             hr
             .submit
                 template(v-if="isEdit")
-                    sui-button.line-button(type="button" @click="cancelEdit") Cancel
+                    sui-button.line-button(type="button" @click="cancelEdit" :disabled="isSaving") Cancel
                     SubmitButton(:loading="isSaving") Save
                 sui-button(v-else type="button" @click="isEdit = true") Edit Account
 
