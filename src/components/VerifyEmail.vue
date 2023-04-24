@@ -4,17 +4,17 @@ form.form.container(@submit.prevent="verifyEmail" action="")
     p Verification Email has been sent. Please check your email and enter the verification code.
     .input
         label Verification Code
-        sui-input(type="text" placeholder="Verification Code" @input="(e) => verificationCode.value = e.target.value" :value="verificationCode.value")
+        sui-input(:disabled="promiseRunning" type="text" placeholder="Verification Code" @input="(e) => verificationCode.value = e.target.value" :value="verificationCode.value")
     .input
         label Haven't got any code?
-        sui-button.line-button(type="button" @click="resendCode" :disabled="secondsTillReady")
+        sui-button.line-button(type="button" @click="resendCode" :disabled="promiseRunning || secondsTillReady")
             template(v-if="secondsTillReady") Code has been sent
             template(v-else) Re-send Code
         .error(v-if="verificationCode.error")
                 Icon warning
                 span {{ verificationCode.error }}
     .actions
-        sui-button.line-button(type="button" @click="close") Cancel
+        sui-button.line-button(type="button" @click="close" :disabled="promiseRunning") Cancel
         SubmitButton(:loading="promiseRunning") Verify
 </template>
 <!-- script below -->
@@ -37,6 +37,7 @@ const verificationCode = ref({
 const promiseRunning = ref(false);
 
 const verifyEmail = () => {
+    verificationCode.value.error = '';
     promiseRunning.value = true;
     skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
         state.user.email_verified = true;
