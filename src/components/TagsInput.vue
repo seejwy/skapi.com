@@ -64,6 +64,7 @@ const deleteTag = () => {
 }
 
 const removeTag = (index) => {
+  if(props.disabled) return false;
   tagArray.value.splice(index, 1);
   emits('change', tagArray);
 }
