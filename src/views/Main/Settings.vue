@@ -131,6 +131,8 @@ const emailOverlay = ref(null);
 const isSaving = ref(false);
 
 const openDeletePopup = async () => {
+    if(isSaving.value) return false;
+    
     isDelete.value = true;
     await nextTick();
     if(state.viewport === 'desktop') deleteAccountOverlay.value.open();
