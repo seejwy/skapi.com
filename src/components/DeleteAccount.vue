@@ -302,10 +302,10 @@ onBeforeUnmount(() => {
 .text-button {
     padding: 0;
     display: block;
-    &:hover {
-        background-color: transparent !important;
-    }
+    &:hover,
+    &:focus,
     &:active {
+        background-color: transparent !important;
         box-shadow: none !important;
     }
 }
