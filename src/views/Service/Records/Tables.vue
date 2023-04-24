@@ -13,7 +13,7 @@ sui-button.hideOnTablet(style='float:right;margin: 8px 0;' @click='()=>addRecord
 .hideOnTablet(style="clear:both;")
 
 // record view
-sui-overlay(ref='openRecord' @mousedown='()=>openRecord.close(() => { recordToOpen = null; })' style="background-color:rgba(0 0 0 / 60%)")
+sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
         ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close(() => { recordToOpen = null; })")
 
@@ -114,13 +114,12 @@ sui-overlay(ref='openRecord' @mousedown='()=>openRecord.close(() => { recordToOp
 <!-- script below -->
 <script setup>
 import { inject, ref, watch, computed, nextTick, onMounted, onBeforeUnmount, provide } from 'vue';
-import { skapi, getSize, dateFormat, groupArray } from '@/main';
+import { state, skapi, getSize, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import { tableList, recordTables, refreshTables, getMoreRecords } from './records.js';
 import RecordSearch from '@/components/recordSearch.vue';
 import ViewRecord from '../../../components/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
-import { state } from '../../../main';
 
 let openRecord = ref(null);
 let recordToOpen = inject('recordToOpen');

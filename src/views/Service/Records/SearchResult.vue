@@ -15,7 +15,7 @@ SearchNavBar(v-if='viewport === "mobile"')
 RecordSearch#recordSearch.hideOnTablet
 .hideOnTablet(style="clear:both;")
 
-sui-overlay(ref='openRecord' @click="()=> openRecord.close(() => { recordToOpen = null })" style="background-color:rgba(0 0 0 / 60%)")
+sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
         ViewRecord(v-if="recordToOpen" :record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
@@ -124,7 +124,7 @@ sui-overlay(ref='openRecord' @click="()=> openRecord.close(() => { recordToOpen 
 <!-- script below -->
 <script setup>
 import { inject, ref, watch, computed, nextTick, onBeforeUnmount } from 'vue';
-import { skapi, dateFormat, groupArray } from '@/main';
+import { state, skapi, dateFormat, groupArray } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import SearchNavBar from '@/components/SearchNavBar.vue';
@@ -195,6 +195,13 @@ let groupedRecordList = computed(() => {
     let recList = groupArray(searchResult.value.list, numberOfRecordPerPage, numberOfPagePerBatch);
     return recList;
 });
+
+const close = async() => {
+    await state.blockingPromise;
+    openRecord.value.close(() => {
+        recordToOpen.value = null;
+    });
+}
 
 watch(currentSelectedRecordPage, n => {
     // close opened table on page change

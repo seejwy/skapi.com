@@ -170,7 +170,9 @@ watch(() => route.name, () => {
     close();
 });
 
-function toParent() {
+async function toParent() {
+    await state.blockingPromise;
+    
     let p = navbarBackDestination.value;
     if (p === 'back') {
         router.go(-1);
