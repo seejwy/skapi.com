@@ -45,4 +45,7 @@ svg {
 	top: 50%;
 	transform: translateY(-50%);
 }
+::-ms-reveal {
+    display: none;
+}
 </style>
