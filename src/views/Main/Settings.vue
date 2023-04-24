@@ -12,7 +12,7 @@ div(v-else-if="state?.user")
             hr(v-if="state.viewport === 'mobile'")
             .title Name
             .value(v-if="state.viewport === 'desktop'")
-                sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
+                sui-input(v-if="isEdit" :disabled="true" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
                 span(v-else) {{  state.user.name }}
             .actions
             .mobile-value(v-if="state.viewport === 'mobile'")

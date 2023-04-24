@@ -1,11 +1,11 @@
 <template lang="pug">
 input(type="hidden" :value="tagArray?.join(',')")
-.tag-container(@click="input.focus()")
+.tag-container(@click="focusEl" :disabled="props.disabled")
   span.tag(v-for="(tag, index) in tagArray" @click.stop="")
     span {{ tag }}
     Icon(@click="removeTag(index)") X
     //- do not remove the extra space in .tag-input
-  .tag-input(ref="input" contenteditable="true" tabindex="0" @keydown.enter.space.prevent="addTag" @input="addTag" @keydown.delete="deleteTag" @blur="addTag")  
+  .tag-input(v-if="!props.disabled" ref="input" contenteditable="true" tabindex="0" @keydown.enter.space.prevent="addTag" @input="addTag" @keydown.delete="deleteTag" @blur="addTag")  
 .error(v-if="inputError")
   Icon warning
   span  No special characters are allowed
@@ -14,7 +14,7 @@ input(type="hidden" :value="tagArray?.join(',')")
 import { reactive, ref } from 'vue';
 import Icon from './Icon.vue';
 
-const props = defineProps(['value']);
+const props = defineProps(['value', 'disabled']);
 const emits = defineEmits(['change']);
 const inputError = ref(false);
 let tagArray = ref([]);
@@ -24,6 +24,13 @@ if(props.value) {
 }
 
 const input = ref(null);
+
+const focusEl = () => {
+  if(!props.disabled) {
+    console.log(props.disabled);
+    input.value.focus();
+  }
+}
 
 const tagIsValid = (string) => {
   return !(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string));
@@ -73,7 +80,11 @@ const removeTag = (index) => {
   box-shadow: -1px -1px 1px rgb(0 0 0 / 25%), inset 1px 1px 1px rgb(0 0 0 / 50%);
   border-radius: 5px;
   padding: 4px 4px;
-  cursor: text;
+  min-height: 40px;
+
+  &:not([disabled]) {
+    cursor: text;
+  }
 
   &:focus-within {
     .dashboard & {

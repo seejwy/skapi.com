@@ -3,9 +3,9 @@
     form.dashboard(@submit.prevent="createNewService" action="")
         .overlay-container-title.hideOnTablet Create a New Service
         .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
-        sui-input(type="text" :disabled="isCreatingService ? 'true' : null" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
-        sui-button.line-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
-        SubmitButton(:loading="isCreatingService") Create
+        sui-input(type="text" :disabled="isDisabled" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
+        sui-button.line-button(v-if="state.viewport === 'desktop'" :disabled="isDisabled" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
+        SubmitButton(:loading="isDisabled" :disabled="isDisabled") Create
 </template>
 <!-- script below -->
 <script setup>
@@ -24,6 +24,7 @@ let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
 const serviceName = ref('');
+const isDisabled = ref(false);
 
 if(state.viewport === 'mobile') {
     pageTitle.value = 'Create a new Service'
@@ -104,11 +105,12 @@ const calculateDistance = (locale, region) => {
     return d;
 }
 
-const createNewService = async () => {
-    if(isCreatingService.value) { return false; }
+const createNewService = async() => {
+    isDisabled.value = true;
     const serviceLocale = getClosestRegion();
-    isCreatingService.value = true;
-    let res = await skapi.createService({region: serviceLocale, name: serviceName.value});
+    state.blockingPromise = skapi.createService({region: serviceLocale, name: serviceName.value});
+    let res = await state.blockingPromise;
+    isDisabled.value = false;
     router.push(`/dashboard/${res.service}`);
 }
 

@@ -49,12 +49,29 @@ let pageTitle = inject('pageTitle');
 let appStyle = inject('appStyle');
 let viewport = inject('viewport');
 const currentBgColor = appStyle.background;
+
+onMounted(() => {
+    if(document.body.classList.contains('dashboard')) {
+        document.body.classList.remove('dashboard');
+        document.body.classList.add('dashboard-login');
+    }
+
+});
+
 onBeforeUnmount(() => {
     appStyle.background = currentBgColor;
+    if(document.body.classList.contains('dashboard-login')) {
+        document.body.classList.remove('dashboard-login');
+        if(route.path.includes('/dashboard')) {
+            document.body.classList.add('dashboard');
+        }
+    }
 })
+
 if(state.viewport === 'mobile') {
     appStyle.background = '#fff';
 }
+
 pageTitle.value = 'skapi';
 let form = reactive({
     email: '',

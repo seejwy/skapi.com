@@ -3,8 +3,6 @@ import App from './App.vue';
 import router from './router';
 import './assets/main.less';
 
-// hi
-
 // init state
 const state = reactive({
     user: null,
@@ -17,7 +15,8 @@ const state = reactive({
         localStorage.setItem('showVerificationMessage', new Date().getTime());
         state.showVerificationNotification = false;
     },
-    viewportOnChange: (v) => v
+    viewportOnChange: (v) => v,
+    blockingPromise: new Promise(res=>res())
 });
 
 // init skapi

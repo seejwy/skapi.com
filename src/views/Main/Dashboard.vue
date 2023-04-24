@@ -27,7 +27,7 @@ div(v-else-if="state?.user")
     .container.empty.no-service(v-else)
         div(style="position: absolute; width: 100%;")
             .title No Services
-            span Get started by creating a new service. 
+            span Get started by creating a new service.
     Transition(name="toast")
         .toast(v-if="state.user && !state.user.email_verified && state.showVerificationNotification")
             Icon warning_bell
@@ -35,9 +35,9 @@ div(v-else-if="state?.user")
             div
             .body Please verify your email to prevent your services from shutting down.
             Icon.close(@click="state.setVerificationDelay") X2
-    sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="isOpen = false")
+    sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeNewServiceWindow")
         div.overlay
-            NewService(@close="isOpen = false")
+            NewService(@close="closeNewServiceWindow")
 </template>
 <script setup>
 import { inject, ref, watch, nextTick, computed } from 'vue';
@@ -65,6 +65,11 @@ const filterServiceDetails = (service) => {
         'CORS': service.cors,
         'Date Created': dateFormat(service.timestamp).split(' ')[0]
     }
+}
+
+const closeNewServiceWindow = async () => {
+    await state.blockingPromise;
+    newServiceWindow.value.close(() => isOpen.value = false);
 }
 
 const openNewServiceWindow = () => {
