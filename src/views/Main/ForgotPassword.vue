@@ -12,6 +12,7 @@
                         placeholder="E.g. someone@gmail.com"
                         :value="email"
                         @input="(e) => email = e.target.value"
+                        :disabled="promiseRunning"
                         required)
                 .error(v-if="forgotError") {{ forgotError }}
                 SubmitButton(:loading="promiseRunning") Continue
@@ -28,10 +29,11 @@
                         :value="code"
                         @input="(e) => { code = e.target.value; resetError = null; }"
                         placeholder="Enter verification code"
+                        :disabled="promiseRunning"
                         required)
                 .input
                     span Haven't got any code?
-                    sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(secondsTillReady || forgotError || isRequestingCode) || null") 
+                    sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(promiseRunning || secondsTillReady || forgotError || isRequestingCode) || null") 
                         template(v-if="forgotError") {{ forgotError }}
                         template(v-else-if="isRequestingCode") 
                             LoadingAnimation
@@ -44,6 +46,7 @@
                         @input="e=> { password = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='password' 
                         @change="validatePassword" 
+                        :disabled="promiseRunning"
                         :required="true")
                 .input
                     label Retype New Password
@@ -52,11 +55,12 @@
                         @input="e=> { passwordConfirm = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='passwordConfirm' 
                         @change="validatePassword" 
+                        :disabled="promiseRunning"
                         :required="true")
                 .error(v-if="resetError") {{ resetError }}
                 SubmitButton(:loading="promiseRunning") Change Password
         template(v-else)
-            Icon check_circle
+            Icon.success check_circle
             h1 New Password Success
             p Your password has been changed successfully. Please login with new password.
             sui-button(type="button" @click="router.push('/dashboard')") Login
@@ -91,7 +95,7 @@ const promiseRunning = ref(false);
 const passwordField = ref(null);
 const confirmPasswordField = ref(null);
 
-let step = ref(1);
+let step = ref(3);
 
 onBeforeMount(async() => {
     await skapi.getConnection().then(() => {
@@ -308,6 +312,13 @@ const changePassword = () => {
         display: block;
     }
 }
+.success {
+    color: #5AD858;
+    margin-bottom: 20px;
+    width: 56px;
+    height: 56px;
+}
+
 .navigator {
     margin-top: 56px;
     .ball {
