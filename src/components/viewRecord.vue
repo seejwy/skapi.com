@@ -1118,6 +1118,7 @@ defineExpose({
 
 					label sui-input {
 						margin-left: 8px;
+						vertical-align: middle;
 					}
 				}
 
@@ -1306,6 +1307,7 @@ defineExpose({
 
 				sui-input {
 					margin-left: 10px;
+					vertical-align: middle;
 				}
 			}
 
