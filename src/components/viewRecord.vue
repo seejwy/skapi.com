@@ -825,6 +825,7 @@ const addField = () => {
 };
 
 const removeField = (index) => {
+	if(isSaving.value) return true;
 	data.value.splice(index, 1);
 };
 
