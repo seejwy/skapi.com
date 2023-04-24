@@ -8,14 +8,16 @@ form.container.login(@submit.prevent="login" action="")
             :value='form.email' 
             @input="e=>form.email = e.target.value"
             @change="validateEmail"
+            :disabled="promiseRunning"
             placeholder="E.g. someone@gmail.com"
             required)
     .input
         label Password
-        PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Enter password" :required="true")
+        PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Enter password" :required="true" :disabled="promiseRunning")
     .action
         label
             sui-input(type="checkbox" 
+                :disabled="promiseRunning"
                 @input="(e)=>rememberme = e.target.checked"
 				:checked="rememberme ? true : null")
             span Stay logged in
