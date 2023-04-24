@@ -95,7 +95,7 @@ const promiseRunning = ref(false);
 const passwordField = ref(null);
 const confirmPasswordField = ref(null);
 
-let step = ref(3);
+let step = ref(1);
 
 onBeforeMount(async() => {
     await skapi.getConnection().then(() => {
