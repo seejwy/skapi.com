@@ -840,7 +840,7 @@ main {
                     background-color: #434343;
                     border-radius: 0;
                     color: #fff;
-                    overflow: scroll;
+                    overflow-x: scroll;
                     font-size: 16px;
                     font-weight: 400;
                     line-height: 24px;
