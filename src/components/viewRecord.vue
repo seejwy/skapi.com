@@ -106,7 +106,7 @@
 	.foot(v-if='!isMobileUrl')
 		sui-button.line-button(type="button" @click="close" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
-.container(v-else-if="isEdit")
+.container(v-else-if="isEdit" :loading="isSaving || null")
 	form(ref="formConfig")
 		.head(:class="{'mobile-head': isMobileUrl}")
 			.title {{ !isMobileUrl ? form.record_id || 'Add Record' : ''}}
@@ -119,7 +119,7 @@
 			.row
 				.section(style="width: 100%;")
 					.name Table Name
-					sui-input(required :value="form.table.name" @input="(e) => form.table.name = e.target.value" :disabled="isSaving")
+					sui-input(required :value="form.table.name" @input="(e) => form.table.name = e.target.value")
 
 			.row
 				.section
@@ -129,10 +129,10 @@
 							Icon(slot="tool") question
 							div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
 
-					sui-input(ref="referenceIdField" :value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => { form.reference.record_id = e.target.value; e.target.setCustomValidity(''); }" :disabled="isSaving")
+					sui-input(ref="referenceIdField" :value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => { form.reference.record_id = e.target.value; e.target.setCustomValidity(''); }")
 				.section
 					.name Access Group
-					sui-select(:value="form.table.access_group.toString()" @change="(e) => form.table.access_group = e.target.value" style="min-width: 160px;" :disabled="isSaving")
+					sui-select(:value="form.table.access_group.toString()" @change="(e) => form.table.access_group = e.target.value" style="min-width: 160px;")
 						option(value="0") Public 
 						option(value="1") Registered
 
@@ -151,7 +151,6 @@
 						pattern="[a-zA-Z0-9.]+"
 						@input="(e)=> {form.index.name = e.target.value; e.target.setCustomValidity('')}"
 						@invalid="(e) => e.target.setCustomValidity('Index name must not have spaces or special characters')"
-						:disabled="isSaving"
 						)
 
 			.row
@@ -159,7 +158,7 @@
 					.name Index Value
 					.row(style="row-gap: 16px;")
 						.section(style="flex-grow: 0")
-							sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => { indexValueType = e.target.value; form.index.value = indexValueType === 'boolean' ? true : ''; indexNameField.children[0].setCustomValidity('') }" :disabled="isSaving")
+							sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => { indexValueType = e.target.value; form.index.value = indexValueType === 'boolean' ? true : ''; indexNameField.children[0].setCustomValidity('') }")
 								option(disabled) Value Type
 								option(value="string") String
 								option(value="number") Number
@@ -167,9 +166,9 @@
 						.section
 							.radio-container(v-if="indexValueType === 'boolean'")
 								label True
-									sui-input(@change="form.index.value = true" type="radio" :checked="form.index.value === true || null" name="index_value" :disabled="isSaving")
+									sui-input(@change="form.index.value = true" type="radio" :checked="form.index.value === true || null" name="index_value")
 								label False
-									sui-input(@change="form.index.value = false" type="radio" :checked="form.index.value === false || null" name="index_value" :disabled="isSaving")
+									sui-input(@change="form.index.value = false" type="radio" :checked="form.index.value === false || null" name="index_value")
 							sui-input(
 								v-else
 								:type="indexValueType === 'number' ? 'number' : 'text'"
@@ -177,8 +176,7 @@
 								:value="form.index.value"
 								pattern="[a-zA-Z0-9' ']+"
 								@invalid="(e) => e.target.setCustomValidity('Index value must not have special characters')"
-								@input="(e)=> { form.index.value = e.target.value; e.target.setCustomValidity(''); !e.target.value ? indexNameField.children[0].setCustomValidity('') : null; }"
-								:disabled="isSaving")
+								@input="(e)=> { form.index.value = e.target.value; e.target.setCustomValidity(''); !e.target.value ? indexNameField.children[0].setCustomValidity('') : null; }")
 
 			.row
 				.section
@@ -188,8 +186,7 @@
 								type="checkbox" 
 								style="margin-right: 8px;"
 								@change="e=>form.reference.reference_limit = e.target.checked ? null : 0"
-								:checked="form.reference?.reference_limit !== 0 ? true : null"
-								:disabled="isSaving")
+								:checked="form.reference?.reference_limit !== 0 ? true : null")
 
 							span Allow Reference
 
@@ -202,8 +199,7 @@
 									style="margin-left: 8px"
 									type="checkbox"
 									@input="(e)=>form.reference.allow_multiple_reference = e.target.checked"
-									:checked="form.reference.allow_multiple_reference ? true : null"
-									:disabled="isSaving")
+									:checked="form.reference.allow_multiple_reference ? true : null")
 
 						div
 							span Reference Limit:
@@ -212,8 +208,7 @@
 								min="1"
 								placeholder="Infinite"
 								:value="form.reference.reference_limit === null ? '' : (form.reference?.reference_limit || '').toString()"
-								@input="(e) => form.reference.reference_limit = e.target.value ? parseInt(e.target.value) : null"
-								:disabled="isSaving")
+								@input="(e) => form.reference.reference_limit = e.target.value ? parseInt(e.target.value) : null")
 
 			// private_access temporarily removed. will be brought back with better scalable structure
 			//- .row
@@ -227,7 +222,7 @@
 				.data-name-action
 					.select-input
 						.select-field
-							sui-select(:value="record.type" @change="(e) => record.type = e.target.value" :disabled="isSaving")
+							sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
 								option(disabled) Value Type
 								option(value="string") String
 								option(value="number") Number
@@ -235,9 +230,9 @@
 								option(value="file") File
 								option(value="json") JSON
 						.input-field
-							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required :disabled="isSaving")
+							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
 					.action
-						sui-button.icon-button(@click="removeField(recordIndex)" :disabled="isSaving")
+						sui-button.icon-button(@click="removeField(recordIndex)")
 							Icon trash
 				.data-values
 					template(v-if="record.type === 'file'")
@@ -246,7 +241,7 @@
 							div
 								Icon attached
 								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR
-								sui-button.line-button(@click.prevent.stop="" type="button" :disabled="isSaving") Upload
+								sui-button.line-button(@click.prevent.stop="" type="button") Upload
 							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
 								Icon warning
 								span You must upload a file
@@ -272,23 +267,23 @@
 						div
 							label
 								span True
-								sui-input(type="radio" :name="record.key" value="true" :checked="record.data !== false ? true : null" :disabled="isSaving")
+								sui-input(type="radio" :name="record.key" value="true" :checked="record.data !== false ? true : null")
 						div
 							label 
 								span False
-								sui-input(type="radio" :name="record.key" value="false" :checked="record.data === false ? true : null" :disabled="isSaving")
+								sui-input(type="radio" :name="record.key" value="false" :checked="record.data === false ? true : null")
 
-					sui-input.data-input-field(v-else-if="record.type === 'number'" style="height: auto;" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()" :disabled="isSaving")
+					sui-input.data-input-field(v-else-if="record.type === 'number'" style="height: auto;" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
 
-					sui-input.data-input-field(v-else type="text" style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value" :value="record.data.toString()" :disabled="isSaving") {{  record.data  }}
+					sui-input.data-input-field(v-else type="text" style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value" :value="record.data.toString()") {{  record.data  }}
 
 			div
-				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField" :disabled="isSaving") Add Data
+				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
 		.foot(v-if='!isMobileUrl')
-			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;" :disabled="isSaving").line-button Cancel
+			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").line-button Cancel
 			div(style="display: inline-block")
-				sui-button(v-if="isSaving" type="button" :disabled="isSaving")
+				sui-button(v-if="isSaving" type="button")
 					span(style="visibility: hidden;") Save
 					Icon.animation-rotation--slow-in-out(style=" position: absolute;") loading
 				sui-button(v-else type="button" @click="save") Save

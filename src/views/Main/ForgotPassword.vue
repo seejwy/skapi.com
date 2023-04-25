@@ -1,6 +1,6 @@
 <template lang="pug">
-.wrapper
-    .container
+.wrapper(:loading="promiseRunning || null")
+    .container(:loading="promiseRunning || null")
         template(v-if="step === 1")
             form(@submit.prevent="forgotPassword")
                 h1 Forgot Password
@@ -12,7 +12,6 @@
                         placeholder="E.g. someone@gmail.com"
                         :value="email"
                         @input="(e) => email = e.target.value"
-                        :disabled="promiseRunning"
                         required)
                 .error(v-if="forgotError") {{ forgotError }}
                 SubmitButton(:loading="promiseRunning") Continue
@@ -29,11 +28,10 @@
                         :value="code"
                         @input="(e) => { code = e.target.value; resetError = null; }"
                         placeholder="Enter verification code"
-                        :disabled="promiseRunning"
                         required)
                 .input
                     span Haven't got any code?
-                    sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(promiseRunning || secondsTillReady || forgotError || isRequestingCode) || null") 
+                    sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(secondsTillReady || forgotError || isRequestingCode) || null") 
                         template(v-if="forgotError") {{ forgotError }}
                         template(v-else-if="isRequestingCode") 
                             LoadingAnimation
@@ -45,8 +43,7 @@
                         ref="passwordField"
                         @input="e=> { password = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='password' 
-                        @change="validatePassword" 
-                        :disabled="promiseRunning"
+                        @change="validatePassword"
                         :required="true")
                 .input
                     label Retype New Password
@@ -55,7 +52,6 @@
                         @input="e=> { passwordConfirm = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='passwordConfirm' 
                         @change="validatePassword" 
-                        :disabled="promiseRunning"
                         :required="true")
                 .error(v-if="resetError") {{ resetError }}
                 SubmitButton(:loading="promiseRunning") Change Password

@@ -88,17 +88,17 @@ template(v-else)
         div.overlay
             EditService(@close="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
 sui-overlay(ref="deleteConfirmOverlay")
-    form.popup(@submit.prevent="deleteService" action="")
+    form.popup(@submit.prevent="deleteService" action="" :loading="isDisabled || null")
         .title
             Icon warning
             div Deleting Service?
         .body 
             p Are you sure you want to delete "{{ service.name }}" permanently? #[br] You will not be able to undo this action.
             p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
-            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value" :disabled="isDisabled")
+            sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
         .foot
-            SubmitButton(:loading="isDisabled" :disabled="isDisabled" class="text-button") Delete
-            sui-button(type="button" :disabled="isDisabled" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = 'hello'}") Cancel
+            sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = 'hello'}").text-button Cancel
+            SubmitButton(:loading="isDisabled" class="text-button") Delete
 sui-overlay(ref="deleteErrorOverlay")
     .popup
         .title

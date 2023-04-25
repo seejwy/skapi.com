@@ -1,26 +1,25 @@
 <template lang="pug">
-.wrapper
+.wrapper(:loading="promiseRunning || null")
     form.container(@submit.prevent="signup" action="")
         h1 Signup
         .input
             label Email
-            sui-input(:disabled="promiseRunning" @change="validateEmail" :value='form.email' @input="e=> { form.email = e.target.value; error = '' }" placeholder="E.g. someone@gmail.com" required)
+            sui-input(@change="validateEmail" :value='form.email' @input="e=> { form.email = e.target.value; error = '' }" placeholder="E.g. someone@gmail.com" required)
         .input
             label Name
-            sui-input(:disabled="promiseRunning" type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
+            sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
         .input
             label Password            
-            PasswordInput(:disabled="promiseRunning" ref="passwordField" @input="e=> { form.password = e.target.value; e.target.setCustomValidity(''); }" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
+            PasswordInput(ref="passwordField" @input="e=> { form.password = e.target.value; e.target.setCustomValidity(''); }" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
         .input
             label Password Confirm
-            PasswordInput(:disabled="promiseRunning" ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); }" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true")
+            PasswordInput(ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); }" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true")
         .error(v-if="error")
             Icon warning
             span {{ error }}
         .input.checkbox
             Label 
                 sui-input(
-                    :disabled="promiseRunning" 
                     type="checkbox" 
                     @input="(e)=> form.subscribe = e.target.checked"
                     :checked="rememberme ? true : null")

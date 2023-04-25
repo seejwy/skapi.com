@@ -10,7 +10,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         a(href="https://docs.skapi.com" target="_blank")
             sui-button.line-button(style="float: right") Read Doc
     div(style="clear:both;")
-.actions-wrapper(v-if="viewport === 'desktop'")
+.actions-wrapper(v-if="viewport === 'desktop'" :loading="promiseRunning || null")
     form(@submit.prevent="search" action="")
         .search-input-wrapper
             sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); searchParams.value = '';}")
@@ -61,7 +61,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         sui-button.text-button(@click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon trash
             span.hide-when-pre-tablet delete
-.table-outer-wrapper
+.table-outer-wrapper(:loading="promiseRunning || null")
     .search-query(v-if="route.query.search && viewport === 'desktop'")
         span Result of {{ visibleFields[route.query.search].text }} : "{{ route.query.value }}" {{ route.query.condition }}
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
@@ -103,7 +103,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             thead(v-if="groupedUserList?.length && (!fetchingData || groupedUserList?.length)")
                 tr(:class="{rounded: fetchingData || null}")
                     th
-                        sui-input(v-if="viewport === 'desktop'" :disabled="promiseRunning || null" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                        sui-input(v-if="viewport === 'desktop'" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
                     th(v-if="viewport === 'mobile'" style="width: 52px;") Block
                     th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
@@ -111,7 +111,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 template(v-if="viewport === 'desktop'")
                     tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']" :id="user['user_id']")
                         td
-                            sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
                         td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
                             template(v-if="key === 'approved'")
                                 Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
