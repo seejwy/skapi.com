@@ -97,7 +97,7 @@ sui-overlay(ref="deleteConfirmOverlay")
             p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
         .foot
-            sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = 'hello'}").text-button Cancel
+            sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = ''}").text-button Cancel
             SubmitButton(:loading="isDisabled" class="text-button") Delete
 sui-overlay(ref="deleteErrorOverlay")
     .popup
