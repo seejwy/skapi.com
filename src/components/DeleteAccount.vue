@@ -172,6 +172,7 @@ const deleteAccount = async (e) => {
         try {        
             await Promise.all(reasonPromiseArray);
             await skapi.disableAccount();
+            state.services = null;
             await router.push('/deleted');
             state.user = null;
         } catch(e) {
