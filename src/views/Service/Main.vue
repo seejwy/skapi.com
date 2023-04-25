@@ -79,7 +79,6 @@ Transition(name="toast")
     }
 
     .sidebar {
-        position: absolute;
         z-index: 10;
         background: var(--primary-color);
         overflow: hidden;
@@ -106,7 +105,7 @@ Transition(name="toast")
         height: 100%;
         min-height: 100vh;
         width: 52px;
-        position: sticky;
+        position: fixed;
         top: 0;
         &>* {
             display: inline-block;
