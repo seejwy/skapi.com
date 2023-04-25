@@ -2,13 +2,12 @@
 .container(v-if="!isEdit && props.record?.record_id")
 	.head(:class="{'mobile-head': isMobileUrl}")
 		.title {{ !isMobileUrl ? props.record.record_id : '' }}
+			sui-button.icon-button.hideOnMobile(@click="() => deleteConfirmOverlay.open()")
+				Icon trash
 		.menu
 			ul
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
 				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
-
-			.action(@click="deleteConfirmOverlay.open")
-				Icon trash
 	.content(:class="{desktop:!isMobileUrl}")
 		.grid(v-if="view === 'information'")
 			.grid-item.title Record ID
@@ -237,8 +236,9 @@
 								option(value="json") JSON
 						.input-field
 							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required :disabled="isSaving")
-					.action(@click="removeField(recordIndex)")
-						Icon trash
+					.action
+						sui-button.icon-button(@click="removeField(recordIndex)" :disabled="isSaving")
+							Icon trash
 				.data-values
 					template(v-if="record.type === 'file'")
 						.file-upload-area(@dragenter.stop.prevent="" @dragover.stop.prevent="" @drop.stop.prevent="e=>onDrop(e, recordIndex)" @click="openFileInput")
@@ -917,8 +917,14 @@ defineExpose({
 	}
 
 	.title {
+		display: flex;
+		justify-content: space-between;
 		padding: 18px 20px 24px 20px;
 		font-weight: bold;
+
+		sui-button {
+			margin: -0.6em;
+		}
 	}
 
 	.menu {
