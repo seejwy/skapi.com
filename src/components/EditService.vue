@@ -27,7 +27,7 @@ sui-overlay(ref="disableConfirmOverlay")
             p(v-if="service?.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
-            sui-button.text-button(@click='confirmDisable()') Yes
+            sui-button.text-button(@click="rejectDisable") No 
             sui-button(@click='disableConfirmOverlay.close()') No 
 sui-overlay(ref="disableErrorOverlay")
     .popup
@@ -102,7 +102,13 @@ const validateCors = (event) => {
 		event.target.reportValidity();
     }
 }
-let confirmDisable = ()=>{
+
+let rejectDisable = () => {
+    disableConfirmOverlay.value.close();
+    isDisabled.value = false;
+}
+
+let confirmDisable = () => {
     state.blockingPromise = new Promise(async res => {
         disableConfirmOverlay.value.close();
         let oldStatus = service.value.active === 0 ? 0 : 1;
