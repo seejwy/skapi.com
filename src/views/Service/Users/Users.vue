@@ -95,12 +95,12 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 Icon trash
 
     .table-wrapper
-        table(v-if="viewport === 'mobile' && fetchingData")
+        table(v-if="viewport === 'mobile' && !groupedUserList?.length && fetchingData")
             tbody
                 tr(v-for="x in numberOfSkeletons()").animation-skeleton
                     td
         table(v-else)
-            thead(v-if="groupedUserList?.length && !fetchingData")
+            thead(v-if="groupedUserList?.length && (!fetchingData || groupedUserList?.length)")
                 tr(:class="{rounded: fetchingData || null}")
                     th
                         sui-input(v-if="viewport === 'desktop'" :disabled="promiseRunning || null" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
@@ -149,6 +149,12 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                                         span(v-else) User
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
+                    template(v-if="fetchingData")
+                        tr(v-for="x in numberOfSkeletons()").animation-skeleton
+                            td
+                            td(style="width: 52px;")
+                            td
+                            td
     .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
         template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
