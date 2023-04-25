@@ -169,7 +169,7 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onBeforeUnmount } from 'vue';
 
 let showThis = ref(false);
 
@@ -243,7 +243,12 @@ onMounted(() => {
             seeMobile();
         }
     });
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('scroll', cardMove);
+    })
 })
+
 </script>
 
 <style lang="less">
