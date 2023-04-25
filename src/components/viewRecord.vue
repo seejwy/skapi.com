@@ -192,16 +192,14 @@
 
 					// reference not allowed when if reference_limit is 0
 					.reference-container(v-if="form.reference.reference_limit !== 0")
-						div
-							label
-								span Allow Multiple Reference
-								sui-input#allow_multiple_reference(
-									style="margin-left: 8px"
-									type="checkbox"
-									@input="(e)=>form.reference.allow_multiple_reference = e.target.checked"
-									:checked="form.reference.allow_multiple_reference ? true : null")
-
-						div
+						label
+							span Allow Multiple Reference
+							sui-input#allow_multiple_reference(
+								style="margin-left: 8px"
+								type="checkbox"
+								@input="(e)=>form.reference.allow_multiple_reference = e.target.checked"
+								:checked="form.reference.allow_multiple_reference ? true : null")
+						label
 							span Reference Limit:
 							input.line-input(
 								type="number"
@@ -1292,10 +1290,10 @@ defineExpose({
 				padding: 12px;
 				background: #434343;
 				border-radius: 4px;
-
-				&>div {
+				
+				label {
 					display: flex;
-					align-items: flex-end;
+    				align-items: center;
 					flex-basis: calc(50% - 16px);
 					white-space: nowrap;
 					flex-grow: 1;
