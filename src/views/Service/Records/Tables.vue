@@ -290,7 +290,8 @@ function viewRecordList(t) {
 // watchers
 let appStyle = inject('appStyle');
 
-const close = () => {
+const close = async() => {
+    await state.blockingPromise;
     viewRecord.value.close();
 }
 
