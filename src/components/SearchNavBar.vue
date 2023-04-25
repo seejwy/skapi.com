@@ -5,6 +5,17 @@
         slot
     slot(name="right")
 </template>
+<script setup>
+import { inject, onMounted, onUnmounted } from 'vue';
+
+const appStyle = inject('appStyle');
+onMounted(() => {
+    appStyle.mainPadding = '0';
+})
+onUnmounted(() => {
+    appStyle.mainPadding = null;
+})
+</script>
 <style lang="less">
 @import '@/assets/variables.less';
 
