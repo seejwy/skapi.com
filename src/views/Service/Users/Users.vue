@@ -140,15 +140,26 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                                 td(v-if="viewport === 'mobile'" style="width: 52px;")
                                     Icon(v-if="user['approved']?.includes('suspended')" style="opacity: 40%;") block
                                     Icon(v-else) unblock
-                                td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}"  @click="openUser(user['user_id'])") 
-                                    template(v-if="key === 'group'")                     
-                                        Icon(v-if="user[key] > 0") check_circle
-                                        Icon(v-else) x
-                                    template(v-else-if="key === 'access_group'")
-                                        span(v-if="user['group'] === 99") Admin
-                                        span(v-else) User
-                                    template(v-else) {{ user[key] || '-' }}
-                                td(v-if="computedVisibleFields.length <= 2")
+                                template(v-if="viewport === 'desktop'")
+                                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}"  @click="openUser(user['user_id'])") 
+                                        template(v-if="key === 'group'")                     
+                                            Icon(v-if="user[key] > 0") check_circle
+                                            Icon(v-else) x
+                                        template(v-else-if="key === 'access_group'")
+                                            span(v-if="user['group'] === 99") Admin
+                                            span(v-else) User
+                                        template(v-else) {{ user[key] || '-' }}
+                                    td(v-if="computedVisibleFields.length <= 2")
+                                template(v-else)
+                                    td(@click="openUser(user['user_id'])")
+                                        template(v-if="mobileVisibleField === 'group'")                     
+                                            Icon(v-if="user[mobileVisibleField] > 0") check_circle
+                                            Icon(v-else) x
+                                        template(v-else-if="mobileVisibleField === 'access_group'")
+                                            span(v-if="user['group'] === 99") Admin
+                                            span(v-else) User
+                                        template(v-else) {{ user[mobileVisibleField] || '-' }}
+                                    td
                     template(v-if="fetchingData")
                         tr(v-for="x in numberOfSkeletons()").animation-skeleton
                             td
@@ -440,9 +451,7 @@ async function getMoreUsers() {
     let result = await getMoreUsersQueue;
     serviceUsers.value.endOfList = result.endOfList;
 
-    result.list.map(user => {
-        serviceUsers.value.list.push(user);
-    });
+    serviceUsers.value.list = serviceUsers.value.list.concat(result.list);
 
     getMoreUsersQueue = null;
     currentSelectedUsersBatch.value++;
