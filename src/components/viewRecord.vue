@@ -295,8 +295,8 @@ sui-overlay(ref="deleteConfirmOverlay")
 			div Are you sure?
 		.body Are you sure you want to delete the record?
 		.foot
-			sui-button(@click="()=>deleteConfirmOverlay.close()") No 
-			sui-button.line-button(@click="deleteRecord") Yes
+			sui-button.text-button(@click="()=>deleteConfirmOverlay.close()") No 
+			sui-button.text-button(@click="deleteRecord") Yes
 sui-overlay(ref="exitEditOverlay")
 	.popup
 		.title
@@ -304,8 +304,8 @@ sui-overlay(ref="exitEditOverlay")
 			div Are you sure?
 		.body Are you sure you want to close? You are still editing.
 		.foot
-			sui-button(@click="()=>exitEditOverlay.close()") No 
-			sui-button.line-button(@click="confirmClose") Yes
+			sui-button.text-button(@click="()=>exitEditOverlay.close()") No 
+			sui-button.text-button(@click="confirmClose") Yes
 sui-overlay(ref="filesizeExceedsOverlay")
 	.popup
 		.title
