@@ -388,7 +388,7 @@ let searchResult = inject('searchResult');
 let getMoreUsersQueue = null;
 
 async function getMoreUsers() {
-    if (serviceUsers.value.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
+    if (serviceUsers.value?.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
         return;
     }
     fetchingData.value = true;
@@ -432,7 +432,7 @@ async function getMoreUsers() {
 }
 
 const mobileScrollHandler = (e) => {
-    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
         getMoreUsers();
     }
 }
