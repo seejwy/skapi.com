@@ -2,7 +2,7 @@
 .container(v-if="!isEdit && props.record?.record_id")
 	.head(:class="{'mobile-head': isMobileUrl}")
 		.title {{ !isMobileUrl ? props.record.record_id : '' }}
-			sui-button.icon-button.hideOnMobile(@click="() => deleteConfirmOverlay.open()")
+			sui-button.icon-button.hideOnTablet(@click="() => deleteConfirmOverlay.open()")
 				Icon trash
 		.menu
 			ul
