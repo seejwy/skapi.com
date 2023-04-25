@@ -68,14 +68,14 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             span(style="vertical-align:middle;") Clear
             Icon X2
     .table-actions(v-if="!route.query.search || viewport === 'desktop' && fetchingData" :class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
-        .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="showSetting = false")
-        .header-actions(v-if="!route.query.search || groupedUserList?.length" @click="showSetting = true")
+        .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="toggleSetting(false)")
+        .header-actions(v-if="!route.query.search || groupedUserList?.length" @click="toggleSetting(true)")
             div.dropdown
                 span Headers
                 Icon down2
             template(v-if="viewport === 'desktop'")
                 .filter-wrapper
-                    .filter(v-if="showSetting")
+                    .filter(ref="filterEl" v-if="showSetting")
                         .label(v-for="(field, key) in visibleFields")
                             label
                                 sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
@@ -207,7 +207,7 @@ sui-overlay(ref="confirmOverlay")
             sui-button.line-button Yes
 </template>
 <script setup>
-import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate } from 'vue';
+import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
 import { changeSearchCondition, visibleFields, getValidationMessage, placeholder } from './users';
 import { skapi, state, groupArray } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
@@ -229,6 +229,7 @@ let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
 const appStyle = inject('appStyle');
 const mobilePageTitle = ref('');
+const filterEl = ref(null);
 
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
@@ -242,6 +243,24 @@ const navbarBackDestination = inject('navbarBackDestination');
 const promiseRunning = ref(false);
 const confirmOverlay = ref(null);
 const actionType = ref('');
+
+const toggleSetting = async (state) => {
+    showSetting.value = state;
+    if(state) {
+        await nextTick();
+        window.addEventListener('scroll', setBodyHeight, true);
+    } else {
+        document.querySelector('.servicePageShell').style.height = null;
+    }
+}
+
+const setBodyHeight = () => {
+    let neededHeight = window.pageYOffset + filterEl.value?.getBoundingClientRect().top + filterEl.value.offsetHeight;
+    if(document.querySelector('.servicePageShell').offsetHeight < neededHeight) {
+        document.querySelector('.servicePageShell').style.height = neededHeight + 20 + 'px';
+        window.removeEventListener('scroll', setBodyHeight, true);
+    }
+}
 
 const openUser = (user_id) => {
     router.push({name: 'userView', params: {user_id}})
@@ -388,7 +407,7 @@ let searchResult = inject('searchResult');
 let getMoreUsersQueue = null;
 
 async function getMoreUsers() {
-    if (serviceUsers.value.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
+    if (serviceUsers.value?.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
         return;
     }
     fetchingData.value = true;
@@ -432,7 +451,7 @@ async function getMoreUsers() {
 }
 
 const mobileScrollHandler = (e) => {
-    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
         getMoreUsers();
     }
 }

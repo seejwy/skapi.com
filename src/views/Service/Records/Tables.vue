@@ -64,7 +64,7 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
                                         br
                                         p This table will be automatically removed.
 
-                                .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}")
+                                .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}" :loading="r.deleting || null")
                                     div
                                         span.label-head RECORD:
                                         span {{ r.record_id }}
@@ -289,6 +289,11 @@ function viewRecordList(t) {
 
 // watchers
 let appStyle = inject('appStyle');
+
+const close = async() => {
+    await state.blockingPromise;
+    viewRecord.value.close();
+}
 
 watch(() => state.viewport, viewport => {
     if(viewport === 'mobile') {
