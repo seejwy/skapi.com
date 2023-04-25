@@ -100,7 +100,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 tr(v-for="x in numberOfSkeletons()").animation-skeleton
                     td
         table(v-else)
-            thead(v-if="groupedUserList?.length && !fetchingData")
+            thead(v-if="groupedUserList?.length && (!fetchingData || groupedUserList?.length)")
                 tr(:class="{rounded: fetchingData || null}")
                     th
                         sui-input(v-if="viewport === 'desktop'" :disabled="promiseRunning || null" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
