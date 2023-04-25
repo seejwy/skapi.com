@@ -95,7 +95,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 Icon trash
 
     .table-wrapper
-        table(v-if="viewport === 'mobile' && fetchingData")
+        table(v-if="viewport === 'mobile' && !groupedUserList?.length && fetchingData")
             tbody
                 tr(v-for="x in numberOfSkeletons()").animation-skeleton
                     td
@@ -149,6 +149,12 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                                         span(v-else) User
                                     template(v-else) {{ user[key] || '-' }}
                                 td(v-if="computedVisibleFields.length <= 2")
+                    template(v-if="fetchingData")
+                        tr(v-for="x in numberOfSkeletons()").animation-skeleton
+                            td
+                            td(style="width: 52px;")
+                            td
+                            td
     .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
         template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
