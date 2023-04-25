@@ -290,6 +290,10 @@ function viewRecordList(t) {
 // watchers
 let appStyle = inject('appStyle');
 
+const close = () => {
+    viewRecord.value.close();
+}
+
 watch(() => state.viewport, viewport => {
     if(viewport === 'mobile') {
         pageTitle.value = 'Records';
