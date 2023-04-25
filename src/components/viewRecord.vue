@@ -924,6 +924,11 @@ defineExpose({
 
 		sui-button {
 			margin: -0.6em;
+
+			svg {
+				width: 20px;
+				height: 20px;
+			}
 		}
 	}
 
