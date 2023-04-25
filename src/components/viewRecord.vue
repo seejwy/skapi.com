@@ -257,7 +257,7 @@
 								span
 									.filename {{ file.name || file.filename }}
 									div(v-if="file.size" style="font-size: 12px;") {{ getSize(file.size) }}
-								Icon.remove(@click="record.data.splice(index, 1)") X
+								Icon.remove(@click="() => { isSaving ? null : record.data.splice(index, 1); }") X
 					template(v-else-if="record.type === 'json'")
 						JsonInput(
 							placeholder="Key Value"
