@@ -32,7 +32,6 @@ section.sectionBox
                     | ."
                 a(href='https://docs.skapi.com' target="_blank")
                     button.readBtn Read Document
-
 section.sectionBox.showVideo
     .videoCont 
         img(src="@/assets/img/icons/video.svg")
@@ -170,7 +169,7 @@ section.sectionBox.trySkapi
 
 <script setup>
 import { onMounted, ref, onBeforeUnmount } from 'vue';
-
+import LoadingCircle from '../../components/LoadingCircle.vue';
 let showThis = ref(false);
 
 function codeCopy() {

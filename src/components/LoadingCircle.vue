@@ -11,11 +11,14 @@
     .background_box.b4
         .background.c4
 </template>
-<script setup>
 
-</script>
 <style lang="less" scoped>
 .content_box {
+    width: 67px;
+    height: 67px;
+    --bgColor: 41, 63, 230;
+    --ringColor: 255, 255, 255;
+
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -23,13 +26,10 @@
     box-sizing: border-box;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
     width: 67px;
     height: 67px;
+    background: rgba(var(--bgColor),1);
     border-radius: 50%;
-    background: #fff;
     animation: rotateS .8s linear infinite;
 
     @keyframes rotateS {
@@ -55,7 +55,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: rgba(41, 63, 230, 1);
+            background: rgba(var(--ringColor), 1);
         }
     }
     .background_box {
@@ -66,7 +66,7 @@
 
         &.b1 {
             border-radius: 100% 0 0 0/ 100% 0 0 0;
-            background: linear-gradient(rgba(41, 63, 230, 1), rgba(41, 63, 230, 0.8));
+            background: linear-gradient(rgba(var(--ringColor), 1), rgba(var(--ringColor), 0.8));
         }
         &.b2 {
             border-radius: 0 100% 0 0/ 0 100% 0 0;
@@ -74,11 +74,11 @@
         }
         &.b3 {
             border-radius: 0 0 0 100%/ 0 0 0 100%;
-            background: linear-gradient(rgba(41, 63, 230, 0.8), rgba(41, 63, 230, 0.4));
+            background: linear-gradient(rgba(var(--ringColor), 0.8), rgba(var(--ringColor), 0.4));
         }
         &.b4 {
             border-radius: 0 0 100% 0/ 0 0 100% 0;
-            background: linear-gradient(transparent, rgba(41, 63, 230, 0.45));
+            background: linear-gradient(transparent, rgba(var(--ringColor), 0.45));
         }
         .background {
             position: absolute;
