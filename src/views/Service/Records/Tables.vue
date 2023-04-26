@@ -93,11 +93,12 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
                         @click="()=>currentSelectedTablePage = idx") {{ currentSelectedTableBatch * numberOfPagePerBatch + i }}
 
                     span.morePage(
-                        :class="{active: !recordTables.endOfList || groupedTableList.length - 1 > currentSelectedTableBatch }"
+                        :class="{active: !isEndOfList || !isLastBatch }"
                         @click="getMoreTables") ...
                     Icon.arrow(
-                        :class="{active: currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 || !recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1 }"
-                        @click="()=>{ if(currentSelectedTablePage < groupedTableList[currentSelectedTableBatch].length - 1 ) currentSelectedTablePage++; else if(!recordTables.endOfList && currentSelectedTablePage === groupedTableList[currentSelectedTableBatch].length - 1) getMoreTables() }") right
+                        :class="{active: !isEndOfList || !isLastBatch || !isLastPage }"
+                        @click="() => { if(!isLastPage) currentSelectedTablePage++; else if(isLastPage && !isLastBatch) { currentSelectedTableBatch++; currentSelectedTablePage = 0;} else if(isLastBatch && !isEndOfList) getMoreTables() }"
+                        ) right
 
 .page-action.showOnTablet(@blur="isFabOpen = false")
     // @blur should be at the parent div
@@ -143,8 +144,20 @@ let fetchLimit = 50;
 let numberOfTablePerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfTablePerPage;
 
-let currentSelectedTablePage = ref(0);
 let currentSelectedTableBatch = ref(0);
+let currentSelectedTablePage = ref(0);
+
+const isLastBatch = computed(() => {
+    return currentSelectedTableBatch.value === groupedTableList?.value?.length - 1;
+});
+
+const isLastPage = computed(() => {
+    return currentSelectedTablePage.value === groupedTableList?.value?.[currentSelectedTableBatch.value]?.length - 1;
+});
+
+const isEndOfList = computed(() => {
+    return recordTables.value?.endOfList;
+});
 
 let groupedTableList = computed(() => {
     if (!recordTables.value || !recordTables.value.list.length) {

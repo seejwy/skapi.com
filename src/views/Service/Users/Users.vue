@@ -2,7 +2,7 @@
 SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
     div {{ mobilePageTitle }}
     template(v-slot:right) 
-        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'}); getUsers(true); serviceUsers.value = null; }") X2
+        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'}); getUsers(true); serviceUsers = null; }") X2
 .page-header.head-space-helper(v-if="viewport === 'desktop' || !route.query.search")
     h1 Users
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
@@ -188,12 +188,12 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             @click="currentSelectedUsersPage = idx"
             ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
         span.more-page(
-            :class="{active: !serviceUsers?.endOfList || groupedUserList.length - 1 > currentSelectedUsersBatch }"
+            :class="{active: !isEndOfList || !isLastBatch }"
             @click="getMoreUsers") ...
 
         Icon(
-            :class="{active: currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 || !serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1 }"
-            @click="()=>{ if(currentSelectedUsersPage < groupedUserList[currentSelectedUsersBatch].length - 1 ) currentSelectedUsersPage++; else if(!serviceUsers.endOfList && currentSelectedUsersPage === groupedUserList[currentSelectedUsersBatch].length - 1) getMoreUsers() }"
+            :class="{active: !isEndOfList || !isLastBatch || !isLastPage }"
+            @click="() => { if(!isLastPage) currentSelectedUsersPage++; else if(isLastPage && !isLastBatch) { currentSelectedUsersBatch++; currentSelectedUsersPage = 0;} else if(isLastBatch && !isEndOfList) getMoreUsers() }"
             ) right
 
 .page-action(v-if="viewport === 'mobile' && !route.query.search" @blur="isFabOpen = false")
@@ -244,6 +244,19 @@ const filterEl = ref(null);
 
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
+
+const isLastBatch = computed(() => {
+    return currentSelectedUsersBatch.value === groupedUserList?.value?.length - 1;
+});
+
+const isLastPage = computed(() => {
+    return currentSelectedUsersPage.value === groupedUserList?.value?.[currentSelectedUsersBatch.value]?.length - 1;
+});
+
+const isEndOfList = computed(() => {
+    return serviceUsers.value?.endOfList;
+});
+
 const searchParams = reactive({
     service: serviceId,
     searchFor: 'timestamp',
@@ -643,6 +656,7 @@ onMounted(() => {
         };
         callSearch();
     } else {
+        navbarBackDestination.value = null;
         if(!serviceUsers.value?.list) {
             getUsers(true);
         }
@@ -666,7 +680,7 @@ watch(() => viewport.value, (viewport) => {
     immediate: true
 });
 
-watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
+watch([viewport, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
     selectedBlockedUsers.value = [];
     selectedUnblockedUsers.value = [];
 });
