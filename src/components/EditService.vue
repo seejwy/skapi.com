@@ -1,5 +1,5 @@
 <template lang="pug">
-.overlay-container(v-if="service")
+.overlay-container(v-if="service" :loading="isDisabled || null")
     form(@submit.prevent="save" @keydown.enter.prevent="" action="")
         .overlay-container-title.hideOnTablet Service Setting
         .toggle(style="margin-bottom: 40px")
@@ -8,15 +8,15 @@
                 .toggle-ball(@click="toggle" :class="{'active': serviceStatus > 0 }")
         .input
             label Name of Service
-            sui-input(type="text" :disabled="isDisabled" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
+            sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         .input
             label CORS
-            sui-input(type="text" :disabled="isDisabled" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
+            sui-input(type="text" :value="cors" @input="(e) => cors = e.target.value" required @change="validateCors")
         .input(style="margin-bottom: 40px;")
             label API Key
-            sui-input(type="text" :disabled="isDisabled" :value="apiKey" @input="(e) => apiKey = e.target.value")
-        sui-button.text-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" :disabled="isDisabled" @click="emit('close', '')") Cancel
-        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="isDisabled" :disabled="isDisabled") Save
+            sui-input(type="text" :value="apiKey" @input="(e) => apiKey = e.target.value")
+        sui-button.text-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
+        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="isDisabled") Save
 sui-overlay(ref="disableConfirmOverlay")
     .popup
         .title
@@ -28,7 +28,7 @@ sui-overlay(ref="disableConfirmOverlay")
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
             sui-button.text-button(@click="rejectDisable") No 
-            sui-button(@click='disableConfirmOverlay.close()') No 
+            sui-button.text-button(@click="confirmDisable") Yes
 sui-overlay(ref="disableErrorOverlay")
     .popup
         .title

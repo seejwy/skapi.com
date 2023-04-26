@@ -1,5 +1,5 @@
 <template lang="pug">
-.form.container(v-if="processStep < 3")
+.form.container(v-if="processStep < 3" :loading="promiseRunning || null")
     Icon(style="height: 32px; width: 32px; fill: #F04E4E;") warning
     h2(style="color: #F04E4E;") Delete Your Account
     template(v-if="processStep === 0")
@@ -59,8 +59,7 @@
                 .input
                     label Enter your password to confirm delete.
                     PasswordInput(
-                        @input="(e) => { form.password = e.target.value; }" 
-                        :disabled="promiseRunning || null"
+                        @input="(e) => { form.password = e.target.value; }"
                         :value="form.password"
                         :required="true")
                     .error(v-if="form.error") {{ form.error }}
@@ -173,6 +172,7 @@ const deleteAccount = async (e) => {
         try {        
             await Promise.all(reasonPromiseArray);
             await skapi.disableAccount();
+            state.services = null;
             await router.push('/deleted');
             state.user = null;
         } catch(e) {

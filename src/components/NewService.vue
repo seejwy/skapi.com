@@ -1,11 +1,11 @@
 <template lang="pug">
-.overlay-container
+.overlay-container(:loading="isDisabled || null")
     form.dashboard(@submit.prevent="createNewService" action="")
         .overlay-container-title.hideOnTablet Create a New Service
         .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
-        sui-input(type="text" :disabled="isDisabled" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
-        sui-button.line-button(v-if="state.viewport === 'desktop'" :disabled="isDisabled" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
-        SubmitButton(:loading="isDisabled" :disabled="isDisabled") Create
+        sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
+        sui-button.line-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
+        SubmitButton(:loading="isDisabled") Create
 </template>
 <!-- script below -->
 <script setup>
