@@ -29,7 +29,7 @@
                 sui-input(
                     type="checkbox" 
                     @input="(e)=> form.subscribe = e.target.checked"
-                    :checked="rememberme ? true : null")
+                    checked)
                 span I agree to receive information and news letters from Skapi via Email.
 
         SubmitButton(:loading="promiseRunning") Create Account
