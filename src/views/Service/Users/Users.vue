@@ -680,7 +680,7 @@ watch(() => viewport.value, (viewport) => {
     immediate: true
 });
 
-watch([viewport.value, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
+watch([viewport, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
     selectedBlockedUsers.value = [];
     selectedUnblockedUsers.value = [];
 });
