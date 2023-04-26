@@ -297,7 +297,11 @@ watch(() => state.user, async (user) => {
     }
 
     .value,
-    .mobile-value {
+    .mobile-value {    
+        @media @tablet {
+            margin-top: 8px;
+        }
+
         & > span {
             display: inline-block;
             margin-right: 8px;
@@ -390,7 +394,6 @@ watch(() => state.user, async (user) => {
         & > .title {
             height: auto;
             padding: 0;
-            margin-bottom: 8px;
             .actions {
                 display: block;
             }
