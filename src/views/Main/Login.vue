@@ -4,9 +4,10 @@ form.container.login(@submit.prevent="login" action="" :loading="promiseRunning 
     .input
         label Email
         sui-input(
-            type="email" 
+            type="text" 
             :value='form.email' 
-            @input="e=>form.email = e.target.value"
+            @input="e=> { form.email = e.target.value; e.target.setCustomValidity(''); }"
+            inputmode="email"
             @change="validateEmail"
             placeholder="E.g. someone@gmail.com"
             required)

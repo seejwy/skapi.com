@@ -22,7 +22,13 @@ div(v-else-if="state?.user" :loading="isSaving || null")
             hr
             .title(style="margin-bottom: 0;") Email
             .value(v-if="state.viewport === 'desktop'")
-                sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
+                sui-input(
+                    v-if="isEdit" 
+                    type="text" 
+                    :value="settings.email" 
+                    @input="(e)=> { settings.email = e.target.value; e.target.setCustomValidity(''); }" 
+                    @change="validateEmail"
+                    inputmode="email")
                 template(v-else)
                     span {{  state.user.email }}
                     .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
@@ -33,7 +39,13 @@ div(v-else-if="state?.user" :loading="isSaving || null")
             .actions(v-if="!state.user.email_verified" @click="openVerifyEmail")
                 span Verify Email
             .mobile-value(v-if="state.viewport === 'mobile'")            
-                sui-input(v-if="isEdit" type="text" :value="settings.email" @input="(e)=>settings.email = e.target.value")
+                sui-input(
+                    v-if="isEdit" 
+                    type="text" 
+                    :value="settings.email" 
+                    @input="(e)=> { settings.email = e.target.value; e.target.setCustomValidity(''); }" 
+                    @change="validateEmail"
+                    inputmode="email")
                 template(v-else)
                     span {{  state.user.email }}
                     .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
@@ -156,6 +168,15 @@ const cancelEdit = () => {
     settings.value.name = state.user.name;
     settings.value.email = state.user.email;
     settings.value.email_subscription = state.user.email_subscription;
+}
+
+const validateEmail = (event) => {
+    if(skapi.validate.email(event.target.value)) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid Email');
+		event.target.reportValidity();
+    }
 }
 
 const updateUserSettings = async () => {

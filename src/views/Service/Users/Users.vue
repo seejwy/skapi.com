@@ -32,7 +32,8 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         autocomplete="off" 
                         :placeholder="`      ${placeholder(searchParams.searchFor)}`" 
                         :value="searchParams.value" 
-                        @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }" 
+                        @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
+                        :inputmode="searchParams.searchFor === 'email' ? searchParams.searchFor : null"
                         required)
                 .select-field(v-if="searchParams.searchFor === 'timestamp'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")

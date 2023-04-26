@@ -8,10 +8,12 @@
                 .input
                     label Enter your Email
                     sui-input(
-                        type="email" 
+                        type="text" 
                         placeholder="E.g. someone@gmail.com"
                         :value="email"
-                        @input="(e) => email = e.target.value"
+                        @input="(e) => { email = e.target.value; e.target.setCustomValidity(''); }"
+                        inputmode="email"
+                        @change="validateEmail"
                         required)
                 .error(v-if="forgotError") {{ forgotError }}
                 SubmitButton(:loading="promiseRunning") Continue
@@ -99,6 +101,15 @@ onBeforeMount(async() => {
         if(state.user) router.push({name: 'dashboard'});
     })
 });
+
+const validateEmail = (event) => {
+    if(skapi.validate.email(event.target.value)) {
+		event.target.setCustomValidity('');
+    } else {
+		event.target.setCustomValidity('Invalid Email');
+		event.target.reportValidity();
+    }
+}
 
 const validatePassword = () => {
     if(password.value.length < 6 || password.value.length > 60) {
