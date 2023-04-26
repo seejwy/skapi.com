@@ -721,6 +721,8 @@ const save = async () => {
 		console.log({e});
 		isSaving.value = false;
 		if(e.code === 'NOT_EXISTS') {
+			view.value = 'information';
+			await nextTick();
 			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
 			referenceIdField.value.querySelector('input').reportValidity();
 		} 
