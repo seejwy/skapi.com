@@ -82,7 +82,7 @@ const search = () => {
     }
 
     if(field.checkValidity()) {
-        router.push({name:"users", params: {search: searchParams.searchFor}, query: {search: searchParams.searchFor, condition: searchParams.condition, value: searchParams.value}});
+        router.push({name:"users", query: {search: searchParams.searchFor, condition: searchParams.condition, value: searchParams.value}});
     }
 }
 
