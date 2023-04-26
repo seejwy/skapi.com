@@ -656,6 +656,7 @@ onMounted(() => {
         };
         callSearch();
     } else {
+        navbarBackDestination.value = null;
         if(!serviceUsers.value?.list) {
             getUsers(true);
         }
