@@ -13,7 +13,7 @@ sui-button.hideOnTablet(type="button" style='float:right;margin: 8px 0;' @click=
 .hideOnTablet(style="clear:both;")
 
 // record view
-sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
+sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
         ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close(() => { recordToOpen = null; })")
 
