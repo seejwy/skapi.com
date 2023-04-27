@@ -231,14 +231,17 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
   }
 
   &:focus-within {
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset;
+    
+    .dashboard & {
+      box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset;
+    }
 
     input {
-      outline: 1px solid var(--primary-color);
-      box-shadow: 0 0 0 1px var(--primary-color) inset;
+      outline: none;
 
       .dashboard & {
-        outline: 1px solid var(--dark-highlight-color);
-        box-shadow: 0 0 0 1px var(--dark-highlight-color) inset;
+        outline: none;
       }
     }
   }
@@ -334,20 +337,21 @@ sui-select {
   background: rgba(255, 255, 255, 0.08);
   box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
   font-family: "Radio Canada", sans-serif;
+  line-height: 1;
 
   .dashboard & {
     color: #fff;
   }
 
   &:focus-within {
-    // box-shadow: inset 2px 2px 0 var(--primary-color), inset -2px -2px 0 var(--primary-color);
-    border-color: var(--primary-color);
-    outline: 2px solid var(--primary-color);
-
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset !important;
     .dashboard & {
-      border-color: var(--dark-highlight-color);
-      outline: 2px solid var(--dark-highlight-color);
+      box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset !important;
     }
+    
+    outline: none;
+
+    
   }
 }
 
@@ -384,10 +388,12 @@ sui-select {
   }
   
   &:focus-within {
-    outline: 2px solid var(--primary-color);
+    outline: none;
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset;
 
     .dashboard & {
-      outline: 2px solid var(--dark-highlight-color);
+      outline: none;
+      box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset;
     }
   }
 }
@@ -397,6 +403,9 @@ sui-input[type=reset],
 sui-button {
   background-color: var(--primary-color);
   box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
+  border-radius: 4px;
+  line-height: 1;
+  padding: 12px 32px;
 
   &:not(.text-button) {  
     border: 1px solid rgba(0, 0, 0, 0.4);
@@ -417,7 +426,7 @@ sui-button {
     box-shadow: none; 
     border: 1px solid;
     padding: 11px 32px;
-    height: 40px;
+    // height: 40px;
   }
 
   .dashboard & {
