@@ -14,8 +14,8 @@
 
 <style lang="less" scoped>
 .content_box {
-    width: 67px;
-    height: 67px;
+    width: 20px;
+    height: 20px;
     --bgColor: 41, 63, 230;
     --ringColor: 255, 255, 255;
 
@@ -26,8 +26,9 @@
     box-sizing: border-box;
     top: 0;
     left: 0;
-    width: 67px;
-    height: 67px;
+    right: 0;
+    bottom: 0;
+    margin: auto;
     background: rgba(var(--bgColor),1);
     border-radius: 50%;
     animation: rotateS .8s linear infinite;
@@ -43,7 +44,7 @@
     }
     .circle {
         position: absolute;
-        width: 8px;
+        width: 4px;
         height: 50%;
         z-index: 2;
         transform-origin: 50% 100%;
@@ -52,8 +53,8 @@
         .box {
             position: absolute;
             top: 0px;
-            width: 8px;
-            height: 8px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             background: rgba(var(--ringColor), 1);
         }
@@ -82,9 +83,9 @@
         }
         .background {
             position: absolute;
-            width: calc(100% - 8px);
-            height: calc(100% - 8px);
-            background: #fff;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            background: rgba(var(--bgColor),1);
             border: none;
 
             &.c1 {
