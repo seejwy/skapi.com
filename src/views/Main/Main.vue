@@ -82,6 +82,9 @@ let route = useRoute();
 let appStyle = inject('appStyle');
 const overlay = ref(null);
 
+let pageTitle = inject('pageTitle');
+pageTitle.value = 'skapi';
+
 const noLoginNeeded = () => {
     if(!state.user) {
         switch(route.name) {
