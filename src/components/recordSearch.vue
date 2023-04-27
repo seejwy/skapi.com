@@ -406,7 +406,11 @@ function search(searchParams) {
                 }
                 else if (k !== 'subscription') {
                     advancedForm.value[k] = value;
-                    params[k] = value;
+                    if(k === 'table') {
+                        params.table.name = value;
+                    } else {
+                        params[k] = value;
+                    }
                 }
         }
     }
