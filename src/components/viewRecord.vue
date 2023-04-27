@@ -528,7 +528,16 @@ const saveData = async () => {
 	} catch(e) {
 		console.log({e});
 		fileError.value = e.message;
-		view.value = 'record';
+
+		if(e.code === 'NOT_EXISTS') {
+			view.value = 'information';
+			await nextTick();
+			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
+			referenceIdField.value.querySelector('input').reportValidity();
+		} 
+		if(e?.name === 'NO_FILE') {		
+			fileError.value = e.message;
+		}
 	}
 }
 
