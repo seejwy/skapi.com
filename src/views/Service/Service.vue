@@ -451,6 +451,10 @@ watch(() => state.viewport, () => {
             line-height: 1;
             color: rgba(255, 255, 255, 0.6);
             margin-bottom: 8px;
+
+            span {
+                vertical-align: middle;
+            }
         }
 
         .value {
