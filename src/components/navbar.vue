@@ -9,11 +9,10 @@ sui-nav#top-nav(auto-hide)
             .hideOnTablet
                 slot
             template(v-if='navbarMobileRightButton')
-                Icon.showOnTablet.clickable(
-                    v-if="navbarMobileRightButton.type === 'icon'"
-                    :class="navbarMobileRightButton?.cssClass || null"
-                    style="height: 28px; width: 28px;"
-                    @click='navbarMobileRightButton?.callback') {{ navbarMobileRightButton.val }}
+                div(v-if="navbarMobileRightButton.type === 'icon'" style="position: relative; width: 24px; height: 24px;")
+                    LoadingCircle.showOnTablet(
+                        style="width: 24px; height: 24px; --spinnerWidth: 3px; --ringColor: 255, 255, 255; --bgColor: 80,80,80;"
+                        @click='navbarMobileRightButton?.callback')
                 span.showOnTablet.clickable(
                     v-if="navbarMobileRightButton.type === 'text'"
                     style="height: 28px; font-weight: bold;"
@@ -156,6 +155,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { state } from '@/main';
 
 import Icon from '@/components/Icon.vue';
+import LoadingCircle from '@/components/LoadingCircle.vue';
 
 const props = defineProps(['isParentLevel']);
 

@@ -14,16 +14,15 @@
 
 <style lang="less" scoped>
 .content_box {
-    width: 67px;
-    height: 67px;
     --bgColor: 41, 63, 230;
     --ringColor: 255, 255, 255;
+    --spinnerWidth: 8px;
 
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     position: absolute;
-    box-sizing: border-box;
+    box-sizing: content-box;
     top: 0;
     left: 0;
     width: 67px;
@@ -43,17 +42,15 @@
     }
     .circle {
         position: absolute;
-        width: 8px;
+        width: var(--spinnerWidth);
         height: 50%;
         z-index: 2;
-        transform-origin: 50% 100%;
-        transform: rotate(0deg);
 
         .box {
             position: absolute;
             top: 0px;
-            width: 8px;
-            height: 8px;
+            width: var(--spinnerWidth);
+            height: var(--spinnerWidth);
             border-radius: 50%;
             background: rgba(var(--ringColor), 1);
         }
@@ -65,47 +62,47 @@
         box-sizing: border-box;
 
         &.b1 {
-            border-radius: 100% 0 0 0/ 100% 0 0 0;
+            border-radius: 100% 0 0 0;
             background: linear-gradient(rgba(var(--ringColor), 1), rgba(var(--ringColor), 0.8));
         }
         &.b2 {
-            border-radius: 0 100% 0 0/ 0 100% 0 0;
+            border-radius: 0 100% 0 0;
             background: linear-gradient(transparent, transparent);
         }
         &.b3 {
-            border-radius: 0 0 0 100%/ 0 0 0 100%;
+            border-radius: 0 0 0 100%;
             background: linear-gradient(rgba(var(--ringColor), 0.8), rgba(var(--ringColor), 0.4));
         }
         &.b4 {
-            border-radius: 0 0 100% 0/ 0 0 100% 0;
+            border-radius: 0 0 100% 0;
             background: linear-gradient(transparent, rgba(var(--ringColor), 0.45));
         }
         .background {
             position: absolute;
-            width: calc(100% - 8px);
-            height: calc(100% - 8px);
-            background: #fff;
+            width: calc(100% - var(--spinnerWidth));
+            height: calc(100% - var(--spinnerWidth));
+            background: rgb(var(--bgColor));
             border: none;
 
             &.c1 {
                 right: 0;
                 bottom: 0;
-                border-radius: 100% 0 0 0/ 100% 0 0 0;
+                border-radius: 100% 0 0 0;
             }
             &.c2 {
                 left: 0;
                 bottom: 0;
-                border-radius: 0 100% 0 0/ 0 100% 0 0;
+                border-radius: 0 100% 0 0;
             }
             &.c3 {
                 right: 0;
                 top: 0;
-                border-radius: 0 0 0 100%/ 0 0 0 100%;
+                border-radius: 0 0 0 100%;
             }
             &.c4 {
                 left: 0;
                 top: 0;
-                border-radius: 0 0 100% 0/ 0 0 100% 0;
+                border-radius: 0 0 100% 0;
             }
         }
     }
