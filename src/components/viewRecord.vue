@@ -2,7 +2,7 @@
 .container(v-if="!isEdit && props.record?.record_id")
 	.head(:class="{'mobile-head': isMobileUrl}")
 		.title {{ !isMobileUrl ? props.record.record_id : '' }}
-			sui-button.icon-button.hideOnTablet(@click="() => deleteConfirmOverlay.open()")
+			sui-button.icon-button.hideOnTablet(type="button" @click="() => deleteConfirmOverlay.open()")
 				Icon trash
 		.menu
 			ul
@@ -230,7 +230,7 @@
 						.input-field
 							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
 					.action
-						sui-button.icon-button(@click="removeField(recordIndex)")
+						sui-button.icon-button(type="button" @click="removeField(recordIndex)")
 							Icon trash
 				.data-values
 					template(v-if="record.type === 'file'")
