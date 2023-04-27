@@ -4,7 +4,14 @@
         h1 Signup
         .input
             label Email
-            sui-input(@change="validateEmail" :value='form.email' @input="e=> { form.email = e.target.value; error = '' }" placeholder="E.g. someone@gmail.com" required)
+            sui-input(
+                type="text"
+                inputmode="email"
+                @change="validateEmail" 
+                :value='form.email' 
+                @input="e=> { form.email = e.target.value; e.target.setCustomValidity(''); error = '' }" 
+                placeholder="E.g. someone@gmail.com" 
+                required)
         .input
             label Name
             sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
@@ -22,7 +29,7 @@
                 sui-input(
                     type="checkbox" 
                     @input="(e)=> form.subscribe = e.target.checked"
-                    :checked="rememberme ? true : null")
+                    checked)
                 span I agree to receive information and news letters from Skapi via Email.
 
         SubmitButton(:loading="promiseRunning") Create Account

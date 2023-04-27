@@ -27,7 +27,6 @@ const input = ref(null);
 
 const focusEl = () => {
   if(!props.disabled) {
-    console.log(props.disabled);
     input.value.focus();
   }
 }
