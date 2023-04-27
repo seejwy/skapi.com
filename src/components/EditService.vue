@@ -149,7 +149,7 @@ const save = async () => {
         disableConfirmOverlay.value.open();
         return;
     } else {
-        state.blockingPromise = saveFunction();
+        state.blockingPromise = await saveFunction();
     }
 }
 
