@@ -16,7 +16,7 @@ const state = reactive({
         state.showVerificationNotification = false;
     },
     viewportOnChange: (v) => v,
-    blockingPromise: new Promise(res=>res())
+    blockingPromise: new Promise(res => res())
 });
 
 // init skapi
@@ -27,7 +27,7 @@ let awaitConnection = skapi.getConnection().then(c => {
     state.connection = c;
     state.user = skapi.user;
     const ONE_DAY = 86400;
-    if(!state.user?.email_verified && (Number(localStorage.getItem('showVerificationMessage')) + ONE_DAY) < new Date().getTime()) {
+    if (!state.user?.email_verified && (Number(localStorage.getItem('showVerificationMessage')) + ONE_DAY) < new Date().getTime()) {
         state.showVerificationNotification = true;
         localStorage.removeItem('showVerificationMessage');
     }
@@ -60,22 +60,20 @@ window.addEventListener("visibilitychange", storeServices);
 // init document (will use when necessary)
 
 let desktopMedia = '(min-width: 769px)';
-let mobileMedia = '(max-width: 768px)';
 const desktopSize = window.matchMedia(desktopMedia);
-const mobileSize = window.matchMedia(mobileMedia);
 
 const setViewport = (e) => {
     if (e.matches) {
-        state.viewport = e.media === desktopMedia ? "desktop" : 'mobile';
-        state.viewportOnChange(state.viewport);
+        state.viewport = 'desktop';
+    } else {
+        state.viewport = 'mobile';
     }
+    state.viewportOnChange(state.viewport);
 };
 
 setViewport(desktopSize);
-setViewport(mobileSize);
 
 desktopSize.addEventListener('change', setViewport);
-mobileSize.addEventListener('change', setViewport);
 
 // init vue
 const app = createApp(App);
@@ -1603,7 +1601,7 @@ const countries = {
 }
 
 const regions = {
-    US: {    
+    US: {
         VA: 'us-east-1',
         OH: 'us-east-2',
     },
@@ -1614,7 +1612,7 @@ const regions = {
 const localeName = (locale) => {
     let name = '';
 
-    switch(locale) {
+    switch (locale) {
         case 'ap-northeast-2':
             name = 'South Korea';
             break;
@@ -1624,8 +1622,8 @@ const localeName = (locale) => {
 }
 
 const logout = async () => {
-    await router.push({name: 'home'});
-    skapi.AdminLogout().then(() => {state.user = null;})
+    await router.push({ name: 'home' });
+    skapi.AdminLogout().then(() => { state.user = null; })
 }
 
 export { skapi, state, getSize, dateFormat, log, groupArray, localeName, countries, regions, awaitConnection, logout };

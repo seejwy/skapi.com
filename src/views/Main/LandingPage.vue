@@ -32,7 +32,6 @@ section.sectionBox
                     | ."
                 a(href='https://docs.skapi.com' target="_blank")
                     button.readBtn Read Document
-
 section.sectionBox.showVideo
     .videoCont 
         img(src="@/assets/img/icons/video.svg")
@@ -169,8 +168,8 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-
+import { onMounted, ref, onBeforeUnmount } from 'vue';
+import LoadingCircle from '../../components/LoadingCircle.vue';
 let showThis = ref(false);
 
 function codeCopy() {
@@ -243,7 +242,12 @@ onMounted(() => {
             seeMobile();
         }
     });
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('scroll', cardMove);
+    })
 })
+
 </script>
 
 <style lang="less">
@@ -390,6 +394,7 @@ main {
                         position: relative;
                         font-size: 20px;
                         font-weight: 500;
+                        line-height: 32px;
                         margin: 0;
                         color: #262626;
 
@@ -1415,7 +1420,7 @@ main {
         .sectionBox {
             .overflow {
                 &::before {
-                    top: 450px;
+                    top: 370px;
                     transform: translateX(-53%);
                     width: 550px;
                     height: 122px;
@@ -1425,13 +1430,13 @@ main {
                     .helloCont {
                         text-align: left;
                         
-                        .logo {
-                            padding: 28px 20px 0 20px;
+                        .logoImg {
                             margin: 0;
+                            padding: 28px 0;
                         }
                         .tit {
                             font-size: 8vw;
-                            margin: 30px 0 80px 0;
+                            margin: 0 0 80px 0;
                             padding: 0 20px;
 
                             .arrowImg {
@@ -1447,12 +1452,15 @@ main {
                         }
 
                         p {
+                            line-height: 28px;
                             padding: 16px 20px 0 20px;
                             background: linear-gradient(183.26deg, #FAFF00 2.7%, rgba(255, 230, 0, 0) 40%);
                         }
 
-                        .readBtn {
-                            margin: 28px 0 0 20px;
+                        a {
+                            .readBtn {
+                                margin: 28px 0 0 20px;
+                            }
                         }
                     }
                 }
