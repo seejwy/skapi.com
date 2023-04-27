@@ -104,7 +104,7 @@
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
 	.foot(v-if='!isMobileUrl')
-		sui-button.line-button(type="button" @click="close" style="margin-right: 16px;") Close
+		sui-button.text-button(type="button" @click="close" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit" :loading="isSaving || null")
 	form(ref="formConfig")
@@ -279,7 +279,7 @@
 				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
 		.foot(v-if='!isMobileUrl')
-			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").line-button Cancel
+			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").text-button Cancel
 			div(style="display: inline-block")
 				sui-button(v-if="isSaving" type="button")
 					span(style="visibility: hidden;") Save
