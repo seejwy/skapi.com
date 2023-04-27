@@ -1328,6 +1328,10 @@ defineExpose({
 				width: 100%;
 				margin-left: 8px;
 				font-size: 16px;
+
+				&:focus-within {
+					outline: none;
+				}
 			}
 		}
 	}
