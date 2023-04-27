@@ -3,7 +3,7 @@ sui-nav#top-nav(auto-hide)
     .nav_align
         .title
             Icon.showOnTablet.clickable.back-button(v-if='!props.isParentLevel' @click="toParent") left
-            img.logo(v-if="pageTitle === 'skapi'" src="@/assets/img/logo.svg" @click="()=>props.isParentLevel ? router.push('/') : null")
+            img.logo(v-if="pageTitle === 'skapi'" alt="skapi" src="@/assets/img/logo.svg" @click="()=>props.isParentLevel ? router.push('/') : null" width="90" height="35")
             span.title-text(v-else:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : gotoService()" v-html="pageTitle || ''")
         .menu
             .hideOnTablet
@@ -146,6 +146,7 @@ sui-nav#top-nav {
 
 .logo {
     height: 35px;
+    width: auto;
     vertical-align: middle;
 }
 </style>
