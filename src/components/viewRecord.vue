@@ -2,12 +2,12 @@
 .container(v-if="!isEdit && props.record?.record_id")
 	.head(:class="{'mobile-head': isMobileUrl}")
 		.title {{ !isMobileUrl ? props.record.record_id : '' }}
-			sui-button.icon-button.hideOnTablet(type="button" @click="() => deleteConfirmOverlay.open()")
-				Icon trash
 		.menu
 			ul
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
 				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
+			.action
+				Icon.hideOnTablet(@click="() => deleteConfirmOverlay.open()") trash
 	.content(:class="{desktop:!isMobileUrl}")
 		.grid(v-if="view === 'information'")
 			.grid-item.title Record ID
@@ -916,15 +916,6 @@ defineExpose({
 		justify-content: space-between;
 		padding: 18px 20px 24px 20px;
 		font-weight: bold;
-
-		sui-button {
-			margin: -0.6em;
-
-			svg {
-				width: 20px;
-				height: 20px;
-			}
-		}
 	}
 
 	.menu {
