@@ -112,6 +112,12 @@ let confirmDisable = () => {
     state.blockingPromise = new Promise(async res => {
         disableConfirmOverlay.value.close();
         let oldStatus = service.value.active === 0 ? 0 : 1;
+        
+        navbarMobileRightButton.value = {
+            type: 'icon',
+            val: 'loading',
+            cssClass: 'animation-rotation--slow-in-out'
+        };
         try {
             if(service.value.active > 0) {
                 service.value.active = 0;
@@ -126,6 +132,12 @@ let confirmDisable = () => {
             errorMessage.value = "Unable to toggle service status at this point.";
             disableErrorOverlay.value.open();
             console.error(e);
+        } finally {
+            navbarMobileRightButton.value = {
+                type: 'text',
+                val: 'Save',
+                callback: buttonCallback
+            };
         }
         isDisabled.value = false;
         res();
@@ -155,7 +167,6 @@ const save = async () => {
 
 const saveFunction = async () => {
     let res;
-
     try {
         res = await skapi.updateService(service.value.service, {
             name: serviceName.value,
