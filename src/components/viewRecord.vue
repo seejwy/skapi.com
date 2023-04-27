@@ -729,15 +729,17 @@ const save = async () => {
 		// do some error message
 		console.log({e});
 		isSaving.value = false;
-		if(e.code === 'NOT_EXISTS') {
-			view.value = 'information';
-			await nextTick();
-			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
-			referenceIdField.value.querySelector('input').reportValidity();
-		} 
-		if(e?.name === 'NO_FILE') {		
-			fileError.value = e.message;
-			throw e;
+		if(state.viewport === 'desktop') {
+			if(e.code === 'NOT_EXISTS') {
+				view.value = 'information';
+				await nextTick();
+				referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
+				referenceIdField.value.querySelector('input').reportValidity();
+			} 
+			if(e?.name === 'NO_FILE') {		
+				fileError.value = e.message;
+				throw e;
+			}
 		}
 		throw e;
 	};
