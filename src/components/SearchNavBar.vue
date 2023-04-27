@@ -51,7 +51,7 @@ onUnmounted(() => {
     }
 
     sui-input {
-        box-shadow: none;
+        box-shadow: none !important;
         width: 100%;
         background: transparent !important;
         border: none !important;
