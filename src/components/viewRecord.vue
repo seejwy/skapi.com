@@ -1273,6 +1273,7 @@ defineExpose({
 				sui-tooltip {
 					float: right;
 					vertical-align: middle;
+					font-weight: normal;
 				}
 			}
 
