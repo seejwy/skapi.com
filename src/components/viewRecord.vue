@@ -293,8 +293,8 @@ sui-overlay(ref="deleteConfirmOverlay")
 			div Are you sure?
 		.body Are you sure you want to delete the record?
 		.foot
-			sui-button.text-button(@click="()=>deleteConfirmOverlay.close()") No 
-			sui-button.text-button(@click="deleteRecord") Yes
+			sui-button.text-button(type="button" @click="()=>deleteConfirmOverlay.close()") No 
+			sui-button.text-button(type="button" @click="deleteRecord") Yes
 sui-overlay(ref="exitEditOverlay")
 	.popup
 		.title
@@ -302,8 +302,8 @@ sui-overlay(ref="exitEditOverlay")
 			div Are you sure?
 		.body Are you sure you want to close? You are still editing.
 		.foot
-			sui-button.text-button(@click="()=>exitEditOverlay.close()") No 
-			sui-button.text-button(@click="confirmClose") Yes
+			sui-button.text-button(type="button" @click="()=>exitEditOverlay.close()") No 
+			sui-button.text-button(type="button" @click="confirmClose") Yes
 sui-overlay(ref="filesizeExceedsOverlay")
 	.popup
 		.title
@@ -311,7 +311,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 			div File Size Exceeded
 		.body Your total file size exceeds {{ fileSizeLimit }}MB.
 		.foot
-			sui-button(@click="()=>filesizeExceedsOverlay.close()") OK
+			sui-button(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';

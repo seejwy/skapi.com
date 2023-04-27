@@ -9,7 +9,7 @@ SearchNavBar(v-if='viewport === "mobile"')
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
         a(href="https://docs.skapi.com" target="_blank")
-            sui-button.line-button Read Doc
+            sui-button.line-button(type="button") Read Doc
 
 // search form
 RecordSearch#recordSearch.hideOnTablet
