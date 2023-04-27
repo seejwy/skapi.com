@@ -106,7 +106,7 @@ sui-overlay(ref="deleteErrorOverlay")
             div Something went wrong!
         .body {{ deleteErrorMessage }}
         .foot
-            sui-button(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
+            sui-button.line-button(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';

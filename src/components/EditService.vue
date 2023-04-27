@@ -36,7 +36,7 @@ sui-overlay(ref="disableErrorOverlay")
             div Something went wrong!
         .body {{ errorMessage }}
         .foot
-            sui-button(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
+            sui-button.line-button(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
 </template>
 <!-- script below -->
 <script setup>

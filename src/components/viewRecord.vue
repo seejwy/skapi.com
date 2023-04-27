@@ -311,7 +311,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 			div File Size Exceeded
 		.body Your total file size exceeds {{ fileSizeLimit }}MB.
 		.foot
-			sui-button(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
+			sui-button.line-button(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';
