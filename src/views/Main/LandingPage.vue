@@ -1121,6 +1121,9 @@ main {
 
         .sectionBox {
             .overflow {
+                &::before {
+                    top: 700px;
+                }
                 .helloSkapi {
                     .helloCont {                        
                         .logo {
