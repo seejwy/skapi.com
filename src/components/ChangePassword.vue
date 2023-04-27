@@ -4,7 +4,7 @@
     template(v-if="processStep === 0")
         form(@submit.prevent="verifyPassword" action="")
             p Please enter your current password.
-            input(type="email" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0")
+            input(type="email" autocomplete="username" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0")
             .input
                 label Current Password
                 PasswordInput(
@@ -26,6 +26,7 @@
     template(v-else-if="processStep === 1")
         form(@submit.prevent="changePassword" action="")
             p Please enter your new password.
+            input(type="email" autocomplete="username" :value="state.user.email" style="position: absolute; visibility: hidden; opacity: 0")
             .input
                 label New Password
                 PasswordInput(

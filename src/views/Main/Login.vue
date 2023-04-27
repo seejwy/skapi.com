@@ -10,10 +10,11 @@ form.container.login(@submit.prevent="login" action="" :loading="promiseRunning 
             inputmode="email"
             @change="validateEmail"
             placeholder="E.g. someone@gmail.com"
+            autocomplete="username"
             required)
     .input
         label Password
-        PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Enter password" :required="true")
+        PasswordInput(@input="e=>form.password = e.target.value" :value='form.password' @change="validatePassword" placeholder="Enter password" :required="true" autocomplete="current-password")
     .action
         label
             sui-input(type="checkbox" 

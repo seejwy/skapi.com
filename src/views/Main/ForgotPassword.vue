@@ -47,6 +47,7 @@
                         @input="e=> { password = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='password' 
                         @change="validatePassword"
+                        autocomplete="new-password"
                         :required="true")
                 .input
                     label Retype New Password
@@ -55,6 +56,7 @@
                         @input="e=> { passwordConfirm = e.target.value; e.target.setCustomValidity(''); }" 
                         :value='passwordConfirm' 
                         @change="validatePassword" 
+                        autocomplete="new-password"
                         :required="true")
                 .error(v-if="resetError") {{ resetError }}
                 SubmitButton(:loading="promiseRunning") Change Password
