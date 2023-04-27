@@ -7,7 +7,7 @@
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
 				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
 			.action
-				Icon.hideOnTablet(@click="() => deleteConfirmOverlay.open()") trash
+				Icon(@click="() => deleteConfirmOverlay.open()") trash
 	.content(:class="{desktop:!isMobileUrl}")
 		.grid(v-if="view === 'information'")
 			.grid-item.title Record ID
