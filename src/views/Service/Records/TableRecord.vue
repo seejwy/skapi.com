@@ -60,6 +60,7 @@ let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
 let viewRecord = ref(null);
+let navbarMobileRightButton = inject('navbarMobileRightButton');
 
 // record page has darker background in mobile mode
 let appStyle = inject('appStyle');
@@ -80,8 +81,13 @@ function adjustBackgroundColor(n) {
 
 watch(viewport, viewport => {
     adjustBackgroundColor(viewport);
+    
     if(viewport === 'desktop') {
         router.replace({name: 'records'});
+    } else {
+        navbarMobileRightButton.value = {
+            type: 'none'
+        };
     }
 }, {
     immediate: true
@@ -140,6 +146,7 @@ onBeforeUnmount(() => {
     // set padding to original value
     appStyle.mainPadding = null;
     appStyle.background = null;
+    navbarMobileRightButton.value = null;
 });
 
 let openRecord = ref(null);

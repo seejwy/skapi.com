@@ -26,6 +26,10 @@ const router = useRouter();
 const route = useRoute();
 const navbarBackDestination = inject('navbarBackDestination');
 navbarBackDestination.value = 'back';
+const navbarMobileRightButton = inject('navbarMobileRightButton');
+navbarMobileRightButton.value = {
+    type: 'none'
+};
 pageTitle.value = route.params.user_id;
 let user = ref(null);
 let serviceId = route.params.service;
@@ -97,8 +101,10 @@ watch(() => state.viewport, (viewport) => {
 }, {immediate: true});
 
 appStyle.background = '#333333';
+
 onBeforeUnmount(() => {
     appStyle.background = null;
+    navbarMobileRightButton.value = null;
 })
 </script>
 <style lang="less" scoped>
