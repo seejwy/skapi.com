@@ -14,13 +14,13 @@
                 required)
         .input
             label Name
-            sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name")
+            sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name" autocomplete="given-name")
         .input
             label Password            
-            PasswordInput(ref="passwordField" @input="e=> { form.password = e.target.value; e.target.setCustomValidity(''); }" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true")
+            PasswordInput(ref="passwordField" @input="e=> { form.password = e.target.value; e.target.setCustomValidity(''); }" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true" autocomplete="new-password")
         .input
             label Password Confirm
-            PasswordInput(ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); }" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true")
+            PasswordInput(ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); }" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true" autocomplete="new-password")
         .error(v-if="error")
             Icon warning
             span {{ error }}
