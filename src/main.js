@@ -1613,6 +1613,15 @@ const localeName = (locale) => {
     let name = '';
 
     switch (locale) {
+        case 'us-east-1':
+            name = 'USA / Virginia';
+            break;
+        case 'us-east-2':
+            name = 'USA / Ohio';
+            break;
+        case 'ap-southeast-1':
+            name = 'Singapore';
+            break;
         case 'ap-northeast-2':
             name = 'South Korea';
             break;
