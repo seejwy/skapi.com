@@ -122,7 +122,7 @@
 					sui-input(required :value="form.table.name" @input="(e) => form.table.name = e.target.value")
 
 			.row
-				.section
+				.section.mobile-full
 					.name 
 						span Reference ID
 						sui-tooltip
@@ -130,7 +130,7 @@
 							div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
 
 					sui-input(ref="referenceIdField" :value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => { form.reference.record_id = e.target.value; e.target.setCustomValidity(''); }")
-				.section
+				.section.mobile-full
 					.name Access Group
 					sui-select(:value="form.table.access_group.toString()" @change="(e) => form.table.access_group = e.target.value" style="min-width: 160px;")
 						option(value="0") Public 
@@ -156,14 +156,13 @@
 			.row
 				.section
 					.name Index Value
-					.row(style="row-gap: 16px;")
-						.section(style="flex-grow: 0")
-							sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => { indexValueType = e.target.value; form.index.value = indexValueType === 'boolean' ? true : ''; indexNameField.children[0].setCustomValidity('') }")
-								option(disabled) Value Type
-								option(value="string") String
-								option(value="number") Number
-								option(value="boolean") Boolean
-						.section
+					.row(style="row-gap: 16px; display: block;")
+						sui-select(style="width: 110px; margin-right: 24px; vertical-align: middle;" index-type :value="indexValueType" @change="(e) => { indexValueType = e.target.value; form.index.value = indexValueType === 'boolean' ? true : ''; indexNameField.children[0].setCustomValidity('') }")
+							option(disabled) Value Type
+							option(value="string") String
+							option(value="number") Number
+							option(value="boolean") Boolean
+						.section(style="width: calc(100% - 134px);")
 							.radio-container(v-if="indexValueType === 'boolean'")
 								label True
 									sui-input(@change="form.index.value = true" type="radio" :checked="form.index.value === true || null" name="index_value")
@@ -908,6 +907,8 @@ defineExpose({
 });
 </script>
 <style lang="less" scoped>
+@import '@/assets/variables.less';
+
 .container {
 	background: #505050;
 	position: relative;
@@ -1257,11 +1258,7 @@ defineExpose({
 		}
 
 		.row {
-			display: flex;
 			width: 100%;
-			row-gap: 24px;
-			column-gap: 16px;
-			flex-wrap: wrap;
 
 			&:not(:last-child) {
 				margin-bottom: 25px;
@@ -1275,7 +1272,25 @@ defineExpose({
 
 		.section {
 			display: inline-block;
-			flex-grow: 1;
+			vertical-align: middle;
+			width: 100%;
+
+			&.mobile-full {
+
+				&:first-child {
+					margin-right: 24px;
+				}
+
+				width: calc(50% - 12px);
+
+				@media @tablet {
+					width: 100%;
+					&:first-child {
+						margin-right: 0;
+						margin-bottom: 25px;
+					}
+				}
+			}
 
 			.name {
 				margin-bottom: 8px;
