@@ -24,7 +24,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 option(value="locale") Locale
                 option(value="birthdate") Birth Date
         
-            .select-input(@click.stop)
+            .select-input.no-border(@click.stop)
                 .input-field
                     sui-input(
                         ref="searchField" 
