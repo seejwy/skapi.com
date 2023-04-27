@@ -44,7 +44,7 @@
     }
     .circle {
         position: absolute;
-        width: 4px;
+        width: 2.5px;
         height: 50%;
         z-index: 2;
         transform-origin: 50% 100%;
@@ -53,8 +53,8 @@
         .box {
             position: absolute;
             top: 0px;
-            width: 4px;
-            height: 4px;
+            width: 2.5px;
+            height: 2.5px;
             border-radius: 50%;
             background: rgba(var(--ringColor), 1);
         }
@@ -83,8 +83,8 @@
         }
         .background {
             position: absolute;
-            width: calc(100% - 4px);
-            height: calc(100% - 4px);
+            width: calc(100% - 2.5px);
+            height: calc(100% - 2.5px);
             background: rgba(var(--bgColor),1);
             border: none;
 
