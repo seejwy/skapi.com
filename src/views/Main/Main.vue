@@ -27,7 +27,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                     router-link(to="/signup") Sign-up
 
                 li.hideOnTablet
-                    sui-button.signup(@click="()=>router.push('/signup')" style="padding: 12px 16px") Sign-up
+                    sui-button.signup(type="button" @click="()=>router.push('/signup')" style="padding: 12px 16px") Sign-up
 main(v-if="route.name === 'home'")
     router-view
 main.app(v-else-if="noLoginNeeded()")
@@ -81,6 +81,9 @@ let router = useRouter();
 let route = useRoute();
 let appStyle = inject('appStyle');
 const overlay = ref(null);
+
+let pageTitle = inject('pageTitle');
+pageTitle.value = 'skapi';
 
 const noLoginNeeded = () => {
     if(!state.user) {

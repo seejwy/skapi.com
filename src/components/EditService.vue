@@ -27,8 +27,8 @@ sui-overlay(ref="disableConfirmOverlay")
             p(v-if="service?.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
-            sui-button.text-button(@click="rejectDisable") No 
-            sui-button.text-button(@click="confirmDisable") Yes
+            sui-button.text-button(type="button" @click="rejectDisable") No 
+            sui-button.text-button(type="button" @click="confirmDisable") Yes
 sui-overlay(ref="disableErrorOverlay")
     .popup
         .title
@@ -36,7 +36,7 @@ sui-overlay(ref="disableErrorOverlay")
             div Something went wrong!
         .body {{ errorMessage }}
         .foot
-            sui-button(@click="()=> { disableErrorOverlay.close(); }") Ok
+            sui-button.line-button(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
 </template>
 <!-- script below -->
 <script setup>
@@ -112,6 +112,12 @@ let confirmDisable = () => {
     state.blockingPromise = new Promise(async res => {
         disableConfirmOverlay.value.close();
         let oldStatus = service.value.active === 0 ? 0 : 1;
+        
+        navbarMobileRightButton.value = {
+            type: 'icon',
+            val: 'loading',
+            cssClass: 'animation-rotation--slow-in-out'
+        };
         try {
             if(service.value.active > 0) {
                 service.value.active = 0;
@@ -126,6 +132,12 @@ let confirmDisable = () => {
             errorMessage.value = "Unable to toggle service status at this point.";
             disableErrorOverlay.value.open();
             console.error(e);
+        } finally {
+            navbarMobileRightButton.value = {
+                type: 'text',
+                val: 'Save',
+                callback: buttonCallback
+            };
         }
         isDisabled.value = false;
         res();
@@ -149,13 +161,12 @@ const save = async () => {
         disableConfirmOverlay.value.open();
         return;
     } else {
-        state.blockingPromise = saveFunction();
+        state.blockingPromise = await saveFunction();
     }
 }
 
 const saveFunction = async () => {
     let res;
-
     try {
         res = await skapi.updateService(service.value.service, {
             name: serviceName.value,

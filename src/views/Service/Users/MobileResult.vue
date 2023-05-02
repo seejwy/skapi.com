@@ -14,11 +14,11 @@ SearchNavBar(v-if='viewport === "mobile"')
                     option(v-if="key !== 'approved'" :value="key") {{  field.text  }}
         Icon(v-if="viewport === 'desktop'" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(@click="blockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(type="button" @click="blockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
                 Icon block
-            sui-button.icon-button(@click="unblockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(type="button" @click="unblockUsers(serviceId, selectedUsers, groupedUserList[currentSelectedUsersBatch][currentSelectedUsersPage])" :disabled="selectedUsers.length === 0 || null")
                 Icon unblock
-            sui-button.icon-button(@click="deleteUsers(serviceId, selectedUsers, serviceUsers)" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(type="button" @click="deleteUsers(serviceId, selectedUsers, serviceUsers)" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
 
     .table-wrapper

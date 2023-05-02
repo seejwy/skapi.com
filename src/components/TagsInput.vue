@@ -76,7 +76,7 @@ const removeTag = (index) => {
   gap: 8px;
   align-items: center;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: -1px -1px 1px rgb(0 0 0 / 25%), inset 1px 1px 1px rgb(0 0 0 / 50%);
   border-radius: 5px;
   padding: 4px 4px;

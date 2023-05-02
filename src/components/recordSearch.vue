@@ -24,7 +24,7 @@ form(
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='openAdvancedForm')
-    .select-input(v-if="viewport === 'desktop'" style="width: 400px;")
+    .select-input.no-border(v-if="viewport === 'desktop'" style="width: 400px;")
         // main search
         .select-field
             sui-select(
@@ -406,7 +406,11 @@ function search(searchParams) {
                 }
                 else if (k !== 'subscription') {
                     advancedForm.value[k] = value;
-                    params[k] = value;
+                    if(k === 'table') {
+                        params.table.name = value;
+                    } else {
+                        params[k] = value;
+                    }
                 }
         }
     }

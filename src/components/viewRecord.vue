@@ -2,12 +2,12 @@
 .container(v-if="!isEdit && props.record?.record_id")
 	.head(:class="{'mobile-head': isMobileUrl}")
 		.title {{ !isMobileUrl ? props.record.record_id : '' }}
-			sui-button.icon-button.hideOnTablet(@click="() => deleteConfirmOverlay.open()")
-				Icon trash
 		.menu
 			ul
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
 				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
+			.action
+				Icon(@click="() => deleteConfirmOverlay.open()") trash
 	.content(:class="{desktop:!isMobileUrl}")
 		.grid(v-if="view === 'information'")
 			.grid-item.title Record ID
@@ -104,7 +104,7 @@
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
 	.foot(v-if='!isMobileUrl')
-		sui-button.line-button(type="button" @click="close" style="margin-right: 16px;") Close
+		sui-button.text-button(type="button" @click="close" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit" :loading="isSaving || null")
 	form(ref="formConfig")
@@ -122,7 +122,7 @@
 					sui-input(required :value="form.table.name" @input="(e) => form.table.name = e.target.value")
 
 			.row
-				.section
+				.section.mobile-full
 					.name 
 						span Reference ID
 						sui-tooltip
@@ -130,7 +130,7 @@
 							div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
 
 					sui-input(ref="referenceIdField" :value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => { form.reference.record_id = e.target.value; e.target.setCustomValidity(''); }")
-				.section
+				.section.mobile-full
 					.name Access Group
 					sui-select(:value="form.table.access_group.toString()" @change="(e) => form.table.access_group = e.target.value" style="min-width: 160px;")
 						option(value="0") Public 
@@ -156,14 +156,13 @@
 			.row
 				.section
 					.name Index Value
-					.row(style="row-gap: 16px;")
-						.section(style="flex-grow: 0")
-							sui-select(style="min-width: 100px;" index-type :value="indexValueType" @change="(e) => { indexValueType = e.target.value; form.index.value = indexValueType === 'boolean' ? true : ''; indexNameField.children[0].setCustomValidity('') }")
-								option(disabled) Value Type
-								option(value="string") String
-								option(value="number") Number
-								option(value="boolean") Boolean
-						.section
+					.row(style="row-gap: 16px; display: block;")
+						sui-select(style="width: 110px; margin-right: 24px; vertical-align: middle;" index-type :value="indexValueType" @change="(e) => { indexValueType = e.target.value; form.index.value = indexValueType === 'boolean' ? true : ''; indexNameField.children[0].setCustomValidity('') }")
+							option(disabled) Value Type
+							option(value="string") String
+							option(value="number") Number
+							option(value="boolean") Boolean
+						.section(style="width: calc(100% - 134px);")
 							.radio-container(v-if="indexValueType === 'boolean'")
 								label True
 									sui-input(@change="form.index.value = true" type="radio" :checked="form.index.value === true || null" name="index_value")
@@ -230,7 +229,7 @@
 						.input-field
 							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
 					.action
-						sui-button.icon-button(@click="removeField(recordIndex)")
+						sui-button.icon-button(type="button" @click="removeField(recordIndex)")
 							Icon trash
 				.data-values
 					template(v-if="record.type === 'file'")
@@ -279,7 +278,7 @@
 				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
 		.foot(v-if='!isMobileUrl')
-			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").line-button Cancel
+			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").text-button Cancel
 			div(style="display: inline-block")
 				sui-button(v-if="isSaving" type="button")
 					span(style="visibility: hidden;") Save
@@ -293,8 +292,8 @@ sui-overlay(ref="deleteConfirmOverlay")
 			div Are you sure?
 		.body Are you sure you want to delete the record?
 		.foot
-			sui-button.text-button(@click="()=>deleteConfirmOverlay.close()") No 
-			sui-button.text-button(@click="deleteRecord") Yes
+			sui-button.text-button(type="button" @click="()=>deleteConfirmOverlay.close()") No 
+			sui-button.text-button(type="button" @click="deleteRecord") Yes
 sui-overlay(ref="exitEditOverlay")
 	.popup
 		.title
@@ -302,8 +301,8 @@ sui-overlay(ref="exitEditOverlay")
 			div Are you sure?
 		.body Are you sure you want to close? You are still editing.
 		.foot
-			sui-button.text-button(@click="()=>exitEditOverlay.close()") No 
-			sui-button.text-button(@click="confirmClose") Yes
+			sui-button.text-button(type="button" @click="()=>exitEditOverlay.close()") No 
+			sui-button.text-button(type="button" @click="confirmClose") Yes
 sui-overlay(ref="filesizeExceedsOverlay")
 	.popup
 		.title
@@ -311,7 +310,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 			div File Size Exceeded
 		.body Your total file size exceeds {{ fileSizeLimit }}MB.
 		.foot
-			sui-button(@click="()=>filesizeExceedsOverlay.close()") OK
+			sui-button.line-button(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';
@@ -528,7 +527,16 @@ const saveData = async () => {
 	} catch(e) {
 		console.log({e});
 		fileError.value = e.message;
-		view.value = 'record';
+
+		if(e.code === 'NOT_EXISTS') {
+			view.value = 'information';
+			await nextTick();
+			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
+			referenceIdField.value.querySelector('input').reportValidity();
+		} 
+		if(e?.name === 'NO_FILE') {		
+			fileError.value = e.message;
+		}
 	}
 }
 
@@ -720,15 +728,17 @@ const save = async () => {
 		// do some error message
 		console.log({e});
 		isSaving.value = false;
-		if(e.code === 'NOT_EXISTS') {
-			view.value = 'information';
-			await nextTick();
-			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
-			referenceIdField.value.querySelector('input').reportValidity();
-		} 
-		if(e?.name === 'NO_FILE') {		
-			fileError.value = e.message;
-			throw e;
+		if(state.viewport === 'desktop') {
+			if(e.code === 'NOT_EXISTS') {
+				view.value = 'information';
+				await nextTick();
+				referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
+				referenceIdField.value.querySelector('input').reportValidity();
+			} 
+			if(e?.name === 'NO_FILE') {		
+				fileError.value = e.message;
+				throw e;
+			}
 		}
 		throw e;
 	};
@@ -897,6 +907,8 @@ defineExpose({
 });
 </script>
 <style lang="less" scoped>
+@import '@/assets/variables.less';
+
 .container {
 	background: #505050;
 	position: relative;
@@ -916,15 +928,6 @@ defineExpose({
 		justify-content: space-between;
 		padding: 18px 20px 24px 20px;
 		font-weight: bold;
-
-		sui-button {
-			margin: -0.6em;
-
-			svg {
-				width: 20px;
-				height: 20px;
-			}
-		}
 	}
 
 	.menu {
@@ -1255,11 +1258,7 @@ defineExpose({
 		}
 
 		.row {
-			display: flex;
 			width: 100%;
-			row-gap: 24px;
-			column-gap: 16px;
-			flex-wrap: wrap;
 
 			&:not(:last-child) {
 				margin-bottom: 25px;
@@ -1273,7 +1272,25 @@ defineExpose({
 
 		.section {
 			display: inline-block;
-			flex-grow: 1;
+			vertical-align: middle;
+			width: 100%;
+
+			&.mobile-full {
+
+				&:first-child {
+					margin-right: 24px;
+				}
+
+				width: calc(50% - 12px);
+
+				@media @tablet {
+					width: 100%;
+					&:first-child {
+						margin-right: 0;
+						margin-bottom: 25px;
+					}
+				}
+			}
 
 			.name {
 				margin-bottom: 8px;
@@ -1282,6 +1299,7 @@ defineExpose({
 				sui-tooltip {
 					float: right;
 					vertical-align: middle;
+					font-weight: normal;
 				}
 			}
 
@@ -1327,6 +1345,10 @@ defineExpose({
 				width: 100%;
 				margin-left: 8px;
 				font-size: 16px;
+
+				&:focus-within {
+					outline: none;
+				}
 			}
 		}
 	}

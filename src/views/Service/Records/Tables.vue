@@ -3,17 +3,17 @@
     h1 Record
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
-        a(href="https://docs.skapi.com" target="_blank")
-            sui-button.line-button Read Doc
+        a(href="https://docs.skapi.com/database" target="_blank")
+            sui-button.line-button(type="button") Read Doc
 br
 // search form
 RecordSearch#recordSearch.hideOnTablet
 
-sui-button.hideOnTablet(style='float:right;margin: 8px 0;' @click='()=>addRecord()') + Add Record
+sui-button.hideOnTablet(type="button" style='float:right;margin: 8px 0;' @click='()=>addRecord()') + Add Record
 .hideOnTablet(style="clear:both;")
 
 // record view
-sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
+sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
     .view-record-overlay
         ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close(() => { recordToOpen = null; })")
 
@@ -102,14 +102,14 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
 
 .page-action.showOnTablet(@blur="isFabOpen = false")
     // @blur should be at the parent div
-    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen")
+    sui-button.fab.open-menu(type="button" @click.stop="isFabOpen = !isFabOpen")
         Icon menu_vertical
 
     Transition
         div(v-if="isFabOpen" @click.stop)
-            sui-button.fab(@click="router.push({name: 'mobileSearchRecord'})")
+            sui-button.fab(type="button" @click="router.push({name: 'mobileSearchRecord'})")
                 Icon search
-            sui-button.fab(@click='()=>addRecord(true)')
+            sui-button.fab(type="button" @click='()=>addRecord(true)')
                 Icon plus2
 </template>
 <!-- script below -->

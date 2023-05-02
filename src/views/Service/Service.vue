@@ -5,8 +5,8 @@ template(v-else)
         h2 How to start my service?
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
         div.action
-            a(href="https://docs.skapi.com" target="_blank")
-                sui-button.line-button Read Doc
+            a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
+                sui-button.line-button(type="button") Read Doc
     .container
         .title-actions-wrapper.showOnTablet
             .title-wrapper
@@ -106,7 +106,7 @@ sui-overlay(ref="deleteErrorOverlay")
             div Something went wrong!
         .body {{ deleteErrorMessage }}
         .foot
-            sui-button(@click="()=> { deleteErrorOverlay.close(); }") Ok
+            sui-button.line-button(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
@@ -451,6 +451,10 @@ watch(() => state.viewport, () => {
             line-height: 1;
             color: rgba(255, 255, 255, 0.6);
             margin-bottom: 8px;
+
+            span {
+                vertical-align: middle;
+            }
         }
 
         .value {

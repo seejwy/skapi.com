@@ -7,8 +7,8 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
     h1 Users
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     .action
-        a(href="https://docs.skapi.com" target="_blank")
-            sui-button.line-button(style="float: right") Read Doc
+        a(href="https://docs.skapi.com/authentication" target="_blank")
+            sui-button.line-button(type="button" style="float: right") Read Doc
     div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'" :loading="promiseRunning || null")
     form(@submit.prevent="search" action="")
@@ -24,7 +24,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 option(value="locale") Locale
                 option(value="birthdate") Birth Date
         
-            .select-input(@click.stop)
+            .select-input.no-border(@click.stop)
                 .input-field
                     sui-input(
                         ref="searchField" 
@@ -53,13 +53,13 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         //- option(value="=") =
     
     .actions
-        sui-button.text-button(@click="blockUsers" :disabled="((selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || !state.user.email_verified) || null")
+        sui-button.text-button(type="button" @click="blockUsers" :disabled="((selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon block
             span.hide-when-pre-tablet block
-        sui-button.text-button(@click="unblockUsers" :disabled="((selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || !state.user.email_verified) || null")
+        sui-button.text-button(type="button" @click="unblockUsers" :disabled="((selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon unblock
             span.hide-when-pre-tablet unblock
-        sui-button.text-button(@click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
+        sui-button.text-button(type="button" @click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon trash
             span.hide-when-pre-tablet delete
 .table-outer-wrapper(:loading="promiseRunning || null")
@@ -88,11 +88,11 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         .header-actions(v-else)
         Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
         .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(@click="blockUsers" :disabled="(selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || null")
+            sui-button.icon-button(type="button" @click="blockUsers" :disabled="(selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || null")
                 Icon block
-            sui-button.icon-button(@click="unblockUsers" :disabled="(selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || null")
+            sui-button.icon-button(type="button" @click="unblockUsers" :disabled="(selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || null")
                 Icon unblock
-            sui-button.icon-button(@click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
+            sui-button.icon-button(type="button" @click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
 
     .table-wrapper
@@ -198,12 +198,12 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             ) right
 
 .page-action(v-if="viewport === 'mobile' && !route.query.search" @blur="isFabOpen = false")
-    sui-button.fab.open-menu(@click.stop="isFabOpen = !isFabOpen")
+    sui-button.fab.open-menu(type="button" @click.stop="isFabOpen = !isFabOpen")
         Icon menu_vertical
 
     Transition
         div(v-if="isFabOpen" @click.stop)
-            sui-button.fab(@click="router.push({name: 'mobileSearchUser'})")
+            sui-button.fab(type="button" @click="router.push({name: 'mobileSearchUser'})")
                 Icon search
 sui-overlay(ref="confirmOverlay")
     .popup
@@ -215,8 +215,8 @@ sui-overlay(ref="confirmOverlay")
         .body 
             p Do you wish to continue?
         .foot
-            sui-button.text-button No 
-            sui-button.text-button Yes
+            sui-button.text-button(type="button") No 
+            sui-button.text-button(type="button") Yes
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
@@ -234,6 +234,50 @@ let serviceId = route.params.service;
 let searchValue = ref('');
 const searchField = ref(null);
 const service = inject('service');
+const list = ref([
+    [
+    {
+        id: 1,
+        name: 'hello'
+    },
+    {
+        id: 2,
+        name: 'hello1'
+    },
+    {
+        id: 3,
+        name: 'hello2'
+    },
+    {
+        id: 4,
+        name: 'hello3'
+    },
+    {
+        id: 5,
+        name: 'hello4'
+    }],
+    
+    {
+        id: 11,
+        name: 'bye'
+    },
+    {
+        id: 12,
+        name: 'bye1'
+    },
+    {
+        id: 13,
+        name: 'bye2'
+    },
+    {
+        id: 41,
+        name: 'bye3'
+    },
+    {
+        id: 15,
+        name: 'bye4'
+    }
+]);
 
 let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
@@ -299,6 +343,7 @@ const changeSearchType = (value) => {
 }
 
 const groupedUserList = computed(() => {
+    console.log("This is run", serviceUsers?.value?.list);
     if (!serviceUsers.value || !serviceUsers.value.list.length) {
         currentSelectedUsersBatch.value = 0;
         return null;
