@@ -169,7 +169,6 @@ section.sectionBox.trySkapi
 
 <script setup>
 import { onMounted, ref, onBeforeUnmount } from 'vue';
-import LoadingCircle from '../../components/LoadingCircle.vue';
 let showThis = ref(false);
 
 function codeCopy() {
