@@ -5,11 +5,10 @@
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
             sui-button.line-button(type="button") Read Doc
-br
 // search form
 RecordSearch#recordSearch.hideOnTablet
 
-sui-button.hideOnTablet(type="button" style='float:right;margin: 8px 0;' @click='()=>addRecord()') + Add Record
+sui-button.hideOnTablet(type="button" style='float:right;' @click='()=>addRecord()') + Add Record
 .hideOnTablet(style="clear:both;")
 
 // record view
@@ -412,7 +411,7 @@ onBeforeUnmount(() => {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25),
     inset 1px 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
-    margin: 20px 0 0 0;
+    margin: 24px 0 0 0;
     padding: 24px 20px;
 
     @media @tablet {

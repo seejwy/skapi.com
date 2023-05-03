@@ -8,7 +8,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
     p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
     .action
         a(href="https://docs.skapi.com/authentication" target="_blank")
-            sui-button.line-button(type="button" style="float: right") Read Doc
+            sui-button.line-button(type="button") Read Doc
     div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'" :loading="promiseRunning || null")
     form(@submit.prevent="search" action="")
@@ -807,7 +807,7 @@ onBeforeRouteLeave((to, from) => {
 
 .table-outer-wrapper {
     position: relative;
-    margin-top: 20px;
+    margin-top: 24px;
     background-color: #434343;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1182,8 +1182,6 @@ onBeforeRouteLeave((to, from) => {
 }
 
 .search-input-wrapper {
-    margin: 8px 0px;
-
     & > sui-select {
         background: rgba(255, 255, 255, 0.08);
     }
