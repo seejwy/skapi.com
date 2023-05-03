@@ -16,7 +16,7 @@
 .content_box {
     --bgColor: 41, 63, 230;
     --ringColor: 255, 255, 255;
-    --spinnerWidth: 8px;
+    --spinnerWidth: 3px;
 
     display: flex;
     justify-content: center;
@@ -27,6 +27,8 @@
     left: 0;
     right: 0;
     bottom: 0;
+    width: 24px;
+    height: 24px;
     margin: auto;
     background: rgba(var(--bgColor), 1);
     border-radius: 50%;

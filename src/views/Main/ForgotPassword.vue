@@ -37,7 +37,7 @@
                     sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(secondsTillReady || forgotError || isRequestingCode) || null") 
                         template(v-if="forgotError") {{ forgotError }}
                         template(v-else-if="isRequestingCode") 
-                            LoadingCircle(style="width:24px; height:24px; --spinnerWidth:3px; --bgColor: 250, 250, 250; --ringColor: 0, 0, 0;")
+                            LoadingCircle(style="--bgColor: 250, 250, 250; --ringColor: 0, 0, 0;")
                         template(v-else-if="secondsTillReady") Code has been sent
                         span(:style="{color: 'var(--primary-color)', margin: 0, visibility: !forgotError && !isRequestingCode && !secondsTillReady ? 'visible' : 'hidden', position:  !forgotError && !secondsTillReady ? 'relative' : 'absolute'}") Resend Code
                 .input
