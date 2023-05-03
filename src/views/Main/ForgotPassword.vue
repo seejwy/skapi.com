@@ -37,7 +37,7 @@
                     sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(secondsTillReady || forgotError || isRequestingCode) || null") 
                         template(v-if="forgotError") {{ forgotError }}
                         template(v-else-if="isRequestingCode") 
-                            LoadingAnimation
+                            LoadingCircle(style="--bgColor: 250, 250, 250; --ringColor: 0, 0, 0;")
                         template(v-else-if="secondsTillReady") Code has been sent
                         span(:style="{color: 'var(--primary-color)', margin: 0, visibility: !forgotError && !isRequestingCode && !secondsTillReady ? 'visible' : 'hidden', position:  !forgotError && !secondsTillReady ? 'relative' : 'absolute'}") Resend Code
                 .input
@@ -78,7 +78,7 @@ import { useRouter } from 'vue-router';
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '../../components/SubmitButton.vue';
 import PasswordInput from '../../components/PasswordInput.vue';
-import LoadingAnimation from '../../components/LoadingAnimation.vue';
+import LoadingCircle from '../../components/LoadingCircle.vue';
 
 let router = useRouter();
 // set page title

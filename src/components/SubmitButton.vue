@@ -1,12 +1,13 @@
 <template lang="pug">
 sui-button(type="submit" :disabled="(props.loading || props.disabled) || null" :loading="props.loading || null")  
-	LoadingAnimation(v-if="props.loading")
+	LoadingCircle(v-if="props.loading")
 	span(:style="{'visibility': props.loading ? 'hidden' : 'visible'}")
 		slot
 	input(type="submit" style="position: absolute; opacity: 0; visibility: hidden" :disabled="(props.loading || props.disabled) || null")
 </template>
 <script setup>
-import LoadingAnimation from './LoadingAnimation.vue';
+import LoadingCircle from './LoadingCircle.vue';
+
 const props = defineProps({
 	loading: {
 		type: Boolean,

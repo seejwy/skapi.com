@@ -16,7 +16,7 @@
 .content_box {
     --bgColor: 41, 63, 230;
     --ringColor: 255, 255, 255;
-    --spinnerWidth: 8px;
+    --spinnerWidth: 3px;
 
     display: flex;
     justify-content: center;
@@ -25,9 +25,12 @@
     box-sizing: content-box;
     top: 0;
     left: 0;
-    width: 67px;
-    height: 67px;
-    background: rgba(var(--bgColor),1);
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    margin: auto;
+    background: rgba(var(--bgColor), 1);
     border-radius: 50%;
     animation: rotateS .8s linear infinite;
 
@@ -40,6 +43,7 @@
             transform: rotate(360deg);
         }
     }
+
     .circle {
         position: absolute;
         width: var(--spinnerWidth);
@@ -55,6 +59,7 @@
             background: rgba(var(--ringColor), 1);
         }
     }
+
     .background_box {
         position: relative;
         width: 50%;
@@ -65,18 +70,22 @@
             border-radius: 100% 0 0 0;
             background: linear-gradient(rgba(var(--ringColor), 1), rgba(var(--ringColor), 0.8));
         }
+
         &.b2 {
             border-radius: 0 100% 0 0;
             background: linear-gradient(transparent, transparent);
         }
+
         &.b3 {
             border-radius: 0 0 0 100%;
-            background: linear-gradient(rgba(var(--ringColor), 0.8), rgba(var(--ringColor), 0.4));
+            background: linear-gradient(rgba(var(--ringColor), 0.8), rgba(var(--ringColor), 0.6));
         }
+
         &.b4 {
             border-radius: 0 0 100% 0;
-            background: linear-gradient(transparent, rgba(var(--ringColor), 0.45));
+            background: linear-gradient(transparent, rgba(var(--ringColor), 0.53), rgba(var(--ringColor), 0.65));
         }
+
         .background {
             position: absolute;
             width: calc(100% - var(--spinnerWidth));
@@ -89,16 +98,19 @@
                 bottom: 0;
                 border-radius: 100% 0 0 0;
             }
+
             &.c2 {
                 left: 0;
                 bottom: 0;
                 border-radius: 0 100% 0 0;
             }
+
             &.c3 {
                 right: 0;
                 top: 0;
                 border-radius: 0 0 0 100%;
             }
+
             &.c4 {
                 left: 0;
                 top: 0;
