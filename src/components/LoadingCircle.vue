@@ -27,8 +27,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     margin: auto;
     background: rgba(var(--bgColor), 1);
     border-radius: 50%;
@@ -78,12 +78,12 @@
 
         &.b3 {
             border-radius: 0 0 0 100%;
-            background: linear-gradient(rgba(var(--ringColor), 0.8), rgba(var(--ringColor), 0.4));
+            background: linear-gradient(rgba(var(--ringColor), 0.8), rgba(var(--ringColor), 0.6));
         }
 
         &.b4 {
             border-radius: 0 0 100% 0;
-            background: linear-gradient(transparent, rgba(var(--ringColor), 0.45));
+            background: linear-gradient(transparent, rgba(var(--ringColor), 0.53), rgba(var(--ringColor), 0.65));
         }
 
         .background {
