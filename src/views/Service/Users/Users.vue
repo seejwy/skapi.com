@@ -343,7 +343,6 @@ const changeSearchType = (value) => {
 }
 
 const groupedUserList = computed(() => {
-    console.log("This is run", serviceUsers?.value?.list);
     if (!serviceUsers.value || !serviceUsers.value.list.length) {
         currentSelectedUsersBatch.value = 0;
         return null;
