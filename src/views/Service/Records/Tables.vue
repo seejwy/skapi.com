@@ -35,7 +35,7 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
                 .title No Record Tables
                 p List of tables will show when there is data
 
-        template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch]")
+        template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch] && !fetchingData")
             template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList.length)")
                 template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1].length)")
                     // when v-for by number, it starts with 1
