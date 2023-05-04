@@ -98,7 +98,7 @@ sui-overlay(ref="deleteConfirmOverlay")
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
         .foot
             sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = ''}").text-button Cancel
-            SubmitButton(:loading="isDisabled" class="text-button") Delete
+            SubmitButton(:loading="isDisabled" class="text-button" backgroundColor="51, 51, 51") Delete
 sui-overlay(ref="deleteErrorOverlay")
     .popup
         .title

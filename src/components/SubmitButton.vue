@@ -1,6 +1,6 @@
 <template lang="pug">
-sui-button(type="submit" :disabled="(props.loading || props.disabled) || null" :loading="props.loading || null")  
-	LoadingCircle(v-if="props.loading")
+sui-button(type="submit" :disabled="(props.loading || props.disabled) || null" :loading="props.loading || null" )  
+	LoadingCircle(v-if="props.loading" :style="{'--bgColor': props.backgroundColor}")
 	span(:style="{'visibility': props.loading ? 'hidden' : 'visible'}")
 		slot
 	input(type="submit" style="position: absolute; opacity: 0; visibility: hidden" :disabled="(props.loading || props.disabled) || null")
@@ -19,6 +19,12 @@ const props = defineProps({
 		type: Boolean,
 		default() {
 			return false;
+		}
+	},
+	backgroundColor: {
+		type: String,
+		default() {
+			return '41, 63, 230';
 		}
 	}
 })
