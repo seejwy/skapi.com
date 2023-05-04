@@ -282,7 +282,7 @@
 			div(style="display: inline-block")
 				sui-button(v-if="isSaving" type="button")
 					span(style="visibility: hidden;") Save
-					Icon.animation-rotation--slow-in-out(style=" position: absolute;") loading
+					LoadingCircle
 				sui-button(v-else type="button" @click="save") Save
 
 sui-overlay(ref="deleteConfirmOverlay")
@@ -320,7 +320,7 @@ import { tableList, getMoreRecords, recordTables, refreshTables } from '../views
 import TagsInput from '@/components/TagsInput.vue';
 import JsonInput from '@/components/JsonInput.vue';
 import Icon from '@/components/Icon.vue';
-import SubmitButton from '@/components/SubmitButton.vue';
+import LoadingCircle from '@/components/LoadingCircle.vue';
 import router from '../router';
 
 const route = useRoute();
