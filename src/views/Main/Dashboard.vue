@@ -41,7 +41,7 @@ div(v-else-if="state?.user")
 </template>
 <script setup>
 import { inject, ref, watch, nextTick, computed } from 'vue';
-import { state, skapi, dateFormat, awaitConnection } from '@/main';
+import { state, skapi, dateFormat, localeName, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import NewService from '@/components/NewService.vue';
@@ -61,7 +61,7 @@ const isFetchingServices = ref(true);
 
 const filterServiceDetails = (service) => {
     return {
-        'Locale': service.region,
+        'Service Location': localeName(service.region),
         'CORS': service.cors,
         'Date Created': dateFormat(service.timestamp).split(' ')[0]
     }
