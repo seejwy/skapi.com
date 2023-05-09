@@ -236,50 +236,6 @@ let serviceId = route.params.service;
 let searchValue = ref('');
 const searchField = ref(null);
 const service = inject('service');
-const list = ref([
-    [
-    {
-        id: 1,
-        name: 'hello'
-    },
-    {
-        id: 2,
-        name: 'hello1'
-    },
-    {
-        id: 3,
-        name: 'hello2'
-    },
-    {
-        id: 4,
-        name: 'hello3'
-    },
-    {
-        id: 5,
-        name: 'hello4'
-    }],
-    
-    {
-        id: 11,
-        name: 'bye'
-    },
-    {
-        id: 12,
-        name: 'bye1'
-    },
-    {
-        id: 13,
-        name: 'bye2'
-    },
-    {
-        id: 41,
-        name: 'bye3'
-    },
-    {
-        id: 15,
-        name: 'bye4'
-    }
-]);
 
 let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
