@@ -248,10 +248,11 @@ const opensettingWindow = () => {
     else settingWindow.value.open();
 }
 
-
-skapi.storageInformation(service.value.service).then((storage) => {
-    service.value.storage = storage.cloud + storage.database + storage.email;
-});
+if(!service.value.hasOwnProperty('storage')) {
+    skapi.storageInformation(service.value.service).then((storage) => {
+        service.value.storage = storage.cloud + storage.database + storage.email;
+    });
+}
 
 watch(() => isEdit.value, async () => {
     if(state.viewport === 'desktop') {
