@@ -4,6 +4,7 @@ template(v-else)
     .page-header.head-space-helper
         h2 How to start my service?
         p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
+        pre {{  service }}
         div.action
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
                 sui-button.line-button(type="button") Read Doc
@@ -23,7 +24,7 @@ template(v-else)
                     span(style="font-size:14px") Delete Service
             .information-grid
                 .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
-                    .name {{ info.name }}
+                    .name {{ info.name }} {{ service[info.key] }}
                     .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
                     .value(v-else) {{ service[info.key] }}
 
@@ -168,6 +169,7 @@ const informationGrid = reactive([
         name: 'Storage Use',
         key: 'storage',
         filter: (value) => {
+            console.log({value})
             let val = value || 0;
             return `${val}KB`
         }
