@@ -123,6 +123,8 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                             template(v-else-if="key === 'access_group'")
                                 span(v-if="user['group'] === 99") Admin
                                 span(v-else) User
+                            template(v-else-if="key === 'timestamp'")
+                                span {{ dateFormat(user[key]) }}
                             template(v-else) {{ user[key] || '-' }}
                         td(v-if="computedVisibleFields.length <= 2")
                     //- Below code needs to change to page list not full users list
@@ -221,7 +223,7 @@ sui-overlay(ref="confirmOverlay")
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
 import { changeSearchCondition, visibleFields, getValidationMessage, placeholder } from './users';
-import { skapi, state, groupArray } from '@/main';
+import { skapi, state, groupArray, dateFormat } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
