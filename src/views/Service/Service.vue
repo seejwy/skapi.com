@@ -2,8 +2,12 @@
 EditService(v-if="state?.user && route.query.edit === 'service'" @close="router.replace({query: null})")
 template(v-else)
     .page-header.head-space-helper
-        h2 How to start my service?
-        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris dignissim purus et arcu placerat dignissim. Aliquam ipsum libero, bibendum et pharetra at, rutrum ac enim. Donec vel dictum orci. Cras turpis massa, dapibus eget tincidunt sollicitudin, sollicitudin sed ipsum. Suspendisse et imperdiet ipsum. Nullam quis velit sit amet urna iaculis mollis in vitae tortor. Sed interdum feugiat diam, vel facilisis velit sagittis vel. Donec dolor augue, mattis a ipsum quis, venenatis mollis ante.
+        h2 Service
+        p.
+            A service represents a collection of serverless resources created within your Skapi network.
+            To unlock the full potential of Skapi's backend features, simply connect your web page to a Service.
+            Get started and learn how to connect your web page with a Service by clicking "Read Doc".
+            
 
         div.action
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
@@ -69,14 +73,14 @@ template(v-else)
                         .title
                             Icon users
                             span Users
-                        .body Users are data that your service user's will store and read from your service database. 
+                        .body Users are individuals who have created an account within your service. From this section, you can search for, block, or delete users as needed.
                     .goto Go to Users >
                 RouterLink(:to="{name: 'records'}").service-grid-item  
                     .content
                         .title
                             Icon folder_open
                             span Record
-                        .body Users are data that your service user's will store and read from your service database. Users are data that your service user's will store and read from your service database. 
+                        .body Records represent the data created by you or your users within your database. In this section, you can search for, edit, or create new records as needed.
                     .goto Go to Records >
                 //- RouterLink(to="/").service-grid-item 
                     .content
@@ -199,12 +203,12 @@ const settingGrid = reactive([
     {
         name: 'CORS',
         key: 'cors',
-        tip: 'Cors tip goes here',
+        tip: 'When CORS URL is set, your website will not be able to connect to your service unless it\'s hosted on the given URL.',
     },
     {
         name: 'API Key',
         key: 'api_key',
-        tip: 'Cors tip goes here',
+        tip: 'You can use your own private API key if you wish to integrate user\'s secure request to your external backend server.',
     },
 ]);
 

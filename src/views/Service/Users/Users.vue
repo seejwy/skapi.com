@@ -5,7 +5,12 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'}); getUsers(true); serviceUsers = null; }") X2
 .page-header.head-space-helper(v-if="viewport === 'desktop' || !route.query.search")
     h1 Users
-    p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
+    p.
+        Users are individuals who have created an account within your service.
+        This page allows you to search for, block, or delete users as necessary.
+        Note that a user needs to log in at least once after signing up to appear on your users list.
+        To gain a deeper understanding of authentication and users, click on "Read Doc".
+
     .action
         a(href="https://docs.skapi.com/authentication" target="_blank")
             sui-button.line-button(type="button") Read Doc

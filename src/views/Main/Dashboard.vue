@@ -4,8 +4,11 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
-        h1.fixed Services
-        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+        h1.fixed Dashboard
+        p.
+            Dashboard is where you can see all the list of the services you are running.
+            To create a new service, click on "New Service".
+
         .action
             sui-button.with-icon(type="button" @click="state.user.email_verified ? state.viewport === 'desktop' ? isOpen = true : router.push('?new=service') : null" :disabled="!state.user.email_verified || null")
                 Icon plus2
