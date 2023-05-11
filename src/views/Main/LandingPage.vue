@@ -23,15 +23,15 @@ section.sectionBox
                                 img(src="@/assets/img/icons/Asset9.svg")
                     .arrowImg 
                         img(src="@/assets/img/icons/Asset1.svg")
-                h3 Welcome to Skapi
+                h3 What is skapi?
                 p 
-                    | "A robust and easy-to-use API service designed 
-                    span to help developers build faster, more efficient, and scalable applications 
-                    | . Our platform offers a suite of advanced tools and features, allowing you to streamline your development process and focus on what matters most: 
+                    | "A robust Javascript backend API designed to help you build 
+                    span secure, more efficient, and scalable web services.
+                    |  Our platform offers a suite of advanced tools and features, allowing you to ease your web development process and focus on what matters most: 
                     span creating incredible user experiences
                     | ."
-                a(href='https://docs.skapi.com' target="_blank")
-                    button.readBtn Read Document
+                //- a(href='https://docs.skapi.com' target="_blank")
+                //-     button.readBtn Read Document
 section.sectionBox.showVideo
     .videoCont 
         img(src="@/assets/img/icons/video.svg")
@@ -105,7 +105,7 @@ section.sectionBox.getStart
                 .level.lv1
                     .lvCont
                         .lvTit Create Service
-                        .lvDesc Log and Create new Service from your dashboard 
+                        .lvDesc Login and Create new Service from your dashboard 
                     .lvImg 
                         img(src="@/assets/img/icons/lvImg1.png")
                 .level.lv2
@@ -118,8 +118,9 @@ section.sectionBox.getStart
                     .lvCont
                         .lvTit Initialize Skapi
                         .lvDesc
-                            | Import and Initialize Skapi from index.html. Replace
+                            | Import and Initialize Skapi from index.html.
                             br
+                            | Replace
                             em ‘SERVICE_ID’ 
                             | and 
                             br
@@ -130,18 +131,16 @@ section.sectionBox.getStart
                             img(src="@/assets/img/icons/copy.svg")
                         .preCode
                             pre
-                                code 
+                                code
                                     |&lt;!DOCTYPE html&gt;
-                                    |  &lt;head&gt;
-                                    |    &lt;script src="https://cdn.jsdelivr.net/npm/skapi-js@latest/dist/skapi.js"&gt;&lt;/script&gt;
-                                    |  &lt;/head&gt;
-                                    |  &lt;script&gt;
+                                    |&lt;script src="https://cdn.jsdelivr.net/npm/skapi-js@latest/dist/skapi.js"&gt;&lt;/script&gt;
+                                    |&lt;script&gt;
                                     |    let skapi = new Skapi('
                                     span SERVICE_ID
                                     | ', '
                                     span OWNERS_ID
                                     | ');
-                                    |  &lt;/script&gt;
+                                    |&lt;/script&gt;
     .mlvImg
         .codeCopy(@click="codeCopy")
             img(src="@/assets/img/icons/copy.svg")
@@ -161,10 +160,14 @@ section.sectionBox.getStart
                     |  &lt;/script&gt;
 section.sectionBox.trySkapi
     .tryCont 
-        h3 DON’T JUST TAKE OUR WORD FOR IT
-        h2 Ready to try Skapi?
-        a(href='https://docs.skapi.com' target="_blank")
-            button.startBtn Get Started
+        pre.
+            Skapi is currently in BETA.
+            We're inviting you to join us in shaping the future of web development.
+            As a BETA user, you'll enjoy full access to our services, absolutely free.
+            Join and help us create powerful software that empowers web developers around the world.
+        br
+        router-link(to="/signup")
+            button.startBtn Sign-up
 </template>
 
 <script setup>

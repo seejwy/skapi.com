@@ -1,7 +1,12 @@
 <template lang="pug">
 .page-header.head-space-helper
     h1 Record
-    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+    p.
+       Records represent the data created by you or your users within your database.
+       Users can store either data objects or binary files.
+       skapi's database is designed for flexibility and features automatic indexing.
+       Learn how to make the most of skapi's database by clicking "Read Doc"
+
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
             sui-button.line-button(type="button") Read Doc
