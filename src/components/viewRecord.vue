@@ -697,11 +697,22 @@ const save = async () => {
 		}
 		
 		if(!isNewRecord && props.record?.table?.name !== currentTable) {
+			await nextTick();
 			recordTables.value.list.forEach((table, index) => {
 				if(table.table === currentTable) {
 					let idx = table.records.list.findIndex((record) => {
 						return record.record_id === props.record_id
 					});
+
+					if(props.record.table.name !== currentTable) {
+						recordTables.value.list.push({
+							number_of_records: 1,
+							opened: true,
+							records: ref({endOfList: true, startKey: 'end', startKey_list: ['end'], list:[r]}),
+							size: 0,
+							table: props.record.table.name
+						});
+					}
 
 					table.records.list.splice(idx, 1);
 					table.number_of_records--;

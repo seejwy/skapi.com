@@ -35,14 +35,14 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
 
     // table list
     template(v-else)
-        .no-records(v-if='!recordTables.list.length')
+        .no-records(v-if='!recordTables.list?.length')
             div
                 .title No Record Tables
                 p List of tables will show when there is data
 
         template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch] && !fetchingData")
-            template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList.length)")
-                template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1].length)")
+            template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList?.length)")
+                template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1]?.length)")
                     // when v-for by number, it starts with 1
                     template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
                         .table-wrapper(v-if="t.number_of_records")
@@ -62,7 +62,7 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
                                 Icon.animation-rotation(v-else) refresh
 
                             div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
-                                .noRecords(v-if='!t.records.list.length')
+                                .noRecords(v-if='!t.records.list?.length')
                                     div
                                         sui-flextext(min-size='14' max-size='24') No Records
                                         br
