@@ -193,7 +193,7 @@ async function toParent() {
 
 function gotoService() {
     if(state.viewport === 'desktop') {
-        router.push('/dashboard/' + route.params.service);
+        router.push('/admin/' + route.params.service);
     }
 }
 

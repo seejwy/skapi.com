@@ -38,7 +38,7 @@ async function resendSignupConfirmation() {
     } catch(e) {
         console.log({e: e});
         if(e.code === 'INVALID_REQUEST') {
-            router.replace('/dashboard');
+            router.replace('/admin');
         }
     }
 }

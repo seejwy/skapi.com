@@ -7,7 +7,7 @@ import EmailConfirmed from '../views/Main/EmailConfirmed.vue';
 import DeleteConfirmed from '../views/Main/DeleteConfirmed.vue';
 import ForgotPassword from '../views/Main/ForgotPassword.vue';
 import Main from '../views/Main/Main.vue';
-import Dashboard from '../views/Main/Dashboard.vue';
+import Admin from '../views/Main/Admin.vue';
 import Settings from '../views/Main/Settings.vue';
 
 const router = createRouter({
@@ -23,9 +23,9 @@ const router = createRouter({
           component: LandingPage
         },
         {
-          path: 'dashboard',
-          name: 'dashboard',
-          component: Dashboard
+          path: 'admin',
+          name: 'admin',
+          component: Admin
         },
         {
           path: 'account-settings',
@@ -65,7 +65,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/dashboard',
+      path: '/admin',
       children: [
         {
           path: ':service',

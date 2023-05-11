@@ -162,7 +162,7 @@ const changePassword = async () => {
 }
 
 const logout = async () => {
-    await router.push('dashboard');
+    await router.push('admin');
     skapi.AdminLogout().then(() => {
         state.user = null;
     });

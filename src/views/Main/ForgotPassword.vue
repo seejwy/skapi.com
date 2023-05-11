@@ -17,7 +17,7 @@
                         required)
                 .error(v-if="forgotError") {{ forgotError }}
                 SubmitButton(:loading="promiseRunning") Continue
-                RouterLink(to="/dashboard") Back to Login
+                RouterLink(to="/admin") Back to Login
         template(v-else-if="step === 2")
             form(@submit.prevent="changePassword")
                 h1 New Password
@@ -64,7 +64,7 @@
             Icon.success check_circle
             h1 New Password Success
             p Your password has been changed successfully. Please login with new password.
-            sui-button(type="button" @click="router.push('/dashboard')") Login
+            sui-button(type="button" @click="router.push('/admin')") Login
 
         .navigator(v-if="step <= 2")
             .ball(v-for="num in 2" @click="() => { num < step ? step = num : null; password = '';  passwordConfirm = '';}" :class="{'active': step === num}")
@@ -100,7 +100,7 @@ let step = ref(1);
 
 onBeforeMount(async() => {
     await skapi.getConnection().then(() => {
-        if(state.user) router.push({name: 'dashboard'});
+        if(state.user) router.push({name: 'admin'});
     })
 });
 

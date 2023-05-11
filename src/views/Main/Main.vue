@@ -8,7 +8,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                 a(href="https://docs.skapi.com" target="_blank") Documentation
 
         li(v-if='state.user')
-            router-link(to="/dashboard") Dashboard
+            router-link(to="/admin") Admin
 
         template(v-if='state.connection')
 
@@ -21,7 +21,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
 
             template(v-else)
                 li
-                    router-link(to="/dashboard") Login
+                    router-link(to="/admin") Login
 
                 li.showOnTablet
                     router-link(to="/signup") Sign-up
@@ -107,7 +107,7 @@ const noLoginNeeded = () => {
 function bypassSameRoute(e) {
     // bypass when same route is clicked
     let routeName = {
-        'Dashboard': 'dashboard',
+        'Admin': 'admin',
         'Login': 'login'
     }[e.target.textContent.trim()];
 

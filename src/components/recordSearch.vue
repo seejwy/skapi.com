@@ -1,7 +1,7 @@
 <template lang="pug">
 // search form
 form(
-    :action="'/dashboard/' + serviceId + '/records/search'"
+    :action="'/admin/' + serviceId + '/records/search'"
     @submit.prevent="submitSearch")
     // navbar for mobile search
     SearchNavBar(v-if='viewport === "mobile" && route.name === "mobileSearchRecord"')
@@ -221,7 +221,7 @@ function submitSearch(ev) {
         queryParts.push(encodeURIComponent(pair[0]) + "=" + encodeURIComponent(pair[1]));
     }
     let query = queryParts.join("&");
-    let url = `/dashboard/${serviceId}/records/search?${query}`;
+    let url = `/admin/${serviceId}/records/search?${query}`;
     router.push(url);
     searchForm.isAdvanced = false;
 }

@@ -10,7 +10,7 @@
                     a(href="https://docs.skapi.com" target="_blank") Documentation
 
                 li
-                    router-link(to="/dashboard" :class="{'router-link-active': route.path.split('/')[1] === 'dashboard'}") Dashboard
+                    router-link(to="/admin" :class="{'router-link-active': route.path.split('/')[1] === 'admin'}") Admin
 
                 li
                     router-link(to="/account-settings" tag="li") Account Settings
@@ -288,8 +288,8 @@ watch(() => state.user, u => {
     }
 });
 
-document.body.classList.add('dashboard');
+document.body.classList.add('admin');
 onBeforeUnmount(() => {
-    document.body.classList.remove('dashboard');
+    document.body.classList.remove('admin');
 })
 </script>

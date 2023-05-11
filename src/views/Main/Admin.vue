@@ -4,9 +4,9 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
-        h1.fixed Dashboard
+        h1.fixed Admin
         p.
-            Dashboard is where you can see all the list of the services you are running.
+            Admin is where you can see all the list of the services you are running.
             To create a new service, click on "New Service".
 
         .action
@@ -15,7 +15,7 @@ div(v-else-if="state?.user")
                 span New Service
     .container(v-if="serviceList?.length")
         template(v-for="service in serviceList")
-            router-link.service(:to='"/dashboard/" + service.service')
+            router-link.service(:to='"/admin/" + service.service')
                 .settings
                     .name 
                         .indicator(:class="{'active': service.active > 0}")
@@ -120,7 +120,7 @@ watch(() => isOpen.value, async () => {
 watch(() => state.viewport, (viewport) => {
     if(viewport === 'desktop') {
         isOpen.value = false;
-        router.replace('/dashboard');
+        router.replace('/admin');
     }
 })
 </script>

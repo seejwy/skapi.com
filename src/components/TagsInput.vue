@@ -87,7 +87,7 @@ const removeTag = (index) => {
   }
 
   &:focus-within {
-    .dashboard & {
+    .admin & {
         border: 1px solid var(--dark-highlight-color);
         box-shadow: 0 0 0 1px var(--dark-highlight-color) inset;
       }

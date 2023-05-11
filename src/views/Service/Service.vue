@@ -6,12 +6,11 @@ template(v-else)
         p.
             A service represents a collection of serverless resources created within your Skapi network.
             To unlock the full potential of Skapi's backend features, simply connect your web page to a Service.
-            Get started and learn how to connect your web page with a Service by clicking "Read Doc".
-            
+            Get started and learn how to connect your web page with a Service by clicking "Read Doc".         
 
         div.action
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
-                sui-button.line-button(type="button") Read Doc
+                sui-button.line-button(type="button") Find out More
     .container
         .title-actions-wrapper.showOnTablet
             .title-wrapper
@@ -236,7 +235,7 @@ const deleteService = () => {
 
     skapi.deleteService(service.value.service).then(() => {
         if(deleteConfirmOverlay.value) deleteConfirmOverlay.value.close();
-        router.replace('/dashboard');
+        router.replace('/admin');
     }).catch(() => {
         deleteErrorMessage.value = "Please disable your service before deleting it.";
         if(deleteConfirmOverlay.value) deleteConfirmOverlay.value.close();

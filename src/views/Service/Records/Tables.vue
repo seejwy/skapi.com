@@ -297,7 +297,7 @@ let viewport = inject('viewport');
 function viewRecordList(t) {
     if (viewport.value === 'mobile') {
         searchResult.value = t.records;
-        router.push(`/dashboard/${serviceId}/records/list?table=${t.table}`);
+        router.push(`/admin/${serviceId}/records/list?table=${t.table}`);
     }
     else {
         t.opened = !t.opened;

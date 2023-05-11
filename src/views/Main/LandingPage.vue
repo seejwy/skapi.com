@@ -105,13 +105,13 @@ section.sectionBox.getStart
                 .level.lv1
                     .lvCont
                         .lvTit Create Service
-                        .lvDesc Login and Create new Service from your dashboard 
+                        .lvDesc Login and Create new Service from your admin 
                     .lvImg 
                         img(src="@/assets/img/icons/lvImg1.png")
                 .level.lv2
                     .lvCont
                         .lvTit Retrieve ID
-                        .lvDesc Retrieve the service ID and the owner’s ID from the dashboard
+                        .lvDesc Retrieve the service ID and the owner’s ID from the admin
                     .lvImg 
                         img(src="@/assets/img/icons/lvImg2.png")
                 .level.lv3

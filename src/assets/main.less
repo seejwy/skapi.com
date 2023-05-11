@@ -71,7 +71,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  &.dashboard {
+  &.admin {
     background-color: var(--app-bg-color, #595959);
     color: #fff;
 
@@ -82,7 +82,7 @@ body {
     }
   }
 
-  &.dashboard-login {
+  &.admin-login {
     background-color: var(--app-bg-color, #595959);
   }
 }
@@ -161,7 +161,7 @@ main {
           color: rgba(0, 0, 0, 0.85);
       }
 
-      .dashboard & p {
+      .admin & p {
         color: rgba(255, 255, 255, .85);
       }
   
@@ -218,7 +218,7 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
     color: rgba(0, 0, 0, 0.4);
   }
 
-  .dashboard &,
+  .admin &,
   .db-input {
     color: #fff;
     border: 0.5px solid rgba(255, 255, 255, 0.4);
@@ -233,20 +233,20 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
   &:focus-within {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset;
     
-    .dashboard & {
+    .admin & {
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset;
     }
 
     input {
       outline: none;
 
-      .dashboard & {
+      .admin & {
         outline: none;
       }
     }
   }
 
-  .dashboard .select-input & {
+  .admin .select-input & {
     background-color: transparent;
   }
 }
@@ -257,7 +257,7 @@ sui-input[type=checkbox] {
   border-width: 2px;
   cursor: pointer;
   
-  .dashboard & {
+  .admin & {
     color: #fff;
   }
 
@@ -267,7 +267,7 @@ sui-input[type=checkbox] {
     &[checked] {
       outline: 3px solid  rgba(41, 63, 230, 0.3);
 
-      .dashboard & {
+      .admin & {
         outline: 3px solid rgba(0, 0, 0, 0.2);
       }
     }
@@ -276,7 +276,7 @@ sui-input[type=checkbox] {
       outline: 3px solid  rgba(41, 63, 230, 0.1);
       background-color:  rgba(41, 63, 230, 0.1);
 
-      .dashboard & {
+      .admin & {
         outline: 3px solid rgba(0, 0, 0, 0.2);
         background-color:  rgba(0, 0, 0, 0.2);
       }
@@ -286,7 +286,7 @@ sui-input[type=checkbox] {
   &[disabled] {
     color: rgba(0, 0, 0, 0.25);
 
-    .dashboard & {
+    .admin & {
       color: rgba(255, 255, 255, 0.6);
     }
   }
@@ -314,7 +314,7 @@ sui-input[type=checkbox] {
     background: var(--primary-color);
     box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%);
 
-    .dashboard & {
+    .admin & {
       color: #434343;
       background: #fff;
     }
@@ -324,7 +324,7 @@ sui-input[type=checkbox] {
         background: rgba(0, 0, 0, 0.25);
         color: rgba(255, 255, 255, 0.6);
 
-      .dashboard & {
+      .admin & {
         background: rgba(255, 255, 255, 0.6);
         color: rgba(255, 255, 255, 0.6);
       }
@@ -338,13 +338,13 @@ sui-select {
   box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
   font-family: "Radio Canada", sans-serif;
 
-  .dashboard & {
+  .admin & {
     color: #fff;
   }
 
   &:focus-within {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset !important;
-    .dashboard & {
+    .admin & {
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset !important;
     }
     
@@ -395,7 +395,7 @@ sui-select {
     outline: none;
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset;
 
-    .dashboard & {
+    .admin & {
       outline: none;
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset;
     }
@@ -432,7 +432,7 @@ sui-button {
     padding: 11px 32px;
   }
 
-  .dashboard & {
+  .admin & {
     background-color: var(--primary-color);
     
     &.line-button {
@@ -458,7 +458,7 @@ sui-button {
     &:not([disabled]):focus {
       background-color: rgba(41, 63, 230, .1);
 
-      .dashboard & {
+      .admin & {
         background: rgba(255, 255, 255, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.65);
       }
@@ -469,7 +469,7 @@ sui-button {
       border: 1px solid #293FE6;
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 
-      .dashboard & {
+      .admin & {
         background-color: rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.65);
         box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -481,7 +481,7 @@ sui-button {
       border-color: #000;
       box-shadow: none !important;
 
-      .dashboard & {
+      .admin & {
         color: #fff;
         border-color: #fff;
       }
@@ -496,7 +496,7 @@ sui-button {
     box-shadow: none;
     color: var(--primary-color);
 
-    .dashboard & {
+    .admin & {
       color: #fff;
     }
 
@@ -506,7 +506,7 @@ sui-button {
       background: rgba(41, 63, 230, 0.1);
       outline: 0;
 
-      .dashboard & {
+      .admin & {
         color: rgba(255, 255, 255, 0.85);
         background: rgba(255, 255, 255, 0.2);
       }
@@ -516,7 +516,7 @@ sui-button {
       background: rgba(41, 63, 230, 0.2);
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 
-      .dashboard & {
+      .admin & {
         background: rgba(0, 0, 0, 0.2);
         box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
         color: rgba(255, 255, 255, 0.6);
@@ -528,7 +528,7 @@ sui-button {
       background-color: transparent;
       outline: 0;
 
-      .dashboard & {
+      .admin & {
         color: rgba(255, 255, 255, 0.25);
       }
     }
@@ -550,8 +550,8 @@ sui-button {
     &:not([disabled]):hover {
       background: #FFFFFF14;
     }
-    .dashboard &:active,
-    .dashboard &:focus {
+    .admin &:active,
+    .admin &:focus {
       background: #FFFFFF14;
     }
   }

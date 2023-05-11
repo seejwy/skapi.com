@@ -1,6 +1,6 @@
 <template lang="pug">
 .overlay-container(:loading="isDisabled || null")
-    form.dashboard(@submit.prevent="createNewService" action="")
+    form.admin(@submit.prevent="createNewService" action="")
         .overlay-container-title.hideOnTablet Create a New Service
         sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         sui-button.text-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
@@ -110,7 +110,7 @@ const createNewService = async() => {
     state.blockingPromise = skapi.createService({region: serviceLocale, name: serviceName.value});
     let res = await state.blockingPromise;
     isDisabled.value = false;
-    router.push(`/dashboard/${res.service}`);
+    router.push(`/admin/${res.service}`);
 }
 
 </script>
