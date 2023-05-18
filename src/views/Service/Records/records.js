@@ -6,7 +6,7 @@ export const recordTables = ref(null);
 export async function refreshTables(serviceId) {
     // initial table fetch
 
-    let t = await skapi.getTable({ service: serviceId }, { limit: 50 });
+    let t = await skapi.getTables({ service: serviceId }, { limit: 50 });
 
     recordTables.value = {
         endOfList: t.endOfList,
