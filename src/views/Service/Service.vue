@@ -138,7 +138,7 @@ const isDisabled = ref(false);
 
 const informationGrid = reactive([
     {
-        name: 'User ID',
+        name: 'Owner\'s ID',
         key: 'owner',
         span: 2
     },
