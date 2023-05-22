@@ -19,7 +19,7 @@
 			.grid-item.title User ID
 			.grid-item {{ props.record.user_id }}
 			.grid-item.title Subscription
-			.grid-item {{ props.record.table.subscription?.user_id || '-' }}
+			.grid-item {{ props.record.table.subscription?.group || '-' }}
 			.grid-item.title Reference 
 			.grid-item {{ props.record.reference?.record_id || '-' }}
 			.grid-item.title.span-2 Index
