@@ -119,7 +119,11 @@
 			.row
 				.section(style="width: 100%;")
 					.name Table Name
-					sui-input(required :value="form.table.name" @input="(e) => form.table.name = e.target.value")
+					sui-input(
+						required 
+						:value="form.table.name" 
+						@input="(e) => {validateTableName(e); form.table.name = e.target.value; }" 
+					)
 
 			.row
 				.section.mobile-full
@@ -127,7 +131,7 @@
 						span Reference ID
 						sui-tooltip
 							Icon(slot="tool") question
-							div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
+							div(slot="tip") Please provide a valid Record ID to establish a reference to another record. Each record can only reference one other record, but multiple references to a single record are permitted. Reference permissions are managed in your record's settings.
 
 					sui-input(ref="referenceIdField" :value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => { form.reference.record_id = e.target.value; e.target.setCustomValidity(''); }")
 				.section.mobile-full
@@ -858,6 +862,17 @@ const validateJson = (event) => {
 		event.target.setCustomValidity('');
 	} catch (e) {
 		event.target.setCustomValidity('Invalid JSON');
+		event.target.reportValidity();
+	}
+};
+
+const validateTableName = (event) => {
+	const regex = /^[\p{L}\d\s.]+$/u;
+
+	let isValid = event.target.value.match(regex) ? true : false;
+	if (isValid) event.target.setCustomValidity('');
+	else {
+		event.target.setCustomValidity('Table name cannot contain special characters other than period and spaces');
 		event.target.reportValidity();
 	}
 };
