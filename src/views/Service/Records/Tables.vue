@@ -239,7 +239,7 @@ async function getMoreTables() {
         return;
     }
 
-    getMoreTablesQueue = skapi.getTable({ service: serviceId }, { fetchMore: true, limit: fetchLimit }).catch(err => {
+    getMoreTablesQueue = skapi.getTables({ service: serviceId }, { fetchMore: true, limit: fetchLimit }).catch(err => {
         fetchingData.value = false;
         throw err;
     });
