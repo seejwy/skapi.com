@@ -161,8 +161,7 @@ section.sectionBox.getStart
 section.sectionBox.trySkapi
     .tryCont 
         pre.
-            Skapi is currently in BETA.
-            We're inviting you to join us in shaping the future of web development.
+            Skapi is currently in BETA. We're inviting you to join us in shaping the future of web development.
             As a BETA user, you'll enjoy full access to our services, absolutely free.
             Join and help us create powerful software that empowers web developers around the world.
         br
@@ -430,11 +429,27 @@ main {
         &.showVideo {
             position: relative;
             width: 1024px;
-            height: 500px;
             margin: 100px auto;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 12px;
+            overflow: hidden;
+
+            .videoCont {
+                position: relative;
+                width: 100%;
+                height: 0;
+                padding-bottom: 56.25%;
+                
+                .video {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
         }
 
         &.features {
@@ -887,37 +902,49 @@ main {
         }
 
         &.trySkapi {
-            width: 1024px;
-            margin: 0 auto;
-            padding: 10vw 0;
+            padding: 80px 0;
             text-align: center;
             font-weight: 700;
+            background-color: #293EE6;
+            margin-top: 150px;
 
-            h3 {
-                font-size: 32px;
-                margin: 0;
-                margin-bottom: 20px;
-            }
-
-            h2 {
-                font-size: 60px;
-                color: #293FE6;
-                margin: 0;
-                margin-bottom: 40px;
-            }
-
-            .startBtn {
-                position: relative;
-                width: 180px;
-                height: 40px;
-                font-weight: 700;
-                font-size: 16px;
+            .tryCont {
+                max-width: 1024px;
+                margin: 0 auto;
                 color: #fff;
-                background: #293FE6;
-                border: 0.5px solid #8C8C8C;
-                box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
-                border-radius: 4px;
-                cursor: pointer;
+                
+                pre {
+                    font-family: 'Radio Canada';
+                    line-height: 28px;
+                    padding: 0 20px; 
+                }
+
+                h3 {
+                    font-size: 32px;
+                    margin: 0;
+                    margin-bottom: 20px;
+                }
+
+                h2 {
+                    font-size: 60px;
+                    color: #293FE6;
+                    margin: 0;
+                    margin-bottom: 40px;
+                }
+
+                .startBtn {
+                    position: relative;
+                    width: 180px;
+                    height: 40px;
+                    font-weight: 700;
+                    font-size: 16px;
+                    color: #fff;
+                    background: #293FE6;
+                    background: rgba(217, 217, 217, 0.08);
+                    border: 1px solid rgba(255, 255, 255, 0.65);
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
             }
         }
     }
@@ -1016,7 +1043,6 @@ main {
             &.getStart {
                 width: 100%;
                 height: 100%;
-                padding: 10vw 0;
                 box-sizing: border-box;
                 
                 .startCont {
@@ -1093,7 +1119,7 @@ main {
 
             &.trySkapi {
                 width: 100%;
-                padding: 100px 2px;
+                padding: 60px 2px;
 
                 h3 {
                     font-size: 20px;
@@ -1110,6 +1136,12 @@ main {
                 }
             }
         }
+    }
+}
+
+@media (max-width: 860px) {
+    .tryCont pre {
+        white-space: normal;
     }
 }
 
@@ -1474,12 +1506,6 @@ main {
             &.showVideo {
                 width: 100%;
                 height: 100%;
-
-                .videoCont {
-                    img {
-                        width: 100%;
-                    }
-                }
             }
         }
     }
