@@ -266,16 +266,16 @@ main {
             overflow: hidden;
             position: relative;
 
-            &::before {
-                position: absolute;
-                content: '';
-                top: 545px;
-                left: 50%;
-                transform: translateX(-48%);
-                width: 2024px;
-                height: 440px;
-                background: url(@/assets/img/icons/Asset10.svg) no-repeat;
-            }
+            // &::before {
+            //     position: absolute;
+            //     content: '';
+            //     top: 545px;
+            //     left: 50%;
+            //     transform: translateX(-48%);
+            //     width: 2024px;
+            //     height: 440px;
+            //     background: url(@/assets/img/icons/Asset10.svg) no-repeat;
+            // }
 
             .helloSkapi {
                 width: 1024px;
