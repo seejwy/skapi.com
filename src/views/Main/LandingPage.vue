@@ -174,7 +174,7 @@ import { onMounted, ref, onBeforeUnmount } from 'vue';
 import gsap from 'gsap';
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-let features;
+let features = ref(null);
 let showThis = ref(false);
 
 function codeCopy() {
@@ -210,24 +210,24 @@ gsap.registerPlugin(ScrollTrigger);
 onMounted(() => {
     document.querySelector('main').classList.add('landing');
 
-    let cardInner = features.querySelector('.cardInner');
-    let cardInnerRight = features.querySelector('.cardTit').getBoundingClientRect().right;
+    let cardInner = features.value.querySelector('.cardInner');
+    let cardInnerRight = features.value.querySelector('.cardTit').getBoundingClientRect().right;
     let cardInnerPosition = Math.max(window.innerWidth - cardInnerRight, 20);
 
     function cardMove() {
         gsap.to(cardInner, {
             scrollTrigger: {
                 scrub: true,
-                trigger: features,
+                trigger: features.value,
                 pin: true,
                 // markers: true,
                 start: "center center",
                 end: function(){  
-                    return "+=" + features.scrollWidth;
+                    return "+=" + features.value.scrollWidth;
                 },
             },
             x: function(){  
-                return -(features.scrollWidth - document.documentElement.clientWidth + cardInnerPosition) + "px";
+                return -(features.value.scrollWidth - document.documentElement.clientWidth + cardInnerPosition) + "px";
             },
             ease: "none"
         })
