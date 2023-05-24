@@ -32,7 +32,7 @@ const focusEl = () => {
 }
 
 const tagIsValid = (string) => {
-  return !(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string));
+  return !(/[.`!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~\[ \]]/.test(string));
 }
 
 const addTag = (e) => {
