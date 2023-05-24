@@ -1187,6 +1187,7 @@ defineExpose({
 				.select-input {
 					flex-grow: 1;
 					text-align: left;
+					box-shadow: none;
 
 					.select-field::after {
 						content: '';
