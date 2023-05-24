@@ -32,6 +32,18 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             .select-input.no-border(@click.stop)
                 .input-field
                     sui-input(
+                        v-if="searchParams.searchFor === 'locale'"
+                        ref="searchField" 
+                        type="search" 
+                        autocomplete="off" 
+                        :placeholder="`      ${placeholder(searchParams.searchFor)}`" 
+                        :value="searchParams.value" 
+                        @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
+                        :inputmode="searchParams.searchFor === 'email' ? searchParams.searchFor : null"
+                        pattern="[A-Z]{2}"
+                        required)
+                    sui-input(
+                        v-else
                         ref="searchField" 
                         type="search" 
                         autocomplete="off" 
