@@ -37,10 +37,10 @@ section.sectionBox.showVideo
         <iframe class="video" src="https://www.youtube.com/embed/c57Km96AHeg?&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 section.sectionBox.features(ref="features")
     .feaCont 
-        .cardTit(ref="cardTit")
+        .cardTit
             h3 Key Features
         .cardWrap(v-if="!showThis")
-            .cardInner(ref="cardInner")
+            .cardInner
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset21.svg")
@@ -171,13 +171,14 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeUnmount, onUnmounted } from 'vue';
+import { onMounted, ref, onUnmounted, nextTick } from 'vue';
 import gsap from 'gsap';
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 let features = ref(null);
 let showThis = ref(false);
-let mygsap = null;
+let animation = null;
+let scrollTrigger = null;
 
 function codeCopy() {
     let doc = document.createElement('textarea');
@@ -211,14 +212,24 @@ gsap.registerPlugin(ScrollTrigger);
 onMounted(() => {
     document.querySelector('main').classList.add('landing');
 
-    let cardInner = features.value.querySelector('.cardInner');
-    let cardInnerRight = features.value.querySelector('.cardTit').getBoundingClientRect().right;
-    let cardInnerPosition = Math.max(window.innerWidth - cardInnerRight, 20);
+    
 
     function cardMove() {
-        mygsap = gsap.to(cardInner, {
-            scrollTrigger: {
+        nextTick().then(() => {
+            let cardInner = features.value.querySelector('.cardInner');
+            let cardInnerRight = features.value.querySelector('.cardTit').getBoundingClientRect().right;
+            let cardInnerPosition = Math.max(window.innerWidth - cardInnerRight, 20);
+
+            animation = gsap.to(cardInner, {
+                x: function(){  
+                    return -(features.value.scrollWidth - document.documentElement.clientWidth + cardInnerPosition) + "px";
+                },
+                ease: "none"
+            });
+
+            scrollTrigger = ScrollTrigger.create({
                 scrub: true,
+                animation: animation,
                 trigger: features.value,
                 pin: true,
                 // markers: true,
@@ -226,17 +237,12 @@ onMounted(() => {
                 end: function(){  
                     return "+=" + features.value.scrollWidth;
                 },
-            },
-            x: function(){  
-                return -(features.value.scrollWidth - document.documentElement.clientWidth + cardInnerPosition) + "px";
-            },
-            ease: "none"
-        })
+            });
+        });
     }
 
     function seePC() {
         showThis.value = false;
-        cardMove();
     }
 
     function seeMobile() {
@@ -245,6 +251,7 @@ onMounted(() => {
     
     if(window.matchMedia('(min-width: 769px)').matches) {
         seePC();
+        cardMove();
     } else {
         seeMobile();
     }
@@ -252,14 +259,20 @@ onMounted(() => {
     window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
         if(e.matches) {
             seePC();
+            cardMove();
         } else {
             seeMobile();
+            scrollTrigger.kill();
+            animation.kill();
+            animation = null;
         }
     });
 })
 
 onUnmounted(() => {
-    mygsap.kill();
+    scrollTrigger.kill();
+    animation.kill();
+    animation = null;
 })
 </script>
 
