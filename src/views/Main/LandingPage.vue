@@ -170,12 +170,13 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeUnmount } from 'vue';
+import { onMounted, ref, onBeforeUnmount, onUnmounted } from 'vue';
 import gsap from 'gsap';
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 let features = ref(null);
 let showThis = ref(false);
+let mygsap = null;
 
 function codeCopy() {
     let doc = document.createElement('textarea');
@@ -206,7 +207,6 @@ window.addEventListener('scroll', () => {
 })
 
 gsap.registerPlugin(ScrollTrigger);
-
 onMounted(() => {
     document.querySelector('main').classList.add('landing');
 
@@ -215,7 +215,7 @@ onMounted(() => {
     let cardInnerPosition = Math.max(window.innerWidth - cardInnerRight, 20);
 
     function cardMove() {
-        gsap.to(cardInner, {
+        mygsap = gsap.to(cardInner, {
             scrollTrigger: {
                 scrub: true,
                 trigger: features.value,
@@ -257,6 +257,9 @@ onMounted(() => {
     });
 })
 
+onUnmounted(() => {
+    mygsap.kill();
+})
 </script>
 
 <style lang="less">
