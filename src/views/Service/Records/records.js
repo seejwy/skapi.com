@@ -1,12 +1,13 @@
 import { ref } from 'vue';
 import { skapi } from '@/main';
-export const tableList = [];
+export let tableList = [];
 export const recordTables = ref(null);
 
 export async function refreshTables(serviceId) {
     // initial table fetch
 
     let t = await skapi.getTables({ service: serviceId }, { limit: 50 });
+    tableList = [];
 
     recordTables.value = {
         endOfList: t.endOfList,

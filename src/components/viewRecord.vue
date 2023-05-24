@@ -684,6 +684,7 @@ const save = async () => {
 								size: 0,
 								table: r.table.name
 							});
+						tableList.push(r.table.name);
 					}
 				}
 			}
