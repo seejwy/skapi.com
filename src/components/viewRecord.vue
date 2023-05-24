@@ -1122,6 +1122,7 @@ defineExpose({
 					svg {
 						color: rgba(255, 255, 255, 0.6);
 						align-self: center;
+						flex-shrink: 0;
 
 						&.remove {
 							cursor: pointer;
