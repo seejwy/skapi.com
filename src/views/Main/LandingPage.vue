@@ -1022,6 +1022,7 @@ main {
 
             &.showVideo {
                 width: 100%;
+                border-radius: 0;
             }
 
             &.features {
@@ -1229,10 +1230,6 @@ main {
                         }
                     }
                 }
-            }
-
-            &.showVideo {
-                width: 100%;
             }
 
             &.features {
