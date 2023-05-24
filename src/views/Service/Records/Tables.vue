@@ -2,14 +2,13 @@
 .page-header.head-space-helper
     h1 Record
     p.
-       Records represent the data created by you or your users within your database.
-       Users can store either data objects or binary files.
-       skapi's database is designed for flexibility and features automatic indexing.
-       Learn how to make the most of skapi's database by clicking "Read Doc"
+        Records are data objects created by you or your users and stored within your database.
+        skapi's database is designed for flexibility and features automatic indexing.
+        Find out how you make use of our advanced features to create a database that fits your needs.
 
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
-            sui-button.line-button(type="button") Read Doc
+            sui-button.line-button(type="button") Find out More
 // search form
 RecordSearch#recordSearch.hideOnTablet
 
@@ -213,7 +212,7 @@ async function displayRecord(r) {
         openRecord.value.open();
     }
     else {
-        if(r.record_id) {
+        if (r.record_id) {
             recordToOpen.value = r;
             openRecord.value.open();
         }
@@ -307,25 +306,25 @@ function viewRecordList(t) {
 // watchers
 let appStyle = inject('appStyle');
 
-const close = async() => {
+const close = async () => {
     await state.blockingPromise;
     viewRecord.value.close();
 }
 
 watch(() => state.viewport, viewport => {
-    if(viewport === 'mobile') {
+    if (viewport === 'mobile') {
         pageTitle.value = 'Records';
     } else {
         pageTitle.value = `Service "${service.value.name}"`;
     }
-    
+
     // close opened table on viewport change
-    if(groupedTableList.value) {
+    if (groupedTableList.value) {
         for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
             t.opened = false;
         }
     }
-}, {immediate: true});
+}, { immediate: true });
 
 watch(currentSelectedTablePage, n => {
     // close opened table on page change
@@ -414,7 +413,7 @@ onBeforeUnmount(() => {
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25),
-    inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+        inset 1px 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     margin: 24px 0 0 0;
     padding: 24px 20px;
@@ -437,7 +436,7 @@ onBeforeUnmount(() => {
         align-items: center;
         flex-wrap: wrap;
 
-        & + .table-wrapper {
+        &+.table-wrapper {
             margin-top: 24px;
         }
     }

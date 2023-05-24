@@ -25,9 +25,9 @@ section.sectionBox
                         img(src="@/assets/img/icons/Asset1.svg")
                 h3 What is skapi?
                 p 
-                    | "A robust Javascript backend API designed to help you build 
-                    span secure, more efficient, and scalable web services.
-                    |  Our platform offers a suite of advanced tools and features, allowing you to ease your web development process and focus on what matters most: 
+                    | "A robust Javascript backend API designed to help you build  
+                    span secure, efficient, and scalable web services.
+                    |  skapi&nbsp;makes things like backend tasks like user authentication, management and database management a breeze with a simple API, allowing you to ease your web development process and focus on what matters most: 
                     span creating incredible user experiences
                     | ."
                 a(href='https://docs.skapi.com' target="_blank")
@@ -37,10 +37,10 @@ section.sectionBox.showVideo
         <iframe class="video" src="https://www.youtube.com/embed/c57Km96AHeg?&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 section.sectionBox.features(ref="features")
     .feaCont 
-        .cardTit
+        .cardTit(ref="cardTit")
             h3 Key Features
         .cardWrap(v-if="!showThis")
-            .cardInner
+            .cardInner(ref="cardInner")
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset21.svg")
@@ -52,7 +52,7 @@ section.sectionBox.features(ref="features")
                         img(src="@/assets/img/icons/Asset14.png")
                     .right
                         h4.tit Database
-                        p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
+                        p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL database architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset15.png")
@@ -76,7 +76,7 @@ section.sectionBox.features(ref="features")
                     .icon
                         img(src="@/assets/img/icons/Asset14.png")
                     h4.tit Database
-                    p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
+                    p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL database architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset15.png")
@@ -105,27 +105,28 @@ section.sectionBox.getStart
                 .level.lv1
                     .lvCont
                         .lvTit Create Service
-                        .lvDesc Login and Create new Service from your admin 
+                        .lvDesc Create a new Service from your admin page.
                     .lvImg 
                         img(src="@/assets/img/icons/lvImg1.png")
                 .level.lv2
                     .lvCont
                         .lvTit Retrieve ID
-                        .lvDesc Retrieve the service ID and the owner’s ID from the admin
+                        .lvDesc Retrieve the service ID and the owner’s ID from the service page.
                     .lvImg 
                         img(src="@/assets/img/icons/lvImg2.png")
                 .level.lv3
                     .lvCont
                         .lvTit Initialize Skapi
                         .lvDesc
-                            | Import and Initialize Skapi from index.html.
+                            | Import and initialize skapi from index.html.
+                            br
                             br
                             | Replace
-                            em ‘SERVICE_ID’ 
-                            | and 
+                            em  ‘SERVICE_ID’ 
+                            | &nbsp;and 
                             br
                             em ‘OWNERS_ID’ 
-                            | with appropriate value.
+                            | &nbsp;with their respective values.
                     .lvImg
                         .codeCopy(@click="codeCopy")
                             img(src="@/assets/img/icons/copy.svg")
@@ -186,7 +187,7 @@ function codeCopy() {
     document.execCommand('copy');
     doc.remove();
 
-    alert('소스가 저장되었습니다. 붙여넣기 하시면 됩니다.');
+    alert('The code has been copied.');
 }
 
 window.addEventListener('scroll', () => {

@@ -4,9 +4,8 @@ template(v-else)
     .page-header.head-space-helper
         h2 Service
         p.
-            A service represents a collection of serverless resources created within your Skapi network.
-            To unlock the full potential of Skapi's backend features, simply connect your web page to a Service.
-            Get started and learn how to connect your web page with a Service by clicking "Read Doc".         
+            A service is a collection of serverless resources working together to form your backend.
+            Simply connect to your service and start building your website.      
 
         div.action
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
@@ -72,14 +71,14 @@ template(v-else)
                         .title
                             Icon users
                             span Users
-                        .body Users are individuals who have created an account within your service. From this section, you can search for, block, or delete users as needed.
+                        .body Within your service, users are individuals who have successfully created an account and logged in at least once. You can search for and apply access control using our easy to use user database management system.
                     .goto Go to Users >
                 RouterLink(:to="{name: 'records'}").service-grid-item  
                     .content
                         .title
                             Icon folder_open
                             span Record
-                        .body Records represent the data created by you or your users within your database. In this section, you can search for, edit, or create new records as needed.
+                        .body Records are data objects created by you or your users and stored within your database. You can efficiently search, modify, or create new records using our database management system.
                     .goto Go to Records >
                 //- RouterLink(to="/").service-grid-item 
                     .content
@@ -138,22 +137,22 @@ const isDisabled = ref(false);
 
 const informationGrid = reactive([
     {
-        name: 'Owner\'s ID',
-        key: 'owner',
-        span: 2
-    },
-    {
         name: 'Service ID',
         key: 'service',
         span: 2
     },
     {
-        name: 'Group',
-        key: 'group',
-        filter: (value) => {
-            return value == 1 ? 'Basic' : 'Premium'
-        }
+        name: 'Owner\'s ID',
+        key: 'owner',
+        span: 2
     },
+    // {
+    //     name: 'Group',
+    //     key: 'group',
+    //     filter: (value) => {
+    //         return value == 1 ? 'Basic' : 'Premium'
+    //     }
+    // },
     {
         name: 'Service Location',
         key: 'region',
@@ -180,10 +179,10 @@ const informationGrid = reactive([
         name: '# of Users',
         key: 'users'
     },
-    {
-        name: '# of Newsletter Sub',
-        key: 'newsletter_subscribers'
-    },
+    // {
+    //     name: '# of Newsletter Sub',
+    //     key: 'newsletter_subscribers'
+    // },
 ]);
 
 const settingGrid = reactive([
@@ -202,12 +201,12 @@ const settingGrid = reactive([
     {
         name: 'CORS',
         key: 'cors',
-        tip: 'When CORS URL is set, your website will not be able to connect to your service unless it\'s hosted on the given URL.',
+        tip: 'When CORS is set, your website will not be able to connect to your service unless the request comes from a valid host.',
     },
     {
         name: 'API Key',
         key: 'api_key',
-        tip: 'You can use your own private API key if you wish to integrate user\'s secure request to your external backend server.',
+        tip: 'You can set your own private API key if you wish to integrate your users\' secure requests to your external backend server.',
     },
 ]);
 
@@ -373,7 +372,7 @@ watch(() => state.viewport, () => {
 
 .information-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     column-gap: 20px;
     row-gap: 28px;
 

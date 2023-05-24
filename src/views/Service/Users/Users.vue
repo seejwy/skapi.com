@@ -6,14 +6,13 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
 .page-header.head-space-helper(v-if="viewport === 'desktop' || !route.query.search")
     h1 Users
     p.
-        Users are individuals who have created an account within your service.
-        This page allows you to search for, block, or delete users as necessary.
-        Note that a user needs to log in at least once after signing up to appear on your users list.
-        To gain a deeper understanding of authentication and users, click on "Read Doc".
+        Users are individuals who have successfully created an account and logged in at least once. 
+        You can perform searches and apply access control on this page.
+        Find out how you can easily perform authentication and manage your users.
 
     .action
         a(href="https://docs.skapi.com/authentication" target="_blank")
-            sui-button.line-button(type="button") Read Doc
+            sui-button.line-button(type="button") Find out More
     div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'" :loading="promiseRunning || null")
     form(@submit.prevent="search" action="")
