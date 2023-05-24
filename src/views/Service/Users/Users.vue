@@ -5,10 +5,14 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
         Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'}); getUsers(true); serviceUsers = null; }") X2
 .page-header.head-space-helper(v-if="viewport === 'desktop' || !route.query.search")
     h1 Users
-    p Users are data that your service user's will store and read from your service database. All records are organized by table names and restrictions. With additional query points such as index names and tags, references, you can have more flexible option when fetching the records.
+    p.
+        Users are individuals who have successfully created an account and logged in at least once. 
+        You can perform searches and apply access control on this page.
+        Find out how you can easily perform authentication and manage your users.
+
     .action
         a(href="https://docs.skapi.com/authentication" target="_blank")
-            sui-button.line-button(type="button") Read Doc
+            sui-button.line-button(type="button") Find out More
     div(style="clear:both;")
 .actions-wrapper(v-if="viewport === 'desktop'" :loading="promiseRunning || null")
     form(@submit.prevent="search" action="")
@@ -27,6 +31,18 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             .select-input.no-border(@click.stop)
                 .input-field
                     sui-input(
+                        v-if="searchParams.searchFor === 'locale'"
+                        ref="searchField" 
+                        type="search" 
+                        autocomplete="off" 
+                        :placeholder="`      ${placeholder(searchParams.searchFor)}`" 
+                        :value="searchParams.value" 
+                        @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
+                        :inputmode="searchParams.searchFor === 'email' ? searchParams.searchFor : null"
+                        pattern="[A-Z]{2}"
+                        required)
+                    sui-input(
+                        v-else
                         ref="searchField" 
                         type="search" 
                         autocomplete="off" 

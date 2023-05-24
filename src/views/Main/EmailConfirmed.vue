@@ -4,7 +4,7 @@
         Icon check_circle
         h1 Congratulations!
         p Your email has been confirmed. #[br] You can now login to Skapi.
-        sui-button(type="button" @click="router.push('/dashboard')") Login
+        sui-button(type="button" @click="router.push('/admin')") Login
 </template>
 <script setup>
 import { inject } from 'vue';

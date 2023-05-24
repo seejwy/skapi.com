@@ -67,7 +67,7 @@ div(v-for="pageType in pages" :class="pageType" ref="container")
 import { ref, onMounted, nextTick } from 'vue';
 import SubmitButton from '../../components/SubmitButton.vue';
 
-const pages = ref(['dashboard', 'normal'])
+const pages = ref(['admin', 'normal'])
 const inputTypes = ref([
     'text',
     'password',
@@ -109,7 +109,7 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 @import '@/assets/variables.less';
-.dashboard {
+.admin {
     background-color: #505050;
 }
 .normal {
@@ -117,7 +117,7 @@ onMounted(async () => {
 }
 
 .normal,
-.dashboard {
+.admin {
     padding: 50px;
     
     & > *,
@@ -128,7 +128,7 @@ onMounted(async () => {
 }
 
 legend {
-    .dashboard & {
+    .admin & {
         color: #fff;
     }
 }

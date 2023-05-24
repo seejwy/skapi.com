@@ -53,19 +53,19 @@ let viewport = inject('viewport');
 const currentBgColor = appStyle.background;
 
 onMounted(() => {
-    if(document.body.classList.contains('dashboard')) {
-        document.body.classList.remove('dashboard');
-        document.body.classList.add('dashboard-login');
+    if(document.body.classList.contains('admin')) {
+        document.body.classList.remove('admin');
+        document.body.classList.add('admin-login');
     }
 
 });
 
 onBeforeUnmount(() => {
     appStyle.background = currentBgColor;
-    if(document.body.classList.contains('dashboard-login')) {
-        document.body.classList.remove('dashboard-login');
-        if(route.path.includes('/dashboard')) {
-            document.body.classList.add('dashboard');
+    if(document.body.classList.contains('admin-login')) {
+        document.body.classList.remove('admin-login');
+        if(route.path.includes('/admin')) {
+            document.body.classList.add('admin');
         }
     }
 })
@@ -81,10 +81,10 @@ let form = reactive({
 });
 
 watch(() => state.user, u => {
-    // if logged in, and page is login page go to dashboard
+    // if logged in, and page is login page go to admin
     // when visited via url, can have page flash.
     if (u && route.name === 'login') {
-        router.replace('/dashboard');
+        router.replace('/admin');
     }
 });
 

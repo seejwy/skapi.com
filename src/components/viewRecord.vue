@@ -19,7 +19,7 @@
 			.grid-item.title User ID
 			.grid-item {{ props.record.user_id }}
 			.grid-item.title Subscription
-			.grid-item {{ props.record.table.subscription?.user_id || '-' }}
+			.grid-item {{ props.record.table.subscription?.group || '-' }}
 			.grid-item.title Reference 
 			.grid-item {{ props.record.reference?.record_id || '-' }}
 			.grid-item.title.span-2 Index
@@ -119,7 +119,11 @@
 			.row
 				.section(style="width: 100%;")
 					.name Table Name
-					sui-input(required :value="form.table.name" @input="(e) => form.table.name = e.target.value")
+					sui-input(
+						required 
+						:value="form.table.name" 
+						@input="(e) => {validateTableName(e); form.table.name = e.target.value; }" 
+					)
 
 			.row
 				.section.mobile-full
@@ -127,7 +131,7 @@
 						span Reference ID
 						sui-tooltip
 							Icon(slot="tool") question
-							div(slot="tip") Please provide a valid Record ID to establish reference to a specific record. Each record can only reference one other record, but multiple references to a single record are permitted. This function is managed within your settings.
+							div(slot="tip") Please provide a valid Record ID to establish a reference to another record. Each record can only reference one other record, but multiple references to a single record are permitted. Reference permissions are managed in your record's settings.
 
 					sui-input(ref="referenceIdField" :value="form.reference?.record_id || ''" pattern="[0-9a-zA-Z]+" @input="(e) => { form.reference.record_id = e.target.value; e.target.setCustomValidity(''); }")
 				.section.mobile-full
@@ -680,6 +684,7 @@ const save = async () => {
 								size: 0,
 								table: r.table.name
 							});
+						tableList.push(r.table.name);
 					}
 				}
 			}
@@ -697,11 +702,22 @@ const save = async () => {
 		}
 		
 		if(!isNewRecord && props.record?.table?.name !== currentTable) {
+			await nextTick();
 			recordTables.value.list.forEach((table, index) => {
 				if(table.table === currentTable) {
 					let idx = table.records.list.findIndex((record) => {
 						return record.record_id === props.record_id
 					});
+
+					if(props.record.table.name !== currentTable) {
+						recordTables.value.list.push({
+							number_of_records: 1,
+							opened: true,
+							records: ref({endOfList: true, startKey: 'end', startKey_list: ['end'], list:[r]}),
+							size: 0,
+							table: props.record.table.name
+						});
+					}
 
 					table.records.list.splice(idx, 1);
 					table.number_of_records--;
@@ -847,6 +863,17 @@ const validateJson = (event) => {
 		event.target.setCustomValidity('');
 	} catch (e) {
 		event.target.setCustomValidity('Invalid JSON');
+		event.target.reportValidity();
+	}
+};
+
+const validateTableName = (event) => {
+	const regex = /^[\p{L}\d\s.]+$/u;
+
+	let isValid = event.target.value.match(regex) ? true : false;
+	if (isValid) event.target.setCustomValidity('');
+	else {
+		event.target.setCustomValidity('Table name cannot contain special characters other than period and spaces');
 		event.target.reportValidity();
 	}
 };
@@ -1095,6 +1122,7 @@ defineExpose({
 					svg {
 						color: rgba(255, 255, 255, 0.6);
 						align-self: center;
+						flex-shrink: 0;
 
 						&.remove {
 							cursor: pointer;
@@ -1160,6 +1188,7 @@ defineExpose({
 				.select-input {
 					flex-grow: 1;
 					text-align: left;
+					box-shadow: none;
 
 					.select-field::after {
 						content: '';

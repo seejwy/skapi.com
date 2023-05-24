@@ -196,7 +196,7 @@ if(state.viewport === 'mobile') {
     appStyle.background = '#333333';
     appStyle.navBackground = '#505050';
     navbarBackDestination.value = function() {
-        router.push(`/dashboard/${service.value.service}`);
+        router.push(`/admin/${service.value.service}`);
     }
 
     navbarMobileRightButton.value = {

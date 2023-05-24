@@ -1,10 +1,14 @@
 <template lang="pug">
 .page-header.head-space-helper
     h1 Record
-    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+    p.
+        Records are data objects created by you or your users and stored within your database.
+        skapi's database is designed for flexibility and features automatic indexing.
+        Find out how you make use of our advanced features to create a database that fits your needs.
+
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
-            sui-button.line-button(type="button") Read Doc
+            sui-button.line-button(type="button") Find out More
 // search form
 RecordSearch#recordSearch.hideOnTablet
 
@@ -30,14 +34,14 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
 
     // table list
     template(v-else)
-        .no-records(v-if='!recordTables.list.length')
+        .no-records(v-if='!recordTables.list?.length')
             div
                 .title No Record Tables
                 p List of tables will show when there is data
 
         template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch] && !fetchingData")
-            template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList.length)")
-                template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1].length)")
+            template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList?.length)")
+                template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1]?.length)")
                     // when v-for by number, it starts with 1
                     template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
                         .table-wrapper(v-if="t.number_of_records")
@@ -57,7 +61,7 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
                                 Icon.animation-rotation(v-else) refresh
 
                             div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
-                                .noRecords(v-if='!t.records.list.length')
+                                .noRecords(v-if='!t.records.list?.length')
                                     div
                                         sui-flextext(min-size='14' max-size='24') No Records
                                         br
@@ -208,7 +212,7 @@ async function displayRecord(r) {
         openRecord.value.open();
     }
     else {
-        if(r.record_id) {
+        if (r.record_id) {
             recordToOpen.value = r;
             openRecord.value.open();
         }
@@ -234,7 +238,7 @@ async function getMoreTables() {
         return;
     }
 
-    getMoreTablesQueue = skapi.getTable({ service: serviceId }, { fetchMore: true, limit: fetchLimit }).catch(err => {
+    getMoreTablesQueue = skapi.getTables({ service: serviceId }, { fetchMore: true, limit: fetchLimit }).catch(err => {
         fetchingData.value = false;
         throw err;
     });
@@ -292,7 +296,7 @@ let viewport = inject('viewport');
 function viewRecordList(t) {
     if (viewport.value === 'mobile') {
         searchResult.value = t.records;
-        router.push(`/dashboard/${serviceId}/records/list?table=${t.table}`);
+        router.push(`/admin/${serviceId}/records/list?table=${t.table}`);
     }
     else {
         t.opened = !t.opened;
@@ -302,25 +306,25 @@ function viewRecordList(t) {
 // watchers
 let appStyle = inject('appStyle');
 
-const close = async() => {
+const close = async () => {
     await state.blockingPromise;
     viewRecord.value.close();
 }
 
 watch(() => state.viewport, viewport => {
-    if(viewport === 'mobile') {
+    if (viewport === 'mobile') {
         pageTitle.value = 'Records';
     } else {
         pageTitle.value = `Service "${service.value.name}"`;
     }
-    
+
     // close opened table on viewport change
-    if(groupedTableList.value) {
+    if (groupedTableList.value) {
         for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
             t.opened = false;
         }
     }
-}, {immediate: true});
+}, { immediate: true });
 
 watch(currentSelectedTablePage, n => {
     // close opened table on page change
@@ -409,7 +413,7 @@ onBeforeUnmount(() => {
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25),
-    inset 1px 1px 1px rgba(0, 0, 0, 0.5);
+        inset 1px 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     margin: 24px 0 0 0;
     padding: 24px 20px;
@@ -432,7 +436,7 @@ onBeforeUnmount(() => {
         align-items: center;
         flex-wrap: wrap;
 
-        & + .table-wrapper {
+        &+.table-wrapper {
             margin-top: 24px;
         }
     }

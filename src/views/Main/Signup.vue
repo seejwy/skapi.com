@@ -34,7 +34,7 @@
 
         SubmitButton(:loading="promiseRunning") Create Account
         div Already have an account?&nbsp;
-            RouterLink(to="/dashboard") Login
+            RouterLink(to="/admin") Login
         //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
 </template>
 <script setup>
@@ -61,7 +61,7 @@ pageTitle.value = 'skapi';
 
 onBeforeMount(async() => {
     await skapi.getConnection().then(() => {
-        if(state.user) router.push({name: 'dashboard'});
+        if(state.user) router.push({name: 'admin'});
     })
 });
 
@@ -75,7 +75,7 @@ let form = reactive({
 
 watch(() => state.user, u => {
     if (u && route.name === 'login') {
-        router.replace('/dashboard');
+        router.replace('/admin');
     }
 });
 

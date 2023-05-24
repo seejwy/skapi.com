@@ -1,8 +1,7 @@
 <template lang="pug">
 .overlay-container(:loading="isDisabled || null")
-    form.dashboard(@submit.prevent="createNewService" action="")
+    form.admin(@submit.prevent="createNewService" action="")
         .overlay-container-title.hideOnTablet Create a New Service
-        .overlay-container-text Your service will have its own dedicated instance and full postgres database. An API will be set up so you can easily interact with your new database.
         sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
         sui-button.text-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
         SubmitButton(:loading="isDisabled") Create
@@ -111,7 +110,7 @@ const createNewService = async() => {
     state.blockingPromise = skapi.createService({region: serviceLocale, name: serviceName.value});
     let res = await state.blockingPromise;
     isDisabled.value = false;
-    router.push(`/dashboard/${res.service}`);
+    router.push(`/admin/${res.service}`);
 }
 
 </script>

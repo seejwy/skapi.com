@@ -4,15 +4,18 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 div(v-else-if="state?.user")
     .page-header.head-space-helper
-        h1.fixed Services
-        p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
+        h1.fixed Admin
+        p.
+            You can see a list of all the services you are running.
+            To create a new service, click on "New Service".
+
         .action
             sui-button.with-icon(type="button" @click="state.user.email_verified ? state.viewport === 'desktop' ? isOpen = true : router.push('?new=service') : null" :disabled="!state.user.email_verified || null")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList?.length")
         template(v-for="service in serviceList")
-            router-link.service(:to='"/dashboard/" + service.service')
+            router-link.service(:to='"/admin/" + service.service')
                 .settings
                     .name 
                         .indicator(:class="{'active': service.active > 0}")
@@ -73,7 +76,7 @@ const closeNewServiceWindow = async () => {
 }
 
 const openNewServiceWindow = () => {
-    if(state.viewport === 'mobile') router.push('?new=service');
+    if (state.viewport === 'mobile') router.push('?new=service');
     else newServiceWindow.value.open();
 }
 
@@ -85,9 +88,9 @@ async function getServices(gs) {
     try {
         let services = await gs;
         isFetchingServices.value = false;
-        if(serviceList.value === null) {
+        if (serviceList.value === null) {
             serviceList.value = [];
-            for(let region in services) {
+            for (let region in services) {
                 serviceList.value = [...serviceList.value, ...services[region]];
             }
 
@@ -107,17 +110,17 @@ getServices(state.getServices);
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
 watch(() => isOpen.value, async () => {
-    if(state.viewport === 'desktop') {
+    if (state.viewport === 'desktop') {
         await nextTick();
-        if(isOpen.value) {
+        if (isOpen.value) {
             openNewServiceWindow();
         }
     }
 });
 watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop') {
+    if (viewport === 'desktop') {
         isOpen.value = false;
-        router.replace('/dashboard');
+        router.replace('/admin');
     }
 })
 </script>
@@ -133,19 +136,8 @@ watch(() => state.viewport, (viewport) => {
         align-items: center;
         justify-content: center;
         background: #F5F5F5;
-        height: 175.33px;
         border-radius: 8px;
         text-align: center;
-        
-        @media screen and (max-width: 825px) {
-            height: 156px;
-        }
-
-        @media @phone {
-            height: 123.33px;
-        }
-
-
 
         .title {
             font-size: 28px;
@@ -154,8 +146,18 @@ watch(() => state.viewport, (viewport) => {
             margin-bottom: 12px;
         }
 
+        &,
         &.no-service {
-            min-height: 220px;
+            height: 175.33px;
+
+            @media screen and (max-width: 825px) {
+                height: 156px;
+            }
+
+            @media @phone {
+                height: 123.33px;
+            }
+
         }
     }
 
@@ -176,7 +178,7 @@ watch(() => state.viewport, (viewport) => {
                 background: #595959;
             }
         }
-        
+
         &:not(:last-child) {
             margin-bottom: 24px;
         }
@@ -213,7 +215,7 @@ watch(() => state.viewport, (viewport) => {
                     display: flex;
                     width: 100%;
                 }
-                
+
                 .hide-mobile {
                     display: none;
                 }
@@ -234,6 +236,7 @@ watch(() => state.viewport, (viewport) => {
         }
     }
 }
+
 .indicator {
     position: relative;
     display: inline-block;
@@ -244,7 +247,7 @@ watch(() => state.viewport, (viewport) => {
     background: #D9D9D9;
     border: 0.3px solid #595959;
     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65);
-    
+
     &.active {
         background: #5AD858;
     }
@@ -252,6 +255,7 @@ watch(() => state.viewport, (viewport) => {
 
 .overlay {
     padding: 16px;
+
     .close {
         position: absolute;
         top: 0;
@@ -275,10 +279,13 @@ watch(() => state.viewport, (viewport) => {
     .container {
         .service {
             padding: 24px;
-            .name span{
+
+            .name span {
                 font-size: 20px;
-            }   
+            }
+
             .details .item {
+
                 .title,
                 .value {
                     display: inline-block;
@@ -288,5 +295,4 @@ watch(() => state.viewport, (viewport) => {
             }
         }
     }
-}
-</style>
+}</style>
