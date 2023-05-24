@@ -18,8 +18,8 @@ section.sectionBox
                         img.icon7(src="@/assets/img/icons/Asset3.svg")
                     .withBtn
                         span A Robust Backend API
-                        a(href='https://docs.skapi.com' target="_blank")
-                            button GET STARTED
+                        RouterLink(to='/signup')
+                            button JOIN NOW
                                 img(src="@/assets/img/icons/Asset9.svg")
                     .arrowImg 
                         img(src="@/assets/img/icons/Asset1.svg")
