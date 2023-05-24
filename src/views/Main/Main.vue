@@ -3,7 +3,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
     ul.inline-vertical-middle(@click='bypassSameRoute')
         li.showOnTablet
             router-link(to="/" tag="li")
-                img(src="@/assets/img/logo-small.svg" style="width: 40px; height: 40px;")
+                img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
         li
                 a(href="https://docs.skapi.com" target="_blank") Documentation
 
