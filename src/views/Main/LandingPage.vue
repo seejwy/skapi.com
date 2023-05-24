@@ -23,15 +23,37 @@ section.sectionBox
                                 img(src="@/assets/img/icons/Asset9.svg")
                     .arrowImg 
                         img(src="@/assets/img/icons/Asset1.svg")
-                h3 What is skapi?
-                p 
-                    | "A robust Javascript backend API designed to help you build  
-                    span secure, efficient, and scalable web services.
-                    |  skapi&nbsp;makes things like backend tasks like user authentication, management and database management a breeze with a simple API, allowing you to ease your web development process and focus on what matters most: 
-                    span creating incredible user experiences
-                    | ."
+                h3(style="text-align:left") What is skapi?
+                p(style="text-align:left")
+                    span Backend&nbsp;API 
+                    |service 
+                    span engineered&nbsp;specifically 
+                    |for frontend&nbsp;developers, 
+                    br
+                    |empowering you to build more 
+                    span efficient
+                    |, 
+                    span production&nbsp;ready
+                    |, 
+                    |and 
+                    span scalable 
+                    |web services.
+                    br
+                    br
+                    |skapi 
+                    span reimagines 
+                    |your backend development, providing a seamless experience with 
+                    span unparalleled&nbsp;simplicity
+                    |.
+                    br
+                    |Our 
+                    span Robust 
+                    |and 
+                    span highly accessible 
+                    |backend resources let you focus solely on what truly matters: 
+                    span crafting&nbsp;exceptional&nbsp;web&nbsp;products
                 a(href='https://docs.skapi.com' target="_blank")
-                    button.readBtn Read Document
+                    button.readBtn Find out more
 section.sectionBox.showVideo
     .videoCont 
         <iframe class="video" src="https://www.youtube.com/embed/c57Km96AHeg?&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -43,6 +65,12 @@ section.sectionBox.features(ref="features")
             .cardInner
                 .card
                     .icon
+                        img(src="@/assets/img/icons/landing_page_html_logo.png")
+                    .right
+                        h4.tit Vanilla Friendly
+                        p.cont Whether you're working on a classic HTML project or a Webpack-based single-page application, the skapi JavaScript library is highly compatible and readily adaptable to any web project.
+                .card
+                    .icon
                         img(src="@/assets/img/icons/Asset21.svg")
                     .right
                         h4.tit Serverless Architecture
@@ -51,22 +79,22 @@ section.sectionBox.features(ref="features")
                     .icon
                         img(src="@/assets/img/icons/Asset14.png")
                     .right
-                        h4.tit Database
-                        p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL database architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
+                        h4.tit Database & Cloud Storage
+                        p.cont Experience the power of auto-indexed, cloud storage intergrated database that combines the best of relational and NoSQL database architectures. skapi's unique approach to database design brings you scalability and flexibility.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset15.png")
                     .right
                         h4.tit Authentication
-                        p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
-                .card
-                    .icon
-                        img(src="@/assets/img/icons/Asset16.png")
-                    .right
-                        h4.tit Cloud Storage
-                        p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+                        p.cont Setting up user authentication and ensuring data security has never been simpler. From cloud storage to database restrictions, user authentication functions flawlessly, freeing you from the typical setup hassles.
+                
         .mobile-cardWrap(v-else)
             .mobile-cardInner
+                .card
+                    .icon
+                        img(src="@/assets/img/icons/landing_page_html_logo.png")
+                    h4.tit Vanilla Friendly
+                    p.cont Whether you're working on a classic HTML project or a Webpack-based single-page application, the skapi JavaScript library is highly compatible and readily adaptable to any web project.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset21.svg")
@@ -75,18 +103,14 @@ section.sectionBox.features(ref="features")
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset14.png")
-                    h4.tit Database
-                    p.cont Experience the power of an auto-indexed, scalable database that combines the best of relational and NoSQL database architectures. skapi's innovative database solution ensures optimal performance and flexibility for your web services.
+                    h4.tit Database & Cloud Storage
+                    p.cont Experience the power of auto-indexed, cloud storage intergrated database that combines the best of relational and NoSQL database architectures. skapi's unique approach to database design brings you scalability and flexibility.
                 .card
                     .icon
                         img(src="@/assets/img/icons/Asset15.png")
                     h4.tit Authentication
-                    p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
-                .card
-                    .icon
-                        img(src="@/assets/img/icons/Asset16.png")
-                    h4.tit Cloud Storage
-                    p.cont Take advantage of unlimited, pay-as-you-go cloud storage with skapi. Whether it's web hosting or serving large files with security restrictions, our platform provides the flexibility and reliability you need to manage your digital assets.
+                    p.cont Setting up user authentication and ensuring data security has never been simpler. From cloud storage to database restrictions, user authentication functions flawlessly, freeing you from the typical setup hassles.
+                
 section.sectionBox.getStart
     .startCont 
         h3 Getting Started
@@ -111,7 +135,7 @@ section.sectionBox.getStart
                 .level.lv2
                     .lvCont
                         .lvTit Retrieve ID
-                        .lvDesc Retrieve the service ID and the owner’s ID from the service page.
+                        .lvDesc Retrieve the service ID and the owner’s ID for your service.
                     .lvImg 
                         img(src="@/assets/img/icons/lvImg2.png")
                 .level.lv3
@@ -149,9 +173,7 @@ section.sectionBox.getStart
             pre
                 code 
                     |&lt;!DOCTYPE html&gt;
-                    |  &lt;head&gt;
-                    |    &lt;script src="https://cdn.jsdelivr.net/npm/skapi-js@latest/dist/skapi.js"&gt;&lt;/script&gt;
-                    |  &lt;/head&gt;
+                    |  &lt;script src="https://cdn.jsdelivr.net/npm/skapi-js@latest/dist/skapi.js"&gt;&lt;/script&gt;
                     |  &lt;script&gt;
                     |    let skapi = new Skapi('
                     span SERVICE_ID
@@ -205,14 +227,14 @@ window.addEventListener('scroll', () => {
             num.classList.remove('active');
             dot.classList.remove('active');
         }
-    })
-})
+    });
+});
 
 gsap.registerPlugin(ScrollTrigger);
 onMounted(() => {
     document.querySelector('main').classList.add('landing');
 
-    
+
 
     function cardMove() {
         nextTick().then(() => {
@@ -221,7 +243,7 @@ onMounted(() => {
             let cardInnerPosition = Math.max(window.innerWidth - cardInnerRight, 20);
 
             animation = gsap.to(cardInner, {
-                x: function(){  
+                x: function () {
                     return -(features.value.scrollWidth - document.documentElement.clientWidth + cardInnerPosition) + "px";
                 },
                 ease: "none"
@@ -234,7 +256,7 @@ onMounted(() => {
                 pin: true,
                 // markers: true,
                 start: "center center",
-                end: function(){  
+                end: function () {
                     return "+=" + features.value.scrollWidth;
                 },
             });
@@ -248,8 +270,8 @@ onMounted(() => {
     function seeMobile() {
         showThis.value = true;
     }
-    
-    if(window.matchMedia('(min-width: 769px)').matches) {
+
+    if (window.matchMedia('(min-width: 769px)').matches) {
         seePC();
         cardMove();
     } else {
@@ -257,7 +279,7 @@ onMounted(() => {
     }
 
     window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
-        if(e.matches) {
+        if (e.matches) {
             seePC();
             cardMove();
         } else {
@@ -267,13 +289,13 @@ onMounted(() => {
             animation = null;
         }
     });
-})
+});
 
 onUnmounted(() => {
     scrollTrigger.kill();
     animation.kill();
     animation = null;
-})
+});
 </script>
 
 <style lang="less">
@@ -314,7 +336,7 @@ main {
                         margin-top: 110px;
                     }
 
-                    .tit{
+                    .tit {
                         position: relative;
                         font-size: 52px;
                         font-weight: 700;
@@ -408,7 +430,7 @@ main {
                             transform: rotate(-15deg);
                         }
                     }
-    
+
                     h3 {
                         font-size: 32px;
                         font-weight: 700;
@@ -466,7 +488,7 @@ main {
                 width: 100%;
                 height: 0;
                 padding-bottom: 56.25%;
-                
+
                 .video {
                     position: absolute;
                     top: 0;
@@ -481,7 +503,7 @@ main {
             width: 100vw;
             overflow: hidden;
             margin-bottom: 100px;
-            
+
             .feaCont {
                 width: 1024px;
                 margin: 0 auto;
@@ -494,16 +516,17 @@ main {
                         margin-bottom: 40px;
                     }
                 }
+
                 .cardWrap {
                     position: relative;
                     height: 325px;
-                    
+
                     .cardInner {
                         position: absolute;
                         top: 0;
                         display: flex;
                         flex-wrap: nowrap;
-                        
+
                         .card {
                             width: 460px;
                             height: 315px;
@@ -515,7 +538,7 @@ main {
                             box-sizing: border-box;
                             display: flex;
                             flex-wrap: nowrap;
-                            
+
                             &:first-child {
                                 .icon {
                                     img {
@@ -523,6 +546,7 @@ main {
                                     }
                                 }
                             }
+
                             &:nth-child(2) {
                                 .icon {
                                     img {
@@ -530,6 +554,7 @@ main {
                                     }
                                 }
                             }
+
                             &:nth-child(3) {
                                 .icon {
                                     img {
@@ -537,15 +562,17 @@ main {
                                     }
                                 }
                             }
+
                             &:last-child {
                                 margin-right: 0;
-    
+
                                 .icon {
                                     img {
                                         width: 122px;
                                     }
                                 }
                             }
+
                             .icon {
                                 width: 30%;
                                 margin: 0 30px;
@@ -553,6 +580,7 @@ main {
                                 align-items: center;
                                 justify-content: center;
                             }
+
                             .right {
                                 width: 70%;
 
@@ -562,6 +590,7 @@ main {
                                     margin: 0;
                                     padding: 40px 0 18px 0;
                                 }
+
                                 .cont {
                                     font-size: 16px;
                                     font-weight: 400;
@@ -573,6 +602,7 @@ main {
                         }
                     }
                 }
+
                 .mobile-cardWrap {
                     position: relative;
                     left: 0 !important;
@@ -601,7 +631,7 @@ main {
                             flex-wrap: wrap;
                             align-items: center;
                             justify-content: space-between;
-                            
+
                             &:first-child {
                                 .icon {
                                     img {
@@ -609,45 +639,54 @@ main {
                                     }
                                 }
                             }
+
                             &:nth-child(2) {
                                 .icon {
                                     img {
                                         width: 65px;
                                     }
                                 }
+
                                 .cont {
                                     padding-top: 20px;
                                 }
                             }
+
                             &:nth-child(3) {
                                 .icon {
                                     img {
                                         width: 77px;
                                     }
                                 }
+
                                 .cont {
                                     padding-top: 20px;
                                 }
                             }
+
                             &:last-child {
                                 margin-right: 0;
-    
+
                                 .icon {
                                     margin-bottom: 30px;
+
                                     img {
                                         width: 106px;
                                     }
                                 }
                             }
+
                             .icon {
                                 width: 40%;
                                 margin: 0;
                             }
+
                             .tit {
                                 width: 55%;
                                 font-size: 20px;
                                 padding: 0;
                             }
+
                             .cont {
                                 width: 100%;
                                 font-size: 14px;
@@ -936,7 +975,7 @@ main {
                 max-width: 1024px;
                 margin: 0 auto;
                 color: #fff;
-                
+
                 pre {
                     font-family: 'Radio Canada';
                     line-height: 28px;
@@ -967,6 +1006,7 @@ main {
     main {
         -ms-overflow-style: none;
         scrollbar-width: none;
+
         &::-webkit-scrollbar {
             display: none;
         }
@@ -977,11 +1017,12 @@ main {
 
                 .helloSkapi {
                     width: 100%;
-                    
-                    .helloCont {                        
+
+                    .helloCont {
                         .logo {
                             width: 30vw;
                         }
+
                         .tit {
                             font-size: 5vw;
 
@@ -1030,6 +1071,7 @@ main {
                                 width: 9vw;
                             }
                         }
+
                         p {
                             padding: 0 2vw;
                         }
@@ -1051,6 +1093,7 @@ main {
                             padding-left: 20px;
                         }
                     }
+
                     .cardWrap {
                         padding-left: 20px;
                     }
@@ -1061,7 +1104,7 @@ main {
                 width: 100%;
                 height: 100%;
                 box-sizing: border-box;
-                
+
                 .startCont {
                     padding: 0 20px;
 
@@ -1106,6 +1149,7 @@ main {
                                 }
                             }
                         }
+
                         .levelInner {
                             width: 82%;
 
@@ -1124,7 +1168,7 @@ main {
 
                                     img {
                                         width: 100%;
-                                        object-fit:cover;
+                                        object-fit: cover;
                                         object-position: right top;
                                     }
                                 }
@@ -1155,6 +1199,7 @@ main {
     main {
         -ms-overflow-style: none;
         scrollbar-width: none;
+
         &::-webkit-scrollbar {
             display: none;
         }
@@ -1164,11 +1209,13 @@ main {
                 &::before {
                     top: 700px;
                 }
+
                 .helloSkapi {
-                    .helloCont {                        
+                    .helloCont {
                         .logo {
                             width: 200px;
                         }
+
                         .tit {
                             font-size: 32px;
                             margin: 30px 0 80px 0;
@@ -1260,7 +1307,7 @@ main {
 
                     .cardTit {
                         width: 100%;
-                        
+
                         h3 {
                             font-size: 28px;
                             padding-left: 0;
@@ -1273,11 +1320,11 @@ main {
             &.getStart {
                 width: 100%;
                 height: 100%;
-                
+
                 .startCont {
                     padding: 0 20px;
                     box-sizing: border-box;
-                    
+
                     h3 {
                         font-size: 28px;
                     }
@@ -1318,6 +1365,7 @@ main {
                                         background-color: #ddd;
                                         z-index: 3;
                                     }
+
                                     &::after {
                                         position: absolute;
                                         content: '';
@@ -1333,40 +1381,47 @@ main {
                                         justify-content: center;
                                         z-index: 9;
                                     }
+
                                     &.active::after {
                                         background-image: linear-gradient(#fff, #fff),
                                             linear-gradient(to right, #001CE9 0%, #fff 100%);
                                     }
                                 }
+
                                 &:first-child {
                                     .num {
                                         &.active::before {
                                             background-image: linear-gradient(to bottom, #001CE9 0%, #5B8BFB 100%);
                                             animation: fadeInText 1s ease-out forwards;
                                         }
+
                                         &::after {
-                                            content: '01';  
+                                            content: '01';
                                         }
                                     }
                                 }
+
                                 &:nth-child(2) {
                                     .num {
                                         &.active::before {
                                             background-image: linear-gradient(to bottom, #5B8BFB 0%, #fff 100%);
                                             animation: fadeInText 1s ease-out forwards;
                                         }
+
                                         &::after {
-                                            content: '02';  
+                                            content: '02';
                                         }
                                     }
                                 }
+
                                 &:last-child {
                                     .num {
                                         &::before {
                                             display: none;
                                         }
+
                                         &::after {
-                                            content: '03';  
+                                            content: '03';
                                         }
                                     }
                                 }
@@ -1394,6 +1449,7 @@ main {
                                         }
                                     }
                                 }
+
                                 &.lv2 {
                                     padding-bottom: 61px;
 
@@ -1404,6 +1460,7 @@ main {
                                         }
                                     }
                                 }
+
                                 &.lv3 {
                                     height: auto;
                                     padding-bottom: 24px;
@@ -1413,6 +1470,7 @@ main {
                                             margin-bottom: 0;
                                         }
                                     }
+
                                     .lvImg {
                                         display: none;
 
@@ -1427,6 +1485,7 @@ main {
                                         margin: 0;
                                         margin-bottom: 16px;
                                     }
+
                                     .lvDesc {
                                         margin-bottom: 16px;
                                     }
@@ -1461,7 +1520,7 @@ main {
         .sectionBox {
             .overflow {
                 .helloSkapi {
-                    .helloCont {                        
+                    .helloCont {
                         .tit {
                             .withBtn {
                                 span {
@@ -1480,6 +1539,7 @@ main {
     main {
         -ms-overflow-style: none;
         scrollbar-width: none;
+
         &::-webkit-scrollbar {
             display: none;
         }
@@ -1496,12 +1556,13 @@ main {
                 .helloSkapi {
                     .helloCont {
                         text-align: left;
-                        
+
                         .logoImg {
                             width: 16rem;
                             margin: 0;
                             padding: 28px 0 28px 10px;
                         }
+
                         .tit {
                             font-size: 8vw;
                             margin: 0 0 80px 0;
@@ -1512,14 +1573,16 @@ main {
                                 // right: 27px;
                                 // width: 45px;
                             }
+
                             .withBtn {
                                 justify-content: start;
-                                
+
                                 span {
                                     width: 100%;
                                     text-align: center;
                                     margin-bottom: 44px;
                                 }
+
                                 a {
                                     button {
                                         margin-left: 0;
@@ -1527,6 +1590,7 @@ main {
                                 }
                             }
                         }
+
                         h3 {
                             font-size: 28px;
                             margin-bottom: 16px;
@@ -1562,5 +1626,4 @@ main {
             }
         }
     }
-}
-</style>
+}</style>
