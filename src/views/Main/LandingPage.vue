@@ -52,6 +52,11 @@ section.sectionBox
                     span highly accessible 
                     |backend resources let you focus solely on what truly matters: 
                     span crafting&nbsp;exceptional&nbsp;web&nbsp;products
+br
+br
+div(style="text-align:center")
+    a(href='https://docs.skapi.com' target="_blank")
+        sui-button Getting Started
 section.sectionBox.showVideo
     .videoCont 
         <iframe class="video" src="https://www.youtube.com/embed/c57Km96AHeg?&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -180,9 +185,6 @@ section.sectionBox.getStart
                     | ');
                     |  &lt;/script&gt;
 
-div(style="text-align:center")
-    a(href='https://docs.skapi.com' target="_blank")
-        sui-button Find out more
 section.sectionBox.trySkapi
     .tryCont 
         pre.
@@ -1074,7 +1076,7 @@ main {
                             }
                         }
 
-                        p {
+                        p,h3 {
                             padding: 0 2vw;
                         }
                     }
