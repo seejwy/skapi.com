@@ -52,8 +52,6 @@ section.sectionBox
                     span highly accessible 
                     |backend resources let you focus solely on what truly matters: 
                     span crafting&nbsp;exceptional&nbsp;web&nbsp;products
-                a(href='https://docs.skapi.com' target="_blank")
-                    button.readBtn Find out more
 section.sectionBox.showVideo
     .videoCont 
         <iframe class="video" src="https://www.youtube.com/embed/c57Km96AHeg?&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -87,7 +85,7 @@ section.sectionBox.features(ref="features")
                     .right
                         h4.tit Authentication
                         p.cont Setting up user authentication and ensuring data security has never been simpler. From cloud storage to database restrictions, user authentication functions flawlessly, freeing you from the typical setup hassles.
-                
+
         .mobile-cardWrap(v-else)
             .mobile-cardInner
                 .card
@@ -110,7 +108,7 @@ section.sectionBox.features(ref="features")
                         img(src="@/assets/img/icons/Asset15.png")
                     h4.tit Authentication
                     p.cont Setting up user authentication and ensuring data security has never been simpler. From cloud storage to database restrictions, user authentication functions flawlessly, freeing you from the typical setup hassles.
-                
+
 section.sectionBox.getStart
     .startCont 
         h3 Getting Started
@@ -181,6 +179,10 @@ section.sectionBox.getStart
                     span OWNERS_ID
                     | ');
                     |  &lt;/script&gt;
+
+div(style="text-align:center")
+    a(href='https://docs.skapi.com' target="_blank")
+        sui-button Find out more
 section.sectionBox.trySkapi
     .tryCont 
         pre.
@@ -1626,4 +1628,5 @@ main {
             }
         }
     }
-}</style>
+}
+</style>
