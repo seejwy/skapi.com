@@ -118,6 +118,7 @@ function login() {
         switch(e.code) {
             case 'UserLambdaValidationException':
             case 'INCORRECT_USERNAME_OR_PASSWORD':
+            case 'NOT_EXISTS':
                 error.value = 'Username or password is incorrect';
                 break;
             case 'USER_IS_DISABLED':
