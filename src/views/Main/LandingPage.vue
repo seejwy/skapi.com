@@ -197,7 +197,7 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted, ref, onUnmounted, nextTick } from 'vue';
+import { onMounted, ref, onUnmounted, nextTick, onBeforeUnmount } from 'vue';
 import gsap from 'gsap';
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -205,6 +205,7 @@ let features = ref(null);
 let showThis = ref(false);
 let animation = null;
 let scrollTrigger = null;
+let mediaWatcher = null;
 
 function codeCopy() {
     let doc = document.createElement('textarea');
@@ -234,74 +235,79 @@ window.addEventListener('scroll', () => {
     });
 });
 
-gsap.registerPlugin(ScrollTrigger);
-onMounted(() => {
-    document.querySelector('main').classList.add('landing');
+function cardMove() {
+    nextTick().then(() => {
+        let cardInner = features.value.querySelector('.cardInner');
+        let cardInnerRight = features.value.querySelector('.cardTit').getBoundingClientRect().right;
+        let cardInnerPosition = Math.max(window.innerWidth - cardInnerRight, 20);
 
-
-
-    function cardMove() {
-        nextTick().then(() => {
-            let cardInner = features.value.querySelector('.cardInner');
-            let cardInnerRight = features.value.querySelector('.cardTit').getBoundingClientRect().right;
-            let cardInnerPosition = Math.max(window.innerWidth - cardInnerRight, 20);
-
-            animation = gsap.to(cardInner, {
-                x: function () {
-                    return -(features.value.scrollWidth - document.documentElement.clientWidth + cardInnerPosition) + "px";
-                },
-                ease: "none"
-            });
-
-            scrollTrigger = ScrollTrigger.create({
-                scrub: true,
-                animation: animation,
-                trigger: features.value,
-                pin: true,
-                // markers: true,
-                start: "center center",
-                end: function () {
-                    return "+=" + features.value.scrollWidth;
-                },
-            });
+        animation = gsap.to(cardInner, {
+            x: function () {
+                return -(features.value.scrollWidth - document.documentElement.clientWidth + cardInnerPosition) + "px";
+            },
+            ease: "none"
         });
-    }
 
-    function seePC() {
-        showThis.value = false;
-    }
+        scrollTrigger = ScrollTrigger.create({
+            scrub: true,
+            animation: animation,
+            trigger: features.value,
+            pin: true,
+            // markers: true,
+            start: "center center",
+            end: function () {
+                return "+=" + features.value.scrollWidth;
+            },
+        });
+    });
+}
 
-    function seeMobile() {
-        showThis.value = true;
-    }
+function seePC() {
+    showThis.value = false;
+}
 
-    if (window.matchMedia('(min-width: 769px)').matches) {
+function seeMobile() {
+    showThis.value = true;
+}
+
+if (window.matchMedia('(min-width: 769px)').matches) {
+    seePC();
+    cardMove();
+} else {
+    seeMobile();
+}
+
+let mediaHandler = (e) => {
+    if (e.matches) {
         seePC();
         cardMove();
     } else {
-        seeMobile();
-    }
-
-    window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
-        if (e.matches) {
-            seePC();
-            cardMove();
-        } else {
-            seeMobile();
-            scrollTrigger.kill();
+        if(scrollTrigger) scrollTrigger.kill();
+        if(animation) {
             animation.kill();
             animation = null;
         }
-    });
+        seeMobile();
+    }
+}
+
+gsap.registerPlugin(ScrollTrigger);
+
+onMounted(() => {
+    document.querySelector('main').classList.add('landing');
+    mediaWatcher = window.matchMedia('(min-width: 769px)');
+    mediaWatcher.addEventListener('change', mediaHandler);
 });
 
-onUnmounted(() => {
-    scrollTrigger.kill();
-    animation.kill();
-    animation = null;
+onBeforeUnmount(() => {
+    mediaWatcher.removeEventListener('change', mediaHandler);
+    if(scrollTrigger) scrollTrigger.kill();
+    if(animation) {
+        animation.kill();
+        animation = null;
+    }
 });
 </script>
-
 <style lang="less">
 main {
     &.landing {
