@@ -51,7 +51,7 @@ section.sectionBox
                     |and 
                     span highly accessible 
                     |backend resources let you focus solely on what truly matters: 
-                    span crafting&nbsp;exceptional&nbsp;web&nbsp;products
+                    span Building&nbsp;the&nbsp;next&nbsp;innovation
 br
 br
 div(style="text-align:center")
