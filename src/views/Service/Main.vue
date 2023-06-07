@@ -76,6 +76,7 @@ Transition(name="toast")
 
     .sidebar-holder {
         width: 52px;
+        flex-shrink: 0;
     }
 
     .sidebar {

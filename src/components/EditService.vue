@@ -187,7 +187,7 @@ const saveFunction = async () => {
 }
 
 const toggle = () => {
-    if(isDisabled.value || isDisabled.value) return;
+    if(isDisabled.value) return;
     serviceStatus.value > 0 ? serviceStatus.value = 0 : serviceStatus.value = 1;
 }
 

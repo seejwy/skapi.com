@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../views/Main/LandingPage.vue';
-import Login from '../views/Main/Login.vue';
 import Signup from '../views/Main/Signup.vue';
 import ResendConfirmation from '../views/Main/ResendConfirmation.vue';
 import EmailConfirmed from '../views/Main/EmailConfirmed.vue';
