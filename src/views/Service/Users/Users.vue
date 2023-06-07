@@ -370,13 +370,6 @@ const callSearch = () => {
 
     let params = getCleanSearchParams();
 
-    if(params.searchFor === 'timestamp') {
-        if(params.value === '') params.value = 0;
-        else {
-            params.value = new Date(params.value).getTime();
-        }
-    }
-
     skapi.getUsers(params, {
         fetchMore: false,
         limit: fetchLimit 

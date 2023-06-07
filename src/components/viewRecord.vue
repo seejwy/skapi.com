@@ -455,6 +455,7 @@ const editRecord = () => {
 
 const deleteRecord = () => {
 	let table, tableIndex;
+	
 	if(recordTables.value) {
 		table = recordTables.value.list.find((val) => val.table === props.record.table.name);
 		if(table.records?.list) {
@@ -652,6 +653,7 @@ const save = async () => {
 				if(tbl) {
 					tbl.number_of_records++;
 					r.data = ref(r.data);
+					
 					if(tbl.records.startKey === 'end') {
 						tbl.records.list.push(r);
 					}

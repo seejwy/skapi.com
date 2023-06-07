@@ -1,8 +1,6 @@
 <template lang="pug">
 // search form
-form(
-    :action="'/admin/' + serviceId + '/records/search'"
-    @submit.prevent="submitSearch")
+form(@submit.prevent="submitSearch")
     // navbar for mobile search
     SearchNavBar(v-if='viewport === "mobile" && route.name === "mobileSearchRecord"')
         template(v-slot:left)    
