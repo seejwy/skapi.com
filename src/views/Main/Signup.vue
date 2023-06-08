@@ -1,41 +1,87 @@
 <template lang="pug">
 .wrapper(:loading="promiseRunning || null")
-    form.container(@submit.prevent="signup" action="")
-        h1 Signup
-        .input
-            label Email
-            sui-input(
-                type="text"
-                inputmode="email"
-                @change="validateEmail" 
-                :value='form.email' 
-                @input="e=> { form.email = e.target.value; e.target.setCustomValidity(''); error = '' }" 
-                placeholder="E.g. someone@gmail.com" 
-                required)
-        .input
-            label Name
-            sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name" autocomplete="given-name")
-        .input
-            label Password            
-            PasswordInput(ref="passwordField" @input="e=> { form.password = e.target.value; e.target.setCustomValidity(''); }" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true" autocomplete="new-password")
-        .input
-            label Password Confirm
-            PasswordInput(ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); }" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true" autocomplete="new-password")
-        .error(v-if="error")
-            Icon warning
-            span {{ error }}
-        .input.checkbox
-            Label 
-                sui-input(
-                    type="checkbox" 
-                    @input="(e)=> form.subscribe = e.target.checked"
-                    checked)
-                span I agree to receive information and news letters from Skapi via Email.
-
-        SubmitButton(:loading="promiseRunning") Create Account
+    .container
+        template(v-if="step === 1")
+            form(@submit.prevent="step++")
+                h1 Signup
+                .input
+                    label Email
+                    sui-input(
+                        type="text"
+                        inputmode="email"
+                        @change="validateEmail" 
+                        :value='form.email' 
+                        @input="e=> { form.email = e.target.value; e.target.setCustomValidity(''); error = '' }" 
+                        placeholder="E.g. someone@gmail.com" 
+                        required)
+                .input
+                    label Name
+                    sui-input(type="text" :value='form.username' @input="e=>form.username = e.target.value" placeholder="Enter your name" autocomplete="given-name")
+                .input
+                    label Password            
+                    PasswordInput(ref="passwordField" @input="e=> { form.password = e.target.value; e.target.setCustomValidity(''); }" :value='form.password' @change="validatePassword" placeholder="Create a password" :required="true" autocomplete="new-password")
+                .input
+                    label Password Confirm
+                    PasswordInput(ref="confirmPasswordField" @input="e=> { form.password_confirm = e.target.value; e.target.setCustomValidity(''); }" :value='form.password_confirm' @change="validatePassword" placeholder="Retype your password" :required="true" autocomplete="new-password")
+                .error(v-if="error")
+                    Icon warning
+                    span {{ error }}
+                .input.checkbox
+                    Label 
+                        sui-input(
+                            type="checkbox" 
+                            @input="(e)=> form.subscribe = e.target.checked"
+                            checked)
+                        span I agree to receive information and news letters from Skapi via Email.
+                SubmitButton Continue
+        template(v-if="step >= 2")
+            form(@submit.prevent="signup" action="")
+                h1 Tell Us More
+                .input 
+                    label What is your role in your company?
+                        sui-select(required @change="(e) => form.misc.role = e.target.value")
+                            option(disabled selected value) -- Please select one --
+                            option(value="frontend") Frontend Engineer
+                            option(value="backend") Backend Engineer
+                            option(value="fullstack") Fullstack Engineer
+                            option(value="others") None of the above
+                .input 
+                    label How many years of experience do you have in dev?
+                        sui-select(required @change="(e) => form.misc.experience = e.target.value")
+                            option(disabled selected value) -- Please select one --
+                            option(value="< 1") Less than a year
+                            option(value="1 - 5") 1 to 5 years
+                            option(value="5 - 10") 5 to 10 years
+                            option(value="> 10") More than 10 years
+                //- pre {{  form }}
+                .input.checkbox.multi
+                    .question You are looking for:
+                    label Database
+                        sui-input(type="checkbox" value="database" :checked="form.misc.feature.includes('database') || null" @change="checkboxSelectionHandler('database', form.misc.feature)")
+                    
+                    label Cloud Storage
+                        sui-input(type="checkbox" value="cloud storage" :checked="form.misc.feature.includes('cloud storage') || null" @change="checkboxSelectionHandler('cloud storage', form.misc.feature)")
+                    
+                    label Authentication
+                        sui-input(type="checkbox" value="authentication" :checked="form.misc.feature.includes('authentication') || null" @change="checkboxSelectionHandler('authentication', form.misc.feature)")
+                .input.checkbox.multi
+                    .question What will you use skapi for?
+                    label Hobby / Learning
+                        sui-input(type="checkbox" value="hobby/learning" :checked="form.misc.purpose.includes('hobby/learning') || null" @change="checkboxSelectionHandler('hobby/learning', form.misc.purpose)")
+                    
+                    label Personal Projects
+                        sui-input(type="checkbox" value="personal projects" :checked="form.misc.purpose.includes('personal projects') || null" @change="checkboxSelectionHandler('personal projects', form.misc.purpose)")
+                    
+                    label Company
+                        sui-input(type="checkbox" value="company" :checked="form.misc.purpose.includes('company') || null" @change="checkboxSelectionHandler('company', form.misc.purpose)")
+                SubmitButton(:loading="promiseRunning") Create Account
+                //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
+        
         div Already have an account?&nbsp;
             RouterLink(to="/admin") Login
-        //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
+        .navigator
+            .ball(v-for="num in 2" @click="() => { num < step ? step = num : null; password = '';  passwordConfirm = '';}" :class="{'active': step === num}")
+
 </template>
 <script setup>
 import { inject, watch, reactive, ref, onBeforeMount } from 'vue';
@@ -50,6 +96,7 @@ let route = useRoute();
 let router = useRouter();
 const error = ref(null);
 const page = ref('signup');
+let step = ref(1);
 const secondsTillReady = ref(null);
 const promiseRunning = ref(false);
 const passwordField = ref(null);
@@ -70,7 +117,13 @@ let form = reactive({
     email: '',
     password: '',
     password_confirm: '',
-    subscribe: false
+    subscribe: false,
+    misc: {
+        role: '',
+        feature: [],
+        experience: '',
+        purpose: []
+    }
 });
 
 watch(() => state.user, u => {
@@ -78,6 +131,15 @@ watch(() => state.user, u => {
         router.replace('/admin');
     }
 });
+
+const checkboxSelectionHandler = (value, arr) => {
+    if(arr.includes(value)) {
+        let idx = arr.indexOf(value)
+        arr.splice(idx, 1);
+    } else {
+        arr.push(value)
+    }
+}
 
 const validateEmail = (event) => {
     if(skapi.validate.email(event.target.value)) {
@@ -110,7 +172,7 @@ function signup() {
         options.email_subscription = form.subscribe;
     }
     
-    skapi.signup({email: form.email, password: form.password, name: form.username}, options).then(result => {
+    skapi.signup({email: form.email, password: form.password, name: form.username, misc: JSON.stringify(form.misc)}, options).then(result => {
         router.push('/confirmation');
     }).catch(e => {
         console.log({e});
@@ -172,34 +234,57 @@ function signup() {
         margin: 0 0 36px 0;
     }
 
+    .question {
+        text-align: left;
+        font-weight: bold;    
+        margin-bottom: 20px;
+    }
+
     .input {
         text-align: left;
         color: rgba(0, 0, 0, 0.65);
         margin-top: 28px;
 
-        &.checkbox label {
+        &.checkbox label,
+        &.radio label {
             display: flex;
             cursor: pointer;
+            gap: 8px;
 
             sui-input {
-                margin: 1px 8px 0 0;
+                margin: 1px 0 0 0;
                 flex-grow: 0;
                 flex-shrink: 0;
             }
         }
 
-        &:not(.checkbox) {
-            margin: 20px auto 12px;
+        &.checkbox.multi label {
+            margin-bottom: 16px;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
 
+        &:not(.radio):not(.checkbox) {
             label {
                 display: block;
                 font-weight: bold;
                 margin-bottom: 8px;
+
+                sui-select {
+                    margin-top: 8px;
+                    font-weight: normal;
+                }
             }
-            sui-input {
+            
+            sui-input,
+            sui-select {
                 width: 100%;
                 margin-left: 0;
-            }
+            } 
+        }
+
+        &:not(.checkbox) {
+            margin: 20px auto 12px; 
         }
     }
     .action {
@@ -248,6 +333,27 @@ function signup() {
         color: #293FE6;
         text-decoration: none;
         font-weight: bold;
+    }
+}
+
+.navigator {
+    margin-top: 56px;
+    .ball {
+        display: inline-block;
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        background-color: #D9D9D9;
+        cursor: pointer;
+        margin-right: 12px;
+
+        &.active {        
+            background-color: var(--primary-color);
+        }
+
+        &:last-child {
+            margin: 0;
+        }
     }
 }
 </style>

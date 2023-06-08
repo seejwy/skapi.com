@@ -109,8 +109,30 @@ const validatePassword = (event) => {
 function login() {
     error.value = '';
     promiseRunning.value = true;
-    skapi.AdminLogin(form, null, rememberme.value).then(u => {
-        state.user = u;
+    skapi.AdminLogin(form, null, rememberme.value).then(async user => {
+        if(user.hasOwnProperty('misc') && JSON.parse(user.misc).hasOwnProperty('purpose')) {
+            let questions = JSON.parse(user.misc);
+            
+            await skapi.updateProfile({
+                misc: null
+            }).then((res) => {
+                state.user = res;
+            });
+
+            skapi.postRecord({
+                featuresNeeded: questions.feature,
+                experience: questions.experience,
+                purpose: questions.purpose
+            }, {
+                table: {
+                    name: 'signup questions'
+                }, 
+                index: {
+                    name: 'role',
+                    value: questions.role
+                }
+            });
+        }
     }).catch(e => {
         // UserLambdaValidationException
         // INCORRECT_USERNAME_OR_PASSWORD
