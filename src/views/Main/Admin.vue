@@ -10,7 +10,7 @@ div(v-else-if="state?.user")
             To create a new service, click on "New Service".
 
         .action
-            sui-button.with-icon(type="button" @click="state.user.email_verified ? state.viewport === 'desktop' ? isOpen = true : router.push('?new=service') : null" :disabled="!state.user.email_verified || null")
+            sui-button.with-icon(type="button" @click="NewServiceConditions" :disabled="!state.user.email_verified || null")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList?.length")
@@ -41,6 +41,9 @@ div(v-else-if="state?.user")
     sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeNewServiceWindow")
         div.overlay
             NewService(@close="closeNewServiceWindow")
+    //- sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="feedBackWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeFeedBackWindow")
+    //-     div.overlay
+    //-         FeedBack(@close="closeFeedBackWindow")
 </template>
 <script setup>
 import { inject, ref, watch, nextTick, computed } from 'vue';
@@ -48,6 +51,7 @@ import { state, skapi, dateFormat, localeName, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import NewService from '@/components/NewService.vue';
+// import FeedBack from '@/view/Main/FeedBackForm.vue';
 import Icon from '@/components/Icon.vue';
 
 let router = useRouter();
@@ -59,6 +63,7 @@ pageTitle.value = 'skapi';
 let serviceList = ref(null);
 let overlay = ref(null);
 const newServiceWindow = ref(null);
+const feedBackWindow = ref(null);
 const isOpen = ref(false);
 const isFetchingServices = ref(true);
 
@@ -73,6 +78,36 @@ const filterServiceDetails = (service) => {
 const closeNewServiceWindow = async () => {
     await state.blockingPromise;
     newServiceWindow.value.close(() => isOpen.value = false);
+}
+
+const closeFeedBackWindow = async () => {
+    await state.blockingPromise;
+    feedBackWindow.value.close(() => isOpen.value = false);
+}
+
+const NewServiceConditions = () => {
+    // skapi.getProfile().then((r)=>{
+    //     if(r.misc === 'feedback complete') {
+    //         return false;
+    //     } else {
+
+    //     }
+    // })
+
+    // skapi.getProfile().then((r) => {console.log(r)});
+
+    console.log(skapi.services)
+
+
+    // if(state.user.email_verified && ) {
+    //     if(state.viewport === 'desktop') {
+    //         isOpen.value = true;
+    //     } else {
+    //         router.push('?new=service');
+    //     }
+    // } else {
+    //     return null;
+    // }
 }
 
 const openNewServiceWindow = () => {

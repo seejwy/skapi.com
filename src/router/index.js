@@ -8,6 +8,7 @@ import ForgotPassword from '../views/Main/ForgotPassword.vue';
 import Main from '../views/Main/Main.vue';
 import Admin from '../views/Main/Admin.vue';
 import Settings from '../views/Main/Settings.vue';
+import FeedbackForm from '../views/Main/FeedBackForm.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
           path: '',
           name: 'home',
           component: LandingPage
+        },
+        {
+          path: 'feedback',
+          name: 'feedback',
+          component: FeedbackForm
         },
         {
           path: 'admin',

@@ -552,7 +552,7 @@ main {
                             &:first-child {
                                 .icon {
                                     img {
-                                        width: 103px;
+                                        width: 100%;
                                     }
                                 }
                             }
@@ -560,7 +560,7 @@ main {
                             &:nth-child(2) {
                                 .icon {
                                     img {
-                                        width: 72px;
+                                        width: 100%;
                                     }
                                 }
                             }
@@ -568,7 +568,7 @@ main {
                             &:nth-child(3) {
                                 .icon {
                                     img {
-                                        width: 86px;
+                                        width: 85%;
                                     }
                                 }
                             }
@@ -578,7 +578,7 @@ main {
 
                                 .icon {
                                     img {
-                                        width: 122px;
+                                        width: 90%;
                                     }
                                 }
                             }
@@ -642,33 +642,13 @@ main {
                             align-items: center;
                             justify-content: space-between;
 
-                            &:first-child {
-                                .icon {
-                                    img {
-                                        width: 88px;
-                                    }
-                                }
-                            }
-
                             &:nth-child(2) {
-                                .icon {
-                                    img {
-                                        width: 65px;
-                                    }
-                                }
-
                                 .cont {
                                     padding-top: 20px;
                                 }
                             }
 
                             &:nth-child(3) {
-                                .icon {
-                                    img {
-                                        width: 77px;
-                                    }
-                                }
-
                                 .cont {
                                     padding-top: 20px;
                                 }
@@ -679,16 +659,16 @@ main {
 
                                 .icon {
                                     margin-bottom: 30px;
-
-                                    img {
-                                        width: 106px;
-                                    }
                                 }
                             }
 
                             .icon {
                                 width: 40%;
                                 margin: 0;
+
+                                img {
+                                    width: 88px;
+                                }
                             }
 
                             .tit {
