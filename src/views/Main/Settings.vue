@@ -151,16 +151,10 @@ const openDeletePopup = async () => {
     else router.replace('?page=delete');
 }
 const openVerifyEmail = async () => {
-    try {
-        await skapi.verifyEmail();
-        if(state.viewport === 'desktop') emailOverlay.value.open();
-        else router.replace('?page=verify');
-    } catch(e) {
-        console.log({e});
-        if(e.code === 'LimitExceededException') {
-            isVerifyErrorMessage.value = true;
-        }
-    }
+    skapi.verifyEmail().catch(err => err);
+    if(state.viewport === 'desktop') emailOverlay.value.open();
+    else router.replace('?page=verify');
+    
 }
 
 const cancelEdit = () => {
