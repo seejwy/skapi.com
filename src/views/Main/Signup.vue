@@ -55,7 +55,7 @@
                             option(value="100" :selected="form.misc.experience === '100'") More than 10 years
                 .input.checkbox.multi
                     .question You are looking for:
-                    label Database
+                    label Database Solutions
                         sui-input(type="checkbox" value="database" :checked="form.misc.feature.includes('database') || null" @change="() => { questionsError.feature = false; checkboxSelectionHandler('database', form.misc.feature) }")
                     
                     label Cloud Storage
@@ -69,10 +69,10 @@
                     label Hobby / Learning
                         sui-input(type="checkbox" value="hobby and learning" :checked="form.misc.purpose.includes('hobby and learning') || null" @change="() => { questionsError.purpose = false; checkboxSelectionHandler('hobby and learning', form.misc.purpose)}")
                     
-                    label Personal Projects
+                    label Personal projects
                         sui-input(type="checkbox" value="personal projects" :checked="form.misc.purpose.includes('personal projects') || null" @change="() => { questionsError.purpose = false; checkboxSelectionHandler('personal projects', form.misc.purpose)}")
                     
-                    label Company
+                    label Company projects
                         sui-input(type="checkbox" value="company" :checked="form.misc.purpose.includes('company') || null" @change="() => { questionsError.purpose = false; checkboxSelectionHandler('company', form.misc.purpose)}")
                     .error(v-if="questionsError.purpose") Please select at least one
                 SubmitButton(:loading="promiseRunning") Create Account
