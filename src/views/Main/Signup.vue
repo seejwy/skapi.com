@@ -188,7 +188,7 @@ function signup() {
     form.misc.experience = Number(form.misc.experience)
     
     skapi.signup({email: form.email, password: form.password, name: form.username, misc: JSON.stringify(form.misc)}, options).then(result => {
-        router.push('/confirmation');
+        router.push({path: '/confirmation', query: {email: form.email}})
     }).catch(e => {
         console.log({e});
         promiseRunning.value = false;
