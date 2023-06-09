@@ -148,7 +148,8 @@ const deleteAccount = async (e) => {
         form.value.reason.forEach((reason) => {
             reasonPromiseArray.push(skapi.postRecord(null, {
                 table: {
-                    name: 'reason'
+                    name: 'reason',
+                    access_group: 1
                 }, 
                 index: {
                     name: reason,
@@ -160,7 +161,8 @@ const deleteAccount = async (e) => {
         if(form.value.reasonText) {
             reasonPromiseArray.push(skapi.postRecord(null,{
                 table: {
-                    name: 'reason'
+                    name: 'reason',
+                    access_group: 1
                 }, 
                 index: {
                     name: 'OTHER',
