@@ -132,7 +132,7 @@ function login() {
             skapi.postRecord(null, {
                 table: {
                     name: questions.role,
-                    access_group: 1
+                    access_group: 'private'
                 }, 
                 index: {
                     name: 'experience',

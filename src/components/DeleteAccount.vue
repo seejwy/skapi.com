@@ -149,7 +149,7 @@ const deleteAccount = async (e) => {
             reasonPromiseArray.push(skapi.postRecord(null, {
                 table: {
                     name: 'reason',
-                    access_group: 1
+                    access_group: 'private'
                 }, 
                 index: {
                     name: reason,
@@ -162,7 +162,7 @@ const deleteAccount = async (e) => {
             reasonPromiseArray.push(skapi.postRecord(null,{
                 table: {
                     name: 'reason',
-                    access_group: 1
+                    access_group: 'private'
                 }, 
                 index: {
                     name: 'OTHER',
