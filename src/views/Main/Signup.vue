@@ -38,7 +38,7 @@
             form(@submit.prevent="signup" action="")
                 h1 Tell Us More
                 .input 
-                    label What is your role in your company?
+                    label What is your role?
                         sui-select(required @change="(e) => form.misc.role = e.target.value")
                             option(disabled :selected="form.misc.role === ''" value) -- Please select one --
                             option(value="frontend" :selected="form.misc.role === 'frontend'") Frontend Engineer
