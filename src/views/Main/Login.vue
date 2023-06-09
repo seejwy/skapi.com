@@ -112,26 +112,36 @@ function login() {
     skapi.AdminLogin(form, null, rememberme.value).then(async user => {
         if(user.hasOwnProperty('misc') && JSON.parse(user.misc).hasOwnProperty('purpose')) {
             let questions = JSON.parse(user.misc);
-            
-            await skapi.updateProfile({
+            let tags = [];
+
+            questions.feature.forEach((feature) => {
+                tags.push(`feature ${feature}`)
+            });
+
+            questions.purpose.forEach((purpose) => {
+                tags.push(`purpose ${purpose}`)
+            });
+
+
+            skapi.updateProfile({
                 misc: null
             }).then((res) => {
                 state.user = res;
             });
 
-            skapi.postRecord({
-                featuresNeeded: questions.feature,
-                experience: questions.experience,
-                purpose: questions.purpose
-            }, {
+            skapi.postRecord(null, {
                 table: {
-                    name: 'signup questions'
+                    name: questions.role,
+                    access_group: 1
                 }, 
                 index: {
-                    name: 'role',
-                    value: questions.role
-                }
+                    name: 'experience',
+                    value: questions.experience
+                },
+                tags: tags
             });
+        } else {
+            state.user = user;
         }
     }).catch(e => {
         // UserLambdaValidationException

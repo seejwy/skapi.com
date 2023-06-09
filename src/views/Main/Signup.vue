@@ -40,43 +40,46 @@
                 .input 
                     label What is your role in your company?
                         sui-select(required @change="(e) => form.misc.role = e.target.value")
-                            option(disabled selected value) -- Please select one --
-                            option(value="frontend") Frontend Engineer
-                            option(value="backend") Backend Engineer
-                            option(value="fullstack") Fullstack Engineer
-                            option(value="others") None of the above
+                            option(disabled :selected="form.misc.role === ''" value) -- Please select one --
+                            option(value="frontend" :selected="form.misc.role === 'frontend'") Frontend Engineer
+                            option(value="backend" :selected="form.misc.role === 'backend'") Backend Engineer
+                            option(value="fullstack" :selected="form.misc.role === 'fullstack'") Fullstack Engineer
+                            option(value="others" :selected="form.misc.role === 'others'") None of the above
                 .input 
                     label How many years of experience do you have in dev?
                         sui-select(required @change="(e) => form.misc.experience = e.target.value")
-                            option(disabled selected value) -- Please select one --
-                            option(value="< 1") Less than a year
-                            option(value="1 - 5") 1 to 5 years
-                            option(value="5 - 10") 5 to 10 years
-                            option(value="> 10") More than 10 years
-                //- pre {{  form }}
+                            option(disabled :selected="form.misc.experience === ''" value) -- Please select one --
+                            option(value="1" :selected="form.misc.experience === '1'") Less than a year
+                            option(value="5" :selected="form.misc.experience === '5'") 1 to 5 years
+                            option(value="10" :selected="form.misc.experience === '10'") 5 to 10 years
+                            option(value="100" :selected="form.misc.experience === '100'") More than 10 years
                 .input.checkbox.multi
                     .question You are looking for:
                     label Database
-                        sui-input(type="checkbox" value="database" :checked="form.misc.feature.includes('database') || null" @change="checkboxSelectionHandler('database', form.misc.feature)")
+                        sui-input(type="checkbox" value="database" :checked="form.misc.feature.includes('database') || null" @change="() => { questionsError.feature = false; checkboxSelectionHandler('database', form.misc.feature) }")
                     
                     label Cloud Storage
-                        sui-input(type="checkbox" value="cloud storage" :checked="form.misc.feature.includes('cloud storage') || null" @change="checkboxSelectionHandler('cloud storage', form.misc.feature)")
+                        sui-input(type="checkbox" value="cloud storage" :checked="form.misc.feature.includes('cloud storage') || null" @change="() => { questionsError.feature = false; checkboxSelectionHandler('cloud storage', form.misc.feature)}")
                     
                     label Authentication
-                        sui-input(type="checkbox" value="authentication" :checked="form.misc.feature.includes('authentication') || null" @change="checkboxSelectionHandler('authentication', form.misc.feature)")
+                        sui-input(type="checkbox" value="authentication" :checked="form.misc.feature.includes('authentication') || null" @change="() => { questionsError.feature = false; checkboxSelectionHandler('authentication', form.misc.feature)}")
+                    .error(v-if="questionsError.feature") Please select at least one
                 .input.checkbox.multi
                     .question What will you use skapi for?
                     label Hobby / Learning
-                        sui-input(type="checkbox" value="hobby/learning" :checked="form.misc.purpose.includes('hobby/learning') || null" @change="checkboxSelectionHandler('hobby/learning', form.misc.purpose)")
+                        sui-input(type="checkbox" value="hobby and learning" :checked="form.misc.purpose.includes('hobby and learning') || null" @change="() => { questionsError.purpose = false; checkboxSelectionHandler('hobby and learning', form.misc.purpose)}")
                     
                     label Personal Projects
-                        sui-input(type="checkbox" value="personal projects" :checked="form.misc.purpose.includes('personal projects') || null" @change="checkboxSelectionHandler('personal projects', form.misc.purpose)")
+                        sui-input(type="checkbox" value="personal projects" :checked="form.misc.purpose.includes('personal projects') || null" @change="() => { questionsError.purpose = false; checkboxSelectionHandler('personal projects', form.misc.purpose)}")
                     
                     label Company
-                        sui-input(type="checkbox" value="company" :checked="form.misc.purpose.includes('company') || null" @change="checkboxSelectionHandler('company', form.misc.purpose)")
+                        sui-input(type="checkbox" value="company" :checked="form.misc.purpose.includes('company') || null" @change="() => { questionsError.purpose = false; checkboxSelectionHandler('company', form.misc.purpose)}")
+                    .error(v-if="questionsError.purpose") Please select at least one
                 SubmitButton(:loading="promiseRunning") Create Account
+                .error(v-if="error")
+                    Icon warning
+                    span {{ error }}
                 //- .terms By signing up, you’re agree to our #[RouterLink(to="/") Terms & Conditions] #[span and ] #[RouterLink(to="/") Privacy Policy]
-        
         div Already have an account?&nbsp;
             RouterLink(to="/admin") Login
         .navigator
@@ -95,6 +98,10 @@ import PasswordInput from '../../components/PasswordInput.vue';
 let route = useRoute();
 let router = useRouter();
 const error = ref(null);
+let questionsError = ref({
+    feature: false,
+    purpose: false
+})
 const page = ref('signup');
 let step = ref(1);
 const secondsTillReady = ref(null);
@@ -162,6 +169,12 @@ const validatePassword = () => {
 }
 
 function signup() {
+    if(!form.misc.feature.length || !form.misc.purpose.length) {
+        !form.misc.feature.length ? questionsError.value.feature = true : false;
+        !form.misc.purpose.length ? questionsError.value.purpose = true : false;
+
+        return false
+    }
     error.value = '';
     promiseRunning.value = true;
     let options = {
@@ -171,6 +184,8 @@ function signup() {
     if(form.subscribe) {
         options.email_subscription = form.subscribe;
     }
+
+    form.misc.experience = Number(form.misc.experience)
     
     skapi.signup({email: form.email, password: form.password, name: form.username, misc: JSON.stringify(form.misc)}, options).then(result => {
         router.push('/confirmation');
@@ -181,9 +196,11 @@ function signup() {
         switch(e.code) {
             case 'INVALID_PARAMETER':
                 error.value = 'Email or password is invalid';
+                step.value = 1;
                 break;
             case 'EXISTS':
                 error.value = "This email is already in use";
+                step.value = 1;
                 break;
             default:
                 error.value = "Something went wrong please contact an administrator.";
