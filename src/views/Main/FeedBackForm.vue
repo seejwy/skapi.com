@@ -5,10 +5,26 @@
             form(@submit.prevent="inputStar")
                 h1 Feedback
                 p How would you rate skapi on a scale of 1 to 5?
-                .starWrap
+                .starWrap(v-if="state.viewport === 'desktop'")
                     label.starBox
                         input(type="radio" name="star")
                         span.starImg
+                    label.starBox
+                        input(type="radio" name="star")
+                        span.starImg
+                    label.starBox
+                        input(type="radio" name="star")
+                        span.starImg
+                    label.starBox
+                        input(type="radio" name="star")
+                        span.starImg
+                    label.starBox
+                        input(type="radio" name="star")
+                        span.starImg
+                .mobile-starWrap(v-else)
+                    label.starBox
+                        input(type="radio" name="star")
+                        span.tarImg
                     label.starBox
                         input(type="radio" name="star")
                         span.starImg
@@ -23,7 +39,6 @@
                         span.starImg
                 br
                 SubmitButton(:loading="promiseRunning") Continue
-                RouterLink(to="/admin") Back to Admin
         template(v-else-if="step === 2")
             form(@submit.prevent="inputFeedback")
                 h1 Feedback
@@ -33,9 +48,10 @@
                     | made to enhance the skapi experience?
                 .input
                     label Enter Your Feedback
-                    sui-input(
+                    sui-textarea(
                         type="text"
                         :value="feedback"
+                        style="width: 100%; min-height: 100px;"
                         @input="(e) => { feedback = e.target.value;}"
                         placeholder="Enter your feedback"
                         required)
@@ -44,38 +60,75 @@
             Icon.success check_circle
             h1 Thank you!
             p Thanks for taking the time to share your thoughts.
-            sui-button(type="button" @click="isOpen = true;") Continue
+            sui-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('closeFeedBack')") Continue
+            sui-button(v-else-if="state.viewport === 'mobile'" type="button" @click="router.push('?new=service')") Continue
 
         .navigator(v-if="step <= 2")
             .ball(v-for="num in 2" @click="() => { num < step ? step = num : null; password = '';  passwordConfirm = '';}" :class="{'active': step === num}")
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { skapi } from '@/main';
-import { useRouter } from 'vue-router';
+import { inject, ref, onBeforeUnmount } from 'vue';
+import { skapi, state } from '@/main';
+import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '../../components/SubmitButton.vue';
 
+let appStyle = inject('appStyle');
+let pageTitle = inject('pageTitle');
+let navbarMobileRightButton = inject('navbarMobileRightButton');
+
+let router = useRouter();
+const emit = defineEmits(['closeFeedBack']);
+const promiseRunning = ref(false);
 let feedback = ref('');
 let step = ref(1);
 let idx = 0;
 
-const promiseRunning = ref(false);
+if(state.viewport === 'mobile') {
+    pageTitle.value = 'Skapi'
+    appStyle.navBackground = '#293fe6';
+    appStyle.background = '#fff';
+    navbarMobileRightButton.value = {
+        type: 'hidden'
+    };
+}
+
+onBeforeUnmount(() => {
+    appStyle.background = null;
+    appStyle.navBackground = '#293fe6';
+    pageTitle.value = 'skapi';
+    navbarMobileRightButton.value = null;
+});
+
 
 const inputStar = () => {
     promiseRunning.value = true;
 
-    let starWrapChild = document.querySelector('.starWrap').children;
-    let starWrapChildArr = Array.from(starWrapChild);
-    let checkedStar = document.querySelector('input[name="star"]:checked').parentNode;
-
-    checkedStar.classList.add('checked');
-
-    for (let i = 0; i < starWrapChildArr.length; i++) {
-        if (starWrapChildArr[i].classList.contains('checked')) {
-            idx = i + 1;
+    if(state.viewport === 'desktop') {
+        let starWrapChild = document.querySelector('.starWrap').children;
+        let starWrapChildArr = Array.from(starWrapChild);
+        let checkedStar = document.querySelector('input[name="star"]:checked').parentNode;
+    
+        checkedStar.classList.add('checked');
+    
+        for (let i = 0; i < starWrapChildArr.length; i++) {
+            if (starWrapChildArr[i].classList.contains('checked')) {
+                idx = i + 1;
+            }
+        }
+    } else {
+        let starWrapChild = document.querySelector('.mobile-starWrap').children;
+        let starWrapChildArr = Array.from(starWrapChild);
+        let checkedStar = document.querySelector('input[name="star"]:checked').parentNode;
+    
+        checkedStar.classList.add('checked');
+    
+        for (let i = 0; i < starWrapChildArr.length; i++) {
+            if (starWrapChildArr[i].classList.contains('checked')) {
+                idx = i + 1;
+            }
         }
     }
 
@@ -95,7 +148,6 @@ const inputFeedback = () => {
         promiseRunning.value = false;
     });    
 }
-
 </script>
 
 <style lang="less" scoped>
@@ -171,7 +223,7 @@ const inputFeedback = () => {
         }
     }
 
-    .starWrap {
+    .starWrap, .mobile-starWrap {
         display: inline-block;
         overflow: hidden;
         height: 51px;
@@ -214,6 +266,12 @@ const inputFeedback = () => {
             width: 500px;
             height: 51px;
             pointer-events: none;
+        }
+    }
+
+    .mobile-starWrap {
+        &:after {
+            background-image: url('./src/assets/img/icons/star-mobile.svg');
         }
     }
 

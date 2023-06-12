@@ -110,7 +110,7 @@ function login() {
     error.value = '';
     promiseRunning.value = true;
     skapi.AdminLogin(form, null, rememberme.value).then(async user => {
-        if (user.hasOwnProperty('misc') && user.misc) {
+        if (user.hasOwnProperty('misc') && user.misc && user.misc !== 'feedback complete') {
             let questions = null;
 
             try {
