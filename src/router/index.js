@@ -27,11 +27,6 @@ const router = createRouter({
           component: LandingPage
         },
         {
-          path: 'feedback',
-          name: 'feedback',
-          component: FeedbackForm
-        },
-        {
           path: 'admin',
           name: 'admin',
           component: Admin
