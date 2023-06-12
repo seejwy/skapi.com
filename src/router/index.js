@@ -1,14 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../views/Main/LandingPage.vue';
 import Signup from '../views/Main/Signup.vue';
-import ResendConfirmation from '../views/Main/ResendConfirmation.vue';
-import EmailConfirmed from '../views/Main/EmailConfirmed.vue';
-import DeleteConfirmed from '../views/Main/DeleteConfirmed.vue';
-import ForgotPassword from '../views/Main/ForgotPassword.vue';
 import Main from '../views/Main/Main.vue';
+import ServiceMain from '../views/Service/Main.vue';
+import Service from '../views/Service/Service.vue';
+import UsersMain from '../views/Service/Users/Main.vue';
+import Users from '../views/Service/Users/Users.vue';
+import RecordsMain from '../views/Service/Records/Main.vue';
+import Tables from '../views/Service/Records/Tables.vue';
+import TableRecord from '../views/Service/Records/TableRecord.vue';
 import Admin from '../views/Main/Admin.vue';
 import Settings from '../views/Main/Settings.vue';
 import FeedbackForm from '../views/Main/FeedBackForm.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,22 +49,22 @@ const router = createRouter({
         {
           path: 'forgotpassword',
           name: 'forgotpassword',
-          component: ForgotPassword
+          component: () => import('../views/Main/ForgotPassword.vue')
         },
         {
           path: 'confirmation',
           name: 'confirmation',
-          component: ResendConfirmation
+          component: () => import('../views/Main/ResendConfirmation.vue')
         },
         {
           path: 'success',
           name: 'success',
-          component: EmailConfirmed
+          component: () => import('../views/Main/EmailConfirmed.vue')
         },
         {
           path: 'deleted',
           name: 'deleted',
-          component: DeleteConfirmed
+          component: () => import('../views/Main/DeleteConfirmed.vue')
         },
         {
           path: "/:catchAll(.*)",
@@ -74,21 +78,21 @@ const router = createRouter({
       children: [
         {
           path: ':service',
-          component: () => import('../views/Service/Main.vue'),
+          component: ServiceMain,
           children: [
             {
               path: '',
               name: 'service',
-              component: () => import('../views/Service/Service.vue')
+              component: Service
             },
             {
               path: 'records',
-              component: () => import('../views/Service/Records/Main.vue'),
+              component: RecordsMain,
               children: [
                 {
                   path: '',
                   name: 'records',
-                  component: ()=>import('../views/Service/Records/Tables.vue')
+                  component: Tables
                 },
                 {
                   path: 'search',
@@ -108,18 +112,18 @@ const router = createRouter({
                 {
                   path: 'list',
                   name: 'recordList',
-                  component: ()=>import('../views/Service/Records/TableRecord.vue')
+                  component: TableRecord
                 }
               ]
             },
             {
               path: 'users',
-              component: () => import('../views/Service/Users/Main.vue'),
+              component: UsersMain,
               children: [
                 {
                   path: '',
                   name: 'users',
-                  component: ()=>import('../views/Service/Users/Users.vue')
+                  component: Users
                 },
                 {
                   path: 'user-search',

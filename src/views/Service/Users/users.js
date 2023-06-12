@@ -1,5 +1,4 @@
-import { reactive } from 'vue';
-import { skapi, state, countries } from '@/main';
+import { skapi, countries } from '@/main';
 
 export const changeSearchCondition = (value, searchParams) => {
     switch(value) {
@@ -16,57 +15,6 @@ export const changeSearchCondition = (value, searchParams) => {
             break;
     }
 }
-
-export const visibleFields = reactive({
-    approved: {
-        text: 'Block',
-        show: state.viewport === 'desktop' ? true : false,
-    },
-    group: {
-        text: 'Active',
-        show: state.viewport === 'desktop' ? true : false,
-    },
-    access_group: {
-        text: 'Access',
-        show: false,
-    },
-    user_id: {
-        text: 'User ID',
-        show: true,
-    },
-    name: {
-        text: 'Name',
-        show: state.viewport === 'desktop' ? true : false,
-    },
-    email: {
-        text: 'Email',
-        show: state.viewport === 'desktop' ? true : false,
-    },
-    address: {
-        text: 'Address',
-        show: false,
-    },
-    phone_number: {
-        text: 'Phone',
-        show: false
-    },
-    gender: {
-        text: 'Gender',
-        show: false,
-    },
-    birthdate: {
-        text: 'Birthdate',
-        show: false,
-    },
-    timestamp: {
-        text: 'Date Created',
-        show: false,
-    },
-    locale: {
-        text: 'Locale',
-        show: false,
-    }
-});
 
 export const getValidationMessage = (searchParams) => {
     let message = '';

@@ -2,7 +2,7 @@
 .wrapper
     .container
         h1 Confirm Your Email
-        p Please check your inbox for a confirmation email. Click the link in the email to confirm your email address. 
+        p Please check your inbox at #[span(style="color: var(--primary-color)") {{ email }}] for a confirmation email. Click the link in the email to confirm your email address. 
         p(style="color: var(--primary-color)") Continue to login after confirmation.
         p(style="text-align: left; ") Haven't got any code?
         sui-button.line-button(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") 
@@ -16,6 +16,17 @@ import { useRouter } from 'vue-router';
 
 let router = useRouter();
 const secondsTillReady = ref(null);
+
+let urlParams = new URLSearchParams(window.location.search);
+let email = ref(urlParams.get('email'));
+
+if(urlParams.size && email.value) {
+    let uri = window.location.toString();
+    if (uri.indexOf("?") > 0) {
+        let clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+    }
+}
 
 // set page title
 let pageTitle = inject('pageTitle');

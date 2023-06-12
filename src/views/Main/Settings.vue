@@ -143,44 +143,38 @@ const emailOverlay = ref(null);
 const isSaving = ref(false);
 
 const openDeletePopup = async () => {
-    if(isSaving.value) return false;
-    
+    if (isSaving.value) return false;
+
     isDelete.value = true;
     await nextTick();
-    if(state.viewport === 'desktop') deleteAccountOverlay.value.open();
+    if (state.viewport === 'desktop') deleteAccountOverlay.value.open();
     else router.replace('?page=delete');
-}
+};
 const openVerifyEmail = async () => {
-    try {
-        await skapi.verifyEmail();
-        if(state.viewport === 'desktop') emailOverlay.value.open();
-        else router.replace('?page=verify');
-    } catch(e) {
-        console.log({e});
-        if(e.code === 'LimitExceededException') {
-            isVerifyErrorMessage.value = true;
-        }
-    }
-}
+    skapi.verifyEmail().catch(err => console.log(err));
+    if (state.viewport === 'desktop') emailOverlay.value.open();
+    else router.replace('?page=verify');
+
+};
 
 const cancelEdit = () => {
     isEdit.value = false;
     settings.value.name = state.user.name;
     settings.value.email = state.user.email;
     settings.value.email_subscription = state.user.email_subscription;
-}
+};
 
 const validateEmail = (event) => {
-    if(skapi.validate.email(event.target.value)) {
-		event.target.setCustomValidity('');
+    if (skapi.validate.email(event.target.value)) {
+        event.target.setCustomValidity('');
     } else {
-		event.target.setCustomValidity('Invalid Email');
-		event.target.reportValidity();
+        event.target.setCustomValidity('Invalid Email');
+        event.target.reportValidity();
     }
-}
+};
 
 const updateUserSettings = async () => {
-    if(state.user.name === settings.value.name && state.user.email === settings.value.email && state.user.email_subscription === settings.value.email_subscription) {
+    if (state.user.name === settings.value.name && state.user.email === settings.value.email && state.user.email_subscription === settings.value.email_subscription) {
         isEdit.value = false;
         isSaving.value = false;
         return true;
@@ -194,21 +188,21 @@ const updateUserSettings = async () => {
             email: settings.value.email
         });
 
-        if(state.user.email_subscription !== settings.value.email_subscription) {
-            if(settings.value.email_subscription) {
-                await skapi.subscribeNewsletter({group: 1});
+        if (state.user.email_subscription !== settings.value.email_subscription) {
+            if (settings.value.email_subscription) {
+                await skapi.subscribeNewsletter({ group: 1 });
                 settings.value.email_subscription = true;
             } else {
-                await skapi.unsubscribeNewsletter({group: 1});
+                await skapi.unsubscribeNewsletter({ group: 1 });
                 settings.value.email_subscription = false;
             }
         }
 
         state.user = res;
-        if(!res.email_verified) state.showVerificationNotification = true;
+        if (!res.email_verified) state.showVerificationNotification = true;
 
-    } catch(e) {
-        console.log({e});
+    } catch (e) {
+        console.log({ e });
         settings.value.name = state.user.name;
         settings.value.email = state.user.email;
         settings.value.email_subscription = state.user.email_subscription;
@@ -216,24 +210,24 @@ const updateUserSettings = async () => {
         isEdit.value = false;
         isSaving.value = false;
     }
-}
+};
 
 const deleteAccount = async () => {
     let res = await skapi.postRecord(null, {
         table: {
             name: 'reason'
-        }, 
+        },
         index: {
             name: 'NR',
             value: true
         }
     });
-}
+};
 
 onMounted(() => {
-    awaitConnection.then(async()=>{
-        if(state.user) {
-            if(!state.user.hasOwnProperty('email_subscription')) {
+    awaitConnection.then(async () => {
+        if (state.user) {
+            if (!state.user.hasOwnProperty('email_subscription')) {
                 let subscriptions = await skapi.getNewsletterSubscription();
                 state.user.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
                 settings.value.email_subscription = subscriptions.length && subscriptions[0].group === 1 ? true : false;
@@ -248,7 +242,7 @@ onMounted(() => {
 
 watch(() => state.user, async (user) => {
     await nextTick();
-    if(!user) {
+    if (!user) {
         overlay.value.open();
     }
 });
@@ -267,6 +261,7 @@ watch(() => state.user, async (user) => {
         display: block;
     }
 }
+
 .settings-wrapper {
     background-color: #fafafa;
     padding: 28px 37px;
@@ -288,10 +283,10 @@ watch(() => state.user, async (user) => {
         margin-top: 24px;
         padding: 0 37px;
         user-select: none;
-        font-weight: bold;    
+        font-weight: bold;
         color: rgba(0, 0, 0, 0.65);
 
-        & > {
+        &> {
             cursor: pointer;
         }
 
@@ -304,13 +299,14 @@ watch(() => state.user, async (user) => {
         }
     }
 }
+
 .settings {
     display: grid;
     grid-template-columns: auto 1fr min-content;
     align-items: center;
     column-gap: 80px;
 
-    & > .title {
+    &>.title {
         font-weight: bold;
         padding: 28px 0;
         color: rgba(0, 0, 0, .65);
@@ -318,17 +314,17 @@ watch(() => state.user, async (user) => {
     }
 
     .value,
-    .mobile-value {    
+    .mobile-value {
         @media @tablet {
             margin-top: 8px;
         }
 
-        & > span {
+        &>span {
             display: inline-block;
             margin-right: 8px;
         }
     }
-    
+
     .email-status {
         display: inline-block;
 
@@ -344,7 +340,7 @@ watch(() => state.user, async (user) => {
             color: #5AD858;
         }
 
-        &.unverified {        
+        &.unverified {
             color: #FF8D3B;
         }
     }
@@ -379,7 +375,7 @@ watch(() => state.user, async (user) => {
                 margin-top: calc((1.5em - 16px) / 2);
             }
 
-            span {            
+            span {
                 line-height: 1.5;
             }
         }
@@ -389,12 +385,12 @@ watch(() => state.user, async (user) => {
             margin-top: 28px;
         }
 
-        & > sui-input {
+        &>sui-input {
             width: 100%;
         }
     }
 
-    hr {    
+    hr {
         grid-column: span 3;
         width: 100%;
         border: 1px solid rgba(0, 0, 0, 0.04);
@@ -408,13 +404,14 @@ watch(() => state.user, async (user) => {
     }
 
     @media @tablet {
-        grid-template-columns: auto 1fr ;
+        grid-template-columns: auto 1fr;
         column-gap: 0;
         padding: 0 20px;
 
-        & > .title {
+        &>.title {
             height: auto;
             padding: 0;
+
             .actions {
                 display: block;
             }
@@ -423,15 +420,15 @@ watch(() => state.user, async (user) => {
         .mobile-value {
             grid-column: span 2;
 
-            & > span {
+            &>span {
                 margin-top: 20px;
             }
         }
-        
 
-        hr {    
+
+        hr {
             grid-column: span 2;
-            margin:  28px -20px;
+            margin: 28px -20px;
             width: 100vw;
         }
 
@@ -441,14 +438,16 @@ watch(() => state.user, async (user) => {
             justify-self: center;
         }
     }
+
     @media @phone {
         padding: 16px;
-        
+
         hr {
             margin: 28px -16px;
         }
     }
 }
+
 @media @phone {
     .delete {
         hr {
@@ -459,15 +458,15 @@ watch(() => state.user, async (user) => {
         }
     }
 }
+
 .error {
     text-align: left;
-    margin-top: 4px;         
+    margin-top: 4px;
     color: #F04E4E;
 }
 
 .line-button {
-    & ~ sui-button {
+    &~sui-button {
         margin-left: 16px;
     }
-}
-</style>
+}</style>

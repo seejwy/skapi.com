@@ -28,16 +28,16 @@
             hr
             .questions
                 label
-                    sui-input(type="checkbox" value="NOT.USEFUL" @change="toggleReason") 
+                    sui-input(type="checkbox" value="notUseful" @change="toggleReason") 
                     span I don’t find it useful
                 label
-                    sui-input(type="checkbox" value="HARD.TO.UNDERSTAND" @change="toggleReason") 
+                    sui-input(type="checkbox" value="hardToUnderstand" @change="toggleReason") 
                     span I don’t understand how it works
                 label
-                    sui-input(type="checkbox" value="HARD.TO.USE" @change="toggleReason") 
+                    sui-input(type="checkbox" value="hardToUse" @change="toggleReason") 
                     span It’s not easy to use
                 label
-                    sui-input(type="checkbox" value="SECURITY.CONCERNS" @change="toggleReason") 
+                    sui-input(type="checkbox" value="securityConcerns" @change="toggleReason") 
                     span I have safety concerns
                 .input
                     label Please list any other reasons why you might be leaving : 
@@ -148,7 +148,8 @@ const deleteAccount = async (e) => {
         form.value.reason.forEach((reason) => {
             reasonPromiseArray.push(skapi.postRecord(null, {
                 table: {
-                    name: 'reason'
+                    name: 'reason',
+                    access_group: 99
                 }, 
                 index: {
                     name: reason,
@@ -160,7 +161,8 @@ const deleteAccount = async (e) => {
         if(form.value.reasonText) {
             reasonPromiseArray.push(skapi.postRecord(null,{
                 table: {
-                    name: 'reason'
+                    name: 'reason',
+                    access_group: 99
                 }, 
                 index: {
                     name: 'OTHER',

@@ -238,7 +238,7 @@ sui-overlay(ref="confirmOverlay")
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
-import { changeSearchCondition, visibleFields, getValidationMessage, placeholder } from './users';
+import { changeSearchCondition, getValidationMessage, placeholder } from './users';
 import { skapi, state, groupArray, dateFormat } from '@/main';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
@@ -263,6 +263,57 @@ const filterEl = ref(null);
 
 const currentSelectedUsersBatch = ref(0);
 const currentSelectedUsersPage = ref(0);
+
+const visibleFields = reactive({
+    approved: {
+        text: 'Block',
+        show: state?.viewport === 'desktop',
+    },
+    group: {
+        text: 'Active',
+        show: state?.viewport === 'desktop',
+    },
+    access_group: {
+        text: 'Access',
+        show: false,
+    },
+    user_id: {
+        text: 'User ID',
+        show: true,
+    },
+    name: {
+        text: 'Name',
+        show: state?.viewport === 'desktop',
+    },
+    email: {
+        text: 'Email',
+        show: state?.viewport === 'desktop',
+    },
+    address: {
+        text: 'Address',
+        show: false,
+    },
+    phone_number: {
+        text: 'Phone',
+        show: false
+    },
+    gender: {
+        text: 'Gender',
+        show: false,
+    },
+    birthdate: {
+        text: 'Birthdate',
+        show: false,
+    },
+    timestamp: {
+        text: 'Date Created',
+        show: false,
+    },
+    locale: {
+        text: 'Locale',
+        show: false,
+    }
+});
 
 const isLastBatch = computed(() => {
     return currentSelectedUsersBatch.value === groupedUserList?.value?.length - 1;
