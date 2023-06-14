@@ -139,7 +139,7 @@ const inputStar = () => {
 const inputFeedback = () => {
     promiseRunning.value = true;
 
-    skapi.postRecord({feedback : feedback.value},{table : {name: 'feedBackForm', access_group: 1}, index: {name: 'star', value: idx}}).then(() => {
+    skapi.postRecord({feedback : feedback.value},{table : {name: 'feedBackForm', access_group: 99}, index: {name: 'star', value: idx}}).then(() => {
         skapi.updateProfile({misc:'feedback complete'});
     }).catch(e => {
         console.log({e});
