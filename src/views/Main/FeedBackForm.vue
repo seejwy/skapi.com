@@ -4,6 +4,7 @@
         template(v-if="step === 1")
             form(@submit.prevent="inputStar")
                 h1 Feedback
+                p Before you proceed, help us improve skapi with your feedback.
                 p How would you rate skapi on a scale of 1 to 5?
                 .starWrap(v-if="state.viewport === 'desktop'")
                     label.starBox
