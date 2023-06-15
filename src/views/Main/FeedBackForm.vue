@@ -235,7 +235,7 @@ const inputFeedback = () => {
             position: relative;
             z-index: 10;
             height: 51px;
-            background-image: url('./src/assets/img/icons/star.svg');
+            background-image: url('/assets/img/icons/star.svg');
             background-size: contain;
             pointer-events: none;
         }
@@ -272,7 +272,7 @@ const inputFeedback = () => {
 
     .mobile-starWrap {
         &:after {
-            background-image: url('./src/assets/img/icons/star-mobile.svg');
+            background-image: url('/assets/img/icons/star-mobile.svg');
         }
     }
 
