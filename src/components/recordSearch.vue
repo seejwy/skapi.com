@@ -4,7 +4,7 @@ form(@submit.prevent="submitSearch")
     // navbar for mobile search
     SearchNavBar(v-if='viewport === "mobile" && route.name === "mobileSearchRecord"')
         template(v-slot:left)    
-            Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'records'})") left
+            Icon.showOnTablet.clickable.backButton(@click="router.push({name: 'records'})") left
         sui-input(
             type="search"
             :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"

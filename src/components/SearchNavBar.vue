@@ -41,7 +41,7 @@ onUnmounted(() => {
         box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
     }
 
-    .back-button {
+    .backButton {
         display: inline;
         height: 32px;
         width: 32px;
