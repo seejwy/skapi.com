@@ -53,7 +53,7 @@ import { dateFormat, localeName } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
 import NewService from '@/components/NewService.vue';
-import FeedBackForm from '@/views/Main/FeedBackForm.vue';
+import FeedBackForm from '@/views/desktop/Main/FeedBackForm.vue';
 import Icon from '@/components/Icon.vue';
 
 let router = useRouter();
