@@ -12,7 +12,7 @@ import { inject, watch, onBeforeUnmount, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { skapi } from '@/main';
 import Icon from '@/components/ue';
-import ViewRecord from '@/components/viewRecord.vue';
+import ViewRecord from '@/components/ViewRecord.vue';
 
 let viewRecord = ref(null);
 let appStyle = inject('appStyle');

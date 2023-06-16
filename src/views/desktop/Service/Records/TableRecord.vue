@@ -54,7 +54,7 @@ import { dateFormat, groupArray } from '@/helper/common'
 import { useRoute, useRouter } from 'vue-router';
 
 import RecordSearch from '@/components/recordSearch.vue';
-import ViewRecord from '@/components/viewRecord.vue';
+import ViewRecord from '@/components/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
