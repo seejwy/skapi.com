@@ -11,7 +11,6 @@ import Tables from '../views/Service/Records/Tables.vue';
 import TableRecord from '../views/Service/Records/TableRecord.vue';
 import Admin from '../views/Main/Admin.vue';
 import Settings from '../views/Main/Settings.vue';
-import FeedbackForm from '../views/Main/FeedBackForm.vue';
 
 
 const router = createRouter({
