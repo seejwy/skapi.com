@@ -376,5 +376,4 @@ function signup() {
             margin: 0;
         }
     }
-}
-</style>
+}</style>

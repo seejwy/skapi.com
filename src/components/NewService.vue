@@ -9,7 +9,8 @@
 <!-- script below -->
 <script setup>
 import { inject, reactive, ref, watch, onBeforeUnmount } from 'vue';
-import { state, skapi, countries, regions } from '@/main';
+import { state, skapi } from '@/main';
+import { countries, regions } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from './Icon.vue';

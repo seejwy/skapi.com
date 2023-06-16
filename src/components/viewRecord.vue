@@ -319,15 +319,16 @@ sui-overlay(ref="filesizeExceedsOverlay")
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';
 import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
-import { skapi, state, dateFormat, getSize, log } from '@/main';
-import { tableList, getMoreRecords, recordTables, refreshTables } from '../views/Service/Records/records';
+import { skapi, state } from '@/main';
+import { dateFormat, getSize } from '@/helper/common';
+import { tableList, getMoreRecords, recordTables, refreshTables } from '@/helper/records';
 import TagsInput from '@/components/TagsInput.vue';
 import JsonInput from '@/components/JsonInput.vue';
 import Icon from '@/components/Icon.vue';
 import LoadingCircle from '@/components/LoadingCircle.vue';
-import router from '../router';
 
 const route = useRoute();
+const router = useRouter();
 const appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 const props = defineProps(['record']);
