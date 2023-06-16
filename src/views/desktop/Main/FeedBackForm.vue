@@ -74,7 +74,7 @@ import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
-import SubmitButton from '../../components/SubmitButton.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 
 let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
