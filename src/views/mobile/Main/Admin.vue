@@ -22,11 +22,7 @@ div(v-else-if="state?.user")
                         .indicator(:class="{'active': service.active > 0}")
                         span {{ service.name }}
                     Icon right
-                .details
-                    .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
-                        .title {{  key }}
-                        .value {{ value || '-' }}
-    .container.empty(v-else-if="isFetchingServices")
+    .container.empty(v-else-if="state.blockingPromise")
         Icon.animation-rotation(style="position: absolute; right: 24px; top: 24px; fill: var(--primary-color)") refresh
     .container.empty.no-service(v-else)
         div(style="position: absolute; width: 100%;")
@@ -39,21 +35,16 @@ div(v-else-if="state?.user")
             div
             .body Please verify your email to prevent your services from shutting down.
             Icon.close(@click="state.setVerificationDelay") X2
-    sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeNewServiceWindow")
-        div.overlay
-            NewService(@close="closeNewServiceWindow")
-    sui-overlay(v-if="feedBackOpen && state.viewport === 'desktop'" ref="feedBackWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeFeedBackWindow")
-        div.overlay
-            FeedBackForm(@close="closeFeedBackWindow" @closeFeedBack="feedBackOpen=false; isOpen=true;")
 </template>
 <script setup>
-import { inject, ref, watch, nextTick, computed } from 'vue';
-import { state, skapi, awaitConnection } from '@/main';
+import { inject, ref, watch, nextTick } from 'vue';
+import { state, skapi } from '@/main';
+import { getServices } from '@/helper/admin';
 import { dateFormat, localeName } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
 import NewService from '@/components/NewService.vue';
-import FeedBackForm from '@/views/Main/FeedBackForm.vue';
+import FeedBackForm from '@/views/mobile/Main/FeedBackForm.vue';
 import Icon from '@/components/Icon.vue';
 
 let router = useRouter();
@@ -63,42 +54,15 @@ let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
-let overlay = ref(null);
-const newServiceWindow = ref(null);
-const feedBackWindow = ref(null);
-const isOpen = ref(false);
-const feedBackOpen = ref(false);
-const isFetchingServices = ref(true);
-
-const filterServiceDetails = (service) => {
-    return {
-        'Service Location': localeName(service.region),
-        'CORS': service.cors,
-        'Date Created': dateFormat(service.timestamp).split(' ')[0]
-    }
-}
-
-const closeNewServiceWindow = async () => {
-    await state.blockingPromise;
-    newServiceWindow.value.close(() => isOpen.value = false);
-}
-
-const closeFeedBackWindow = async () => {
-    await state.blockingPromise;
-    feedBackWindow.value.close(() => feedBackOpen.value = false);
-}
+state.blockingPromise = true;
 
 const NewServiceConditions = async () => {
-    await getServices(state.getServices);
+    await getServices(state.getServices, serviceList);
 
     skapi.getProfile().then((r) => {
-        if (r.misc === 'feedback complete') {
+        if (r.misc !== 'feedback complete') {
             if (state.user.email_verified) {
-                if (state.viewport === 'desktop') {
-                    isOpen.value = true;
-                } else {
-                    router.push('?new=service');
-                }
+                router.push('?new=service');
             } else {
                 return null;
             }
@@ -108,10 +72,6 @@ const NewServiceConditions = async () => {
             let users_count = 0;
 
             if (services_count > 0) {
-                // for(let i=0; i<services_count; i++){
-                //     console.log(services[Object.keys(services)[i]])
-                // }
-
                 let value = services[Object.keys(services)[0]];
 
                 for (let i = 0; i < value.length; i++) {
@@ -121,106 +81,35 @@ const NewServiceConditions = async () => {
 
                 if (users_count > 0) {
                     if (state.user.email_verified) {
-                        if (state.viewport === 'desktop') {
-                            feedBackOpen.value = true;
-                        } else {
-                            router.push('?new=feedback');
-                        }
+                        router.push('?new=feedback');
                     } else {
                         return null;
                     }
                 } else {
                     if (state.user.email_verified) {
-                        if (state.viewport === 'desktop') {
-                            isOpen.value = true;
-                        } else {
-                            router.push('?new=service');
-                        }
+                        router.push('?new=service');
                     } else {
                         return null;
                     }
                 }
             } else {
                 if (state.user.email_verified) {
-                    if (state.viewport === 'desktop') {
-                        isOpen.value = true;
-                    } else {
-                        router.push('?new=service');
-                    }
+                    router.push('?new=service');
                 } else {
                     return null;
                 }
             }
         }
     })
-
-
 }
 
-const openNewServiceWindow = () => {
-    if (state.viewport === 'mobile') router.push('?new=service');
-    else newServiceWindow.value.open();
-}
-
-const openFeedBackWindow = () => {
-    if (state.viewport === 'mobile') router.push('?new=feedback');
-    else feedBackWindow.value.open();
-}
-
-async function getServices(gs) {
-    if (!(gs instanceof Promise) || !state.user) {
-        return;
-    }
-
-    try {
-        let services = await gs;
-        isFetchingServices.value = false;
-        if (serviceList.value === null) {
-            serviceList.value = [];
-            for (let region in services) {
-                serviceList.value = [...serviceList.value, ...services[region]];
-            }
-
-            serviceList.value.sort((a, b) => a.timestamp > b.timestamp ? -1 : a.timestamp < b.timestamp ? 1 : 0);
-        }
-
-        return services;
-
-    } catch (err) {
-        serviceList.value = null;
-        throw err;
-    }
-}
-
-getServices(state.getServices);
+getServices(state.getServices, serviceList);
 
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
-watch(() => isOpen.value, async () => {
-    if (state.viewport === 'desktop') {
-        await nextTick();
-        if (isOpen.value) {
-            openNewServiceWindow();
-        }
-    }
-});
 watch(() => state.viewport, (viewport) => {
     if (viewport === 'desktop') {
         isOpen.value = false;
-        router.replace('/admin');
-    }
-});
-watch(() => feedBackOpen.value, async () => {
-    if (state.viewport === 'desktop') {
-        await nextTick();
-        if (feedBackOpen.value) {
-            openFeedBackWindow();
-        }
-    }
-});
-watch(() => state.viewport, (viewport) => {
-    if (viewport === 'desktop') {
-        feedBackOpen.value = false;
         router.replace('/admin');
     }
 });
@@ -351,28 +240,6 @@ watch(() => state.viewport, (viewport) => {
 
     &.active {
         background: #5AD858;
-    }
-}
-
-.overlay {
-    padding: 16px;
-
-    .close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 32px;
-        height: 32px;
-        background-color: #BFBFBF;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-
-        svg {
-            color: #434343;
-        }
     }
 }
 
