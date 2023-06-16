@@ -1,10 +1,10 @@
 <template lang="pug">
 sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-color:rgba(0 0 0 / 60%)")
-    .view-record-overlay
+    .viewRecordOverlay
         ViewRecord(:record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
-.record-container#data-container
-    .recordWrapper.animation-skeleton(v-if='searchResult === null')
+.recordContainer#dataContainer
+    .recordWrapper.animationSkeleton(v-if='searchResult === null')
         .records.clickable(v-for="t in numberOfSkeletons()")
             div
                 span.label &nbsp; 
@@ -18,7 +18,7 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
 
     template(v-else)
         div(v-if='!searchResult.list.length')
-            .no-records-found
+            .noRecordsFound
                 .title No Records
                 p There are no records in this table
         template(v-else)
@@ -33,7 +33,7 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
                     div
                         span.label UPLOADED: 
                         span {{ dateFormat(r.uploaded) }}
-            .recordWrapper.animation-skeleton(v-if="promiseQueue")
+            .recordWrapper.animationSkeleton(v-if="promiseQueue")
                 .records.clickable(v-for="t in numberOfSkeletons()")
                     div
                         span.label &nbsp; 
@@ -199,7 +199,7 @@ function displayRecord(r) {
 
 <style lang="less" scoped>
 @import '@/assets/variables.less';
-.record-container {
+.recordContainer {
     position: relative;
     margin: 0;
     padding: 0;
@@ -266,7 +266,7 @@ function displayRecord(r) {
             }
         }
     }  
-    .no-records-found {
+    .noRecordsFound {
         text-align: center;
         border-radius: 0 0 8px 8px;
         color: rgba(255, 255, 255, .4);

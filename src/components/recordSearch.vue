@@ -22,7 +22,7 @@ form(@submit.prevent="submitSearch")
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='openAdvancedForm')
-    .select-input.no-border(v-if="viewport === 'desktop'" style="width: 400px;")
+    .selectInput.noBorder(v-if="viewport === 'desktop'" style="width: 400px;")
         // main search
         .select-field
             sui-select(
@@ -33,7 +33,7 @@ form(@submit.prevent="submitSearch")
                 option(value="user") User ID
                 option(value="record") Record ID
 
-        .input-field.search
+        .inputField.search
             sui-input(
                 type="search"
                 :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -45,7 +45,7 @@ form(@submit.prevent="submitSearch")
                 autocomplete="off")
             Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="openAdvancedForm") filter
 
-    .mobile-search-type(v-else style="margin: 8px 0;")
+    .mobileSearchType(v-else style="margin: 8px 0;")
         sui-select(
             name='search_type'
             :value="searchForm.type"
@@ -64,15 +64,15 @@ form(@submit.prevent="submitSearch")
         .formLabel Access Group
         .form
             .labelRadio.clickable
-                label.inline-vertical-middle(for='ag-reg') Registered
+                label.inlineVerticalMiddle(for='ag-reg') Registered
                 sui-input#ag-reg(type='radio' value='1' name='access_group' @change='advancedForm.access_group = 1' :checked='advancedForm.access_group === 1 ? true : null')
 
             .labelRadio.clickable
-                label.inline-vertical-middle(for='ag-pub') Public
+                label.inlineVerticalMiddle(for='ag-pub') Public
                 sui-input#ag-pub(type='radio' value='0' name='access_group' @change='advancedForm.access_group = 0' :checked='advancedForm.access_group === 0 ? true : null')
 
             .labelRadio.clickable
-                label.inline-vertical-middle(for='ag-prv') Private
+                label.inlineVerticalMiddle(for='ag-prv') Private
                 sui-input#ag-prv(type='radio' value='private' name='access_group' @change='advancedForm.access_group = "private"' :checked='advancedForm.access_group === "private" ? true : null')
 
         template(v-if='searchForm.type === "user"')
@@ -89,18 +89,18 @@ form(@submit.prevent="submitSearch")
 
             .formLabel Table Subscription
             .form
-                .inline-vertical-middle(style='vertical-align: middle;width: 100%;display:inline-block;')
+                .inlineVerticalMiddle(style='vertical-align: middle;width: 100%;display:inline-block;')
                     // subscription
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='subscription-none') None
+                        label.inlineVerticalMiddle(for='subscription-none') None
                         sui-input#subscription-none(type='radio' name='subscription' value='null' @change='e=>{advancedForm.subscription = null; parseIndexType()}' :checked="advancedForm.subscription === null || null")
 
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='subscription-public') Public
+                        label.inlineVerticalMiddle(for='subscription-public') Public
                         sui-input#subscription-public(type='radio' name='subscription' value='false' @change='e=>{advancedForm.subscription = false; parseIndexType()}' :checked="advancedForm.subscription === false || null")
 
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='subscription-sub') Subscribed
+                        label.inlineVerticalMiddle(for='subscription-sub') Subscribed
                         sui-input#subscription-sub(type='radio' name='subscription' value='true' @change='e=>{advancedForm.subscription = true; parseIndexType()}' :checked="advancedForm.subscription === true || null")
 
         .formLabel Index
@@ -129,18 +129,18 @@ form(@submit.prevent="submitSearch")
                 option(value="number") Number
                 option(value="boolean") Boolean
 
-            .inline-vertical-middle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
+            .inlineVerticalMiddle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
                 // index value (boolean)
                 .labelRadio.clickable
-                    label.inline-vertical-middle(for='typ-bool-true') True
+                    label.inlineVerticalMiddle(for='typ-bool-true') True
                     sui-input#typ-bool-true(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
 
                 .labelRadio.clickable
-                    label.inline-vertical-middle(for='typ-bool-false') False
+                    label.inlineVerticalMiddle(for='typ-bool-false') False
                     sui-input#typ-bool-false(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
-            .select-input(v-else style='width: calc(100% - 100px - 1em);')
+            .selectInput(v-else style='width: calc(100% - 100px - 1em);')
                 // index value
-                .input-field
+                .inputField
                     sui-input(
                         autocomplete="off"
                         ref='indexValueFormElement'
@@ -188,7 +188,7 @@ form(@submit.prevent="submitSearch")
                     @input="e => advancedForm.reference = e.target.value")
 
         div(style='text-align:center;')
-            sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()")
+            sui-input.lineButton(type='reset' @click.prevent="advancedForm = advancedFormInit()")
             sui-input(style='margin: 8px .5em;width: 6em;' type='submit' value="Search")
 
 </template>
@@ -451,7 +451,7 @@ watch(() => route.query, n => {
 @import '@/assets/variables.less';
 
 form {
-    .mobile-search-type {
+    .mobileSearchType {
         width: 100%;
         padding: 8px var(--side-padding);
 
@@ -469,7 +469,7 @@ form {
         // position: relative;
     }
 
-    .select-input.isMobile {
+    .selectInput.isMobile {
         @media @tablet {
             width: 100% !important;
             margin: 0px;
@@ -484,7 +484,7 @@ form {
         }
     }
 
-    .input-field.search {
+    .inputField.search {
         display: flex;
         flex-grow: 1;
         align-items: center;
@@ -500,7 +500,7 @@ form {
         }
     }
 
-    .line-button {
+    .lineButton {
         margin: 8px .5em;
     }
 
@@ -606,7 +606,7 @@ form {
     color: rgba(255, 255, 255, .6);
 }
 
-.select-input {
+.selectInput {
 
   &>.select-field {
     display: inline-block;

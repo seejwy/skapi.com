@@ -1,8 +1,4 @@
 <template lang="pug">
-SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
-    div {{ mobilePageTitle }}
-    template(v-slot:right) 
-        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'}); getUsers(true); serviceUsers = null; }") X2
 .page-header.head-space-helper(v-if="viewport === 'desktop' || !route.query.search")
     h1 Users
     p.

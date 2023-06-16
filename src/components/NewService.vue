@@ -3,7 +3,7 @@
     form.admin(@submit.prevent="createNewService" action="")
         .overlay-container-title.hideOnTablet Create a New Service
         sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
-        sui-button.text-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
+        sui-button.textButton(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
         SubmitButton(:loading="isDisabled") Create
 </template>
 <!-- script below -->

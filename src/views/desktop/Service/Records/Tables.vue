@@ -1,5 +1,5 @@
 <template lang="pug">
-.page-header.head-space-helper
+.pageHeader.headSpaceHelper
     h1 Record
     p.
         Records are data objects created by you or your users and stored within your database.
@@ -8,7 +8,7 @@
 
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
-            sui-button.line-button(type="button") Find out More
+            sui-button.lineButton(type="button") Find out More
 // search form
 RecordSearch#recordSearch.hideOnTablet
 
@@ -16,20 +16,20 @@ sui-button.hideOnTablet(type="button" style='float:right;' @click='()=>addRecord
 .hideOnTablet(style="clear:both;")
 
 // record view
-sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
-    .view-record-overlay
+sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
+    .viewRecordOverlay
         ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close(() => { recordToOpen = null; })")
 
-.table-container#data-container
-    .header.label-head
-        span.not-clickable Table name
-        div.not-clickable
+.tableContainer#dataContainer
+    .header.labelHead
+        span.notClickable Table name
+        div.notClickable
             span Size
             span # of records
-        Icon.clickable.hideOnTablet(:class="{'animation-rotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
+        Icon.clickable.hideOnTablet(:class="{'animationRotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
 
     // skeleton(mobile)
-    .tableHead.animation-skeleton.showOnTablet(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
+    .tableHead.animationSkeleton.showOnTablet(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
         span &nbsp;
 
     // table list
@@ -40,25 +40,22 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
                 p List of tables will show when there is data
 
         template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch] && !fetchingData")
-            template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList?.length)")
-                template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1]?.length)")
+            template(v-for="batchIdx in [currentSelectedTableBatch + 1]")
+                template(v-for="pageIdx in [currentSelectedTablePage + 1]")
                     // when v-for by number, it starts with 1
                     template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
-                        .table-wrapper(v-if="t.number_of_records")
-                            .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
+                        .tableWrapper(v-if="t.number_of_records")
+                            .tableHead.labelHead.clickable(@click='()=>{viewRecordList(t)}')
                                 span {{ t.table }}
                                 div
                                     span {{getSize(t.size)}}
                                     span {{t.number_of_records}}
 
                                 template(v-if='t.records')
-                                    template(v-if="viewport === 'desktop'")
-                                        Icon.clickable(v-if="!t.opened") plus
-                                        Icon.clickable(v-else) minus
+                                    Icon.clickable(v-if="!t.opened") plus
+                                    Icon.clickable(v-else) minus
 
-                                    Icon.clickable(v-else style="color: rgba(255, 255, 255, .6)") right
-
-                                Icon.animation-rotation(v-else) refresh
+                                Icon.animationRotation(v-else) refresh
 
                             div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
                                 .noRecords(v-if='!t.records.list?.length')
@@ -69,18 +66,18 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
 
                                 .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}" :loading="r.deleting || null")
                                     div
-                                        span.label-head RECORD:
+                                        span.labelHead RECORD:
                                         span {{ r.record_id }}
                                     div
-                                        span.label-head USER:
+                                        span.labelHead USER:
                                         span {{ r.user_id }}
                                     div
-                                        span.label-head UPLOADED:
+                                        span.labelHead UPLOADED:
                                         span {{ dateFormat(r.uploaded) }}
 
-                                .load-more(v-if="!t.records.endOfList")
-                                    Icon.animation-rotation refresh
-                .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
+                                .loadMore(v-if="!t.records.endOfList")
+                                    Icon.animationRotation refresh
+                .tableHead.animationSkeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
                     span &nbsp;
                 .paginator.hideOnTablet
                     Icon.arrow(
@@ -103,9 +100,9 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
                         @click="() => { if(!isLastPage) currentSelectedTablePage++; else if(isLastPage && !isLastBatch) { currentSelectedTableBatch++; currentSelectedTablePage = 0;} else if(isLastBatch && !isEndOfList) getMoreTables() }"
                         ) right
 
-.page-action.showOnTablet(@blur="isFabOpen = false")
+.pageAction.showOnTablet(@blur="isFabOpen = false")
     // @blur should be at the parent div
-    sui-button.fab.open-menu(type="button" @click.stop="isFabOpen = !isFabOpen")
+    sui-button.fab.openMenu(type="button" @click.stop="isFabOpen = !isFabOpen")
         Icon menu_vertical
 
     Transition
@@ -333,7 +330,7 @@ watch(currentSelectedTablePage, n => {
         t.opened = false;
     }
     nextTick(() => {
-        window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.document.getElementById('dataContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
 
@@ -343,7 +340,7 @@ watch(currentSelectedTableBatch, n => {
         t.opened = false;
     }
     nextTick(() => {
-        window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.document.getElementById('dataContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
 
@@ -370,7 +367,7 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 
-.page-action {
+.pageAction {
     position: fixed;
     bottom: 76px;
     right: 16px;
@@ -409,7 +406,7 @@ onBeforeUnmount(() => {
     max-width: 100%;
 }
 
-.table-container {
+.tableContainer {
     background-color: #434343;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -437,12 +434,12 @@ onBeforeUnmount(() => {
         align-items: center;
         flex-wrap: wrap;
 
-        &+.table-wrapper {
+        &+.tableWrapper {
             margin-top: 24px;
         }
     }
 
-    .table-wrapper {
+    .tableWrapper {
         background-color: #333333;
         border-radius: 8px;
 
@@ -478,7 +475,7 @@ onBeforeUnmount(() => {
                 span {
                     font-family: Courier;
 
-                    &.label-head {
+                    &.labelHead {
                         color: rgba(255, 255, 255, 0.6);
                     }
                 }
@@ -489,14 +486,14 @@ onBeforeUnmount(() => {
             }
         }
 
-        .load-more {
+        .loadMore {
             text-align: center;
             padding: 8px;
         }
     }
 
 
-    .label-head {
+    .labelHead {
         &>span {
             display: inline-block;
             text-align: left;

@@ -4,14 +4,14 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 FeedBackForm(v-else-if="state?.user && route.query.new === 'feedback'")
 div(v-else-if="state?.user")
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h1.fixed Admin
         p.
             You can see a list of all the services you are running.
             To create a new service, click on "New Service".
 
         .action
-            sui-button.with-icon(type="button" @click="NewServiceConditions" :disabled="!state.user.email_verified || null")
+            sui-button.withIcon(type="button" @click="NewServiceConditions" :disabled="!state.user.email_verified || null")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList?.length")
@@ -27,8 +27,8 @@ div(v-else-if="state?.user")
                         .title {{  key }}
                         .value {{ value || '-' }}
     .container.empty(v-else-if="isFetchingServices")
-        Icon.animation-rotation(style="position: absolute; right: 24px; top: 24px; fill: var(--primary-color)") refresh
-    .container.empty.no-service(v-else)
+        Icon.animationRotation(style="position: absolute; right: 24px; top: 24px; fill: var(--primary-color)") refresh
+    .container.empty.noService(v-else)
         div(style="position: absolute; width: 100%;")
             .title No Services
             span Get started by creating a new service.
@@ -121,32 +121,20 @@ const NewServiceConditions = async () => {
 
                 if (users_count > 0) {
                     if (state.user.email_verified) {
-                        if (state.viewport === 'desktop') {
-                            feedBackOpen.value = true;
-                        } else {
-                            router.push('?new=feedback');
-                        }
+                        feedBackOpen.value = true;
                     } else {
                         return null;
                     }
                 } else {
                     if (state.user.email_verified) {
-                        if (state.viewport === 'desktop') {
-                            isOpen.value = true;
-                        } else {
-                            router.push('?new=service');
-                        }
+                        isOpen.value = true;
                     } else {
                         return null;
                     }
                 }
             } else {
                 if (state.user.email_verified) {
-                    if (state.viewport === 'desktop') {
-                        isOpen.value = true;
-                    } else {
-                        router.push('?new=service');
-                    }
+                    isOpen.value = true;
                 } else {
                     return null;
                 }
@@ -248,7 +236,7 @@ watch(() => state.viewport, (viewport) => {
         }
 
         &,
-        &.no-service {
+        &.noService {
             height: 175.33px;
 
             @media screen and (max-width: 825px) {

@@ -104,7 +104,7 @@
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
 	.foot(v-if='!isMobileUrl')
-		sui-button.text-button(type="button" @click="close" style="margin-right: 16px;") Close
+		sui-button.textButton(type="button" @click="close" style="margin-right: 16px;") Close
 		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit" :loading="isSaving || null")
 	form(ref="formConfig")
@@ -221,7 +221,7 @@
 		.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
 			.data-row(v-for="(record, recordIndex) in data")
 				.data-name-action
-					.select-input
+					.selectInput
 						.select-field
 							sui-select(:value="record.type" @change="(e) => record.type = e.target.value")
 								option(disabled) Value Type
@@ -230,7 +230,7 @@
 								option(value="boolean") Boolean
 								option(value="file") File
 								option(value="json") JSON
-						.input-field
+						.inputField
 							sui-input(type="text" :value="record.key" placeholder="Key Name" @input="(e) => record.key = e.target.value" required)
 					.action
 						sui-button.icon-button(type="button" @click="removeField(recordIndex)")
@@ -242,7 +242,7 @@
 							div
 								Icon attached
 								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR
-								sui-button.line-button(@click.prevent.stop="" type="button") Upload
+								sui-button.lineButton(@click.prevent.stop="" type="button") Upload
 							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
 								Icon warning
 								span You must upload a file
@@ -263,7 +263,7 @@
 							:disabled="isSaving"
 							required) {{ record.data }}
 
-					.data-input-field.transparent.boolean(v-else-if="record.type === 'boolean'")
+					.data-inputField.transparent.boolean(v-else-if="record.type === 'boolean'")
 						div Value:
 						div
 							label
@@ -274,15 +274,15 @@
 								span False
 								sui-input(type="radio" :name="record.key" value="false" :checked="record.data === false ? true : null")
 
-					sui-input.data-input-field(v-else-if="record.type === 'number'" style="height: auto;" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
+					sui-input.data-inputField(v-else-if="record.type === 'number'" style="height: auto;" required placeholder="Key Value" type='number' :name="record.key" :value="record.data.toString()")
 
-					sui-input.data-input-field(v-else type="text" style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value" :value="record.data.toString()") {{  record.data  }}
+					sui-input.data-inputField(v-else type="text" style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value" :value="record.data.toString()") {{  record.data  }}
 
 			div
-				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
+				sui-button.lineButton(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
 		.foot(v-if='!isMobileUrl')
-			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").text-button Cancel
+			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").textButton Cancel
 			div(style="display: inline-block")
 				sui-button(v-if="isSaving" type="button")
 					span(style="visibility: hidden;") Save
@@ -296,8 +296,8 @@ sui-overlay(ref="deleteConfirmOverlay")
 			div Are you sure?
 		.body Are you sure you want to delete the record?
 		.foot
-			sui-button.text-button(type="button" @click="()=>deleteConfirmOverlay.close()") No 
-			sui-button.text-button(type="button" @click="deleteRecord") Yes
+			sui-button.textButton(type="button" @click="()=>deleteConfirmOverlay.close()") No 
+			sui-button.textButton(type="button" @click="deleteRecord") Yes
 sui-overlay(ref="exitEditOverlay")
 	.popup
 		.title
@@ -305,8 +305,8 @@ sui-overlay(ref="exitEditOverlay")
 			div Are you sure?
 		.body Are you sure you want to close? You are still editing.
 		.foot
-			sui-button.text-button(type="button" @click="()=>exitEditOverlay.close()") No 
-			sui-button.text-button(type="button" @click="confirmClose") Yes
+			sui-button.textButton(type="button" @click="()=>exitEditOverlay.close()") No 
+			sui-button.textButton(type="button" @click="confirmClose") Yes
 sui-overlay(ref="filesizeExceedsOverlay")
 	.popup
 		.title
@@ -314,7 +314,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 			div File Size Exceeded
 		.body Your total file size exceeds {{ fileSizeLimit }}MB.
 		.foot
-			sui-button.line-button(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
+			sui-button.lineButton(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';
@@ -1076,7 +1076,7 @@ defineExpose({
 				margin-bottom: 36px;
 			}
 
-			.data-input-field {
+			.data-inputField {
 				width: 100%;
 				box-shadow: none;
 
@@ -1085,7 +1085,7 @@ defineExpose({
 				}
 			}
 
-			.data-input-field,
+			.data-inputField,
 			.value {
 				margin-top: 20px;
 				padding: 16px 20px;
@@ -1188,7 +1188,7 @@ defineExpose({
 				align-items: center;
 				gap: 12px;
 
-				.select-input {
+				.selectInput {
 					flex-grow: 1;
 					text-align: left;
 					box-shadow: none;

@@ -1,27 +1,19 @@
 <template lang="pug">
 div(v-if='!state?.connection')
     // is loading...
-ChangePassword(v-if="state?.user && state.viewport === 'mobile' && route.query.page === 'password'")
-VerifyEmail(v-else-if="state?.user && state.viewport === 'mobile' && route.query.page === 'verify'")
-DeleteAccount(v-else-if="state?.user && state.viewport === 'mobile' && route.query.page === 'delete'")
 div(v-else-if="state?.user" :loading="isSaving || null")
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h1.fixed Account Settings
-    .settings-wrapper
+    .settingsWrapper
         form.settings(@submit.prevent="updateUserSettings" @keydown.enter.prevent="" action="")
-            hr(v-if="state.viewport === 'mobile'")
             .title Name
-            .value(v-if="state.viewport === 'desktop'")
+            .value
                 sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
                 span(v-else) {{  state.user.name }}
             .actions
-            .mobile-value(v-if="state.viewport === 'mobile'")
-                sui-input(v-if="isEdit" type="text" @input="(e) => settings.name = e.target.value" :value="settings.name")
-                span(v-else) {{  state.user.name }}
-
             hr
             .title(style="margin-bottom: 0;") Email
-            .value(v-if="state.viewport === 'desktop'")
+            .value
                 sui-input(
                     v-if="isEdit" 
                     type="text" 
@@ -38,24 +30,9 @@ div(v-else-if="state?.user" :loading="isSaving || null")
                     .error(v-if="isVerifyErrorMessage") You have exceeded the number of tries. Please try again later.
             .actions(v-if="!state.user.email_verified" @click="openVerifyEmail")
                 span Verify Email
-            .mobile-value(v-if="state.viewport === 'mobile'")            
-                sui-input(
-                    v-if="isEdit" 
-                    type="text" 
-                    :value="settings.email" 
-                    @input="(e)=> { settings.email = e.target.value; e.target.setCustomValidity(''); }" 
-                    @change="validateEmail"
-                    inputmode="email")
-                template(v-else)
-                    span {{  state.user.email }}
-                    .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
-                        Icon warning
-                        span(v-if="state.user.email_verified") Verified
-                        span(v-else) Unverified
-                    .error(v-if="isVerifyErrorMessage") You have exceeded the number of tries. Please try again later.
             hr   
             .title Newsletter Subscription
-            .value(v-if="state.viewport === 'desktop'")
+            .value
                 template(v-if="isEdit")
                     label
                         sui-input(type="checkbox" :disabled="!state.user.email_verified ? true : null" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
@@ -64,32 +41,19 @@ div(v-else-if="state?.user" :loading="isSaving || null")
                     template(v-if="settings.email_subscription") Subscribed
                         span(v-if="!state.user.email_verified" style="margin-left: 10px; color: #FF8D3B;")   ( Needs Verification )
                     template(v-else) Not Subscribed
-            .mobile-value(v-if="state.viewport === 'mobile'")
-                template(v-if="isEdit")
-                    label
-                        sui-input(type="checkbox" :disabled="state.user.email_verified ? null : true" :checked="settings.email_subscription ? true : null" @change="(e) => settings.email_subscription = e.target.checked")
-                        span I agree to receive information and news letters from Skapi via Email.
-                template(v-else)
-                    template(v-if="settings.email_subscription") Subscribed
-                    template(v-else) Not Subscribed
-                .actions(v-if="settings.email_subscription.isEdit")
-                    span.cancel(@click="settings.email_subscription.isEdit = false") Cancel
-                    span.save(@click="settings.email_subscription.isEdit = false") Save
             hr
             .title(style="margin-bottom: 0;") Password
-            .value(v-if="state.viewport === 'desktop'")
+            .value
             .actions
-                span(@click="() => { if(isSaving) return false; state.viewport === 'desktop' ? passwordOverlay.open() : router.replace('?page=password')}") Change Password
-            .mobile-value(v-if="state.viewport === 'mobile'")
+                span(@click="() => { if(isSaving) return false; passwordOverlay.open()}") Change Password
             hr
             .submit
                 template(v-if="isEdit")
-                    sui-button.line-button(type="button" @click="cancelEdit") Cancel
+                    sui-button.lineButton(type="button" @click="cancelEdit") Cancel
                     SubmitButton(:loading="isSaving") Save
                 sui-button(v-else type="button" @click="isEdit = true") Edit Account
 
-    .settings-wrapper.delete     
-        hr(v-if="state.viewport === 'mobile'")
+    .settingsWrapper.delete     
         div(@click="openDeletePopup") Delete Your Account
             Icon(style="height: 20px; width: 20px; margin-left: 8px;") trash
     Transition(name="toast")
@@ -99,11 +63,11 @@ div(v-else-if="state?.user" :loading="isSaving || null")
             div
             .body Please verify your email to prevent your services from shutting down.
             Icon.close(@click="state.setVerificationDelay") X2
-    sui-overlay(v-if="state.viewport === 'desktop'" ref="passwordOverlay" style="background: rgba(0, 0, 0, 0.6);")
-        ChangePassword(v-if="state.viewport === 'desktop'" @close="passwordOverlay.close()")
-    sui-overlay(v-if="state.viewport === 'desktop'" ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
+    sui-overlay(ref="passwordOverlay" style="background: rgba(0, 0, 0, 0.6);")
+        ChangePassword(@close="passwordOverlay.close()")
+    sui-overlay(ref="emailOverlay" style="background: rgba(0, 0, 0, 0.6);")
         VerifyEmail(@close="emailOverlay.close()")
-    sui-overlay(v-if="state.viewport === 'desktop' && isDelete" ref="deleteAccountOverlay" style="background: rgba(0, 0, 0, 0.6);")
+    sui-overlay(v-if="isDelete" ref="deleteAccountOverlay" style="background: rgba(0, 0, 0, 0.6);")
         DeleteAccount(@close="deleteAccountOverlay.close(() => isDelete = false)")
 </template>
 <script setup>
@@ -251,7 +215,7 @@ watch(() => state.user, async (user) => {
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 
-.page-header {
+.pageHeader {
     @media @tablet {
         text-align: center;
         margin-bottom: 12px;
@@ -262,7 +226,7 @@ watch(() => state.user, async (user) => {
     }
 }
 
-.settings-wrapper {
+.settingsWrapper {
     background-color: #fafafa;
     padding: 28px 37px;
     border-radius: 8px;
@@ -465,7 +429,7 @@ watch(() => state.user, async (user) => {
     color: #F04E4E;
 }
 
-.line-button {
+.lineButton {
     &~sui-button {
         margin-left: 16px;
     }

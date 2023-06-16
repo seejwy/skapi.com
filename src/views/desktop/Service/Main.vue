@@ -2,7 +2,7 @@
 .servicePageShell
     .sideScreen
         NavBar(v-if="pageTitle" style='background-color: #505050;z-index: 2;')
-            ul.inline-vertical-middle
+            ul.inlineVerticalMiddle
                 li.showOnTablet
                     router-link(to="/" tag="li")
                         img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
@@ -18,7 +18,7 @@
                 li
                     a.clickable(@click="logout") Logout
 
-        main.app#app-main(v-if='state.connection')
+        main.app#appMain(v-if='state.connection')
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
@@ -26,7 +26,7 @@
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
             Login(v-else-if="!state.user")
-    .sidebar-holder(v-if="state.user")
+    .sidebarHzolder(v-if="state.user")
         .sidebar
             img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
             img.hover-logo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
@@ -74,7 +74,7 @@ Transition(name="toast")
         }
     }
 
-    .sidebar-holder {
+    .sidebarHzolder {
         width: 52px;
         flex-shrink: 0;
     }

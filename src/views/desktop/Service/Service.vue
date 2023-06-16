@@ -1,7 +1,7 @@
 <template lang="pug">
 EditService(v-if="state?.user && route.query.edit === 'service'" @close="router.replace({query: null})")
 template(v-else)
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h2 Service
         p.
             A service is a collection of serverless resources working together to form your backend.
@@ -9,44 +9,44 @@ template(v-else)
 
         div.action
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
-                sui-button.line-button(type="button") Find out More
+                sui-button.lineButton(type="button") Find out More
     .container
-        .title-actions-wrapper.showOnTablet
-            .title-wrapper
+        .titleActionsWrapper.showOnTablet
+            .titleWrapper
                 Icon information
                 h2 Service Information
             .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon trash
-        .inner-container 
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
+        .innerContainer 
+            .titleActionsWrapper.hideOnTablet
+                .titleWrapper
                     Icon information
                     h2 Service Information
                 .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
                     span(style="font-size:14px") Delete Service
-            .information-grid
-                .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
+            .informationGrid
+                .informationGridItem(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
                     .name {{ info.name }}
                     .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
                     .value(v-else) {{ service[info.key] }}
 
     .container
-        .title-actions-wrapper.showOnTablet
-            .title-wrapper
+        .titleActionsWrapper.showOnTablet
+            .titleWrapper
                 Icon setting
                 h2 Service Setting 
             .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon pencil
-        .inner-container 
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
+        .innerContainer 
+            .titleActionsWrapper.hideOnTablet
+                .titleWrapper
                     Icon setting
                     h2 Service Setting 
                 .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
                     Icon pencil
                     span Edit
-            .setting-grid 
-                .setting-grid-item(v-for="setting in settingGrid")
+            .settingGrid 
+                .settingGridItem(v-for="setting in settingGrid")
                     .name 
                         span {{ setting.name }}
                         sui-tooltip(v-if="setting.tip")
@@ -58,36 +58,36 @@ template(v-else)
                         span(v-else) Disabled
                     .value(v-else) {{  service[setting.key] || '-' }}
     .container
-        .title-actions-wrapper.showOnTablet
-            .title-wrapper
+        .titleActionsWrapper.showOnTablet
+            .titleWrapper
                 h2 Manage your Service 
-        .inner-container.services
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
+        .innerContainer.services
+            .titleActionsWrapper.hideOnTablet
+                .titleWrapper
                     h2 Manage your Service 
-            .service-grid 
-                RouterLink(:to="{name: 'users'}").service-grid-item
+            .serviceGrid 
+                RouterLink(:to="{name: 'users'}").serviceGridItem
                     .content
                         .title
                             Icon users
                             span Users
                         .body Within your service, users are individuals who have successfully created an account and logged in at least once. You can search for and apply access control using our easy to use user database management system.
                     .goto Go to Users >
-                RouterLink(:to="{name: 'records'}").service-grid-item  
+                RouterLink(:to="{name: 'records'}").serviceGridItem  
                     .content
                         .title
                             Icon folder_open
                             span Record
                         .body Records are data objects created by you or your users and stored within your database. You can efficiently search, modify, or create new records using our database management system.
                     .goto Go to Records >
-                //- RouterLink(to="/").service-grid-item 
+                //- RouterLink(to="/").serviceGridItem 
                     .content
                         .title
                             Icon mail
                             span Email System
                         .body Users are data that your service user's will store and read from your service database. 
                     .goto Go to Mail >
-    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
+    sui-overlay(v-if="isEdit" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
         div.overlay
             EditService(@close="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
 sui-overlay(ref="deleteConfirmOverlay")
@@ -100,8 +100,8 @@ sui-overlay(ref="deleteConfirmOverlay")
             p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
         .foot
-            sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = ''}").text-button Cancel
-            SubmitButton(:loading="isDisabled" class="text-button" backgroundColor="51, 51, 51") Delete
+            sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = ''}").textButton Cancel
+            SubmitButton(:loading="isDisabled" class="textButton" backgroundColor="51, 51, 51") Delete
 sui-overlay(ref="deleteErrorOverlay")
     .popup
         .title
@@ -109,7 +109,7 @@ sui-overlay(ref="deleteErrorOverlay")
             div Something went wrong!
         .body {{ deleteErrorMessage }}
         .foot
-            sui-button.line-button(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
+            sui-button.lineButton(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
@@ -275,11 +275,11 @@ watch(() => state.viewport, () => {
 .container {
     margin: 0 0 40px 0;
 
-    .inner-container {    
+    .innerContainer {    
         padding: 40px;
         background: #434343;
         border-radius: 12px;
-        .title-actions-wrapper {
+        .titleActionsWrapper {
             margin-bottom: 32px;
 
             h2 {
@@ -312,7 +312,7 @@ watch(() => state.viewport, () => {
         line-height: 1.5;
     }
 
-    .title-actions-wrapper {
+    .titleActionsWrapper {
         display: flex;
         justify-content: space-between;
         margin-bottom: 16px;
@@ -323,7 +323,7 @@ watch(() => state.viewport, () => {
         }
     }
 
-    .title-wrapper {
+    .titleWrapper {
         h2 {
             margin: 0;
         }
@@ -356,7 +356,7 @@ watch(() => state.viewport, () => {
             margin-top: 0;
         }
 
-        .inner-container {    
+        .innerContainer {    
             padding: 20px;
 
             &.services {
@@ -371,7 +371,7 @@ watch(() => state.viewport, () => {
     }
 }
 
-.information-grid {
+.informationGrid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 20px;
@@ -385,7 +385,7 @@ watch(() => state.viewport, () => {
         grid-template-columns: 1fr;
     }
 
-    &-item {
+    &Item {
         min-width: 0;
 
         .name {
@@ -410,11 +410,11 @@ watch(() => state.viewport, () => {
     }
 }
 
-.setting-grid {
+.settingGrid {
     display: flex;
     justify-content: space-between;
     
-    &-item {
+    &Item {
         .name {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
@@ -441,7 +441,7 @@ watch(() => state.viewport, () => {
 
     @media @phone {
         grid-template-columns: repeat(1, 1fr);
-        &-item {
+        &Item {
             &.span-2 {
                 grid-column: span 1;
             }
@@ -449,13 +449,13 @@ watch(() => state.viewport, () => {
     }
 }
 
-.setting-grid {
+.settingGrid {
     display: grid;
     column-gap: 12px;
     row-gap:28px;
     grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
 
-    &-item {
+    &Item {
         .name {
             font-size: 14px;
             line-height: 1;
@@ -485,7 +485,7 @@ watch(() => state.viewport, () => {
 
     @media screen and (max-width: 1000px) {
         grid-template-columns: repeat(2, calc(50% - 6px));
-        &-item {
+        &Item {
             &.actions {
                 grid-column: span 2;
                 align-self: flex-end;
@@ -498,7 +498,7 @@ watch(() => state.viewport, () => {
         display: flex;
         flex-direction: column;
 
-        &-item {
+        &Item {
             &.actions {         
                 grid-column: span 2;
                 justify-self: flex-end;
@@ -509,7 +509,7 @@ watch(() => state.viewport, () => {
     
 }
 
-.service-grid {
+.serviceGrid {
     display: flex;
     justify-content: space-between;
     gap: 20px;
@@ -518,7 +518,7 @@ watch(() => state.viewport, () => {
         flex-direction: column;
     }
 
-    &-item {
+    &Item {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -556,7 +556,7 @@ watch(() => state.viewport, () => {
             text-decoration: none;
         }
     }
-    a.service-grid-item {
+    a.serviceGridItem {
         text-align: left;
         color: rgba(255, 255, 255, 0.85);
         font-size: 14px;
@@ -567,13 +567,13 @@ watch(() => state.viewport, () => {
         flex-direction: column;
         gap: 20px;
 
-        &-item { 
+        &Item { 
             border-radius: 12px;
         }
     }
 
     @media @tablet {
-        &-item {
+        &Item {
             padding: 24px;
             background: #434343;
         }

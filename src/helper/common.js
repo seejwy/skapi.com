@@ -1546,6 +1546,4 @@ const localeName = (locale) => {
     return name;
 }
 
-console.log('common')
-
 export { getSize, dateFormat, groupArray, localeName, countries, regions };

@@ -90,8 +90,6 @@ if (mql.matches) {
 router.then((module) => {
     const routes = module.default;
 
-    console.log(routes);
-
     app.use(routes);
     app.mount('#app');
     app.config.warnHandler = function (msg, vm, trace) {

@@ -1,28 +1,23 @@
 <template lang="pug">
-SearchNavBar(v-if='viewport === "mobile"')
-    div {{ searchTitle }}
-    template(v-slot:right) 
-        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchRecord'})}") X2
-
-.page-header.head-space-helper.hideOnTablet 
+.pageHeader.headSpaceHelper.hideOnTablet 
     h1 Record
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
-            sui-button.line-button(type="button") Read Doc
+            sui-button.lineButton(type="button") Read Doc
 
 // search form
 RecordSearch#recordSearch.hideOnTablet
 .hideOnTablet(style="clear:both;")
 
 sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 / 60%)")
-    .view-record-overlay
+    .viewRecordOverlay
         ViewRecord(v-if="recordToOpen" :record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
-.record-container#data-container
+.recordContainer#dataContainer
     .header.hideOnTablet
-        span.not-clickable(v-html="searchTitle")
-        Icon.not-clickable.animation-rotation(style='opacity:0.6;' v-if="fetchingData") refresh
+        span.notClickable(v-html="searchTitle")
+        Icon.notClickable.animationRotation(style='opacity:0.6;' v-if="fetchingData") refresh
         .clickable(v-else @click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'records'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
@@ -36,7 +31,7 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
         span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
 
     // skeleton(mobile)
-    .recordWrapper.animation-skeleton.showOnTablet(v-if='searchResult === null')
+    .recordWrapper.animationSkeleton.showOnTablet(v-if='searchResult === null')
         .records.clickable(v-for="t in numberOfSkeletons()")
             div
                 span.label &nbsp; 
@@ -50,7 +45,7 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
 
     template(v-else)
         div(v-if='!searchResult.list.length')
-            .no-records-found
+            .noRecordsFound
                 .title No Records Found
                 p There was no record matching the query:
                 .query.showOnTablet(v-if='route.query?.access_group')
@@ -73,8 +68,8 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
 
         template(v-else-if="groupedRecordList && groupedRecordList[currentSelectedRecordBatch]")
             .recordWrapper
-                template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedRecordBatch + 1] : groupedRecordList.length)")
-                    template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedRecordPage + 1] : groupedRecordList[batchIdx - 1].length)")
+                template(v-for="batchIdx in [currentSelectedRecordBatch + 1]")
+                    template(v-for="pageIdx in [currentSelectedRecordPage + 1]")
                         // when v-for by number, it starts with 1
                         .records(v-for="r in groupedRecordList[batchIdx - 1][pageIdx - 1]" style="cursor:pointer;" @click="()=>displayRecord(r)" :style="{opacity: r.deleting ? '0.3' : null}")
                             div
@@ -86,8 +81,8 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
                             div
                                 span.label UPLOADED: 
                                 span {{ dateFormat(r.uploaded) }}
-                                .recordWrapper.animation-skeleton.showOnTablet(v-if='searchResult === null')
-            .recordWrapper.animation-skeleton.showOnTablet(v-if="fetchingData")
+                                .recordWrapper.animationSkeleton.showOnTablet(v-if='searchResult === null')
+            .recordWrapper.animationSkeleton.showOnTablet(v-if="fetchingData")
                 .records.clickable(v-for="t in numberOfSkeletons()")
                     div
                         span.label &nbsp; 
@@ -145,14 +140,8 @@ let record = inject('recordToOpen');
 record.value = null;
 
 function adjustBackgroundColor(n) {
-    if (n === 'mobile') {
-        // remove padding for zebra list to extend to full width
-        appStyle.mainPadding = '0';
-        appStyle.background = '#333333';
-    } else {
-        appStyle.mainPadding = null;
-        appStyle.background = null;
-    }
+    appStyle.mainPadding = null;
+    appStyle.background = null;
 }
 
 watch(viewport, n => {
@@ -170,11 +159,7 @@ let pageTitle = inject('pageTitle');
 let searchTitle = computed(() => {
     let s = `${fetchingData.value ? "Searching" : viewport.value === 'desktop' ? "Result of" : ''}${fetchingData.value ? '' : ' ' + route.query.search_type.replace('_', ' ')}: "${route.query[route.query.search_type === 'user' ? 'reference' : route.query.search_type === 'record' ? 'record_id' : route.query.search_type]}"${fetchingData.value ? ' ...' : ''}`;
     let capitalized = s.trim().replace(/^\w/, c => c.toUpperCase());
-    if(viewport.value === 'desktop') {
-        pageTitle.value = viewport.value === 'desktop' ? 'Records' : capitalized;
-    } else {
-        pageTitle.value = null;
-    }
+    pageTitle.value = 'Records';
     return capitalized;
 });
 
@@ -210,7 +195,7 @@ watch(currentSelectedRecordPage, n => {
         t.opened = false;
     }
     nextTick(() => {
-        window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.document.getElementById('dataContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
 
@@ -219,17 +204,7 @@ function numberOfSkeletons() {
     return parseInt(window.innerHeight / 2 / 48);
 }
 
-function scrollEventMobile(event) {
-    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
-        // scrolled to bottom
-        fetchMoreRecords();
-    }
-}
-
-window.addEventListener('scroll', scrollEventMobile, { passive: true });
-
 onBeforeUnmount(() => {
-    window.removeEventListener('scroll', scrollEventMobile, { passive: true });
     // set padding to original value
     appStyle.mainPadding = null;
     appStyle.background = null;
@@ -276,17 +251,7 @@ async function fetchMoreRecords() {
 let recordToOpen = inject('recordToOpen');
 function displayRecord(r) {
     recordToOpen.value = r;
-    if (viewport.value === 'mobile') {
-        router.push({
-            name: 'mobileRecordView',
-            query: {
-                id: r.record_id
-            }
-        });
-    }
-    else {
-        openRecord.value.open();
-    }
+    openRecord.value.open();
 }
 
 </script>
@@ -309,7 +274,7 @@ function displayRecord(r) {
     max-width: 100%;
 }
 
-.record-container {
+.recordContainer {
     svg {
         color: white;
         margin-left: 4px;
@@ -453,7 +418,7 @@ function displayRecord(r) {
         }
     }
         
-    .no-records-found {
+    .noRecordsFound {
         text-align: center;
         padding: 60px 0 36px 0;
         border-radius: 0 0 8px 8px;

@@ -34,7 +34,7 @@
                         required)
                 .input
                     span Haven't got any code?
-                    sui-button.line-button(type="button" @click="resendForgotPassword" :disabled="(secondsTillReady || forgotError || isRequestingCode) || null") 
+                    sui-button.lineButton(type="button" @click="resendForgotPassword" :disabled="(secondsTillReady || forgotError || isRequestingCode) || null") 
                         template(v-if="forgotError") {{ forgotError }}
                         template(v-else-if="isRequestingCode") 
                             LoadingCircle(style="--bgColor: 250, 250, 250; --ringColor: 0, 0, 0;")
@@ -318,7 +318,7 @@ const changePassword = () => {
         font-weight: bold;
     }
 
-    .line-button {
+    .lineButton {
         display: block;
     }
 }

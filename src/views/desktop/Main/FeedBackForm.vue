@@ -6,7 +6,7 @@
                 h1 Feedback
                 p Before you proceed, help us improve skapi with your feedback.
                 p How would you rate skapi on a scale of 1 to 5?
-                .starWrap(v-if="state.viewport === 'desktop'")
+                .starWrap
                     label.starBox
                         input(type="radio" name="star")
                         span.starImg
@@ -22,22 +22,10 @@
                     label.starBox
                         input(type="radio" name="star")
                         span.starImg
-                .mobile-starWrap(v-else)
-                    label.starBox
-                        input(type="radio" name="star")
-                        span.tarImg
-                    label.starBox
-                        input(type="radio" name="star")
-                        span.starImg
-                    label.starBox
-                        input(type="radio" name="star")
-                        span.starImg
-                    label.starBox
-                        input(type="radio" name="star")
-                        span.starImg
-                    label.starBox
-                        input(type="radio" name="star")
-                        span.starImg
+                br
+                .error(v-if="error")
+                    Icon warning
+                    span Please select at least one star
                 br
                 SubmitButton(:loading="promiseRunning") Continue
         template(v-else-if="step === 2")
@@ -61,8 +49,7 @@
             Icon.success check_circle
             h1 Thank you!
             p Thanks for taking the time to share your thoughts.
-            sui-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('closeFeedBack')") Continue
-            sui-button(v-else-if="state.viewport === 'mobile'" type="button" @click="router.push('?new=service')") Continue
+            sui-button(type="button" @click="emit('closeFeedBack')") Continue
 
         .navigator(v-if="step <= 2")
             .ball(v-for="num in 2" @click="() => { num < step ? step = num : null; password = '';  passwordConfirm = '';}" :class="{'active': step === num}")
@@ -83,18 +70,10 @@ let navbarMobileRightButton = inject('navbarMobileRightButton');
 let router = useRouter();
 const emit = defineEmits(['closeFeedBack']);
 const promiseRunning = ref(false);
+const error = ref(false);
 let feedback = ref('');
 let step = ref(1);
 let idx = 0;
-
-if(state.viewport === 'mobile') {
-    pageTitle.value = 'Skapi'
-    appStyle.navBackground = '#293fe6';
-    appStyle.background = '#fff';
-    navbarMobileRightButton.value = {
-        type: 'hidden'
-    };
-}
 
 onBeforeUnmount(() => {
     appStyle.background = null;
@@ -107,47 +86,38 @@ onBeforeUnmount(() => {
 const inputStar = () => {
     promiseRunning.value = true;
 
-    if(state.viewport === 'desktop') {
-        let starWrapChild = document.querySelector('.starWrap').children;
-        let starWrapChildArr = Array.from(starWrapChild);
-        let checkedStar = document.querySelector('input[name="star"]:checked').parentNode;
-    
-        checkedStar.classList.add('checked');
-    
-        for (let i = 0; i < starWrapChildArr.length; i++) {
-            if (starWrapChildArr[i].classList.contains('checked')) {
-                idx = i + 1;
-            }
-        }
-    } else {
-        let starWrapChild = document.querySelector('.mobile-starWrap').children;
-        let starWrapChildArr = Array.from(starWrapChild);
-        let checkedStar = document.querySelector('input[name="star"]:checked').parentNode;
-    
-        checkedStar.classList.add('checked');
-    
-        for (let i = 0; i < starWrapChildArr.length; i++) {
-            if (starWrapChildArr[i].classList.contains('checked')) {
-                idx = i + 1;
-            }
-        }
-    }
+    let starWrapChild = document.querySelector('.starWrap').children;
+    let starWrapChildArr = Array.from(starWrapChild);
+    let checkedStar = document.querySelector('input[name="star"]:checked');
 
-    step.value++;
-    promiseRunning.value = false;
+    try {
+        checkedStar.parentNode.classList.add('checked');
+
+        for (let i = 0; i < starWrapChildArr.length; i++) {
+            if (starWrapChildArr[i].classList.contains('checked')) {
+                idx = i + 1;
+            }
+        }
+
+        step.value++;
+        promiseRunning.value = false;
+    } catch (err) {
+        promiseRunning.value = false;
+        error.value = true;
+    }
 }
 
 const inputFeedback = () => {
     promiseRunning.value = true;
 
-    skapi.postRecord({feedback : feedback.value},{table : {name: 'feedBackForm', access_group: 99}, index: {name: 'star', value: idx}}).then(() => {
-        skapi.updateProfile({misc:'feedback complete'});
+    skapi.postRecord({ feedback: feedback.value }, { table: { name: 'feedBackForm', access_group: 99 }, index: { name: 'star', value: idx } }).then(() => {
+        skapi.updateProfile({ misc: 'feedback complete' });
     }).catch(e => {
-        console.log({e});
+        console.log({ e });
     }).finally(() => {
         step.value++;
         promiseRunning.value = false;
-    });    
+    });
 }
 </script>
 
@@ -224,7 +194,7 @@ const inputFeedback = () => {
         }
     }
 
-    .starWrap, .mobile-starWrap {
+    .starWrap {
         display: inline-block;
         overflow: hidden;
         height: 51px;
@@ -267,12 +237,6 @@ const inputFeedback = () => {
             width: 500px;
             height: 51px;
             pointer-events: none;
-        }
-    }
-
-    .mobile-starWrap {
-        &:after {
-            background-image: url('/assets/img/icons/star-mobile.svg');
         }
     }
 
@@ -350,9 +314,8 @@ const inputFeedback = () => {
     }
 
     .error {
-        text-align: left;
         color: #F04E4E;
-        margin-bottom: 27px;
+        margin-top: 35px;
 
         svg {
             margin-right: 4px;
@@ -369,7 +332,7 @@ const inputFeedback = () => {
         font-weight: bold;
     }
 
-    .line-button {
+    .lineButton {
         display: block;
     }
 }

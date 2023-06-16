@@ -15,7 +15,7 @@
         .input(style="margin-bottom: 40px;")
             label API Key
             sui-input(type="text" :value="apiKey" @input="(e) => apiKey = e.target.value")
-        sui-button.text-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
+        sui-button.textButton(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
         SubmitButton(v-if="state.viewport !== 'mobile'" :loading="isDisabled") Save
 sui-overlay(ref="disableConfirmOverlay")
     .popup
@@ -27,8 +27,8 @@ sui-overlay(ref="disableConfirmOverlay")
             p(v-if="service?.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
-            sui-button.text-button(type="button" @click="rejectDisable") No 
-            sui-button.text-button(type="button" @click="confirmDisable") Yes
+            sui-button.textButton(type="button" @click="rejectDisable") No 
+            sui-button.textButton(type="button" @click="confirmDisable") Yes
 sui-overlay(ref="disableErrorOverlay")
     .popup
         .title
@@ -36,7 +36,7 @@ sui-overlay(ref="disableErrorOverlay")
             div Something went wrong!
         .body {{ errorMessage }}
         .foot
-            sui-button.line-button(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
+            sui-button.lineButton(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
 </template>
 <!-- script below -->
 <script setup>
@@ -74,7 +74,7 @@ const buttonCallback = async () => {
     navbarMobileRightButton.value = {
         type: 'icon',
         val: 'loading',
-        cssClass: 'animation-rotation--slow-in-out'
+        cssClass: 'animationRotation--slow-in-out'
     };
     try {
         await save();
@@ -116,7 +116,7 @@ let confirmDisable = () => {
         navbarMobileRightButton.value = {
             type: 'icon',
             val: 'loading',
-            cssClass: 'animation-rotation--slow-in-out'
+            cssClass: 'animationRotation--slow-in-out'
         };
         try {
             if(service.value.active > 0) {

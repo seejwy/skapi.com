@@ -18,9 +18,9 @@
                     Icon warning
                     span {{ password.current.error }}
             .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                sui-button.lineButton(type="button" @click="closePasswordChange") Cancel
                 SubmitButton(type="submit" :loading="promiseRunning") Continue
-            .step-wrapper
+            .stepWrapper
                 .step.active
                 .step
     template(v-else-if="processStep === 1")
@@ -48,9 +48,9 @@
                     Icon warning
                     span {{ password.confirm.error }}
             .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                sui-button.lineButton(type="button" @click="closePasswordChange") Cancel
                 SubmitButton(:loading="promiseRunning") Change Password
-            .step-wrapper
+            .stepWrapper
                 .step.clickable(@click="processStep = 0")
                 .step.active
 .form.container.success(v-else)
@@ -237,7 +237,7 @@ onBeforeUnmount(() => {
     .actions {
         margin-top: 40px;
     }
-    .step-wrapper {
+    .stepWrapper {
         margin-top: 56px;
 
         .step {
@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
     }
 }
 
-.line-button {
+.lineButton {
     & ~ sui-button {
         margin-left: 16px;
     }
