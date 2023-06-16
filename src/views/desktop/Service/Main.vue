@@ -216,7 +216,7 @@ Transition(name="toast")
 }
 </style>
 <script setup>
-import NavBar from '@/components/navbar.vue';
+import NavBar from '@/components/mobile/Navbar.vue';
 import NotExists from '@/views/desktop/Main/404.vue';
 import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';

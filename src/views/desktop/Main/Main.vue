@@ -71,7 +71,7 @@ sui-button.signup {
 </style>
 
 <script setup>
-import NavBar from '@/components/navbar.vue';
+import NavBar from '@/components/mobile/Navbar.vue';
 import { ref, inject, onMounted, onUpdated, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { skapi, state, awaitConnection } from '@/main';

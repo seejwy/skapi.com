@@ -1,4 +1,9 @@
 <template lang="pug">
+NavBarProxy
+    template(v-slot:title)
+        div Feedback
+    template(v-slot:rightButton)
+        div
 .wrapper(:loading="promiseRunning || null")
     .container(:loading="promiseRunning || null")
         template(v-if="step === 1")
@@ -54,12 +59,11 @@ import { inject, ref, onBeforeUnmount } from 'vue';
 import { skapi, state } from '@/main';
 import { useRouter } from 'vue-router';
 
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
 let appStyle = inject('appStyle');
-let pageTitle = inject('pageTitle');
-let navbarMobileRightButton = inject('navbarMobileRightButton');
 
 let router = useRouter();
 const promiseRunning = ref(false);
@@ -98,17 +102,6 @@ const inputFeedback = () => {
         promiseRunning.value = false;
     });    
 }
-
-pageTitle.value = 'Feedback'
-navbarMobileRightButton.value = {
-    type: 'hidden'
-};
-
-onBeforeUnmount(() => {
-    pageTitle.value = 'skapi';
-    navbarMobileRightButton.value = null;
-});
-
 </script>
 
 <style lang="less" scoped>
