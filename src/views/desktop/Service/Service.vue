@@ -11,14 +11,8 @@ template(v-else)
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
                 sui-button.lineButton(type="button") Find out More
     .container
-        .titleActionsWrapper.showOnTablet
-            .titleWrapper
-                Icon information
-                h2 Service Information
-            .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
-                Icon trash
         .innerContainer 
-            .titleActionsWrapper.hideOnTablet
+            .titleActionsWrapper
                 .titleWrapper
                     Icon information
                     h2 Service Information
@@ -31,14 +25,8 @@ template(v-else)
                     .value(v-else) {{ service[info.key] }}
 
     .container
-        .titleActionsWrapper.showOnTablet
-            .titleWrapper
-                Icon setting
-                h2 Service Setting 
-            .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
-                Icon pencil
         .innerContainer 
-            .titleActionsWrapper.hideOnTablet
+            .titleActionsWrapper
                 .titleWrapper
                     Icon setting
                     h2 Service Setting 
@@ -58,9 +46,6 @@ template(v-else)
                         span(v-else) Disabled
                     .value(v-else) {{  service[setting.key] || '-' }}
     .container
-        .titleActionsWrapper.showOnTablet
-            .titleWrapper
-                h2 Manage your Service 
         .innerContainer.services
             .titleActionsWrapper.hideOnTablet
                 .titleWrapper

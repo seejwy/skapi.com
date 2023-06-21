@@ -28,13 +28,9 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
             span # of records
         Icon.clickable.hideOnTablet(:class="{'animationRotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
 
-    // skeleton(mobile)
-    .tableHead.animationSkeleton.showOnTablet(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
-        span &nbsp;
-
     // table list
-    template(v-else)
-        .no-records(v-if='!recordTables.list?.length')
+    template
+        .noRecords(v-if='!recordTables.list?.length')
             div
                 .title No Record Tables
                 p List of tables will show when there is data
@@ -77,8 +73,6 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
 
                                 .loadMore(v-if="!t.records.endOfList")
                                     Icon.animationRotation refresh
-                .tableHead.animationSkeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
-                    span &nbsp;
                 .paginator.hideOnTablet
                     Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
@@ -100,17 +94,6 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
                         @click="() => { if(!isLastPage) currentSelectedTablePage++; else if(isLastPage && !isLastBatch) { currentSelectedTableBatch++; currentSelectedTablePage = 0;} else if(isLastBatch && !isEndOfList) getMoreTables() }"
                         ) right
 
-.pageAction.showOnTablet(@blur="isFabOpen = false")
-    // @blur should be at the parent div
-    sui-button.fab.openMenu(type="button" @click.stop="isFabOpen = !isFabOpen")
-        Icon menu_vertical
-
-    Transition
-        div(v-if="isFabOpen" @click.stop)
-            sui-button.fab(type="button" @click="router.push({name: 'mobileSearchRecord'})")
-                Icon search
-            sui-button.fab(type="button" @click='()=>addRecord(true)')
-                Icon plus2
 </template>
 <!-- script below -->
 <script setup>
@@ -362,6 +345,7 @@ onBeforeUnmount(() => {
     appStyle.mainPadding = null;
     appStyle.background = null;
 });
+
 </script>
 
 <style lang="less" scoped>
@@ -551,7 +535,7 @@ onBeforeUnmount(() => {
         }
     }
 
-    .no-records {
+    .noRecords {
         color: rgba(255, 255, 255, 0.4);
         padding: 60px 0 60px 0;
         margin: 0 -20px -24px -20px;

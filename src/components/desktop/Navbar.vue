@@ -2,23 +2,11 @@
 sui-nav#topNav(auto-hide)
     .navAlign
         .title
-            Icon.showOnTablet.clickable.backButton(v-if='!props.isParentLevel' @click="toParent") left
             img.logo(v-if="pageTitle === 'skapi'" alt="skapi" src="@/assets/img/logo.svg" @click="()=>props.isParentLevel ? router.push('/') : null" width="90" height="35")
             span.titleText(v-else:class="{clickable: props.isParentLevel}" @click="()=>props.isParentLevel ? router.push('/') : gotoService()" v-html="pageTitle || ''")
         .menu
-            .hideOnTablet
+            div
                 slot
-            template(v-if='navbarMobileRightButton')
-                div(v-if="navbarMobileRightButton.type === 'icon'" style="position: relative; width: 24px; height: 24px;")
-                    LoadingCircle.showOnTablet(
-                        style="width: 24px; height: 24px; --spinnerWidth: 3px; --ringColor: 255, 255, 255; --bgColor: 80,80,80;"
-                        @click='navbarMobileRightButton?.callback')
-                span.showOnTablet.clickable(
-                    v-if="navbarMobileRightButton.type === 'text'"
-                    style="height: 28px; font-weight: bold;"
-                    :class="navbarMobileRightButton?.cssClass || null"
-                    @click='navbarMobileRightButton?.callback') {{ navbarMobileRightButton.val }}
-            Icon.showOnTablet.clickable(v-else style="height: 28px; width: 28px;" @click='open') menu_horizontal
 
     sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' style='background-color: rgba(31, 31, 31, .6); color:white;' position="right")
         // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
@@ -26,15 +14,8 @@ sui-nav#topNav(auto-hide)
             slot
 </template>
 <style lang="less">
-@import '@/assets/variables.less';
-
 #navOverlay {
     min-width: 50vw;
-
-    @media @phone {
-        min-width: 70vw;
-    }
-
     background-color: #1F1F1F;
     height: 100vh;
     padding: 40px 8px;
@@ -66,10 +47,6 @@ sui-nav#topNav {
     box-shadow: none;
     padding: 0 var(--side-padding, 24px);
     color: #fff;
-
-    @media @tablet {
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-    }
 
     &>.navAlign {
         display: flex;
@@ -133,10 +110,6 @@ sui-nav#topNav {
                     font-size: 20px;
                     vertical-align: middle;
                     cursor: pointer;
-
-                    @media @tablet {
-                        font-weight: bold;
-                    }
                 }
             }
         }
@@ -160,7 +133,6 @@ import LoadingCircle from '@/components/LoadingCircle.vue';
 const props = defineProps(['isParentLevel']);
 
 let pageTitle = inject('pageTitle');
-let navbarMobileRightButton = inject('navbarMobileRightButton');
 let navOverlay = ref(null);
 let route = useRoute();
 let router = useRouter();
@@ -192,9 +164,7 @@ async function toParent() {
 }
 
 function gotoService() {
-    if(state.viewport === 'desktop') {
-        router.push('/admin/' + route.params.service);
-    }
+    router.push('/admin/' + route.params.service);
 }
 
 function close(keepScrollPosition = false) {

@@ -63,6 +63,7 @@ div(v-for="pageType in pages" :class="pageType" ref="container")
         sui-select
             option(value="hello") Hello
 </template>
+
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 import SubmitButton from '@/components/SubmitButton.vue';

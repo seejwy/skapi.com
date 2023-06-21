@@ -23,7 +23,7 @@ div(v-else-if="state?.user" :loading="isSaving || null")
                     inputmode="email")
                 template(v-else)
                     span {{  state.user.email }}
-                    .email-status(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
+                    .emailStatus(:class="{'unverified': !state.user.email_verified ? true : null, 'verified': state.user.email_verified ? true : null}")
                         Icon warning
                         span(v-if="state.user.email_verified") Verified
                         span(v-else) Unverified
@@ -70,6 +70,7 @@ div(v-else-if="state?.user" :loading="isSaving || null")
     sui-overlay(v-if="isDelete" ref="deleteAccountOverlay" style="background: rgba(0, 0, 0, 0.6);")
         DeleteAccount(@close="deleteAccountOverlay.close(() => isDelete = false)")
 </template>
+
 <script setup>
 import { inject, ref, onMounted, watch, nextTick } from 'vue';
 import { state, awaitConnection } from '@/main';
@@ -216,11 +217,6 @@ watch(() => state.user, async (user) => {
 @import '@/assets/variables.less';
 
 .pageHeader {
-    @media @tablet {
-        text-align: center;
-        margin-bottom: 12px;
-    }
-
     h1 {
         display: block;
     }
@@ -230,17 +226,6 @@ watch(() => state.user, async (user) => {
     background-color: #fafafa;
     padding: 28px 37px;
     border-radius: 8px;
-
-    @media @tablet {
-        background-color: #fff;
-        padding: 0;
-        margin: 0 -20px;
-        border-radius: 0;
-    }
-
-    @media @phone {
-        margin: 0 -16px;
-    }
 
     &.delete {
         line-height: 52px;
@@ -252,14 +237,6 @@ watch(() => state.user, async (user) => {
 
         &> {
             cursor: pointer;
-        }
-
-        @media @phone {
-            line-height: 1;
-        }
-
-        @media @tablet {
-            padding: 0 16px;
         }
     }
 }
@@ -277,19 +254,14 @@ watch(() => state.user, async (user) => {
         white-space: nowrap;
     }
 
-    .value,
-    .mobile-value {
-        @media @tablet {
-            margin-top: 8px;
-        }
-
+    .value {
         &>span {
             display: inline-block;
             margin-right: 8px;
         }
     }
 
-    .email-status {
+    .emailStatus {
         display: inline-block;
 
         span {
@@ -328,8 +300,7 @@ watch(() => state.user, async (user) => {
         }
     }
 
-    .value,
-    .mobile-value {
+    .value {
         label {
             display: flex;
             gap: 7px;
@@ -366,61 +337,6 @@ watch(() => state.user, async (user) => {
         justify-self: end;
         padding-top: 28px;
     }
-
-    @media @tablet {
-        grid-template-columns: auto 1fr;
-        column-gap: 0;
-        padding: 0 20px;
-
-        &>.title {
-            height: auto;
-            padding: 0;
-
-            .actions {
-                display: block;
-            }
-        }
-
-        .mobile-value {
-            grid-column: span 2;
-
-            &>span {
-                margin-top: 20px;
-            }
-        }
-
-
-        hr {
-            grid-column: span 2;
-            margin: 28px -20px;
-            width: 100vw;
-        }
-
-        .submit {
-            grid-column: span 2;
-            grid-row: span 2;
-            justify-self: center;
-        }
-    }
-
-    @media @phone {
-        padding: 16px;
-
-        hr {
-            margin: 28px -16px;
-        }
-    }
-}
-
-@media @phone {
-    .delete {
-        hr {
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.06);
-            width: 100vw;
-            margin: 80px -16px 28px;
-        }
-    }
 }
 
 .error {
@@ -434,5 +350,4 @@ watch(() => state.user, async (user) => {
         margin-left: 16px;
     }
 }
-</style>
-    F    
+</style> 

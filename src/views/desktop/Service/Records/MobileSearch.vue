@@ -1,6 +1,7 @@
 <template lang="pug">
 RecordSearch
 </template>
+
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';

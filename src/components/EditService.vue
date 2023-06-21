@@ -1,7 +1,7 @@
 <template lang="pug">
 .overlay-container(v-if="service" :loading="isDisabled || null")
     form(@submit.prevent="save" @keydown.enter.prevent="" action="")
-        .overlay-container-title.hideOnTablet Service Setting
+        .overlay-container-title Service Setting
         .toggle(style="margin-bottom: 40px")
             span Enable/Disable
             .toggle-bar 

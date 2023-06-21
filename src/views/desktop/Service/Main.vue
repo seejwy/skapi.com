@@ -3,9 +3,6 @@
     .sideScreen
         NavBar(v-if="pageTitle" style='background-color: #505050;z-index: 2;')
             ul.inlineVerticalMiddle
-                li.showOnTablet
-                    router-link(to="/" tag="li")
-                        img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
                 li
                     a(href="https://docs.skapi.com" target="_blank") Documentation
 
@@ -61,17 +58,9 @@ Transition(name="toast")
     display: flex;
     flex-direction: row-reverse;
 
-    @media @ipad {
-        display: block;
-    }
-
     // navbar title text
     .titleText {
         color: rgba(255 255 255 / 60%);
-
-        @media @tablet {
-            color: inherit;
-        }
     }
 
     .sidebarHzolder {
@@ -83,31 +72,14 @@ Transition(name="toast")
         z-index: 10;
         background: var(--primary-color);
         overflow: hidden;
-
-        @media @tablet {        
-            box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
-        }
-
-        @media @ipad {
-            height: unset;
-            width: unset;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            min-height: unset;
-            flex-wrap: wrap;
-            bottom: 0px;
-            position: fixed;
-            top: unset;
-            left: 0;
-            right: 0;
-        }
-
         height: 100%;
         min-height: 100vh;
         width: 52px;
         position: fixed;
         top: 0;
+        transition: width .2s cubic-bezier(1, 0, 0, 1);
+        max-width: 170px;
+        
         &>* {
             display: inline-block;
             color: #fff;
@@ -118,10 +90,6 @@ Transition(name="toast")
             width: 32px;
             margin: 11px 10px;
             cursor: pointer;
-
-            @media @ipad {
-                display: none;
-            }
         }
 
         & .hover-logo {
@@ -133,13 +101,6 @@ Transition(name="toast")
             display: block;
             width: min-content;
             margin: 28px 8px;
-
-            @media @ipad {
-                width: 36px;
-                height: 36px;
-                margin: 12px 16px;
-            }
-            
             border-radius: 4px;
 
             &.router-link-active-mobile,
@@ -160,51 +121,45 @@ Transition(name="toast")
                 line-height: 24px;
             }
         }
-        @media screen and (min-width: 1024px) {
             
-            transition: width .2s cubic-bezier(1, 0, 0, 1);
-            max-width: 170px;
-            
+        a {
+            white-space: nowrap;
+            span {    
+                vertical-align: middle;
+            }
+        }
+        &:hover {
+            flex-shrink: 0;
+            width: 170px;
+
+            .logo {
+                display: none;
+            }
+            .hover-logo {
+                display: block;
+                height: 35px;
+                margin: 14px 14px 11px 14px;
+            }
 
             a {
-                white-space: nowrap;
-                span {    
-                    vertical-align: middle;
-                }
-            }
-            &:hover {
-                flex-shrink: 0;
-                width: 170px;
+                background: transparent;
+                display: block;
+                width: 100%;
+                margin: 0;
+                border-radius: 4px;
+                padding: 14px 8px;
+                border-radius: 0;
+                &:hover {
 
-                .logo {
-                    display: none;
-                }
-                .hover-logo {
-                    display: block;
-                    height: 35px;
-                    margin: 14px 14px 11px 14px;
-                }
-
-                a {
-                    background: transparent;
-                    display: block;
-                    width: 100%;
-                    margin: 0;
-                    border-radius: 4px;
-                    padding: 14px 8px;
-                    border-radius: 0;
-                    &:hover {
-
-                        background: rgba(255, 255, 255, .2);
-                        span{
-                            font-weight: bold;
-                        }
+                    background: rgba(255, 255, 255, .2);
+                    span{
+                        font-weight: bold;
                     }
                 }
+            }
 
-                a span {
-                    display: inline-block;
-                }
+            a span {
+                display: inline-block;
             }
         }
         
@@ -216,7 +171,7 @@ Transition(name="toast")
 }
 </style>
 <script setup>
-import NavBar from '@/components/navbar.vue';
+import NavBar from '@/components/desktop/Navbar.vue';
 import NotExists from '@/views/desktop/Main/404.vue';
 import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';

@@ -7,6 +7,7 @@
         RouterLink(to="/") Return to Home
         .logo
 </template>
+
 <script setup>
 import { inject } from 'vue';
 import { skapi, state } from '@/main';
@@ -16,21 +17,15 @@ let router = useRouter();
 // set page title
 let pageTitle = inject('pageTitle');
 pageTitle.value = 'skapi';
-
 </script>
+
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 60px 0;
     min-height: calc(100vh - 140px);
-
-    @media @tablet {
-        align-items: flex-start;
-        padding: 0;
-    }
 }
 .container {
     text-align: center;
@@ -43,16 +38,6 @@ pageTitle.value = 'skapi';
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     margin-top: 60px;
-
-    @media @tablet {
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-        border: none;
-        background: #FFF;
-        padding: 0;
-        margin-top: var(--head-space);
-    }
 
     h1 {
         font-size: 32px;

@@ -308,6 +308,7 @@ onBeforeUnmount(() => {
     }
 });
 </script>
+
 <style lang="less">
 main {
     &.landing {

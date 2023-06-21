@@ -1,5 +1,5 @@
 <template lang="pug">
-.pageHeader.headSpaceHelper.hideOnTablet 
+.pageHeader.headSpaceHelper 
     h1 Record
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
@@ -7,22 +7,21 @@
             sui-button.lineButton(type="button") Read Doc
 
 // search form
-RecordSearch#recordSearch.hideOnTablet
-.hideOnTablet(style="clear:both;")
+RecordSearch#recordSearch(style="clear:both;")
 
 sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 / 60%)")
     .viewRecordOverlay
         ViewRecord(v-if="recordToOpen" :record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
 .recordContainer#dataContainer
-    .header.hideOnTablet
+    .header
         span.notClickable(v-html="searchTitle")
         Icon.notClickable.animationRotation(style='opacity:0.6;' v-if="fetchingData") refresh
         .clickable(v-else @click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'records'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
 
-    .searchPoints.hideOnTablet(v-if="route.query?.access_group")
+    .searchPoints(v-if="route.query?.access_group")
         span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
         span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
         span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
@@ -30,41 +29,11 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
         span(v-if='route.query?.index_name') Index Value: [ {{ route.query.index_type }} ] {{ route.query.index_condition }} {{ route.query.index_value }}
         span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
 
-    // skeleton(mobile)
-    .recordWrapper.animationSkeleton.showOnTablet(v-if='searchResult === null')
-        .records.clickable(v-for="t in numberOfSkeletons()")
-            div
-                span.label &nbsp; 
-                span &nbsp;
-            div
-                span.label &nbsp;
-                span &nbsp;
-            div
-                span.label &nbsp;
-                span &nbsp;
-
     template(v-else)
         div(v-if='!searchResult.list.length')
             .noRecordsFound
                 .title No Records Found
                 p There was no record matching the query:
-                .query.showOnTablet(v-if='route.query?.access_group')
-                    span Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
-                    template(v-if='route.query.search_type === "user" && route.query?.table')
-                        br
-                        span Table: {{ route.query.table }}
-                    template(v-if='route.query?.subscription')
-                        br
-                        span Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
-                    template(v-if='route.query.search_type === "table" && route.query?.reference')
-                        br
-                        span Reference: {{ route.query.reference }}
-                    template(v-if='route.query?.index_name')
-                        br
-                        span Index: {{ route.query.index_type === 'string' ? '"' + route.query.index_value + '"' : route.query.index_value }} {{ route.query.index_condition }} [{{ route.query.index_name }}]
-                    template(v-if="route.query?.tag")
-                        br
-                        span Tag: {{ route.query.tag }}
 
         template(v-else-if="groupedRecordList && groupedRecordList[currentSelectedRecordBatch]")
             .recordWrapper
@@ -81,20 +50,8 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
                             div
                                 span.label UPLOADED: 
                                 span {{ dateFormat(r.uploaded) }}
-                                .recordWrapper.animationSkeleton.showOnTablet(v-if='searchResult === null')
-            .recordWrapper.animationSkeleton.showOnTablet(v-if="fetchingData")
-                .records.clickable(v-for="t in numberOfSkeletons()")
-                    div
-                        span.label &nbsp; 
-                        span &nbsp;
-                    div
-                        span.label &nbsp;
-                        span &nbsp;
-                    div
-                        span.label &nbsp;
-                        span &nbsp;
 
-            .paginator.hideOnTablet
+            .paginator
                 Icon.arrow(
                     :class="{active: currentSelectedRecordBatch || currentSelectedRecordPage}"
                     @click="()=>{ if(currentSelectedRecordPage) currentSelectedRecordPage--; else { currentSelectedRecordPage = numberOfPagePerBatch - 1; currentSelectedRecordBatch--; } }") left
@@ -257,14 +214,8 @@ function displayRecord(r) {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .recordPageHead {
     padding: 50px 0;
-
-    @media @tablet {
-        padding: 24px 0;
-    }
 }
 
 #recordSearch {
@@ -289,51 +240,6 @@ function displayRecord(r) {
     margin: 0;
     margin-top: 20px;
     padding: 24px 20px;
-
-    @media @tablet {
-        background-color: transparent;
-        border: none;
-        box-shadow: none;
-        border-radius: 0;
-        margin: 0;
-        padding: 0;
-
-        .recordWrapper {
-            margin: 0 !important;
-            border-radius: 0 !important;
-
-            .records {
-                border-radius: 0 !important;
-                padding-right: 16px !important;
-                padding-left: 16px !important;
-
-                div {
-                    &:not(:last-child) {
-                        margin-bottom: 2px !important;
-                    }
-
-                    margin-right: 0 !important;
-                    display: block;
-                }
-            }
-        }
-    }
-
-    @media @phone {
-        .recordWrapper {
-            .records {
-                div {
-                    &:not(:last-child) {
-                        margin-bottom: 4px !important;
-                    }
-
-                    span {
-                        display: block !important;
-                    }
-                }
-            }
-        }
-    }
 
     .searchPoints {
         padding-top: 16px;
@@ -376,10 +282,7 @@ function displayRecord(r) {
             flex-direction: column;
             font-size: 14px;
             padding: 16px 20px;
-
-            @media screen and (min-width: 945px) {
-                flex-direction: row;
-            }
+            flex-direction: row;
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -425,10 +328,6 @@ function displayRecord(r) {
         color: rgba(255, 255, 255, .4);
         align-items: center;
         text-align: center;
-
-        @media @tablet {        
-            padding: 60px 0 32px 0;
-        }
         
         .title {
             font-size: 28px;

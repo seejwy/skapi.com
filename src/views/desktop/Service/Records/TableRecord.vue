@@ -198,7 +198,6 @@ function displayRecord(r) {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .recordContainer {
     position: relative;
     margin: 0;
@@ -250,22 +249,6 @@ function displayRecord(r) {
             }
         }
     }
-
-    @media @phone {
-        .recordWrapper {
-            .records {
-                div {
-                    &:not(:last-child) {
-                        margin-bottom: 4px !important;
-                    }
-
-                    span {
-                        display: block !important;
-                    }
-                }
-            }
-        }
-    }  
     .noRecordsFound {
         text-align: center;
         border-radius: 0 0 8px 8px;

@@ -4,7 +4,6 @@ form(@submit.prevent="submitSearch")
     // navbar for mobile search
     SearchNavBar(v-if='viewport === "mobile" && route.name === "mobileSearchRecord"')
         template(v-slot:left)    
-            Icon.showOnTablet.clickable.backButton(@click="router.push({name: 'records'})") left
         sui-input(
             type="search"
             :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -18,7 +17,6 @@ form(@submit.prevent="submitSearch")
             
         template(v-slot:right) 
             sui-button(type="submit").icon-button  
-                Icon.showOnTablet.placeholder-icon search
 
     // mask clicker for closing advanced search
     .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='openAdvancedForm')
@@ -53,11 +51,6 @@ form(@submit.prevent="submitSearch")
             option(value="table" selected) Search By Table Name
             option(value="user") Search By User ID
             option(value="record") Search By Record ID
-
-    .toggle-advanced-form.showOnTablet(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
-        hr
-        span(:class="{'close': searchForm.isAdvanced }") Advanced Search
-        Icon.showOnTablet down2
 
     // advanced search
     .advanced-form(ref="advancedFormEl" v-if='searchForm.isAdvanced && searchForm.type !== "record"')

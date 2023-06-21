@@ -9,6 +9,7 @@
             template(v-if="secondsTillReady") Email has been sent
             template(v-else) Re-send Confirmation Email
 </template>
+
 <script setup>
 import { inject, ref } from 'vue';
 import { skapi } from '@/main';
@@ -54,20 +55,14 @@ async function resendSignupConfirmation() {
     }
 }
 </script>
-<style lang="less" scoped>
-@import '@/assets/variables.less';
 
+<style lang="less" scoped>
 .wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 60px 0;
     min-height: calc(100vh - 140px);
-
-    @media @tablet {
-        align-items: flex-start;
-        padding: 0;
-    }
 }
 .container {
     text-align: center;
@@ -80,15 +75,6 @@ async function resendSignupConfirmation() {
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     margin-top: 60px;
-
-    @media @tablet {
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-        border: none;
-        background: #FFF;
-        padding: 40px 0;
-    }
 
     & > * {
         width: 100%;

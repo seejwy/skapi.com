@@ -241,7 +241,7 @@
 							input(hidden :file-key="record.key" type="file" @change="e=>addFiles(e, recordIndex, index)" multiple :disabled="isSaving")
 							div
 								Icon attached
-								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR
+								span(style="margin-right: 6px;") Drag and Drop OR
 								sui-button.lineButton(@click.prevent.stop="" type="button") Upload
 							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
 								Icon warning

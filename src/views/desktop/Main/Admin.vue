@@ -46,6 +46,7 @@ div(v-else-if="state?.user")
         div.overlay
             FeedBackForm(@close="closeFeedBackWindow" @closeFeedBack="feedBackOpen=false; isOpen=true;")
 </template>
+
 <script setup>
 import { inject, ref, watch, nextTick, computed } from 'vue';
 import { state, skapi, awaitConnection } from '@/main';
@@ -215,8 +216,6 @@ watch(() => state.viewport, (viewport) => {
 </script>
     
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .container {
     &.empty {
         position: relative;
@@ -238,15 +237,6 @@ watch(() => state.viewport, (viewport) => {
         &,
         &.noService {
             height: 175.33px;
-
-            @media screen and (max-width: 825px) {
-                height: 156px;
-            }
-
-            @media @phone {
-                height: 123.33px;
-            }
-
         }
     }
 
@@ -260,12 +250,6 @@ watch(() => state.viewport, (viewport) => {
 
         &:hover {
             background: #8C8C8C;
-        }
-
-        @media @tablet {
-            &:hover {
-                background: #595959;
-            }
         }
 
         &:not(:last-child) {
@@ -296,18 +280,6 @@ watch(() => state.viewport, (viewport) => {
 
             .item {
                 width: 200px;
-            }
-
-            @media screen and (max-width: 825px) {
-
-                .item {
-                    display: flex;
-                    width: 100%;
-                }
-
-                .hide-mobile {
-                    display: none;
-                }
             }
 
             .title {
@@ -360,28 +332,6 @@ watch(() => state.viewport, (viewport) => {
 
         svg {
             color: #434343;
-        }
-    }
-}
-
-@media @tablet {
-    .container {
-        .service {
-            padding: 24px;
-
-            .name span {
-                font-size: 20px;
-            }
-
-            .details .item {
-
-                .title,
-                .value {
-                    display: inline-block;
-                    margin: 0 12px 0 0;
-                    vertical-align: middle;
-                }
-            }
         }
     }
 }
