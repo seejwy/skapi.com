@@ -49,9 +49,6 @@ const promiseRunning = ref(false);
 
 // set page title
 let pageTitle = inject('pageTitle');
-let appStyle = inject('appStyle');
-let viewport = inject('viewport');
-const currentBgColor = appStyle.background;
 
 onMounted(() => {
     if (document.body.classList.contains('admin')) {
@@ -62,7 +59,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    appStyle.background = currentBgColor;
     if (document.body.classList.contains('admin-login')) {
         document.body.classList.remove('admin-login');
         if (route.path.includes('/admin')) {
@@ -71,11 +67,8 @@ onBeforeUnmount(() => {
     }
 });
 
-if (state.viewport === 'mobile') {
-    appStyle.background = '#fff';
-}
-
 pageTitle.value = 'skapi';
+
 let form = reactive({
     email: '',
     password: ''

@@ -53,49 +53,19 @@ import { skapi } from '@/main';
 import { dateFormat, groupArray } from '@/helper/common'
 import { useRoute, useRouter } from 'vue-router';
 
-import RecordSearch from '@/components/recordSearch.vue';
-import ViewRecord from '@/components/viewRecord.vue';
+import ViewRecord from '@/views/desktop/Service/Records/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
 let viewRecord = ref(null);
-let navbarMobileRightButton = inject('navbarMobileRightButton');
 
 // record page has darker background in mobile mode
-let appStyle = inject('appStyle');
-let viewport = inject('viewport');
 let record = inject('recordToOpen');
 record.value = null;
 
-function adjustBackgroundColor(n) {
-    if (n === 'mobile') {
-        // remove padding for zebra list to extend to full width
-        appStyle.mainPadding = '0';
-        appStyle.background = '#333333';
-    } else {
-        appStyle.mainPadding = null;
-        appStyle.background = null;
-    }
-}
-
-watch(viewport, viewport => {
-    adjustBackgroundColor(viewport);
-    
-    if(viewport === 'desktop') {
-        router.replace({name: 'records'});
-    } else {
-        navbarMobileRightButton.value = {
-            type: 'none'
-        };
-    }
-}, {
-    immediate: true
-});
-
 // page title
-
 let pageTitle = inject('pageTitle');
 pageTitle.value = route.query.table;
 
@@ -109,15 +79,6 @@ function numberOfSkeletons() {
     // calculated by available vertical space
     return parseInt(window.innerHeight / 2 / 48);
 }
-
-function scrollEventMobile(event) {
-    if (viewport.value === 'mobile' && (window.document.documentElement.clientHeight + window.scrollY) >= document.body.offsetHeight - 60) {
-        // scrolled to bottom
-        fetchMoreRecords();
-    }
-}
-
-window.addEventListener('scroll', scrollEventMobile, { passive: true });
 
 onMounted(() => {
     if(searchResult.value) return;
@@ -140,14 +101,6 @@ onMounted(() => {
             };
             throw err;
         });
-});
-
-onBeforeUnmount(() => {
-    window.removeEventListener('scroll', scrollEventMobile, { passive: true });
-    // set padding to original value
-    appStyle.mainPadding = null;
-    appStyle.background = null;
-    navbarMobileRightButton.value = null;
 });
 
 let openRecord = ref(null);
@@ -182,17 +135,7 @@ async function fetchMoreRecords() {
 let recordToOpen = inject('recordToOpen');
 function displayRecord(r) {
     recordToOpen.value = r;
-    if (viewport.value === 'mobile') {
-        router.push({
-            name: 'mobileRecordView',
-            query: {
-                id: r.record_id
-            }
-        });
-    }
-    else {
-        openRecord.value.open();
-    }
+    openRecord.value.open();
 }
 
 </script>

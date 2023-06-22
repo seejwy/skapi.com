@@ -10,10 +10,10 @@
         a(href="https://docs.skapi.com/database" target="_blank")
             sui-button.lineButton(type="button") Find out More
 // search form
-RecordSearch#recordSearch.hideOnTablet
+RecordSearch#recordSearch
 
-sui-button.hideOnTablet(type="button" style='float:right;' @click='()=>addRecord()') + Add Record
-.hideOnTablet(style="clear:both;")
+sui-button(type="button" style='float:right;' @click='()=>addRecord()') + Add Record
+div(style="clear:both;")
 
 // record view
 sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
@@ -26,10 +26,10 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
         div.notClickable
             span Size
             span # of records
-        Icon.clickable.hideOnTablet(:class="{'animationRotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
+        Icon.clickable(:class="{'animationRotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
 
     // table list
-    template
+    template(v-if='recordTables !== null')
         .noRecords(v-if='!recordTables.list?.length')
             div
                 .title No Record Tables
@@ -41,15 +41,16 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
                     // when v-for by number, it starts with 1
                     template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
                         .tableWrapper(v-if="t.number_of_records")
-                            .tableHead.labelHead.clickable(@click='()=>{viewRecordList(t)}')
+                            .tableHead.labelHead.clickable(@click='()=>{t.opened = !t.opened;}')
                                 span {{ t.table }}
                                 div
                                     span {{getSize(t.size)}}
                                     span {{t.number_of_records}}
 
                                 template(v-if='t.records')
-                                    Icon.clickable(v-if="!t.opened") plus
-                                    Icon.clickable(v-else) minus
+                                    template
+                                        Icon.clickable(v-if="!t.opened") plus
+                                        Icon.clickable(v-else) minus
 
                                 Icon.animationRotation(v-else) refresh
 
@@ -73,7 +74,7 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
 
                                 .loadMore(v-if="!t.records.endOfList")
                                     Icon.animationRotation refresh
-                .paginator.hideOnTablet
+                .paginator
                     Icon.arrow(
                         :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
                         @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTableBatch) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
@@ -97,13 +98,13 @@ sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onMounted, onBeforeUnmount, provide } from 'vue';
+import { inject, ref, watch, computed, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
-import { getSize, dateFormat, groupArray } from '@/helper/common';
+import { getSize, dateFormat, groupArray } from '@/helper/common.js';
 import { useRoute, useRouter } from 'vue-router';
-import { tableList, recordTables, refreshTables, getMoreRecords } from '@/helper/records';
-import RecordSearch from '@/components/recordSearch.vue';
-import ViewRecord from '@/components/viewRecord.vue';
+import { tableList, recordTables, refreshTables, getMoreRecords } from '@/helper/records.js';
+import RecordSearch from '@/components/desktop/RecordSearch.vue';
+import ViewRecord from '@/views/desktop/Service/Records/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let openRecord = ref(null);
@@ -268,44 +269,10 @@ if (!recordTables.value) {
     getTables();
 }
 
-function numberOfSkeletons() {
-    // calculated by available vertical space
-    return parseInt((window.innerHeight / 2) / 48);
-}
-
-let viewport = inject('viewport');
-function viewRecordList(t) {
-    if (viewport.value === 'mobile') {
-        searchResult.value = t.records;
-        router.push(`/admin/${serviceId}/records/list?table=${t.table}`);
-    }
-    else {
-        t.opened = !t.opened;
-    }
-}
-
-// watchers
-let appStyle = inject('appStyle');
-
 const close = async () => {
     await state.blockingPromise;
     viewRecord.value.close();
 }
-
-watch(() => state.viewport, viewport => {
-    if (viewport === 'mobile') {
-        pageTitle.value = 'Records';
-    } else {
-        pageTitle.value = `Service "${service.value.name}"`;
-    }
-
-    // close opened table on viewport change
-    if (groupedTableList.value) {
-        for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
-            t.opened = false;
-        }
-    }
-}, { immediate: true });
 
 watch(currentSelectedTablePage, n => {
     // close opened table on page change
@@ -329,23 +296,9 @@ watch(currentSelectedTableBatch, n => {
 
 document.body.classList.add('table');
 
-function scrollEventMobile(event) {
-    if (viewport.value === 'mobile' && (window.document.documentElement.clientHeight + window.scrollY) >= document.body.offsetHeight - 60) {
-        // scrolled to bottom
-        getMoreTables();
-    }
-}
-
-window.addEventListener('scroll', scrollEventMobile, { passive: true });
-
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
-    window.removeEventListener('scroll', scrollEventMobile, { passive: true });
-    // set padding to original value
-    appStyle.mainPadding = null;
-    appStyle.background = null;
 });
-
 </script>
 
 <style lang="less" scoped>
@@ -400,13 +353,6 @@ onBeforeUnmount(() => {
     margin: 24px 0 0 0;
     padding: 24px 20px;
 
-    @media @tablet {
-        box-shadow: none;
-        padding: 0;
-        background-color: transparent;
-        border: none;
-    }
-
     svg {
         color: white;
     }
@@ -434,10 +380,7 @@ onBeforeUnmount(() => {
             justify-content: space-between;
             font-size: 14px;
             padding: 16px 20px;
-
-            @media screen and (min-width: 945px) {
-                flex-direction: row;
-            }
+            flex-direction: row;
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -487,10 +430,6 @@ onBeforeUnmount(() => {
             display: inline-block;
             text-overflow: ellipsis;
             overflow: hidden;
-
-            @media @tablet {
-                padding-right: 0.5em;
-            }
         }
 
         &>div {
@@ -502,10 +441,6 @@ onBeforeUnmount(() => {
                 width: 50%;
                 white-space: nowrap;
                 padding-right: 1em;
-
-                @media @tablet {
-                    padding-right: 0.5em;
-                }
             }
         }
     }

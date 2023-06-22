@@ -53,7 +53,7 @@ import { state, skapi, awaitConnection } from '@/main';
 import { dateFormat, localeName } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
-import NewService from '@/components/NewService.vue';
+import NewService from '@/components/desktop/NewService.vue';
 import FeedBackForm from '@/views/desktop/Main/FeedBackForm.vue';
 import Icon from '@/components/Icon.vue';
 
@@ -146,16 +146,6 @@ const NewServiceConditions = async () => {
 
 }
 
-const openNewServiceWindow = () => {
-    if (state.viewport === 'mobile') router.push('?new=service');
-    else newServiceWindow.value.open();
-}
-
-const openFeedBackWindow = () => {
-    if (state.viewport === 'mobile') router.push('?new=feedback');
-    else feedBackWindow.value.open();
-}
-
 async function getServices(gs) {
     if (!(gs instanceof Promise) || !state.user) {
         return;
@@ -186,33 +176,29 @@ getServices(state.getServices);
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
 watch(() => isOpen.value, async () => {
-    if (state.viewport === 'desktop') {
-        await nextTick();
-        if (isOpen.value) {
-            openNewServiceWindow();
-        }
+    await nextTick();
+    if (isOpen.value) {
+        newServiceWindow.value.open();
     }
 });
-watch(() => state.viewport, (viewport) => {
-    if (viewport === 'desktop') {
-        isOpen.value = false;
-        router.replace('/admin');
-    }
-});
+// watch(() => state.viewport, (viewport) => {
+//     if (viewport === 'desktop') {
+//         isOpen.value = false;
+//         router.replace('/admin');
+//     }
+// });
 watch(() => feedBackOpen.value, async () => {
-    if (state.viewport === 'desktop') {
-        await nextTick();
-        if (feedBackOpen.value) {
-            openFeedBackWindow();
-        }
+    await nextTick();
+    if (feedBackOpen.value) {
+        feedBackWindow.value.open();
     }
 });
-watch(() => state.viewport, (viewport) => {
-    if (viewport === 'desktop') {
-        feedBackOpen.value = false;
-        router.replace('/admin');
-    }
-});
+// watch(() => state.viewport, (viewport) => {
+//     if (viewport === 'desktop') {
+//         feedBackOpen.value = false;
+//         router.replace('/admin');
+//     }
+// });
 </script>
     
 <style lang="less" scoped>

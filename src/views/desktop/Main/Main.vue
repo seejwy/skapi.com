@@ -70,7 +70,6 @@ import { skapi, state, awaitConnection } from '@/main';
 import Login from './Login.vue';
 let router = useRouter();
 let route = useRoute();
-let appStyle = inject('appStyle');
 const overlay = ref(null);
 
 let pageTitle = inject('pageTitle');

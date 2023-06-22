@@ -63,9 +63,7 @@ import { useRoute, useRouter } from 'vue-router';
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
-let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
-let navbarMobileRightButton = inject('navbarMobileRightButton');
 
 let router = useRouter();
 const emit = defineEmits(['closeFeedBack']);
@@ -76,10 +74,7 @@ let step = ref(1);
 let idx = 0;
 
 onBeforeUnmount(() => {
-    appStyle.background = null;
-    appStyle.navBackground = '#293fe6';
     pageTitle.value = 'skapi';
-    navbarMobileRightButton.value = null;
 });
 
 

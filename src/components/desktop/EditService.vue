@@ -1,11 +1,11 @@
 <template lang="pug">
-.overlay-container(v-if="service" :loading="isDisabled || null")
+.overlayContainer(v-if="service" :loading="isDisabled || null")
     form(@submit.prevent="save" @keydown.enter.prevent="" action="")
-        .overlay-container-title.hideOnTablet Service Setting
+        .overlayContainerTitle Service Setting
         .toggle(style="margin-bottom: 40px")
             span Enable/Disable
-            .toggle-bar 
-                .toggle-ball(@click="toggle" :class="{'active': serviceStatus > 0 }")
+            .toggleBar
+                .toggleBall(@click="toggle" :class="{'active': serviceStatus > 0 }")
         .input
             label Name of Service
             sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
@@ -15,8 +15,8 @@
         .input(style="margin-bottom: 40px;")
             label API Key
             sui-input(type="text" :value="apiKey" @input="(e) => apiKey = e.target.value")
-        sui-button.text-button(v-if="state.viewport !== 'mobile'" type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
-        SubmitButton(v-if="state.viewport !== 'mobile'" :loading="isDisabled") Save
+        sui-button.textButton(type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
+        SubmitButton(:loading="isDisabled") Save
 sui-overlay(ref="disableConfirmOverlay")
     .popup
         .title
@@ -27,8 +27,8 @@ sui-overlay(ref="disableConfirmOverlay")
             p(v-if="service?.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
-            sui-button.text-button(type="button" @click="rejectDisable") No 
-            sui-button.text-button(type="button" @click="confirmDisable") Yes
+            sui-button.textButton(type="button" @click="rejectDisable") No 
+            sui-button.textButton(type="button" @click="confirmDisable") Yes
 sui-overlay(ref="disableErrorOverlay")
     .popup
         .title
@@ -36,25 +36,23 @@ sui-overlay(ref="disableErrorOverlay")
             div Something went wrong!
         .body {{ errorMessage }}
         .foot
-            sui-button.line-button(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
+            sui-button.lineButton(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, onBeforeUnmount } from 'vue';
+import { inject, ref, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
-import Icon from './Icon.vue';
-import SubmitButton from './SubmitButton.vue';
+import Icon from '@/components/Icon.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 
 const emit = defineEmits(['close']);
 
 let route = useRoute();
 let router = useRouter();
-let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let service = inject('service');
-let navbarMobileRightButton = inject('navbarMobileRightButton');
 let navbarBackDestination = inject('navbarBackDestination');
 let isDisabled = ref(false);
 const serviceStatus = ref(0);
@@ -70,23 +68,6 @@ cors.value = service.value.cors;
 apiKey.value = service.value.api_key;
 serviceStatus.value = service.value.active;
 
-const buttonCallback = async () => {
-    navbarMobileRightButton.value = {
-        type: 'icon',
-        val: 'loading',
-        cssClass: 'animation-rotation--slow-in-out'
-    };
-    try {
-        await save();
-    } finally {
-        navbarMobileRightButton.value = {
-            type: 'text',
-            val: 'Save',
-            callback: buttonCallback
-        };
-    }
-}
-
 const validateCors = (event) => {
     let isValid = true;
     cors.value.split(',').forEach(url => {
@@ -96,10 +77,10 @@ const validateCors = (event) => {
     });
 
     if(isValid) {
-        event.target.setCustomValidity('');
+		event.target.setCustomValidity('');
     } else {
-        event.target.setCustomValidity('Invalid CORS');
-        event.target.reportValidity();
+		event.target.setCustomValidity('Invalid CORS');
+		event.target.reportValidity();
     }
 }
 
@@ -112,12 +93,7 @@ let confirmDisable = () => {
     state.blockingPromise = new Promise(async res => {
         disableConfirmOverlay.value.close();
         let oldStatus = service.value.active === 0 ? 0 : 1;
-        
-        navbarMobileRightButton.value = {
-            type: 'icon',
-            val: 'loading',
-            cssClass: 'animation-rotation--slow-in-out'
-        };
+    
         try {
             if(service.value.active > 0) {
                 service.value.active = 0;
@@ -132,12 +108,6 @@ let confirmDisable = () => {
             errorMessage.value = "Unable to toggle service status at this point.";
             disableErrorOverlay.value.open();
             console.error(e);
-        } finally {
-            navbarMobileRightButton.value = {
-                type: 'text',
-                val: 'Save',
-                callback: buttonCallback
-            };
         }
         isDisabled.value = false;
         res();
@@ -191,39 +161,15 @@ const toggle = () => {
     serviceStatus.value > 0 ? serviceStatus.value = 0 : serviceStatus.value = 1;
 }
 
-if(state.viewport === 'mobile') {
-    pageTitle.value = 'Service Setting'
-    appStyle.background = '#333333';
-    appStyle.navBackground = '#505050';
-    navbarBackDestination.value = function() {
-        router.push(`/admin/${service.value.service}`);
-    }
-
-    navbarMobileRightButton.value = {
-        type: 'text',
-        val: 'Save',
-        callback: buttonCallback
-    };
-}
-
-watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop') {
-        router.replace({query: null});
-    }
-})
-
 onBeforeUnmount(() => {
-    appStyle.background = null;
-    appStyle.navBackground = '#293fe6';
     pageTitle.value = `Service "${service.value.name}"`;
-    navbarMobileRightButton.value = null;
     navbarBackDestination.value = null;
 });
+
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-.overlay-container {
+.overlayContainer {
     background-color: #505050;
     border: 1px solid #808080;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
@@ -234,7 +180,7 @@ onBeforeUnmount(() => {
     max-width: 100%;
     border-radius: 8px;
 
-    &-title {
+    &Title {
         font-weight: bold;
         font-size: 28px;
         margin-bottom: 40px;
@@ -254,16 +200,6 @@ onBeforeUnmount(() => {
             width: 100%;
         }
     }
-    @media @tablet {
-        width: 100%;
-        max-width: unset;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-        padding: 0;
-        margin-top: var(--head-space);
-    }
 }
 .toggle {
     width: 100%;
@@ -273,7 +209,7 @@ onBeforeUnmount(() => {
     font-weight: bold;
     color: rgba(255, 255, 255, .6);
 
-    &-bar {
+    &Bar {
         position: relative;
         height: 8px;
         width: 40px;
@@ -283,7 +219,7 @@ onBeforeUnmount(() => {
         border-radius: 2px;
         margin-right: 10px;
     }
-    &-ball {
+    &Ball {
         position: absolute;
         cursor: pointer;
         height: 20px;
@@ -300,15 +236,6 @@ onBeforeUnmount(() => {
             left: calc(100% - 10px);
             background: #5AD858;
         }
-    }
-}
-.delete-button {
-    padding: 0;
-    margin-top: 4px;
-    color: rgba(255, 255, 255, 0.85);
-
-    &:hover {
-        background-color: transparent;
     }
 }
 

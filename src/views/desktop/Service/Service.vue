@@ -102,7 +102,7 @@ import { state, skapi } from '@/main';
 import { localeName, dateFormat, getSize } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
-import EditService from '@/components/EditService.vue';
+import EditService from '@/components/desktop/EditService.vue';
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
@@ -387,7 +387,7 @@ watch(() => state.viewport, () => {
         
         @media @phone {
         // @media screen and (max-width: 520px) {
-            &.span-2 {
+            &.span2 {
                 grid-column: span 2;
             }
         }
@@ -411,7 +411,7 @@ watch(() => state.viewport, () => {
             color: rgba(255, 255, 255, 0.85);
         }
 
-        &.span-2 {
+        &.span2 {
             grid-column: span 2;
         }
     }
@@ -427,7 +427,7 @@ watch(() => state.viewport, () => {
     @media @phone {
         grid-template-columns: repeat(1, 1fr);
         &Item {
-            &.span-2 {
+            &.span2 {
                 grid-column: span 1;
             }
         }

@@ -1,5 +1,5 @@
 <template lang="pug">
-.mobileSearchNav
+.mobile-search-nav
     slot(name="left")
     div(style="width: 100%;")
         slot
@@ -19,7 +19,7 @@ onUnmounted(() => {
 <style lang="less">
 @import '@/assets/variables.less';
 
-.mobileSearchNav {
+.mobile-search-nav {
     position: sticky;
     top: 0;
     height: 60px;
@@ -41,7 +41,7 @@ onUnmounted(() => {
         box-shadow: 0px 2px 0 0 rgba(0, 0, 0, 0.2);
     }
 
-    .backButton {
+    .back-button {
         display: inline;
         height: 32px;
         width: 32px;

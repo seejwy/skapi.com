@@ -51,7 +51,7 @@ div(v-for="pageType in pages" :class="pageType" ref="container")
         SubmitButton(disabled @click="test") Submit
         SubmitButton(loading @click="test") Submit
         br
-        sui-button.icon-button 
+        sui-button.iconButton 
     br
     sui-select
         option(value="hello") Hello

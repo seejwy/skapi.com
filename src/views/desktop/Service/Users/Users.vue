@@ -47,12 +47,12 @@
                         @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
                         :inputmode="searchParams.searchFor === 'email' ? searchParams.searchFor : null"
                         required)
-                .selectField(v-if="searchParams.searchFor === 'timestamp'")
+                .select-field(v-if="searchParams.searchFor === 'timestamp'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
                         option(value=">=") &gt;=
                         option(value="<=") &lt;=
                         option(value="=") =
-                .selectField(v-else-if="searchParams.searchFor === 'birthdate'")
+                .select-field(v-else-if="searchParams.searchFor === 'birthdate'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
                         option(value=">") &gt;
                         option(value="<") &lt;
@@ -67,20 +67,20 @@
     .actions
         sui-button.textButton(type="button" @click="blockUsers" :disabled="((selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon block
-            span.hideWhenPreTablet block
+            span block
         sui-button.textButton(type="button" @click="unblockUsers" :disabled="((selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon unblock
-            span.hideWhenPreTablet unblock
+            span unblock
         sui-button.textButton(type="button" @click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon trash
-            span.hideWhenPreTablet delete
+            span delete
 .tableOuterWrapper(:loading="promiseRunning || null")
     .searchQuery(v-if="route.query.search")
         span Result of {{ visibleFields[route.query.search].text }} : "{{ route.query.value }}" {{ route.query.condition }}
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
-    .tableActions(v-if="!route.query.search || fetchingData" :class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
+    .tableActions(v-if="!route.query.search || fetchingData" :class="{'roundedBorder' : !groupedUserList?.length && fetchingData}")
         .headerActionsBefore(v-if="showSetting" @click="toggleSetting(false)")
         .headerActions(v-if="!route.query.search || groupedUserList?.length" @click="toggleSetting(true)")
             div.dropdown
@@ -105,30 +105,30 @@
                     th(v-for="key in computedVisibleFields" :class="{'iconTd': key === 'block' || key === 'status', 'userId': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
             tbody(v-if="groupedUserList?.length")
-                template
-                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']" :id="user['user_id']")
-                        td
-                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                        td(v-for="(key, index) in computedVisibleFields" :class="{'iconTd' : key === 'block' || key === 'status'}") 
-                            template(v-if="key === 'approved'")
-                                Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
-                                Icon(v-else) unblock
-                            template(v-else-if="key === 'group'")                     
-                                Icon(v-if="user[key] > 0") check_circle
-                                Icon(v-else) x
-                            template(v-else-if="key === 'access_group'")
-                                span(v-if="user['group'] === 99") Admin
-                                span(v-else) User
-                            template(v-else-if="key === 'timestamp'")
-                                span {{ dateFormat(user[key]) }}
-                            template(v-else) {{ user[key] || '-' }}
+                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']" :id="user['user_id']")
+                    td
+                        sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                    td(v-for="(key, index) in computedVisibleFields" :class="{'iconTd' : key === 'block' || key === 'status'}") 
+                        template(v-if="key === 'approved'")
+                            Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
+                            Icon(v-else) unblock
+                        template(v-else-if="key === 'group'")                     
+                            Icon(v-if="user[key] > 0") check_circle
+                            Icon(v-else) x
+                        template(v-else-if="key === 'access_group'")
+                            span(v-if="user['group'] === 99") Admin
+                            span(v-else) User
+                        template(v-else-if="key === 'timestamp'")
+                            span {{ dateFormat(user[key]) }}
+                        template(v-else) {{ user[key] || '-' }}
+                    td(v-if="computedVisibleFields.length <= 2")
+                //- Below code needs to change to page list not full users list
+                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                    tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                        td  
+                        td(v-for="(key, index) in computedVisibleFields")
                         td(v-if="computedVisibleFields.length <= 2")
-                    //- Below code needs to change to page list not full users list
-                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
-                            td  
-                            td(v-for="(key, index) in computedVisibleFields")
-                            td(v-if="computedVisibleFields.length <= 2")
+                    
     .noUsersFound(v-if="!groupedUserList?.length && !fetchingData")
         template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
@@ -136,7 +136,7 @@
         template(v-else) 
             .title No Users Found
             p There were no users matching the query.
-    .paginator(v-if="groupedUserList?.length")
+    .paginator.hideOnTablet(v-if="groupedUserList?.length")
         Icon(
             :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
             @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
@@ -159,10 +159,6 @@
             @click="() => { if(!isLastPage) currentSelectedUsersPage++; else if(isLastPage && !isLastBatch) { currentSelectedUsersBatch++; currentSelectedUsersPage = 0;} else if(isLastBatch && !isEndOfList) getMoreUsers() }"
             ) right
 
-    Transition
-        div(v-if="isFabOpen" @click.stop)
-            sui-button.fab(type="button" @click="router.push({name: 'mobileSearchUser'})")
-                Icon search
 sui-overlay(ref="confirmOverlay")
     .popup
         .title
@@ -176,16 +172,14 @@ sui-overlay(ref="confirmOverlay")
             sui-button.text-button(type="button") No 
             sui-button.text-button(type="button") Yes
 </template>
-
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
 import { changeSearchCondition, getValidationMessage, placeholder } from '@/helper/users';
 import { skapi, state } from '@/main';
-import { dateFormat, groupArray } from '@/helper/common'
+import { groupArray, dateFormat } from '@/helper/common';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
-import SearchNavBar from '@/components/SearchNavBar.vue';
 
 const viewport = inject('viewport');
 let route = useRoute();
@@ -374,11 +368,13 @@ const callSearch = () => {
         };
     });
 }
+const mobileVisibleField = ref('user_id');
 
 let showSetting = ref(false);
 
 const computedVisibleFields = computed(() => {
-    return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
+    if(viewport.value === 'desktop') return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
+    return [mobileVisibleField.value];
 });
 const selectedBlockedUsers = ref([]);
 const selectedUnblockedUsers = ref([]);
@@ -473,6 +469,12 @@ async function getMoreUsers() {
     currentSelectedUsersBatch.value++;
     currentSelectedUsersPage.value = 0;
     fetchingData.value = false;
+}
+
+const mobileScrollHandler = (e) => {
+    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+        getMoreUsers();
+    }
 }
 
 function getUsers(refresh = false) {
@@ -659,7 +661,7 @@ onMounted(() => {
         }
     }
 
-    // window.addEventListener('scroll', mobileScrollHandler, { passive: true });
+    window.addEventListener('scroll', mobileScrollHandler, { passive: true });
     toggleMobileDesktopSearchView();
 });
 
@@ -696,7 +698,7 @@ watch(() => route.query, () => {
 document.body.classList.add('table');
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
-    // window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
+    window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
 });
 
 onBeforeRouteLeave((to, from) => {
@@ -705,7 +707,6 @@ onBeforeRouteLeave((to, from) => {
     }
 });
 </script>
-
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 .actionsWrapper {
@@ -720,6 +721,10 @@ onBeforeRouteLeave((to, from) => {
             display: inline-block;
             margin-left: 16px;
             padding: 9px 12px;
+
+            @media @tablet {
+                margin-left: 0;
+            }
         }
 
         svg {
@@ -818,7 +823,7 @@ onBeforeRouteLeave((to, from) => {
             cursor: pointer;
         }
 
-        &.rounded-border {
+        &.roundedBorder {
             border-radius: 8px;
         }
 

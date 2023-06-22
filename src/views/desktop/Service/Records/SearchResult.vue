@@ -1,5 +1,5 @@
 <template lang="pug">
-.pageHeader.headSpaceHelper 
+.pageHeader.headSpaceHelper.hideOnTablet 
     h1 Record
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
@@ -7,21 +7,22 @@
             sui-button.lineButton(type="button") Read Doc
 
 // search form
-RecordSearch#recordSearch(style="clear:both;")
+RecordSearch#recordSearch.hideOnTablet
+.hideOnTablet(style="clear:both;")
 
 sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 / 60%)")
     .viewRecordOverlay
         ViewRecord(v-if="recordToOpen" :record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
 .recordContainer#dataContainer
-    .header
+    .header.hideOnTablet
         span.notClickable(v-html="searchTitle")
         Icon.notClickable.animationRotation(style='opacity:0.6;' v-if="fetchingData") refresh
         .clickable(v-else @click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'records'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
 
-    .searchPoints(v-if="route.query?.access_group")
+    .searchPoints.hideOnTablet(v-if="route.query?.access_group")
         span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
         span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
         span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
@@ -29,11 +30,28 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
         span(v-if='route.query?.index_name') Index Value: [ {{ route.query.index_type }} ] {{ route.query.index_condition }} {{ route.query.index_value }}
         span(v-if="route.query?.tag") Tag: {{ route.query.tag }}
 
-    template(v-else)
+    template(v-if='searchResult !== null')
         div(v-if='!searchResult.list.length')
             .noRecordsFound
                 .title No Records Found
                 p There was no record matching the query:
+                .query.showOnTablet(v-if='route.query?.access_group')
+                    span Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
+                    template(v-if='route.query.search_type === "user" && route.query?.table')
+                        br
+                        span Table: {{ route.query.table }}
+                    template(v-if='route.query?.subscription')
+                        br
+                        span Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
+                    template(v-if='route.query.search_type === "table" && route.query?.reference')
+                        br
+                        span Reference: {{ route.query.reference }}
+                    template(v-if='route.query?.index_name')
+                        br
+                        span Index: {{ route.query.index_type === 'string' ? '"' + route.query.index_value + '"' : route.query.index_value }} {{ route.query.index_condition }} [{{ route.query.index_name }}]
+                    template(v-if="route.query?.tag")
+                        br
+                        span Tag: {{ route.query.tag }}
 
         template(v-else-if="groupedRecordList && groupedRecordList[currentSelectedRecordBatch]")
             .recordWrapper
@@ -50,8 +68,9 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
                             div
                                 span.label UPLOADED: 
                                 span {{ dateFormat(r.uploaded) }}
+                                .recordWrapper.animation-skeleton.showOnTablet(v-if='searchResult === null')
 
-            .paginator
+            .paginator.hideOnTablet
                 Icon.arrow(
                     :class="{active: currentSelectedRecordBatch || currentSelectedRecordPage}"
                     @click="()=>{ if(currentSelectedRecordPage) currentSelectedRecordPage--; else { currentSelectedRecordPage = numberOfPagePerBatch - 1; currentSelectedRecordBatch--; } }") left
@@ -77,12 +96,11 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
 <script setup>
 import { inject, ref, watch, computed, nextTick, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
-import { dateFormat, groupArray } from '@/helper/common'
+import { dateFormat, groupArray } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
-import SearchNavBar from '@/components/SearchNavBar.vue';
-import RecordSearch from '@/components/recordSearch.vue';
-import ViewRecord from '@/components/viewRecord.vue';
+import RecordSearch from '@/components/desktop/RecordSearch.vue';
+import ViewRecord from '@/views/desktop/Service/Records/viewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
@@ -91,21 +109,9 @@ let serviceId = route.params.service;
 let viewRecord = ref(null);
 
 // record page has darker background in mobile mode
-let appStyle = inject('appStyle');
 let viewport = inject('viewport');
 let record = inject('recordToOpen');
 record.value = null;
-
-function adjustBackgroundColor(n) {
-    appStyle.mainPadding = null;
-    appStyle.background = null;
-}
-
-watch(viewport, n => {
-    adjustBackgroundColor(n);
-}, {
-    immediate: true
-});
 
 // flag
 let fetchingData = inject('fetchingData');
@@ -152,7 +158,7 @@ watch(currentSelectedRecordPage, n => {
         t.opened = false;
     }
     nextTick(() => {
-        window.document.getElementById('dataContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
 
@@ -160,12 +166,6 @@ function numberOfSkeletons() {
     // calculated by available vertical space
     return parseInt(window.innerHeight / 2 / 48);
 }
-
-onBeforeUnmount(() => {
-    // set padding to original value
-    appStyle.mainPadding = null;
-    appStyle.background = null;
-});
 
 let openRecord = ref(null);
 
