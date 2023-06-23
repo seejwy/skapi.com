@@ -181,24 +181,12 @@ watch(() => isOpen.value, async () => {
         newServiceWindow.value.open();
     }
 });
-// watch(() => state.viewport, (viewport) => {
-//     if (viewport === 'desktop') {
-//         isOpen.value = false;
-//         router.replace('/admin');
-//     }
-// });
 watch(() => feedBackOpen.value, async () => {
     await nextTick();
     if (feedBackOpen.value) {
         feedBackWindow.value.open();
     }
 });
-// watch(() => state.viewport, (viewport) => {
-//     if (viewport === 'desktop') {
-//         feedBackOpen.value = false;
-//         router.replace('/admin');
-//     }
-// });
 </script>
     
 <style lang="less" scoped>

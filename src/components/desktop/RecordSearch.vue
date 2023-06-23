@@ -409,8 +409,6 @@ watch(() => route.query, n => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 form {
     .inputField.search {
         display: flex;

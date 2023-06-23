@@ -19,14 +19,13 @@
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
-
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
             Login(v-else-if="!state.user")
     .sidebarHzolder(v-if="state.user")
         .sidebar
             img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
-            img.hover-logo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
+            img.hoverLogo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
 
             router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
                 Icon home
@@ -53,7 +52,6 @@ Transition(name="toast")
 </template>
 
 <style lang="less">
-@import '@/assets/variables.less';
 .servicePageShell {
     display: flex;
     flex-direction: row-reverse;
@@ -92,7 +90,7 @@ Transition(name="toast")
             cursor: pointer;
         }
 
-        & .hover-logo {
+        & .hoverLogo {
             display: none;
             cursor: pointer;
         }
@@ -135,7 +133,7 @@ Transition(name="toast")
             .logo {
                 display: none;
             }
-            .hover-logo {
+            .hoverLogo {
                 display: block;
                 height: 35px;
                 margin: 14px 14px 11px 14px;

@@ -96,6 +96,7 @@ sui-overlay(ref="deleteErrorOverlay")
         .foot
             sui-button.lineButton(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
+
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
 import { state, skapi } from '@/main';
@@ -255,8 +256,8 @@ watch(() => state.viewport, () => {
     if(isEdit.value) isEdit.value = false;
 });
 </script>
+
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .container {
     margin: 0 0 40px 0;
 
@@ -286,10 +287,6 @@ watch(() => state.viewport, () => {
         font-size: 24px;
         margin-bottom: 50px;
         font-weight: bold;
-
-        @media @tablet {        
-            margin-bottom: 28px;
-        }
     }
 
     p {
@@ -333,24 +330,6 @@ watch(() => state.viewport, () => {
         }
     }
 
-    @media @tablet {    
-        margin: 40px 0 0;
-        border-radius: 0;
-
-        &:first-child {
-            margin-top: 0;
-        }
-
-        .innerContainer {    
-            padding: 20px;
-
-            &.services {
-                padding: 0;
-                background-color: transparent;
-            }
-        }
-    }
-
     &:last-child {
         margin-bottom: 0;
     }
@@ -361,14 +340,6 @@ watch(() => state.viewport, () => {
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 20px;
     row-gap: 28px;
-
-    @media @tablet {   
-        grid-template-columns: 1fr 1fr;
-    }
-
-    @media @phone {
-        grid-template-columns: 1fr;
-    }
 
     &Item {
         min-width: 0;
@@ -384,14 +355,6 @@ watch(() => state.viewport, () => {
             color: rgba(255, 255, 255, 0.85);
             word-break: break-all;
         }
-        
-        @media @phone {
-        // @media screen and (max-width: 520px) {
-            &.span2 {
-                grid-column: span 2;
-            }
-        }
-
     }
 }
 
@@ -413,23 +376,6 @@ watch(() => state.viewport, () => {
 
         &.span2 {
             grid-column: span 2;
-        }
-    }
-
-    @media screen and (max-width: 980px) {    
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    @media screen and (max-width: 730px) {    
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media @phone {
-        grid-template-columns: repeat(1, 1fr);
-        &Item {
-            &.span2 {
-                grid-column: span 1;
-            }
         }
     }
 }
@@ -466,42 +412,13 @@ watch(() => state.viewport, () => {
             align-self: flex-end;
             justify-self: flex-end;
         }
-    }
-
-    @media screen and (max-width: 1000px) {
-        grid-template-columns: repeat(2, calc(50% - 6px));
-        &Item {
-            &.actions {
-                grid-column: span 2;
-                align-self: flex-end;
-                justify-self: flex-end;
-            }
-        }
-    }
-
-    @media @phone {
-        display: flex;
-        flex-direction: column;
-
-        &Item {
-            &.actions {         
-                grid-column: span 2;
-                justify-self: flex-end;
-            }
-        }
-    }
-
-    
+    }  
 }
 
 .serviceGrid {
     display: flex;
     justify-content: space-between;
     gap: 20px;
-
-    @media screen and (max-width: 825px) {
-        flex-direction: column;
-    }
 
     &Item {
         display: flex;
@@ -546,22 +463,6 @@ watch(() => state.viewport, () => {
         color: rgba(255, 255, 255, 0.85);
         font-size: 14px;
         text-decoration: none;
-    }
-
-    @media screen and (max-width: 940px) {
-        flex-direction: column;
-        gap: 20px;
-
-        &Item { 
-            border-radius: 12px;
-        }
-    }
-
-    @media @tablet {
-        &Item {
-            padding: 24px;
-            background: #434343;
-        }
     }
 }
 sui-tooltip {

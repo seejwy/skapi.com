@@ -105,7 +105,6 @@ let questionsError = ref({
 })
 const page = ref('signup');
 let step = ref(1);
-const secondsTillReady = ref(null);
 const promiseRunning = ref(false);
 const passwordField = ref(null);
 const confirmPasswordField = ref(null);

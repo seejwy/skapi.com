@@ -1,5 +1,5 @@
 <template lang="pug">
-.pageHeader.headSpaceHelper(v-if="!route.query.search")
+.pageHeader.headSpaceHelper
     h1 Users
     p.
         Users are individuals who have successfully created an account and logged in at least once. 
@@ -47,12 +47,12 @@
                         @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
                         :inputmode="searchParams.searchFor === 'email' ? searchParams.searchFor : null"
                         required)
-                .select-field(v-if="searchParams.searchFor === 'timestamp'")
+                .selectField(v-if="searchParams.searchFor === 'timestamp'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
                         option(value=">=") &gt;=
                         option(value="<=") &lt;=
                         option(value="=") =
-                .select-field(v-else-if="searchParams.searchFor === 'birthdate'")
+                .selectField(v-else-if="searchParams.searchFor === 'birthdate'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
                         option(value=">") &gt;
                         option(value="<") &lt;
@@ -86,13 +86,12 @@
             div.dropdown
                 span Headers
                 Icon down2
-            template
-                .filterWrapper
-                    .filter(ref="filterEl" v-if="showSetting")
-                        .label(v-for="(field, key) in visibleFields")
-                            label
-                                sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
-                                span {{  field.text }}
+            .filterWrapper
+                .filter(ref="filterEl" v-if="showSetting")
+                    .label(v-for="(field, key) in visibleFields")
+                        label
+                            sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show" :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
+                            span {{  field.text }}
         .headerActions(v-else)
         Icon.refresh(v-if="!route.query.search || fetchingData" :class="{'animationRotation': fetchingData}" @click="getUsers") refresh
 
@@ -128,7 +127,7 @@
                         td  
                         td(v-for="(key, index) in computedVisibleFields")
                         td(v-if="computedVisibleFields.length <= 2")
-                    
+
     .noUsersFound(v-if="!groupedUserList?.length && !fetchingData")
         template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
@@ -169,8 +168,8 @@ sui-overlay(ref="confirmOverlay")
         .body 
             p Do you wish to continue?
         .foot
-            sui-button.text-button(type="button") No 
-            sui-button.text-button(type="button") Yes
+            sui-button.textButton(type="button") No 
+            sui-button.textButton(type="button") Yes
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
@@ -180,6 +179,7 @@ import { groupArray, dateFormat } from '@/helper/common';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
+import SearchNavBar from '@/components/SearchNavBar.vue';
 
 const viewport = inject('viewport');
 let route = useRoute();
@@ -193,8 +193,6 @@ let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
-const appStyle = inject('appStyle');
-const mobilePageTitle = ref('');
 const filterEl = ref(null);
 
 const currentSelectedUsersBatch = ref(0);
@@ -203,11 +201,11 @@ const currentSelectedUsersPage = ref(0);
 const visibleFields = reactive({
     approved: {
         text: 'Block',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     group: {
         text: 'Active',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     access_group: {
         text: 'Access',
@@ -219,11 +217,11 @@ const visibleFields = reactive({
     },
     name: {
         text: 'Name',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     email: {
         text: 'Email',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     address: {
         text: 'Address',
@@ -368,13 +366,11 @@ const callSearch = () => {
         };
     });
 }
-const mobileVisibleField = ref('user_id');
 
 let showSetting = ref(false);
 
 const computedVisibleFields = computed(() => {
-    if(viewport.value === 'desktop') return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
-    return [mobileVisibleField.value];
+    return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
 });
 const selectedBlockedUsers = ref([]);
 const selectedUnblockedUsers = ref([]);
@@ -471,12 +467,6 @@ async function getMoreUsers() {
     fetchingData.value = false;
 }
 
-const mobileScrollHandler = (e) => {
-    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
-        getMoreUsers();
-    }
-}
-
 function getUsers(refresh = false) {
     // initial table fetch
     if (!refresh && serviceUsers.value) {
@@ -517,18 +507,6 @@ if(route.query.search) {
     searchParams.searchFor = route.query.search;
     searchParams.condition = route.query.condition;
     searchParams.value = route.query.value;
-}
-
-const toggleMobileDesktopSearchView = () => {
-    if(viewport.value === 'mobile' && route.query.search) {
-        appStyle.mainPadding = '0';
-        pageTitle.value = null;
-        mobilePageTitle.value = `${visibleFields[route.query.search].text} : ${route.query.value}`;
-        appStyle.background = '#333333';
-    } else {
-        appStyle.mainPadding = null;
-        appStyle.background = null;
-    }
 }
 
 function numberOfSkeletons() {
@@ -660,23 +638,6 @@ onMounted(() => {
             getUsers(true);
         }
     }
-
-    window.addEventListener('scroll', mobileScrollHandler, { passive: true });
-    toggleMobileDesktopSearchView();
-});
-
-watch(() => viewport.value, (viewport) => {
-    if(viewport === 'mobile') {
-        pageTitle.value = 'Users';
-    } else {
-        pageTitle.value = `Service "${service.value.name}"`;
-    }
-
-    selectedBlockedUsers.value = [];
-    selectedUnblockedUsers.value = [];
-    toggleMobileDesktopSearchView();
-}, {
-    immediate: true
 });
 
 watch([viewport, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
@@ -691,14 +652,13 @@ watch(() => route.query, () => {
         searchParams.value = route.query.value;
     } 
     else {
-        if(viewport.value === 'desktop') getUsers(true);
+        getUsers(true);
     }
 })
 
 document.body.classList.add('table');
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
-    window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
 });
 
 onBeforeRouteLeave((to, from) => {
@@ -708,7 +668,6 @@ onBeforeRouteLeave((to, from) => {
 });
 </script>
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .actionsWrapper {
     display: flex;
     align-items: center;
@@ -721,10 +680,6 @@ onBeforeRouteLeave((to, from) => {
             display: inline-block;
             margin-left: 16px;
             padding: 9px 12px;
-
-            @media @tablet {
-                margin-left: 0;
-            }
         }
 
         svg {

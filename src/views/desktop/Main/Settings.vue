@@ -78,7 +78,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
 import ChangePassword from '@/components/ChangePassword.vue';
 import VerifyEmail from '@/components/VerifyEmail.vue';
 import DeleteAccount from '@/components/DeleteAccount.vue';
@@ -112,14 +111,11 @@ const openDeletePopup = async () => {
 
     isDelete.value = true;
     await nextTick();
-    if (state.viewport === 'desktop') deleteAccountOverlay.value.open();
-    else router.replace('?page=delete');
+    deleteAccountOverlay.value.open();
 };
 const openVerifyEmail = async () => {
     skapi.verifyEmail().catch(err => console.log(err));
-    if (state.viewport === 'desktop') emailOverlay.value.open();
-    else router.replace('?page=verify');
-
+    emailOverlay.value.open();
 };
 
 const cancelEdit = () => {
@@ -214,8 +210,6 @@ watch(() => state.user, async (user) => {
 </script>
         
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .pageHeader {
     h1 {
         display: block;

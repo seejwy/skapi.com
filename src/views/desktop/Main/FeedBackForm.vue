@@ -309,9 +309,5 @@ const inputFeedback = () => {
         text-decoration: none;
         font-weight: bold;
     }
-
-    .lineButton {
-        display: block;
-    }
 }
 </style>

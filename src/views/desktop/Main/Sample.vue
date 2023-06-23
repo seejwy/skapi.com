@@ -109,7 +109,6 @@ onMounted(async () => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .admin {
     background-color: #505050;
 }

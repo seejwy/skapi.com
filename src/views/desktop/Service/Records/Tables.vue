@@ -302,8 +302,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .pageAction {
     position: fixed;
     bottom: 76px;
