@@ -15,7 +15,7 @@ sui-nav#top-nav(auto-hide)
             slot
 </template>
 <script setup>
-import { inject, onMounted, onUpdated, ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { state } from '@/main';
 
@@ -36,25 +36,6 @@ watch(() => route.name, () => {
     // always close on route change
     close();
 });
-
-onMounted(() => {
-    triggerNavBarUpdates();
-});
-
-onUpdated(() => {
-    triggerNavBarUpdates();
-});
-
-const triggerNavBarUpdates = () => {
-    let elements = [title, rightButton];
-    elements.forEach(el => {
-        if(el.value.children.length > 1) {
-            el.value.children[0].style.display = 'none';
-        } else {
-            el.value.children[0].style.display = 'block';
-        }
-    })
-}
 
 async function toParent() {
     await state.blockingPromise;
@@ -194,6 +175,14 @@ sui-nav#top-nav {
 
             .logo {
                 cursor: pointer;
+            }
+        }
+
+        #leftButton,
+        #title,
+        #rightButton {
+            & *:not(:last-child) {
+                display: none;
             }
         }
     }
