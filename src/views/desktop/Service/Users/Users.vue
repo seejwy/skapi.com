@@ -721,33 +721,6 @@ onBeforeRouteLeave((to, from) => {
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 
-    .mobileSearchNav + & {
-        background-color: transparent;
-        margin: 0;
-
-        table {
-            tbody tr,
-            thead tr {
-                background-color: transparent;
-                th {
-                    background-color: transparent;
-                }
-            }
-                
-            tbody {
-                tr {
-                    &:nth-child(odd) {
-                        background: rgba(255, 255, 255, .04);
-                    }
-                }
-            }
-        }
-
-        .noUsersFound {
-            background-color: transparent;
-        }
-    }
-
     .searchQuery {
         display: flex;
         justify-content: space-between;

@@ -232,11 +232,6 @@ const deleteService = () => {
     });
 }
 
-const opensettingWindow = () => {
-    if(state.viewport === 'mobile') router.push('?new=service');
-    else settingWindow.value.open();
-}
-
 if(!service.value.hasOwnProperty('storage')) {
     skapi.storageInformation(service.value.service).then((storage) => {
         service.value.storage = storage.cloud + storage.database + storage.email;
@@ -244,11 +239,9 @@ if(!service.value.hasOwnProperty('storage')) {
 }
 
 watch(() => isEdit.value, async () => {
-    if(state.viewport === 'desktop') {
-        await nextTick();
-        if(isEdit.value) {
-            opensettingWindow();
-        }
+    await nextTick();
+    if(isEdit.value) {
+        settingWindow.value.open();
     }
 });
 

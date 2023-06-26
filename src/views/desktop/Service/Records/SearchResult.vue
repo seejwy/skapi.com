@@ -109,7 +109,6 @@ let serviceId = route.params.service;
 let viewRecord = ref(null);
 
 // record page has darker background in mobile mode
-let viewport = inject('viewport');
 let record = inject('recordToOpen');
 record.value = null;
 
