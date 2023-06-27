@@ -93,16 +93,6 @@ const router = createRouter({
                   component: ()=>import('@/views/desktop/Service/Records/SearchResult.vue')
                 },
                 {
-                  path: 'mobile-search',
-                  name: 'mobileSearchRecord',
-                  component: ()=>import('@/views/desktop/Service/Records/MobileSearch.vue')
-                },
-                {
-                  path: 'mobile-view',
-                  name: 'mobileRecordView',
-                  component: ()=>import('@/views/desktop/Service/Records/MobileViewRecord.vue')
-                },
-                {
                   path: 'list',
                   name: 'recordList',
                   component: TableRecord
@@ -117,16 +107,6 @@ const router = createRouter({
                   path: '',
                   name: 'users',
                   component: Users
-                },
-                {
-                  path: 'user-search',
-                  name: 'mobileSearchUser',
-                  component: ()=>import('@/views/desktop/Service/Users/MobileSearch.vue')
-                },
-                {
-                  path: 'user/:user_id',
-                  name: 'userView',
-                  component: ()=>import('@/views/desktop/Service/Users/MobileView.vue')
                 },
               ]
             },

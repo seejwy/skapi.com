@@ -77,15 +77,14 @@ desktopSize.addEventListener('change', setViewport);
 // init vue
 const app = createApp(App);
 
-
 let mql = window.matchMedia("(max-width: 600px)");
 let router;
 
-if (mql.matches) {
-    router = import('@/router/mobile.js');
-} else {
+// if (mql.matches) {
+//     router = import('@/router/mobile.js');
+// } else {
     router = import('@/router/desktop.js');
-}
+// }
 
 router.then((module) => {
     const routes = module.default;
