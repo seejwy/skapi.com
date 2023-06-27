@@ -47,7 +47,7 @@ template(v-else)
                     .value(v-else) {{  service[setting.key] || '-' }}
     .container
         .innerContainer.services
-            .titleActionsWrapper.hideOnTablet
+            .titleActionsWrapper
                 .titleWrapper
                     h2 Manage your Service 
             .serviceGrid 
@@ -199,8 +199,12 @@ const settingGrid = reactive([
 
 const edit = () => {
     if(!state.user.email_verified) return false;
-    if(state.viewport === 'desktop') isEdit.value = true;
-    else router.push('?edit=service');
+
+    // 항상 데탑이므로 조건문 필요없음
+    // if(state.viewport === 'desktop') isEdit.value = true;
+    // else router.push('?edit=service');
+
+    isEdit.value = true;
 }
 
 const deleteServiceAsk = () => {
@@ -245,9 +249,10 @@ watch(() => isEdit.value, async () => {
     }
 });
 
-watch(() => state.viewport, () => {
-    if(isEdit.value) isEdit.value = false;
-});
+// 항상 데탑이므로 watch 필요없음
+// watch(() => state.viewport, () => {
+//     if(isEdit.value) isEdit.value = false;
+// });
 </script>
 
 <style lang="less" scoped>

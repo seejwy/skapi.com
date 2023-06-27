@@ -76,18 +76,18 @@ const filterServiceDetails = (service) => {
         'Service Location': localeName(service.region),
         'CORS': service.cors,
         'Date Created': dateFormat(service.timestamp).split(' ')[0]
-    }
-}
+    };
+};
 
 const closeNewServiceWindow = async () => {
     await state.blockingPromise;
     newServiceWindow.value.close(() => isOpen.value = false);
-}
+};
 
 const closeFeedBackWindow = async () => {
     await state.blockingPromise;
     feedBackWindow.value.close(() => feedBackOpen.value = false);
-}
+};
 
 const NewServiceConditions = async () => {
     await getServices(state.getServices);
@@ -95,11 +95,12 @@ const NewServiceConditions = async () => {
     skapi.getProfile().then((r) => {
         if (r.misc === 'feedback complete') {
             if (state.user.email_verified) {
-                if (state.viewport === 'desktop') {
-                    isOpen.value = true;
-                } else {
-                    router.push('?new=service');
-                }
+                // if (state.viewport === 'desktop') {
+                //     isOpen.value = true;
+                // } else {
+                //     router.push('?new=service');
+                // }
+                isOpen.value = true;
             } else {
                 return null;
             }
@@ -141,10 +142,10 @@ const NewServiceConditions = async () => {
                 }
             }
         }
-    })
+    });
 
 
-}
+};
 
 async function getServices(gs) {
     if (!(gs instanceof Promise) || !state.user) {
