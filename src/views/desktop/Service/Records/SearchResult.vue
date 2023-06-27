@@ -100,7 +100,7 @@ import { dateFormat, groupArray } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
 import RecordSearch from '@/components/desktop/RecordSearch.vue';
-import ViewRecord from '@/views/desktop/Service/Records/viewRecord.vue';
+import ViewRecord from '@/views/desktop/Service/Records/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
