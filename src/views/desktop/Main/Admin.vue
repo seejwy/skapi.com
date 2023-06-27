@@ -23,7 +23,7 @@ div(v-else-if="state?.user")
                         span {{ service.name }}
                     Icon right
                 .details
-                    .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
+                    .item(v-for="(value, key) in filterServiceDetails(service)")
                         .title {{  key }}
                         .value {{ value || '-' }}
     .container.empty(v-else-if="isFetchingServices")

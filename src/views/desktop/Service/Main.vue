@@ -27,15 +27,15 @@
             img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
             img.hoverLogo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
 
-            router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
+            router-link(:to="{name: 'service'}" :class="{'routerLinkActive': !route.path.split('/')[3]}")
                 Icon home
                 span Service Home
 
-            router-link(:to="{name: 'users'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'users'}") 
+            router-link(:to="{name: 'users'}" :class="{'routerLinkActive': route.path.split('/')[3] === 'users'}") 
                 Icon users
                 span Users
 
-            router-link(:to="{name: 'records'}" :class="{'router-link-active-mobile': route.path.split('/')[3] === 'records'}")
+            router-link(:to="{name: 'records'}" :class="{'routerLinkActive': route.path.split('/')[3] === 'records'}")
                 Icon folder_open
                 span Records
 
@@ -101,7 +101,7 @@ Transition(name="toast")
             margin: 28px 8px;
             border-radius: 4px;
 
-            &.router-link-active-mobile,
+            &.routerLinkActive,
             &:hover {
                 background: rgba(255, 255, 255, 0.2);
             }
