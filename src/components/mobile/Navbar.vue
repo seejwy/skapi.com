@@ -5,9 +5,8 @@ sui-nav#top-nav(auto-hide)
             Icon.clickable.backButton(v-if='!props.isParentLevel' @click="toParent") left
         .title#title(ref="title")
             img.logo(alt="skapi" src="@/assets/img/logo-small.svg" @click="()=>props.isParentLevel ? router.push('/') : null")
-        .menu
-            #rightButton(ref="rightButton")
-                Icon.clickable(style="height: 28px; width: 28px;" @click='open') menu_horizontal
+        .menu#rightButton(ref="rightButton")
+            Icon.clickable(style="height: 28px; width: 28px;" @click='open') menu_horizontal
 
     sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' style='background-color: rgba(31, 31, 31, .6); color:white;' position="right")
         // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
@@ -20,6 +19,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { state } from '@/main';
 
 import Icon from '@/components/Icon.vue';
+import LoadingCircle from '@/components/LoadingCircle.vue';
 
 const props = defineProps({
     isParentLevel: Boolean
@@ -41,7 +41,11 @@ async function toParent() {
     await state.blockingPromise;
     
     let p = navbarBackDestination.value;
-    if (p === 'back') {
+
+    if(!!Object.keys(route.query).length) {
+        router.replace({query: null});
+    }
+    else if (p === 'back') {
         router.go(-1);
     }
     else if (typeof p === 'function') {
@@ -178,10 +182,14 @@ sui-nav#top-nav {
             }
         }
 
+        #rightButton { 
+            position: relative;
+        }
+
         #leftButton,
         #title,
         #rightButton {
-            & *:not(:last-child) {
+            & > *:not(:last-child) {
                 display: none;
             }
         }

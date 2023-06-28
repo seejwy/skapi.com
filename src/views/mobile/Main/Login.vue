@@ -18,8 +18,8 @@ form.container.login(@submit.prevent="login" action="" :loading="promiseRunning 
     .action
         label
             sui-input(type="checkbox" 
-                @input="(e)=>rememberme = e.target.checked"
-                :checked="rememberme ? true : null")
+                @input="(e)=>rememberMe = e.target.checked"
+                :checked="rememberMe ? true : null")
             span Stay logged in
         RouterLink(:to="{name: 'forgotpassword'}") Forgot Email & Password?
     .error(v-if="error")
@@ -32,7 +32,7 @@ form.container.login(@submit.prevent="login" action="" :loading="promiseRunning 
 
 </template>
 <script setup>
-import { onMounted, inject, watch, reactive, ref, onBeforeUnmount } from 'vue';
+import { onMounted, watch, reactive, ref, onBeforeUnmount } from 'vue';
 import { skapi, state } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -43,25 +43,17 @@ import PasswordInput from '@/components/PasswordInput.vue';
 let route = useRoute();
 let router = useRouter();
 const error = ref(null);
-const rememberme = ref(window.localStorage.getItem('remember') === 'true');
+const rememberMe = ref(window.localStorage.getItem('remember') === 'true');
 const promiseRunning = ref(false);
-
-// set page title
-let pageTitle = inject('pageTitle');
-let appStyle = inject('appStyle');
-let viewport = inject('viewport');
-const currentBgColor = appStyle.background;
 
 onMounted(() => {
     if (document.body.classList.contains('admin')) {
         document.body.classList.remove('admin');
         document.body.classList.add('admin-login');
     }
-
 });
 
 onBeforeUnmount(() => {
-    appStyle.background = currentBgColor;
     if (document.body.classList.contains('admin-login')) {
         document.body.classList.remove('admin-login');
         if (route.path.includes('/admin')) {
@@ -70,11 +62,6 @@ onBeforeUnmount(() => {
     }
 });
 
-if (state.viewport === 'mobile') {
-    appStyle.background = '#fff';
-}
-
-pageTitle.value = 'skapi';
 let form = reactive({
     email: '',
     password: ''
@@ -109,7 +96,7 @@ const validatePassword = (event) => {
 function login() {
     error.value = '';
     promiseRunning.value = true;
-    skapi.AdminLogin(form, null, rememberme.value).then(async user => {
+    skapi.AdminLogin(form, null, rememberMe.value).then(async user => {
         if (user.hasOwnProperty('misc') && user.misc && user.misc !== 'feedback complete') {
             let questions = null;
 
@@ -182,32 +169,9 @@ function login() {
 }
 </script>
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .container {
     text-align: center;
-    padding: 40px;
-    background: #FAFAFA;
-    color: rgba(0, 0, 0, 0.85);
-    border-radius: 8px;
-    width: 542px;
-    max-width: 100%;
-    border: 1px solid #808080;
-    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
-    margin: auto;
-
-    @media @tablet {
-        margin: var(--head-space) auto 0;
-        background: #FFF;
-        padding: 0 20px;
-        border: 0;
-        box-shadow: none;
-    }
-
-    @media @tablet {
-        padding: 0;
-    }
+    margin-top: var(--head-space);
 
     h1 {
         font-size: 32px;
@@ -237,6 +201,7 @@ function login() {
         margin-bottom: 20px;
 
         label {
+            text-align: left;
             cursor: pointer;
 
             sui-input {
@@ -251,6 +216,7 @@ function login() {
         }
 
         a {
+            text-align: right;
             font-weight: normal;
         }
     }

@@ -1,6 +1,6 @@
 import { createApp, reactive, watch } from 'vue';
 import App from './App.vue';
-import './assets/main.less';
+// import './assets/main.less';
 
 // init state
 const state = reactive({
@@ -78,19 +78,19 @@ desktopSize.addEventListener('change', setViewport);
 const app = createApp(App);
 
 
-let mql = window.matchMedia("(max-width: 600px)");
+let mql = window.matchMedia("(max-width: 768px)");
 let router;
 
 if (mql.matches) {
     router = import('@/router/mobile.js');
+    import('@/assets/mobile.less');
 } else {
     router = import('@/router/desktop.js');
+    import('@/assets/desktop.less');
 }
 
 router.then((module) => {
     const routes = module.default;
-
-    console.log(routes);
 
     app.use(routes);
     app.mount('#app');

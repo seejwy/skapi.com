@@ -1,6 +1,7 @@
 import { state } from '@/main';
 
 export async function getServices(gs, serviceList) {
+    console.log(state.getServices)
     if (!(gs instanceof Promise) || !state.user) {
         return;
     }

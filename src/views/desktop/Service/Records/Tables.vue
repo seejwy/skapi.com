@@ -284,7 +284,9 @@ function getTables() {
 }
 
 // get tables on created (if not already fetched)
+console.log(recordTables.value)
 if (!recordTables.value) {
+    console.log("Tables empty")
     getTables();
 }
 

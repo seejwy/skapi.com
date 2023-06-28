@@ -37,21 +37,17 @@ div(v-else-if="state?.user")
             Icon.close(@click="state.setVerificationDelay") X2
 </template>
 <script setup>
-import { inject, ref, watch, nextTick } from 'vue';
+import { ref, watch } from 'vue';
 import { state, skapi } from '@/main';
-import { getServices } from '@/helper/admin';
 import { dateFormat, localeName } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
-import NewService from '@/components/NewService.vue';
+import NewService from '@/views/mobile/Main/NewService.vue';
 import FeedBackForm from '@/views/mobile/Main/FeedBackForm.vue';
 import Icon from '@/components/Icon.vue';
 
 let router = useRouter();
 let route = useRoute();
-
-let pageTitle = inject('pageTitle');
-pageTitle.value = 'skapi';
 
 let serviceList = ref(null);
 state.blockingPromise = true;
@@ -60,7 +56,7 @@ const NewServiceConditions = async () => {
     await getServices(state.getServices, serviceList);
 
     skapi.getProfile().then((r) => {
-        if (r.misc !== 'feedback complete') {
+        if (r.misc === 'feedback complete') {
             if (state.user.email_verified) {
                 router.push('?new=service');
             } else {
@@ -103,21 +99,36 @@ const NewServiceConditions = async () => {
     })
 }
 
-getServices(state.getServices, serviceList);
+async function getServices(gs) {
+    if (!(gs instanceof Promise) || !state.user) {
+        return;
+    }
 
+    try {
+        let services = await gs;
+        state.blockingPromise = false;
+        if (serviceList.value === null) {
+            serviceList.value = [];
+            for (let region in services) {
+                serviceList.value = [...serviceList.value, ...services[region]];
+            }
+
+            serviceList.value.sort((a, b) => a.timestamp > b.timestamp ? -1 : a.timestamp < b.timestamp ? 1 : 0);
+        }
+
+        return services;
+
+    } catch (err) {
+        serviceList.value = null;
+        throw err;
+    }
+}
+getServices(state.getServices);
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
-watch(() => state.viewport, (viewport) => {
-    if (viewport === 'desktop') {
-        isOpen.value = false;
-        router.replace('/admin');
-    }
-});
 </script>
         
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .container {
     &.empty {
         position: relative;
@@ -138,35 +149,20 @@ watch(() => state.viewport, (viewport) => {
 
         &,
         &.no-service {
-            height: 175.33px;
-
-            @media screen and (max-width: 825px) {
-                height: 156px;
-            }
-
-            @media @phone {
-                height: 123.33px;
-            }
-
+            height: 123.33px;
         }
     }
 
     .service {
         display: block;
         background: #595959;
-        padding: 32px 40px;
+        padding: 24px;
         border-radius: 8px;
         color: unset;
         text-decoration: unset;
 
         &:hover {
-            background: #8C8C8C;
-        }
-
-        @media @tablet {
-            &:hover {
-                background: #595959;
-            }
+            background: #595959;
         }
 
         &:not(:last-child) {
@@ -184,45 +180,8 @@ watch(() => state.viewport, (viewport) => {
         .name span {
             margin-left: 12px;
             color: #fff;
-            font-size: 24px;
+            font-size: 20px;
             vertical-align: middle;
-        }
-
-        .details {
-            display: flex;
-            justify-content: flex-start;
-            column-gap: 33px;
-            flex-wrap: wrap;
-            overflow: hidden;
-
-            .item {
-                width: 200px;
-            }
-
-            @media screen and (max-width: 825px) {
-
-                .item {
-                    display: flex;
-                    width: 100%;
-                }
-
-                .hide-mobile {
-                    display: none;
-                }
-            }
-
-            .title {
-                color: rgba(255, 255, 255, .4);
-                margin-bottom: 12px;
-            }
-
-            .value {
-                font-weight: bold;
-                color: rgba(255, 255, 255, .85);
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
         }
     }
 }
@@ -240,28 +199,6 @@ watch(() => state.viewport, (viewport) => {
 
     &.active {
         background: #5AD858;
-    }
-}
-
-@media @tablet {
-    .container {
-        .service {
-            padding: 24px;
-
-            .name span {
-                font-size: 20px;
-            }
-
-            .details .item {
-
-                .title,
-                .value {
-                    display: inline-block;
-                    margin: 0 12px 0 0;
-                    vertical-align: middle;
-                }
-            }
-        }
     }
 }
 </style>

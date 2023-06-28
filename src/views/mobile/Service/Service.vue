@@ -1,5 +1,8 @@
 <template lang="pug">
-EditService(v-if="state?.user && route.query.edit === 'service'" @close="router.replace({query: null})")
+NavBarProxy(backgroundColor="#505050")
+    template(v-slot:title)
+        div Service: "{{ service.name }}"
+EditService(v-if="state?.user && route.query.edit === 'service'")
 template(v-else)
     .page-header.head-space-helper
         h2 Service
@@ -11,19 +14,13 @@ template(v-else)
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
                 sui-button.line-button(type="button") Find out More
     .container
-        .title-actions-wrapper.showOnTablet
+        .title-actions-wrapper
             .title-wrapper
                 Icon information
                 h2 Service Information
             .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon trash
         .inner-container 
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
-                    Icon information
-                    h2 Service Information
-                .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
-                    span(style="font-size:14px") Delete Service
             .information-grid
                 .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
                     .name {{ info.name }}
@@ -31,20 +28,13 @@ template(v-else)
                     .value(v-else) {{ service[info.key] }}
 
     .container
-        .title-actions-wrapper.showOnTablet
+        .title-actions-wrapper
             .title-wrapper
                 Icon setting
                 h2 Service Setting 
             .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon pencil
-        .inner-container 
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
-                    Icon setting
-                    h2 Service Setting 
-                .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
-                    Icon pencil
-                    span Edit
+        .inner-container
             .setting-grid 
                 .setting-grid-item(v-for="setting in settingGrid")
                     .name 
@@ -58,13 +48,10 @@ template(v-else)
                         span(v-else) Disabled
                     .value(v-else) {{  service[setting.key] || '-' }}
     .container
-        .title-actions-wrapper.showOnTablet
+        .title-actions-wrapper
             .title-wrapper
                 h2 Manage your Service 
         .inner-container.services
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
-                    h2 Manage your Service 
             .service-grid 
                 RouterLink(:to="{name: 'users'}").service-grid-item
                     .content
@@ -87,9 +74,6 @@ template(v-else)
                             span Email System
                         .body Users are data that your service user's will store and read from your service database. 
                     .goto Go to Mail >
-    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
-        div.overlay
-            EditService(@close="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
 sui-overlay(ref="deleteConfirmOverlay")
     form.popup(@submit.prevent="deleteService" action="" :loading="isDisabled || null")
         .title
@@ -112,12 +96,13 @@ sui-overlay(ref="deleteErrorOverlay")
             sui-button.line-button(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
 <script setup>
-import { inject, reactive, ref, watch, nextTick } from 'vue';
+import { inject, reactive, ref, watch, nextTick, onMounted } from 'vue';
 import { state, skapi } from '@/main';
 import { localeName, dateFormat, getSize } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
-import EditService from '@/components/EditService.vue';
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
+import EditService from '@/views/mobile/Service/EditService.vue';
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
@@ -125,10 +110,9 @@ const route = useRoute();
 const router = useRouter();
 
 let service = inject('service');
-let pageTitle = inject('pageTitle');
-pageTitle.value = 'Service "' + service.value.name + '"'
+// let pageTitle = inject('pageTitle');
+// pageTitle.value = 'Service "' + service.value.name + '"'
 
-const settingWindow = ref(null);
 const deleteConfirmOverlay = ref(null);
 const deleteErrorOverlay = ref(null);
 const confirmationCode = ref('');
@@ -213,8 +197,7 @@ const settingGrid = reactive([
 
 const edit = () => {
     if(!state.user.email_verified) return false;
-    if(state.viewport === 'desktop') isEdit.value = true;
-    else router.push('?edit=service');
+    router.push('?edit=service');
 }
 
 const deleteServiceAsk = () => {
@@ -246,37 +229,20 @@ const deleteService = () => {
     });
 }
 
-const opensettingWindow = () => {
-    if(state.viewport === 'mobile') router.push('?new=service');
-    else settingWindow.value.open();
-}
-
 if(!service.value.hasOwnProperty('storage')) {
     skapi.storageInformation(service.value.service).then((storage) => {
         service.value.storage = storage.cloud + storage.database + storage.email;
     });
 }
-
-watch(() => isEdit.value, async () => {
-    if(state.viewport === 'desktop') {
-        await nextTick();
-        if(isEdit.value) {
-            opensettingWindow();
-        }
-    }
-});
-
-watch(() => state.viewport, () => {
-    if(isEdit.value) isEdit.value = false;
-});
 </script>
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 .container {
-    margin: 0 0 40px 0;
+    margin: 40px 0 0;
+    border-radius: 0;
 
     .inner-container {    
-        padding: 40px;
+        padding: 20px;
         background: #434343;
         border-radius: 12px;
         .title-actions-wrapper {
@@ -286,6 +252,11 @@ watch(() => state.viewport, () => {
                 font-size: 20px;
                 font-weight: normal;
             }
+        }
+
+        &.services {
+            padding: 0;
+            background-color: transparent;
         }
     }
 
@@ -299,12 +270,8 @@ watch(() => state.viewport, () => {
         display: inline-block;
         vertical-align: middle;
         font-size: 24px;
-        margin-bottom: 50px;
+        margin-bottom: 28px;
         font-weight: bold;
-
-        @media @tablet {        
-            margin-bottom: 28px;
-        }
     }
 
     p {
@@ -348,22 +315,8 @@ watch(() => state.viewport, () => {
         }
     }
 
-    @media @tablet {    
-        margin: 40px 0 0;
-        border-radius: 0;
-
-        &:first-child {
-            margin-top: 0;
-        }
-
-        .inner-container {    
-            padding: 20px;
-
-            &.services {
-                padding: 0;
-                background-color: transparent;
-            }
-        }
+    &:first-child {
+        margin-top: 0;
     }
 
     &:last-child {
@@ -373,13 +326,9 @@ watch(() => state.viewport, () => {
 
 .information-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     column-gap: 20px;
     row-gap: 28px;
-
-    @media @tablet {   
-        grid-template-columns: 1fr 1fr;
-    }
 
     @media @phone {
         grid-template-columns: 1fr;
@@ -413,7 +362,8 @@ watch(() => state.viewport, () => {
 .setting-grid {
     display: flex;
     justify-content: space-between;
-    
+    grid-template-columns: repeat(2, 1fr);
+
     &-item {
         .name {
             font-size: 14px;
@@ -431,14 +381,6 @@ watch(() => state.viewport, () => {
         }
     }
 
-    @media screen and (max-width: 980px) {    
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    @media screen and (max-width: 730px) {    
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     @media @phone {
         grid-template-columns: repeat(1, 1fr);
         &-item {
@@ -453,7 +395,6 @@ watch(() => state.viewport, () => {
     display: grid;
     column-gap: 12px;
     row-gap:28px;
-    grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
 
     &-item {
         .name {
@@ -510,22 +451,16 @@ watch(() => state.viewport, () => {
 }
 
 .service-grid {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-
-    @media screen and (max-width: 825px) {
-        flex-direction: column;
-    }
-
     &-item {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         width: 100%;
-        background: rgba(255, 255, 255, 0.1);
+        background: #434343;
         padding: 24px;
         border-radius: 8px;
+        margin-bottom: 20px;
+
         .content {
             display: flex;
             flex-direction: column;
@@ -563,21 +498,6 @@ watch(() => state.viewport, () => {
         text-decoration: none;
     }
 
-    @media screen and (max-width: 940px) {
-        flex-direction: column;
-        gap: 20px;
-
-        &-item { 
-            border-radius: 12px;
-        }
-    }
-
-    @media @tablet {
-        &-item {
-            padding: 24px;
-            background: #434343;
-        }
-    }
 }
 sui-tooltip {
     margin-top: -7px;
@@ -597,34 +517,6 @@ sui-tooltip {
     
     &.active {
         background: #5AD858;
-    }
-}
-.overlay {
-    padding: 16px;
-    .close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 32px;
-        height: 32px;
-        background-color: #BFBFBF;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-
-        svg {
-            color: #434343;
-        }
-
-        a {
-            text-align: left;
-            margin-top: 40px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            text-decoration: none;
-        }
     }
 }
 </style>

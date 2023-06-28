@@ -1,6 +1,8 @@
 <template lang="pug">
+NavBarProxy
+    template(v-slot:title)
+        div Records
 .page-header.head-space-helper
-    h1 Record
     p.
         Records are data objects created by you or your users and stored within your database.
         skapi's database is designed for flexibility and features automatic indexing.
@@ -9,16 +11,6 @@
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
             sui-button.line-button(type="button") Find out More
-// search form
-RecordSearch#recordSearch.hideOnTablet
-
-sui-button.hideOnTablet(type="button" style='float:right;' @click='()=>addRecord()') + Add Record
-.hideOnTablet(style="clear:both;")
-
-// record view
-sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
-    .view-record-overlay
-        ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close(() => { recordToOpen = null; })")
 
 .table-container#data-container
     .header.label-head
@@ -26,10 +18,9 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
         div.not-clickable
             span Size
             span # of records
-        Icon.clickable.hideOnTablet(:class="{'animation-rotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
 
-    // skeleton(mobile)
-    .tableHead.animation-skeleton.showOnTablet(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
+    // skeleton
+    .tableHead.animation-skeleton(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
         span &nbsp;
 
     // table list
@@ -39,9 +30,9 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
                 .title No Record Tables
                 p List of tables will show when there is data
 
-        template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch] && !fetchingData")
-            template(v-for="batchIdx in (viewport === 'desktop' ? [currentSelectedTableBatch + 1] : groupedTableList?.length)")
-                template(v-for="pageIdx in (viewport === 'desktop' ? [currentSelectedTablePage + 1] : groupedTableList[batchIdx - 1]?.length)")
+        template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch]")
+            template(v-for="batchIdx in groupedTableList?.length")
+                template(v-for="pageIdx in groupedTableList[batchIdx - 1]?.length")
                     // when v-for by number, it starts with 1
                     template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
                         .table-wrapper(v-if="t.number_of_records")
@@ -52,56 +43,11 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
                                     span {{t.number_of_records}}
 
                                 template(v-if='t.records')
-                                    template(v-if="viewport === 'desktop'")
-                                        Icon.clickable(v-if="!t.opened") plus
-                                        Icon.clickable(v-else) minus
-
-                                    Icon.clickable(v-else style="color: rgba(255, 255, 255, .6)") right
+                                    Icon.clickable(style="color: rgba(255, 255, 255, .6)") right
 
                                 Icon.animation-rotation(v-else) refresh
-
-                            div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
-                                .noRecords(v-if='!t.records.list?.length')
-                                    div
-                                        sui-flextext(min-size='14' max-size='24') No Records
-                                        br
-                                        p This table will be automatically removed.
-
-                                .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}" :loading="r.deleting || null")
-                                    div
-                                        span.label-head RECORD:
-                                        span {{ r.record_id }}
-                                    div
-                                        span.label-head USER:
-                                        span {{ r.user_id }}
-                                    div
-                                        span.label-head UPLOADED:
-                                        span {{ dateFormat(r.uploaded) }}
-
-                                .load-more(v-if="!t.records.endOfList")
-                                    Icon.animation-rotation refresh
                 .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
                     span &nbsp;
-                .paginator.hideOnTablet
-                    Icon.arrow(
-                        :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
-                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTableBatch) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
-                    span.morePage(
-                        :class="{active: currentSelectedTableBatch}"
-                        @click="()=>{ if(currentSelectedTableBatch > 0) {currentSelectedTableBatch--; currentSelectedTablePage = numberOfPagePerBatch - 1} }") ...
-
-                    span.page(
-                        v-for="(i, idx) in groupedTableList[currentSelectedTableBatch].length"
-                        :class="{active: idx === currentSelectedTablePage}"
-                        @click="()=>currentSelectedTablePage = idx") {{ currentSelectedTableBatch * numberOfPagePerBatch + i }}
-
-                    span.morePage(
-                        :class="{active: !isEndOfList || !isLastBatch }"
-                        @click="getMoreTables") ...
-                    Icon.arrow(
-                        :class="{active: !isEndOfList || !isLastBatch || !isLastPage }"
-                        @click="() => { if(!isLastPage) currentSelectedTablePage++; else if(isLastPage && !isLastBatch) { currentSelectedTableBatch++; currentSelectedTablePage = 0;} else if(isLastBatch && !isEndOfList) getMoreTables() }"
-                        ) right
 
 .page-action.showOnTablet(@blur="isFabOpen = false")
     // @blur should be at the parent div
@@ -112,29 +58,27 @@ sui-overlay(v-if="viewport === 'desktop'" ref='openRecord' @mousedown="close" st
         div(v-if="isFabOpen" @click.stop)
             sui-button.fab(type="button" @click="router.push({name: 'mobileSearchRecord'})")
                 Icon search
-            sui-button.fab(type="button" @click='()=>addRecord(true)')
+            sui-button.fab(type="button" @click='()=>addRecord()')
                 Icon plus2
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onMounted, onBeforeUnmount, provide } from 'vue';
+import { inject, ref, watch, computed, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { getSize, dateFormat, groupArray } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 import { tableList, recordTables, refreshTables, getMoreRecords } from '@/helper/records';
+
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
 import RecordSearch from '@/components/recordSearch.vue';
-import ViewRecord from '@/components/ViewRecord.vue';
+import ViewRecord from '@/views/mobile/Service/Records/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
-let openRecord = ref(null);
-let recordToOpen = inject('recordToOpen');
 const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
 const service = inject('service');
-
-let pageTitle = inject('pageTitle');
 
 // flag
 let fetchingData = inject('fetchingData');
@@ -179,45 +123,13 @@ if (groupedTableList.value) {
     }
 }
 
-onMounted(() => {
-    if (recordToOpen.value) {
-        displayRecord(recordToOpen.value);
-    }
-});
-
-function addRecord(mobile = false) {
-    recordToOpen.value = {};
-    if (mobile) {
-        router.push({
-            name: 'mobileRecordView',
-            query: {
-                id: 'Add Record'
-            }
-        });
-    }
-    else {
-        nextTick(() => {
-            viewRecord.value.editRecord();
-            openRecord.value.open();
-        });
-    }
-}
-
-async function displayRecord(r) {
-    if (typeof r === 'string') {
-        let rec = await skapi.getRecords({
-            service: serviceId,
-            record_id: r
-        });
-        recordToOpen.value = rec.list[0];
-        openRecord.value.open();
-    }
-    else {
-        if (r.record_id) {
-            recordToOpen.value = r;
-            openRecord.value.open();
+function addRecord() {
+    router.push({
+        name: 'mobileRecordView',
+        query: {
+            id: 'Add Record'
         }
-    }
+    });
 }
 
 let getMoreTablesQueue = null;
@@ -280,11 +192,14 @@ function getTables() {
     fetchingData.value = true;
     refreshTables(serviceId).then(() => {
         fetchingData.value = false;
+        console.log(recordTables.value)
     });
+
 }
 
 // get tables on created (if not already fetched)
 if (!recordTables.value) {
+    console.log("Getting tables")
     getTables();
 }
 
@@ -293,15 +208,9 @@ function numberOfSkeletons() {
     return parseInt((window.innerHeight / 2) / 48);
 }
 
-let viewport = inject('viewport');
 function viewRecordList(t) {
-    if (viewport.value === 'mobile') {
-        searchResult.value = t.records;
-        router.push(`/admin/${serviceId}/records/list?table=${t.table}`);
-    }
-    else {
-        t.opened = !t.opened;
-    }
+    searchResult.value = t.records;
+    router.push(`/admin/${serviceId}/records/list?table=${t.table}`);
 }
 
 // watchers
@@ -312,20 +221,7 @@ const close = async () => {
     viewRecord.value.close();
 }
 
-watch(() => state.viewport, viewport => {
-    if (viewport === 'mobile') {
-        pageTitle.value = 'Records';
-    } else {
-        pageTitle.value = `Service "${service.value.name}"`;
-    }
-
-    // close opened table on viewport change
-    if (groupedTableList.value) {
-        for (let t of groupedTableList.value[currentSelectedTableBatch.value][currentSelectedTablePage.value]) {
-            t.opened = false;
-        }
-    }
-}, { immediate: true });
+appStyle.background = '#434343';
 
 watch(currentSelectedTablePage, n => {
     // close opened table on page change
@@ -350,7 +246,7 @@ watch(currentSelectedTableBatch, n => {
 document.body.classList.add('table');
 
 function scrollEventMobile(event) {
-    if (viewport.value === 'mobile' && (window.document.documentElement.clientHeight + window.scrollY) >= document.body.offsetHeight - 60) {
+    if ((window.document.documentElement.clientHeight + window.scrollY) >= document.body.offsetHeight - 60) {
         // scrolled to bottom
         getMoreTables();
     }
@@ -368,8 +264,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .page-action {
     position: fixed;
     bottom: 76px;
@@ -412,19 +306,7 @@ onBeforeUnmount(() => {
 .table-container {
     background-color: #434343;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25),
-        inset 1px 1px 1px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
     margin: 24px 0 0 0;
-    padding: 24px 20px;
-
-    @media @tablet {
-        box-shadow: none;
-        padding: 0;
-        background-color: transparent;
-        border: none;
-    }
 
     svg {
         color: white;
@@ -453,10 +335,6 @@ onBeforeUnmount(() => {
             justify-content: space-between;
             font-size: 14px;
             padding: 16px 20px;
-
-            @media screen and (min-width: 945px) {
-                flex-direction: row;
-            }
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -502,14 +380,10 @@ onBeforeUnmount(() => {
             text-align: left;
             max-width: 50%;
             flex-grow: 1;
-            padding-right: 1em;
+            padding-right: 0.5em;
             display: inline-block;
             text-overflow: ellipsis;
             overflow: hidden;
-
-            @media @tablet {
-                padding-right: 0.5em;
-            }
         }
 
         &>div {
@@ -520,11 +394,7 @@ onBeforeUnmount(() => {
                 display: inline-block;
                 width: 50%;
                 white-space: nowrap;
-                padding-right: 1em;
-
-                @media @tablet {
-                    padding-right: 0.5em;
-                }
+                padding-right: 0.5em;
             }
         }
     }

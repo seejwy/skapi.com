@@ -1,13 +1,13 @@
 <template lang="pug">
 .servicePageShell
     .sideScreen
-        NavBar(v-if="pageTitle" style='background-color: #505050;z-index: 2;')
+        NavBar(v-if="route.name !== 'mobileSearchRecord' && route.name !== 'recordSearch' && route.name !== 'mobileSearchUser' && !(route.name === 'users' && route.query.search)" style="background-color: #505050")
             ul.inline-vertical-middle
-                li.showOnTablet
+                li
                     router-link(to="/" tag="li")
                         img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
                 li
-                    a(href="https://docs.skapi.com" target="_blank") Documentation
+                    a(href="https://docs.skapi.com" target="_blank") Documentation {{  route.query.search }}
 
                 li
                     router-link(to="/admin" :class="{'router-link-active': route.path.split('/')[1] === 'admin'}") Admin
@@ -26,11 +26,8 @@
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
             Login(v-else-if="!state.user")
-    .sidebar-holder(v-if="state.user")
-        .sidebar
-            img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
-            img.hover-logo(src="@/assets/img/logo.svg" @click="router.push({name: 'home'})")
-
+    .sidebar-holder
+        .sidebar(v-if="state.user")
             router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
                 Icon home
                 span Service Home
@@ -58,88 +55,42 @@ Transition(name="toast")
 <style lang="less">
 @import '@/assets/variables.less';
 .servicePageShell {
-    display: flex;
-    flex-direction: row-reverse;
-
-    @media @ipad {
-        display: block;
-    }
+    display: block;
 
     // navbar title text
     .titleText {
-        color: rgba(255 255 255 / 60%);
-
-        @media @tablet {
-            color: inherit;
-        }
+        color: inherit;
     }
 
     .sidebar-holder {
-        width: 52px;
-        flex-shrink: 0;
-    }
-
-    .sidebar {
+        position: fixed;
         z-index: 10;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100vw;
+    }
+    .sidebar {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
         background: var(--primary-color);
         overflow: hidden;
+        box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 12px 12px 0 0;
+        width: 100%;
 
-        @media @tablet {        
-            box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.25);
-        }
-
-        @media @ipad {
-            height: unset;
-            width: unset;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            min-height: unset;
-            flex-wrap: wrap;
-            bottom: 0px;
-            position: fixed;
-            top: unset;
-            left: 0;
-            right: 0;
-        }
-
-        height: 100%;
-        min-height: 100vh;
-        width: 52px;
-        position: fixed;
-        top: 0;
         &>* {
             display: inline-block;
             color: #fff;
         }
 
-        & .logo {
-            display: block;
-            width: 32px;
-            margin: 11px 10px;
-            cursor: pointer;
-
-            @media @ipad {
-                display: none;
-            }
-        }
-
-        & .hover-logo {
-            display: none;
-            cursor: pointer;
-        }
-
         &>a {
             display: block;
-            width: min-content;
-            margin: 28px 8px;
-
-            @media @ipad {
-                width: 36px;
-                height: 36px;
-                margin: 12px 16px;
-            }
-            
+            width: 36px;
+            height: 36px;
+            margin: 12px 16px;
             border-radius: 4px;
 
             &.router-link-active-mobile,
@@ -159,59 +110,7 @@ Transition(name="toast")
                 white-space: nowrap;
                 line-height: 24px;
             }
-        }
-        @media screen and (min-width: 1024px) {
-            
-            transition: width .2s cubic-bezier(1, 0, 0, 1);
-            max-width: 170px;
-            
-
-            a {
-                white-space: nowrap;
-                span {    
-                    vertical-align: middle;
-                }
-            }
-            &:hover {
-                flex-shrink: 0;
-                width: 170px;
-
-                .logo {
-                    display: none;
-                }
-                .hover-logo {
-                    display: block;
-                    height: 35px;
-                    margin: 14px 14px 11px 14px;
-                }
-
-                a {
-                    background: transparent;
-                    display: block;
-                    width: 100%;
-                    margin: 0;
-                    border-radius: 4px;
-                    padding: 14px 8px;
-                    border-radius: 0;
-                    &:hover {
-
-                        background: rgba(255, 255, 255, .2);
-                        span{
-                            font-weight: bold;
-                        }
-                    }
-                }
-
-                a span {
-                    display: inline-block;
-                }
-            }
-        }
-        
-    }
-
-    .sideScreen {
-        flex-grow: 1;
+        }        
     }
 }
 </style>
@@ -221,7 +120,7 @@ import NotExists from '@/views/mobile/Main/404.vue';
 import Login from '../Main/Login.vue';
 import Icon from '@/components/Icon.vue';
 
-import { provide, inject, watch, ref, onMounted, onBeforeUnmount } from 'vue';
+import { provide, inject, watch, ref, onMounted, onBeforeUnmount, onUpdated } from 'vue';
 import { skapi, state, awaitConnection } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 import { recordTables } from '@/helper/records.js';
@@ -238,8 +137,8 @@ provide('service', service);
 provide('serviceUsers', ref(null));
 provide('fetchingData', ref(false));
 
-let pageTitle = inject('pageTitle');
-pageTitle.value = ' ';
+// let pageTitle = inject('pageTitle');
+// pageTitle.value = ' ';
 
 let overlay = ref(null);
 

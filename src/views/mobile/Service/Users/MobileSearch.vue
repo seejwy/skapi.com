@@ -2,7 +2,7 @@
 form(
     @submit.prevent="search")
     // navbar for mobile search
-    SearchNavBar(v-if='viewport === "mobile"')
+    SearchNavBar
         template(v-slot:left)
             Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'users'})") left
         sui-input(
@@ -37,7 +37,7 @@ form(
 </template>
 <script setup>
 import { inject, watch, onBeforeUnmount, onMounted, computed, ref, reactive } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { changeSearchCondition, getValidationMessage, placeholder } from '@/helper/users';
 import { state, skapi } from '@/main';
 
@@ -45,14 +45,9 @@ import Icon from '@/components/Icon.vue';
 import SearchNavBar from '@/components/SearchNavBar.vue';
 
 let appStyle = inject('appStyle');
-let pageTitle = inject('pageTitle');
-
-pageTitle.value = null;
 appStyle.mainPadding = '0';
 
-let viewport = inject('viewport');
 let router = useRouter();
-let route = useRoute();
 const searchField = ref(null);
 
 const searchParams = reactive({
@@ -85,12 +80,6 @@ const search = () => {
         router.push({name:"users", query: {search: searchParams.searchFor, condition: searchParams.condition, value: searchParams.value}});
     }
 }
-
-watch(viewport, viewport => {
-    if (viewport === 'desktop') {
-        router.replace({ name: 'users' });
-    }
-}, { immediate: true });
 
 appStyle.background = '#333333';
 onBeforeUnmount(() => {

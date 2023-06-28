@@ -1,5 +1,12 @@
 <template lang="pug">
 template(v-if="user")
+    NavBarProxy
+        template(v-slot:leftButton)        
+            Icon.clickable.backButton(@click="router.go(-1)") left
+        template(v-slot:title)
+            div {{  user.user_id }}
+        template(v-slot:rightButton)
+            div
     .head
         .tab Information
     .container
@@ -18,19 +25,13 @@ import { inject, ref, reactive, watch, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { useRouter, useRoute } from 'vue-router';
 
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
 import Icon from '@/components/Icon.vue';
 
 let appStyle = inject('appStyle');
-let pageTitle = inject('pageTitle');
 const router = useRouter();
 const route = useRoute();
-const navbarBackDestination = inject('navbarBackDestination');
-navbarBackDestination.value = 'back';
-const navbarMobileRightButton = inject('navbarMobileRightButton');
-navbarMobileRightButton.value = {
-    type: 'none'
-};
-pageTitle.value = route.params.user_id;
+
 let user = ref(null);
 let serviceId = route.params.service;
 let serviceUsers = inject('serviceUsers');
@@ -94,17 +95,10 @@ if(userIdx >= 0) {
     });
 }
 
-watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop') {
-        router.replace({name: 'users'});
-    }
-}, {immediate: true});
-
 appStyle.background = '#333333';
 
 onBeforeUnmount(() => {
     appStyle.background = null;
-    navbarMobileRightButton.value = null;
 })
 </script>
 <style lang="less" scoped>

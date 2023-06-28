@@ -1,4 +1,7 @@
 <template lang="pug">
+NavBarProxy
+    template(v-slot:leftButton)
+        div
 .form.container(v-if="processStep < 2" :loading="promiseRunning || null")
     h2 Change Password
     template(v-if="processStep === 0")
@@ -66,9 +69,10 @@ import { inject, ref, watch, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
-import Icon from './Icon.vue';
-import PasswordInput from './PasswordInput.vue';
-import SubmitButton from './SubmitButton.vue';
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
+import Icon from '@/components/Icon.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -94,8 +98,7 @@ const password = ref({
 const promiseRunning = ref(false);
 
 const closePasswordChange = () => {
-    if(state.viewport === 'desktop') emit('close');
-    else router.replace('');
+    router.replace('');
     processStep.value = 0;
     password.value.current.value = '';
     password.value.confirm.value = '';
@@ -168,14 +171,6 @@ const logout = async () => {
     });
 }
 
-watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop' && route.query.page === 'password') {
-        router.replace('');
-    } else if(viewport === 'mobile') {
-        emit('close');
-    }
-});
-
 onBeforeUnmount(() => {
     router.replace('');
 });
@@ -186,14 +181,10 @@ onBeforeUnmount(() => {
 
 .form.container {
     text-align: center;
-    padding: 40px;
-    background: #FAFAFA;
     color: #000000d9;
     width: 542px;
     max-width: 100%;
-    border: 1px solid #808080;
-    box-shadow: 4px 4px 12px #00000040;
-    border-radius: 8px;
+    margin: var(--head-space) auto 0;
 
     p {
         margin: 40px 0;
@@ -264,14 +255,6 @@ onBeforeUnmount(() => {
             width: 56px;
             height: 56px;
         }
-    }
-
-    @media @tablet {
-        border: none;
-        box-shadow: none;
-        background-color: transparent;
-        padding: 0px;
-        margin: var(--head-space) auto 0;
     }
 }
 

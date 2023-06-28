@@ -1,7 +1,7 @@
 <template lang="pug">
 NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 10;background-color: var(--app-nav-bg-color);')
     ul.inline-vertical-middle(@click='bypassSameRoute')
-        li.showOnTablet
+        li
             router-link(to="/" tag="li")
                 img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
         li
@@ -23,11 +23,8 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                 li
                     router-link(to="/admin") Login
 
-                li.showOnTablet
+                li
                     router-link(to="/signup") Sign-up
-
-                li.hideOnTablet
-                    sui-button.signup(type="button" @click="()=>router.push('/signup')" style="padding: 12px 16px") Sign-up
 main(v-if="route.name === 'home'")
     router-view
 main.app(v-else-if="noLoginNeeded()")
@@ -36,54 +33,15 @@ main.app(v-else)
     .wrapper
         Login
 </template>
-<style lang="less" scoped>
-@import '@/assets/variables.less';
-
-@media @tablet_excl {
-    main .wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 0;
-        min-height: calc(100vh - 140px);
-    }
-}
-
-sui-button.signup {
-    background-color: #fff;
-    color: var(--primary-color);
-    height: 30px;
-
-    &:hover,
-    &:focus,
-    &:active {
-        background-color: #fff;
-    }
-
-    &:hover {
-        box-shadow: rgba(255, 255, 255, 0.65) 1px 1px 2px inset, rgba(0, 0, 0, 0.25) -1px -1px 2px inset, rgba(0, 0, 0, 0.25) 0px 0px 0px 1px inset, rgba(191, 191, 191, 0.16) 0px 0px 1em 1em inset;
-    }
-
-    &:active {
-        box-shadow: rgba(128, 128, 128, 0.25) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.75) 0px 1px 3px inset, rgba(255, 255, 255, 0.25) -1px -1px 1px inset;
-    }
-}
-</style>
 
 <script setup>
 import NavBar from '@/components/mobile/Navbar.vue';
-import { ref, inject, onMounted, onUpdated, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { skapi, state, awaitConnection } from '@/main';
+import { skapi, state } from '@/main';
 
 import Login from './Login.vue';
 let router = useRouter();
 let route = useRoute();
-let appStyle = inject('appStyle');
-const overlay = ref(null);
-
-let pageTitle = inject('pageTitle');
-pageTitle.value = 'skapi';
 
 const noLoginNeeded = () => {
     if(!state.user) {
