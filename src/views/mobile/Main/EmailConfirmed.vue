@@ -14,9 +14,6 @@ import { useRouter } from 'vue-router';
 import Icon from '@/components/Icon.vue';
 
 let router = useRouter();
-// set page title
-let pageTitle = inject('pageTitle');
-pageTitle.value = 'skapi';
 
 </script>
 <style lang="less" scoped>

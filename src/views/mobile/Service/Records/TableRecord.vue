@@ -72,11 +72,6 @@ record.value = null;
 appStyle.mainPadding = '0';
 appStyle.background = '#333333';
 
-// page title
-
-let pageTitle = inject('pageTitle');
-pageTitle.value = route.query.table;
-
 // data
 let searchResult = inject('searchResult');
 

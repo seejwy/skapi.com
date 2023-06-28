@@ -81,9 +81,6 @@ import PasswordInput from '@/components/PasswordInput.vue';
 import LoadingCircle from '@/components/LoadingCircle.vue';
 
 let router = useRouter();
-// set page title
-let pageTitle = inject('pageTitle');
-pageTitle.value = 'skapi';
 let email = ref('');
 let code = ref('');
 let password = ref('');

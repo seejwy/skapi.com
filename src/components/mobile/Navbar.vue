@@ -4,7 +4,7 @@ sui-nav#top-nav(auto-hide)
         #leftButton
             Icon.clickable.backButton(v-if='!props.isParentLevel' @click="toParent") left
         .title#title(ref="title")
-            img.logo(alt="skapi" src="@/assets/img/logo-small.svg" @click="()=>props.isParentLevel ? router.push('/') : null")
+            img.logo(v-if="props.isParentLevel" alt="skapi" src="@/assets/img/logo-small.svg" @click="()=>props.isParentLevel ? router.push('/') : null")
         .menu#rightButton(ref="rightButton")
             Icon.clickable(style="height: 28px; width: 28px;" @click='open') menu_horizontal
 
@@ -169,6 +169,10 @@ sui-nav#top-nav {
             }
         }
 
+        #title:empty ~ #rightButton {
+            display: none;
+        }
+
         #rightButton { 
             position: relative;
         }
@@ -185,7 +189,7 @@ sui-nav#top-nav {
 
 .logo {
     height: 35px;
-    width: auto;
+    width: 35px;
     vertical-align: middle;
 }
 </style>

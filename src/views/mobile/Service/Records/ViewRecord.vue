@@ -330,7 +330,6 @@ import LoadingCircle from '@/components/LoadingCircle.vue';
 const route = useRoute();
 const router = useRouter();
 const appStyle = inject('appStyle');
-let pageTitle = inject('pageTitle');
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const deleteConfirmOverlay = ref(null);
@@ -533,7 +532,6 @@ const saveData = async () => {
 	try {
 		let res = await save();
 		if (res) {
-			pageTitle.value = res.record_id;
 			router.replace({
 				name: 'mobileRecordView',
 				query: {

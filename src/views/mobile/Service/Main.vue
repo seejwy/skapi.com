@@ -127,7 +127,6 @@ import { recordTables } from '@/helper/records.js';
 
 let router = useRouter();
 
-// sets pageTitle for immediate effect
 // this does not trigger again when nested routes change
 let route = useRoute();
 let serviceId = route.params.service;
