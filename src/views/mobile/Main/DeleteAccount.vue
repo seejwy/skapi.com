@@ -76,7 +76,7 @@ NavBarProxy
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, onBeforeUnmount, onMounted } from 'vue';
+import { ref, onBeforeUnmount, onMounted } from 'vue';
 import { state, skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 

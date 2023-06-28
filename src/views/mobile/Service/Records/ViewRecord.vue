@@ -1,7 +1,7 @@
 <template lang="pug">
 NavBarProxy
 	template(v-slot:leftButton)
-		Icon.clickable.backButton(@click="router.go(-1)") left
+		Icon.clickable.backButton(@click="backHandler") left
 	template(v-slot:title)
 		div {{ route.query.id }}
 	template(v-slot:rightButton)
@@ -354,7 +354,24 @@ let isNewRecord = false;
 const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || navigator?.oscpu?.includes('Windows') ? 3.9 : 4;
 
 const currentTotalFileSize = ref(0);
-const navbarMobileRightButton = inject('navbarMobileRightButton');
+
+const backHandler = () => {
+    // if search page, go back to search page
+    if(router.options.history.state.back) {
+        let url = new URLSearchParams(router.options.history.state.back.substring(router.options.history.state.back.indexOf('?')))
+        if(url.has('table')) {
+            router.go(-1);
+        } else {
+            router.push({name: 'records'});
+        }
+    } else {
+		if(props.record.table) {
+			router.push(`/admin/${serviceId}/records/list?table=${props.record.table.name}`);
+		} else {
+            router.push({name: 'records'});
+		}
+    }
+}
 
 const editRecord = () => {
 	if (!props?.record) {
@@ -493,7 +510,7 @@ const deleteRecord = () => {
 			delete table.records.list[tableIndex].deleting;
 		});
 	} else {
-		if (searchResult.value) searchResult.value.list[tableIndex].deleting = true;
+		if (searchResult.value && searchResult.value.list.length) searchResult.value.list[tableIndex].deleting = true;
 
 		skapi.deleteRecords({
 			service: serviceId,
@@ -507,7 +524,7 @@ const deleteRecord = () => {
 	}
 
 	deleteConfirmOverlay.value.close();
-	router.replace(router.options.history.state.back);
+	router.push(`/admin/${serviceId}/records/list?table=${props.record.table.name}`);
 
 	view.value = 'information';
 }
@@ -690,6 +707,9 @@ const save = async () => {
 				}
 			}
 
+			isSaving.value = false;
+			isEdit.value = false;
+
 			router.replace({
 				name: 'mobileRecordView',
 				query: {
@@ -796,7 +816,6 @@ const checkFileSize = (event, fileCollection) => {
 			if (Array.isArray(key.data)) {
 				key.data.forEach((file) => {
 					if (file instanceof File) {
-						console.log(file.size);
 						currentTotalFileSize.value += file.size / 1000;
 					}
 				});

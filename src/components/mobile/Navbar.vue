@@ -28,7 +28,6 @@ const props = defineProps({
 let navOverlay = ref(null);
 let route = useRoute();
 let router = useRouter();
-let navbarBackDestination = inject('navbarBackDestination');
 let rightButton = ref(null)
 let title = ref(null)
 
@@ -40,21 +39,9 @@ watch(() => route.name, () => {
 async function toParent() {
     await state.blockingPromise;
     
-    let p = navbarBackDestination.value;
-
     if(!!Object.keys(route.query).length) {
         router.replace({query: null});
-    }
-    else if (p === 'back') {
-        router.go(-1);
-    }
-    else if (typeof p === 'function') {
-        p();
-    }
-    else if (p?.from && p?.to && route.name === p.from) {
-        router.push({ name: p.to });
-    }
-    else {
+    } else {
         let path = route.fullPath.split('/');
         path.pop();
         router.push(path.join('/'));

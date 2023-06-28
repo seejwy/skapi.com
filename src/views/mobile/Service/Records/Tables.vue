@@ -71,13 +71,13 @@ import { tableList, recordTables, refreshTables, getMoreRecords } from '@/helper
 
 import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
 import RecordSearch from '@/components/recordSearch.vue';
-import ViewRecord from '@/views/mobile/Service/Records/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
+let record = inject('recordToOpen');
 const service = inject('service');
 
 // flag
@@ -124,6 +124,8 @@ if (groupedTableList.value) {
 }
 
 function addRecord() {
+    record.value = null;
+
     router.push({
         name: 'mobileRecordView',
         query: {
@@ -192,14 +194,12 @@ function getTables() {
     fetchingData.value = true;
     refreshTables(serviceId).then(() => {
         fetchingData.value = false;
-        console.log(recordTables.value)
     });
 
 }
 
 // get tables on created (if not already fetched)
 if (!recordTables.value) {
-    console.log("Getting tables")
     getTables();
 }
 

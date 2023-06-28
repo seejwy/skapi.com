@@ -2,7 +2,7 @@
 template(v-if="user")
     NavBarProxy
         template(v-slot:leftButton)        
-            Icon.clickable.backButton(@click="router.go(-1)") left
+            Icon.clickable.backButton(@click="backHandler") left
         template(v-slot:title)
             div {{  user.user_id }}
         template(v-slot:rightButton)
@@ -37,6 +37,20 @@ let serviceId = route.params.service;
 let serviceUsers = inject('serviceUsers');
 
 appStyle.mainPadding = null;
+
+const backHandler = () => {
+    // if search page, go back to search page
+    if(router.options.history.state.back) {
+        let url = new URLSearchParams(router.options.history.state.back.substring(router.options.history.state.back.indexOf('?')))
+        if(url.has('search')) {
+            router.go(-1);
+        } else {
+            router.push({name: 'users'});
+        }
+    } else {
+        router.push({name: 'users'});
+    }
+}
 
 const info = reactive([
     {

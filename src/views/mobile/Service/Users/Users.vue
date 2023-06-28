@@ -184,7 +184,6 @@ const searchParams = reactive({
     condition: '>=',
     value: ''
 });
-const navbarBackDestination = inject('navbarBackDestination');
 const promiseRunning = ref(false);
 const confirmOverlay = ref(null);
 const actionType = ref('');
@@ -517,12 +516,8 @@ const deleteUsers = async () => {
 
 onMounted(() => {
     if (route.query.search) {
-        navbarBackDestination.value = () => {
-            router.push({ name: 'users' });
-        };
         callSearch();
     } else {
-        navbarBackDestination.value = null;
         if (!serviceUsers.value?.list) {
             getUsers(true);
         }

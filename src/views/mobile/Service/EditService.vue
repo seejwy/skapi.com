@@ -57,7 +57,6 @@ let appStyle = inject('appStyle');
 let pageTitle = inject('pageTitle');
 let service = inject('service');
 let navbarMobileRightButton = inject('navbarMobileRightButton');
-let navbarBackDestination = inject('navbarBackDestination');
 let isDisabled = ref(false);
 const serviceStatus = ref(0);
 const serviceName = ref('');

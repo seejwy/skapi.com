@@ -78,7 +78,6 @@ import { useRoute, useRouter } from 'vue-router';
 
 import SearchNavBar from '@/components/SearchNavBar.vue';
 import RecordSearch from '@/components/recordSearch.vue';
-import ViewRecord from '@/views/mobile/Service/Records/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();

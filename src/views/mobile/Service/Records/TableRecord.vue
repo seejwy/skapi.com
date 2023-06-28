@@ -1,7 +1,7 @@
 <template lang="pug">
 NavBarProxy(v-if="route.query.table")
     template(v-slot:leftButton)
-        Icon.clickable.backButton(@click="router.go(-1)") left
+        Icon.clickable.backButton(@click="router.push({name: 'records'})") left
     template(v-slot:title)
         div {{ route.query.table }}
     template(v-slot:rightButton)
