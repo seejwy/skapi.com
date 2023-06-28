@@ -1,5 +1,5 @@
 <template lang="pug">
-.pageHeader.headSpaceHelper.hideOnTablet 
+.pageHeader.headSpaceHelper
     h1 Record
     p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse porta sed metus eget auctor. Nulla quis nulla a lorem consequat gravida viverra ac nisi. Donec rutrum mauris orci. Sed a velit sed magna aliquet gravida rutrum et magna.
     .action
@@ -7,22 +7,22 @@
             sui-button.lineButton(type="button") Read Doc
 
 // search form
-RecordSearch#recordSearch.hideOnTablet
-.hideOnTablet(style="clear:both;")
+RecordSearch#recordSearch
+div(style="clear:both;")
 
 sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 / 60%)")
     .viewRecordOverlay
         ViewRecord(v-if="recordToOpen" :record='recordToOpen' ref='viewRecord' @close="()=>openRecord.close(() => { recordToOpen = null })")
 
 .recordContainer#dataContainer
-    .header.hideOnTablet
+    .header
         span.notClickable(v-html="searchTitle")
         Icon.notClickable.animationRotation(style='opacity:0.6;' v-if="fetchingData") refresh
         .clickable(v-else @click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'records'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
 
-    .searchPoints.hideOnTablet(v-if="route.query?.access_group")
+    .searchPoints(v-if="route.query?.access_group")
         span(v-if='route.query?.access_group') Access Group: {{ route.query.access_group === '0' ? 'Public' : route.query.access_group === '1' ? 'Registered' : route.query.access_group }}
         span(v-if='route.query?.subscription') Subscription: {{ route.query.subscription === 'null' ? 'None' : route.query.access_group === 'true' ? 'Subscribed' : 'Public' }}
         span(v-if='route.query.search_type === "table" && route.query?.reference') Reference: {{ route.query.reference }}
@@ -70,7 +70,7 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
                                 span {{ dateFormat(r.uploaded) }}
                                 .recordWrapper.animation-skeleton.showOnTablet(v-if='searchResult === null')
 
-            .paginator.hideOnTablet
+            .paginator
                 Icon.arrow(
                     :class="{active: currentSelectedRecordBatch || currentSelectedRecordPage}"
                     @click="()=>{ if(currentSelectedRecordPage) currentSelectedRecordPage--; else { currentSelectedRecordPage = numberOfPagePerBatch - 1; currentSelectedRecordBatch--; } }") left

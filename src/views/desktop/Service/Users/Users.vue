@@ -135,7 +135,7 @@
         template(v-else) 
             .title No Users Found
             p There were no users matching the query.
-    .paginator.hideOnTablet(v-if="groupedUserList?.length")
+    .paginator(v-if="groupedUserList?.length")
         Icon(
             :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
             @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
@@ -181,7 +181,7 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import Icon from '@/components/Icon.vue';
 import SearchNavBar from '@/components/SearchNavBar.vue';
 
-const viewport = inject('viewport');
+// const viewport = inject('viewport');
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -640,7 +640,10 @@ onMounted(() => {
     }
 });
 
-watch([viewport, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
+// 항상 데탑이므로 viewport을 watch 할 필요없음.
+// viewport 변수는 app.vue 에서 viewport 설정을 담고있는 변수를 provide() 에서 여기서 inject()로 읽고 있는 변수임.
+// watch([viewport, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
+watch([currentSelectedUsersBatch, currentSelectedUsersPage], () => {
     selectedBlockedUsers.value = [];
     selectedUnblockedUsers.value = [];
 });

@@ -19,9 +19,13 @@
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
-            sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+            //- sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
+            //-     Login
+            //- 오버레이는 화면에 표시 되지 않음. 조건문 필요 x , 조건문은 왠만해서는 '참' 조건.
+            sui-overlay(v-else ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
-            Login(v-else-if="!state.user")
+            //- 아래는 모바일 용이니 패스
+            //- Login(v-else-if="!state.user")
     .sidebarHzolder(v-if="state.user")
         .sidebar
             img.logo(src="@/assets/img/logo-small.svg" @click="router.push({name: 'home'})" alt="Skapi")
@@ -198,7 +202,10 @@ let overlay = ref(null);
 
 onMounted(() => {
     awaitConnection.then(()=>{
-        if(!state.user && state.viewport === 'desktop') {
+        // if(!state.user && state.viewport === 'desktop') {
+        //     overlay.value.open();
+        // }
+        if(!state.user) {
             overlay.value.open();
         }
         recordTables.value = null;
