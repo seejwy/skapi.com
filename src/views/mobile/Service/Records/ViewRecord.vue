@@ -1,14 +1,24 @@
 <template lang="pug">
+NavBarProxy
+	template(v-slot:leftButton)
+		Icon.clickable.backButton(@click="backHandler") left
+	template(v-slot:title)
+		div {{ route.query.id }}
+	template(v-slot:rightButton)
+		div(v-if="!isEdit" style="font-weight: bold; cursor: pointer" @click="editRecord") Edit      
+		div(style="position: relative; width: 28px; height: 28px;" v-else-if="isSaving")
+			LoadingCircle(style="--bgColor: 80, 80, 80; --ringColor: 250, 250, 250;")
+		span(v-else @click="save" style="font-weight: bold; cursor: pointer") Save
 .container(v-if="!isEdit && props.record?.record_id")
-	.head(:class="{'mobile-head': isMobileUrl}")
-		.title {{ !isMobileUrl ? props.record.record_id : '' }}
+	.head
+		.title
 		.menu
 			ul
 				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
 				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
 			.action
 				Icon(@click="() => deleteConfirmOverlay.open()") trash
-	.content(:class="{desktop:!isMobileUrl}")
+	.content
 		.grid(v-if="view === 'information'")
 			.grid-item.title Record ID
 			.grid-item {{ props.record.record_id }}
@@ -103,19 +113,16 @@
 			.no-data(v-else)
 				Icon(style="height: 72px; width: 72px;") no_record
 				p No Data
-	.foot(v-if='!isMobileUrl')
-		sui-button.text-button(type="button" @click="close" style="margin-right: 16px;") Close
-		sui-button(type="button" @click="editRecord") Edit
 .container(v-else-if="isEdit" :loading="isSaving || null")
 	form(ref="formConfig")
-		.head(:class="{'mobile-head': isMobileUrl}")
-			.title {{ !isMobileUrl ? form.record_id || 'Add Record' : ''}}
+		.head
+			.title 
 			.menu
 				ul
 					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
 					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
 
-		.content#setting(:class="{desktop:!isMobileUrl}" v-show="view === 'information'")
+		.content#setting(v-show="view === 'information'")
 			.row
 				.section(style="width: 100%;")
 					.name Table Name
@@ -218,7 +225,7 @@
 			//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
 	form(ref="formEl")
-		.content#record(:class="{desktop:!isMobileUrl}" v-show="view === 'record'")
+		.content#record(v-show="view === 'record'")
 			.data-row(v-for="(record, recordIndex) in data")
 				.data-name-action
 					.select-input
@@ -281,14 +288,6 @@
 			div
 				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
-		.foot(v-if='!isMobileUrl')
-			sui-button(type="button" @click="props.record?.record_id ? isEdit = false : close()" style="margin-right: 16px;").text-button Cancel
-			div(style="display: inline-block")
-				sui-button(v-if="isSaving" type="button")
-					span(style="visibility: hidden;") Save
-					LoadingCircle
-				sui-button(v-else type="button" @click="save") Save
-
 sui-overlay(ref="deleteConfirmOverlay")
 	.popup
 		.title
@@ -318,10 +317,11 @@ sui-overlay(ref="filesizeExceedsOverlay")
 </template>
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';
-import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
+import { useRoute, useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import { skapi, state } from '@/main';
 import { dateFormat, getSize } from '@/helper/common';
 import { tableList, getMoreRecords, recordTables, refreshTables } from '@/helper/records';
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
 import TagsInput from '@/components/TagsInput.vue';
 import JsonInput from '@/components/JsonInput.vue';
 import Icon from '@/components/Icon.vue';
@@ -330,7 +330,6 @@ import LoadingCircle from '@/components/LoadingCircle.vue';
 const route = useRoute();
 const router = useRouter();
 const appStyle = inject('appStyle');
-let pageTitle = inject('pageTitle');
 const props = defineProps(['record']);
 const emit = defineEmits(['close']);
 const deleteConfirmOverlay = ref(null);
@@ -355,8 +354,23 @@ const fileSizeLimit = navigator?.userAgentData?.platform === 'Windows' || naviga
 
 const currentTotalFileSize = ref(0);
 
-const isMobileUrl = route.query?.id;
-const navbarMobileRightButton = inject('navbarMobileRightButton');
+const backHandler = () => {
+    // if search page, go back to search page
+    if(router.options.history.state.back) {
+        let url = new URLSearchParams(router.options.history.state.back.substring(router.options.history.state.back.indexOf('?')))
+        if(url.has('table')) {
+            router.go(-1);
+        } else {
+            router.push({name: 'records'});
+        }
+    } else {
+		if(props.record.table) {
+			router.push(`/admin/${serviceId}/records/list?table=${props.record.table.name}`);
+		} else {
+            router.push({name: 'records'});
+		}
+    }
+}
 
 const editRecord = () => {
 	if (!props?.record) {
@@ -429,8 +443,8 @@ const editRecord = () => {
 				data.value.push({ key, type: 'file', data: typeSplitFiles.files });
 			}
 
-			if(typeSplitFiles.json) {
-				if(Array.isArray(typeSplitFiles.json)) {
+			if (typeSplitFiles.json) {
+				if (Array.isArray(typeSplitFiles.json)) {
 					typeSplitFiles.json.forEach(value => {
 						if (Array.isArray(value)) {
 							data.value.push({ key, type: 'json', data: JSON.stringify(value) });
@@ -456,69 +470,68 @@ const editRecord = () => {
 
 const deleteRecord = () => {
 	let table, tableIndex;
-	
-	if(recordTables.value) {
+
+	if (recordTables.value) {
 		table = recordTables.value.list.find((val) => val.table === props.record.table.name);
-		if(table.records?.list) {
-			tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
-		} else {
-			tableIndex = table.records.value.list.findIndex((record) => record.record_id === props.record.record_id);
+		if (table) {
+			if (table.records?.list) {
+				tableIndex = table.records.list.findIndex((record) => record.record_id === props.record.record_id);
+			} else {
+				tableIndex = table.records.value.list.findIndex((record) => record.record_id === props.record.record_id);
+			}
 		}
-	} else {
+	} else if (searchResult.value) {
 		tableIndex = searchResult.value.list.findIndex((val) => {
 			return val.record_id === props.record.record_id;
 		});
 	}
 
-	if(recordTables.value && !searchResult.value) {
+	if (recordTables.value && !searchResult.value) {
 		table.records.list[tableIndex].deleting = true;
-		
+
 		skapi.deleteRecords({
 			service: serviceId,
 			record_id: [props.record.record_id]
 		}).then(() => {
 			table.number_of_records--;
 			table.records.list.splice(tableIndex, 1);
-			if(table.records.list.length === 0) {
+			if (table.records.list.length === 0) {
 				let indexToDelete = recordTables.value.list.findIndex(t => {
 					return t.table.toString() === table.table;
 				});
 
-				if(indexToDelete >= 0) {
+				if (indexToDelete >= 0) {
 					recordTables.value.list.splice(indexToDelete, 1);
 				}
 			}
 		}).catch((e) => {
-			console.log({e});
+			console.log({ e });
 			delete table.records.list[tableIndex].deleting;
 		});
 	} else {
-		searchResult.value.list[tableIndex].deleting = true;		
+		if (searchResult.value && searchResult.value.list.length) searchResult.value.list[tableIndex].deleting = true;
 
 		skapi.deleteRecords({
 			service: serviceId,
 			record_id: [props.record.record_id]
 		}).then(() => {
-			searchResult.value.list.splice(tableIndex, 1);
-			if(recordTables.value) table.number_of_records--;
+			if (searchResult.value) searchResult.value.list.splice(tableIndex, 1);
+			if (recordTables.value) table.number_of_records--;
 		}).catch((e) => {
-			console.log({e});
+			console.log({ e });
 		});
 	}
-	
+
 	deleteConfirmOverlay.value.close();
-	if(state.viewport === 'desktop') emit('close');
-	else {
-		router.replace(router.options.history.state.back);
-	}
+	router.push(`/admin/${serviceId}/records/list?table=${props.record.table.name}`);
+
 	view.value = 'information';
 }
 
 const saveData = async () => {
 	try {
 		let res = await save();
-		if(res) {
-			pageTitle.value = res.record_id;
+		if (res) {
 			router.replace({
 				name: 'mobileRecordView',
 				query: {
@@ -530,17 +543,17 @@ const saveData = async () => {
 		} else {
 			return false;
 		}
-	} catch(e) {
-		console.log({e});
+	} catch (e) {
+		console.log({ e });
 		fileError.value = e.message;
 
-		if(e.code === 'NOT_EXISTS') {
+		if (e.code === 'NOT_EXISTS') {
 			view.value = 'information';
 			await nextTick();
 			referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
 			referenceIdField.value.querySelector('input').reportValidity();
-		} 
-		if(e?.name === 'NO_FILE') {		
+		}
+		if (e?.name === 'NO_FILE') {
 			fileError.value = e.message;
 		}
 	}
@@ -549,13 +562,13 @@ const saveData = async () => {
 const save = async () => {
 	isSaving.value = true;
 
-	if(view.value === 'record') {
+	if (view.value === 'record') {
 		formEl.value.reportValidity();
-		if(formEl.value.checkValidity()) {
+		if (formEl.value.checkValidity()) {
 			view.value = 'information';
 			await nextTick();
 			formConfig.value.reportValidity();
-			if(!formConfig.value.checkValidity()) {
+			if (!formConfig.value.checkValidity()) {
 				isSaving.value = false;
 				return false;
 			}
@@ -567,11 +580,11 @@ const save = async () => {
 		}
 	} else {
 		formConfig.value.reportValidity();
-		if(formConfig.value.checkValidity()) {
+		if (formConfig.value.checkValidity()) {
 			view.value = 'record';
 			await nextTick();
 			formEl.value.reportValidity();
-			if(!formEl.value.checkValidity()) {
+			if (!formEl.value.checkValidity()) {
 				isSaving.value = false;
 				return false;
 			}
@@ -582,13 +595,13 @@ const save = async () => {
 			return false;
 		}
 	}
-	
+
 	let config = Object.assign({}, form.value, {
 		service: serviceId,
 		formData: form => {
 			data.value.forEach(record => {
 				if (record.type === 'json') {
-					if(typeof record.data !== 'string' && !isNaN(record.data)) {
+					if (typeof record.data !== 'string' && !isNaN(record.data)) {
 						record.data = JSON.stringify(record.data);
 					}
 					record.data = record.data.replaceAll(' ', '');
@@ -596,7 +609,7 @@ const save = async () => {
 						type: 'application/json'
 					}));
 				} else if (record.type === 'file') {
-					if(record.data.length) {
+					if (record.data.length) {
 						record.data.forEach(file => {
 							if (file instanceof File) {
 								form.append(record.key, file);
@@ -621,7 +634,7 @@ const save = async () => {
 			return form;
 		}
 	});
-	
+
 	if (!config.index?.name) {
 		config.index = null; // set to null to remove index
 	} else {
@@ -651,46 +664,56 @@ const save = async () => {
 			if (tableList.includes(r.table.name)) {
 				let idx = tableList.indexOf(r.table.name);
 				let tbl = recordTables.value.list[idx];
-				if(tbl) {
+				if (tbl) {
 					tbl.number_of_records++;
 					r.data = ref(r.data);
-					
-					if(tbl.records.startKey === 'end') {
+
+					if (tbl.records.startKey === 'end') {
 						tbl.records.list.push(r);
 					}
 				}
 			} else {
-				if(recordTables.value.endOfList) {
+				if (recordTables.value?.endOfList) {
 					let positionFound = false;
 					let index = 0;
-					while(!positionFound && index < recordTables.value.list.length) {
-						if(index + 1 <= recordTables.value.list.length && r.table.name > recordTables.value.list[index].table && r.table.name < recordTables.value.list[index+1]?.table) {
+					while (!positionFound && index < recordTables.value.list.length) {
+						if (index + 1 <= recordTables.value.list.length && r.table.name > recordTables.value.list[index].table && r.table.name < recordTables.value.list[index + 1]?.table) {
 							recordTables.value.list.splice(index + 1, 0, {
 								number_of_records: 1,
 								opened: true,
-								records: ref({endOfList: true, startKey: 'end', startKey_list: ['end'], list:[r]}),
+								records: ref({ endOfList: true, startKey: 'end', startKey_list: ['end'], list: [r] }),
 								service: serviceId,
 								size: 0,
 								table: r.table.name
 							});
 							positionFound = true;
-						} 
+						}
 						index++;
 					}
-					
-					if(!positionFound) {
+
+					if (!positionFound) {
 						recordTables.value.list.push({
-								number_of_records: 1,
-								opened: true,
-								records: ref({endOfList: true, startKey: 'end', startKey_list: ['end'], list:[r]}),
-								service: serviceId,
-								size: 0,
-								table: r.table.name
-							});
+							number_of_records: 1,
+							opened: true,
+							records: ref({ endOfList: true, startKey: 'end', startKey_list: ['end'], list: [r] }),
+							service: serviceId,
+							size: 0,
+							table: r.table.name
+						});
 						tableList.push(r.table.name);
 					}
 				}
 			}
+
+			isSaving.value = false;
+			isEdit.value = false;
+
+			router.replace({
+				name: 'mobileRecordView',
+				query: {
+					id: r.record_id
+				}
+			});
 		}
 		else {
 			for (let k in props.record) {
@@ -703,20 +726,20 @@ const save = async () => {
 		for (let k in r) {
 			props.record[k] = r[k];
 		}
-		
-		if(!isNewRecord && props.record?.table?.name !== currentTable) {
+
+		if (!isNewRecord && props.record?.table?.name !== currentTable) {
 			await nextTick();
 			recordTables.value.list.forEach((table, index) => {
-				if(table.table === currentTable) {
+				if (table.table === currentTable) {
 					let idx = table.records.list.findIndex((record) => {
 						return record.record_id === props.record_id
 					});
 
-					if(props.record.table.name !== currentTable) {
+					if (props.record.table.name !== currentTable) {
 						recordTables.value.list.push({
 							number_of_records: 1,
 							opened: true,
-							records: ref({endOfList: true, startKey: 'end', startKey_list: ['end'], list:[r]}),
+							records: ref({ endOfList: true, startKey: 'end', startKey_list: ['end'], list: [r] }),
 							size: 0,
 							table: props.record.table.name
 						});
@@ -724,10 +747,10 @@ const save = async () => {
 
 					table.records.list.splice(idx, 1);
 					table.number_of_records--;
-					if(table.number_of_records <= 0) {
+					if (table.number_of_records <= 0) {
 						recordTables.value.list.splice(index, 1);
 					}
-				} else if(table.table === props.record.table.name) {
+				} else if (table.table === props.record.table.name) {
 					table.number_of_records++;
 					let idx = table.records.list.findIndex((record) => {
 						return record.uploaded > props.record.uploaded
@@ -745,27 +768,15 @@ const save = async () => {
 		return r;
 	} catch (e) {
 		// do some error message
-		console.log({e});
+		console.log({ e });
 		isSaving.value = false;
-		if(state.viewport === 'desktop') {
-			if(e.code === 'NOT_EXISTS') {
-				view.value = 'information';
-				await nextTick();
-				referenceIdField.value.querySelector('input').setCustomValidity('Reference ID is invalid');
-				referenceIdField.value.querySelector('input').reportValidity();
-			} 
-			if(e?.name === 'NO_FILE') {		
-				fileError.value = e.message;
-				throw e;
-			}
-		}
 		throw e;
 	};
 };
 
 const download = async (secureUrl, fileName) => {
 	try {
-		let download = await skapi.getBlob({url: secureUrl}, {service: serviceId});
+		let download = await skapi.getBlob({ url: secureUrl }, { service: serviceId });
 		let reader = new FileReader();
 		reader.readAsDataURL(download);
 		reader.onload = () => {
@@ -777,20 +788,25 @@ const download = async (secureUrl, fileName) => {
 			a.click();
 			document.body.removeChild(a);
 		}
-	} catch( e ) {
-		console.log({e});
+	} catch (e) {
+		console.log({ e });
 	}
 }
 
 const onDrop = (event, keyIndex) => {
 	event.preventDefault();
+<<<<<<< HEAD:src/components/viewRecord.vue
 	if(isSaving.value) return false;
 	
+=======
+	if (isSaving.value) return false;
+
+>>>>>>> 6bb878875b1b05c306f534771094547acace21db:src/views/mobile/Service/Records/ViewRecord.vue
 	const files = event.dataTransfer.files;
 	let fileData = data.value[keyIndex].data || [];
 	fileData = [...fileData, ...files];
 
-	if(checkFileSize(event, fileData)) {
+	if (checkFileSize(event, fileData)) {
 		data.value[keyIndex].data = fileData;
 	}
 };
@@ -800,10 +816,9 @@ const checkFileSize = (event, fileCollection) => {
 
 	data.value.forEach((key) => {
 		if (key.type === 'file') {
-			if(Array.isArray(key.data)) {
+			if (Array.isArray(key.data)) {
 				key.data.forEach((file) => {
-					if(file instanceof File) {
-						console.log(file.size);
+					if (file instanceof File) {
 						currentTotalFileSize.value += file.size / 1000;
 					}
 				});
@@ -815,7 +830,7 @@ const checkFileSize = (event, fileCollection) => {
 		currentTotalFileSize.value += file.size / 1000;
 	});
 
-	if(currentTotalFileSize.value > 4000) {
+	if (currentTotalFileSize.value > 4000) {
 		event.target.value = null;
 		filesizeExceedsOverlay.value.open();
 
@@ -826,14 +841,14 @@ const checkFileSize = (event, fileCollection) => {
 }
 
 const addFiles = (event, keyIndex, index) => {
-	if(isSaving.value) return false;
+	if (isSaving.value) return false;
 
 	const files = event.target.files;
 	let fileData = data.value[keyIndex].data;
 	let fileCollection = [...files];
 
-	if(checkFileSize(event, fileCollection)) {
-		if(Array.isArray(fileData)) {
+	if (checkFileSize(event, fileCollection)) {
+		if (Array.isArray(fileData)) {
 			fileCollection = [...fileData, ...fileCollection];
 		} else {
 			fileCollection = [...fileCollection];
@@ -849,7 +864,7 @@ const addField = () => {
 };
 
 const removeField = (index) => {
-	if(isSaving.value) return true;
+	if (isSaving.value) return true;
 	data.value.splice(index, 1);
 };
 
@@ -937,17 +952,13 @@ defineExpose({
 });
 </script>
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .container {
 	background: #505050;
 	position: relative;
 
 	.head {
 		background-color: #505050;
-	}
 
-	.head.mobile-head {
 		.title {
 			padding: 8px 0;
 		}
@@ -996,12 +1007,6 @@ defineExpose({
 				height: 20px;
 			}
 		}
-	}
-
-	.content.desktop {
-		max-height: calc(100vh - 250px);
-		overflow-y: auto;
-		height: 700px;
 	}
 
 	.content {
@@ -1067,7 +1072,7 @@ defineExpose({
 			& .data-row:last-child {
 				margin-bottom: 0;
 			}
-			
+
 			.action {
 				float: right;
 			}
@@ -1256,8 +1261,10 @@ defineExpose({
 					width: 57px;
 					color: rgba(255, 255, 255, .6);
 				}
+
 				.error {
 					color: #FF8D3B;
+
 					svg {
 						height: 24px;
 						width: 24px;
@@ -1265,6 +1272,7 @@ defineExpose({
 					}
 				}
 			}
+
 			.file-size-limit {
 				text-align: center;
 				font-size: 14px;
@@ -1310,18 +1318,10 @@ defineExpose({
 			&.mobile-full {
 
 				&:first-child {
-					margin-right: 24px;
+					margin-bottom: 25px;
 				}
 
-				width: calc(50% - 12px);
-
-				@media @tablet {
-					width: 100%;
-					&:first-child {
-						margin-right: 0;
-						margin-bottom: 25px;
-					}
-				}
+				width: 100%;
 			}
 
 			.name {
@@ -1342,7 +1342,7 @@ defineExpose({
 				padding: 12px;
 				background: #434343;
 				border-radius: 4px;
-				
+
 				label {
 					display: flex;
 					align-items: center;

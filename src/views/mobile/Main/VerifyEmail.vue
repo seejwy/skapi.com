@@ -1,4 +1,7 @@
 <template lang="pug">
+NavBarProxy
+    template(v-slot:leftButton)
+        div
 form.form.container(@submit.prevent="verifyEmail" action="")
     h2 Verify Email
     p Verification Email has been sent. Please check your email and enter the verification code.
@@ -23,8 +26,9 @@ import { inject, ref, watch, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
-import Icon from './Icon.vue';
-import SubmitButton from './SubmitButton.vue';
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
+import Icon from '@/components/Icon.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -100,18 +104,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .form.container {
     text-align: center;
-    padding: 40px;
-    background: #FAFAFA;
     color: #000000d9;
-    width: 542px;
-    max-width: 100%;
-    border: 1px solid #808080;
-    box-shadow: 4px 4px 12px #00000040;
-    border-radius: 8px;
+    margin: var(--head-space) auto 0;
 
     p {
         margin: 40px 0;
@@ -182,14 +178,6 @@ onBeforeUnmount(() => {
             width: 56px;
             height: 56px;
         }
-    }
-
-    @media @tablet {
-        border: none;
-        box-shadow: none;
-        background-color: transparent;
-        padding: 0px;
-        margin: var(--head-space) auto 0;
     }
 }
 

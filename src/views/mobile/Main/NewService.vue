@@ -1,45 +1,38 @@
 <template lang="pug">
+NavBarProxy
+    template(v-slot:title)
+        div Create a New Service
+    template(v-slot:rightButton)
+        div
 .overlay-container(:loading="isDisabled || null")
     form.admin(@submit.prevent="createNewService" action="")
-        .overlay-container-title.hideOnTablet Create a New Service
         sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
-        sui-button.text-button(v-if="state.viewport === 'desktop'" type="button" @click="emit('close', '')" style="margin-right: 16px;") Cancel
         SubmitButton(:loading="isDisabled") Create
 </template>
 <!-- script below -->
 <script setup>
-import { inject, reactive, ref, watch, onBeforeUnmount } from 'vue';
+import { inject, ref, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
 import { countries, regions } from '@/helper/common';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
-import Icon from './Icon.vue';
-import SubmitButton from './SubmitButton.vue';
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
+import Icon from '@/components/Icon.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 
-let route = useRoute();
 let router = useRouter();
 const emit = defineEmits(['close']);
 const isCreatingService = ref(false);
 let appStyle = inject('appStyle');
-let pageTitle = inject('pageTitle');
-let navbarMobileRightButton = inject('navbarMobileRightButton');
 const serviceName = ref('');
 const isDisabled = ref(false);
 
-if(state.viewport === 'mobile') {
-    pageTitle.value = 'Create a new Service'
-    appStyle.navBackground = '#505050';
-    appStyle.background = '#333333';
-    navbarMobileRightButton.value = {
-        type: 'hidden'
-    };
-}
+appStyle.navBackground = '#505050';
+appStyle.background = '#333333';
 
 onBeforeUnmount(() => {
     appStyle.background = null;
     appStyle.navBackground = '#293fe6';
-    pageTitle.value = 'skapi';
-    navbarMobileRightButton.value = null;
 });
 
 const states = {
@@ -111,35 +104,17 @@ const createNewService = async() => {
     state.blockingPromise = skapi.createService({region: serviceLocale, name: serviceName.value});
     let res = await state.blockingPromise;
     isDisabled.value = false;
+    console.log(state)
     router.push(`/admin/${res.service}`);
 }
 
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .overlay-container {
-    background-color: #505050;
-    border: 1px solid #808080;
-    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     color: #fff;
     text-align: center;
-    padding: 40px;
-    width: 500px;
-    max-width: 100%;
-    border-radius: 8px;
-
-    &-title {
-        font-weight: bold;
-        font-size: 28px;
-        margin-bottom: 40px;
-    }
-
-    &-text {
-        color: rgba(255, 255, 255, 0.85);
-        margin: 0 0 28px 0;
-        line-height: 1.5;
-    }
+    margin-top: var(--head-space);
 
     sui-input {
         display: block;
@@ -149,21 +124,6 @@ const createNewService = async() => {
         &[type=submit] {
             display: inline-block;        
             width: unset;
-        }
-    }
-
-    @media @tablet {
-        width: 100%;
-        max-width: unset;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-        padding: 0;
-        margin-top: var(--head-space);
-
-        &-text {
-            text-align: left;
         }
     }
 }

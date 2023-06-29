@@ -24,15 +24,15 @@
   }
 }
 
-.animationRotation {
+.animation-rotation {
   animation: rotation 2s infinite linear;
 }
 
-.animationRotation--slow-in-out {
+.animation-rotation--slow-in-out {
   animation: rotation 1s infinite cubic-bezier(0.09, 0.43, 0.94, 0.59);
 }
 
-.animationSkeleton {
+.animation-skeleton {
   border-radius: 4px;
   animation: woosh-woosh 1.6s infinite linear;
 }
@@ -41,13 +41,9 @@
   --primary-color: #293fe6;
   --app-nav-bg-color: #293fe6;
   --input-box-shadow: rgb(0 0 0 / 50%) -1px -1px 2px -1px, rgb(255 255 255 / 33%) 1px 1px 1px, rgb(0 0 0 / 25%) 0px 0px 0px 1px inset;
-  --head-space: 60px;
+  --head-space: 40px;
   --dark-highlight-color: #4B8DE6;
-
-  @media @tablet {
-    --head-space: 40px;
-    --side-padding: 20px;
-  }
+  --side-padding: 20px;
 
   @media @phone {
     --side-padding: 16px;
@@ -85,7 +81,7 @@ body {
   box-sizing: border-box;
 }
 
-.inlineVerticalMiddle {
+.inline-vertical-middle {
   vertical-align: middle;
 }
 
@@ -94,81 +90,50 @@ body {
   cursor: pointer !important;
 }
 
-.notClickable {
+.not-clickable {
   user-select: none;
   cursor: default !important;
 }
 
-.showOnIpad {
-  @media @ipad_excl {
-    display: none !important;
-  }
-}
-
-.hideOnIpad {
-  @media @ipad {
-    display: none !important;
-  }
-}
-
-.showOnTablet {
-  @media @tablet_excl {
-    display: none !important;
-  }
-}
-
-.hideOnTablet {
-  @media @tablet {
-    display: none !important;
-  }
-}
-
 main {
   &.app {
-    max-width: 1000px;
     margin: auto;
     padding: 0 var(--side-padding, 24px) 80px;
-    box-sizing: content-box;  
+    box-sizing: content-box;
   }
 
-  .headSpaceHelper {
+  .head-space-helper {
     margin-top: var(--head-space);
   }
-  
-  .pageHeader {
-      margin-bottom: 60px;
 
-      h1, h2 {
-        font-size: 28px;
-        margin: 0;
-      }
+  .page-header {
+    margin-bottom: 60px;
 
-      @media @phone {
-        h2 {
-          font-size: 20px;
-        }
-      }
+    h1,
+    h2 {
+      font-size: 28px;
+      margin: 0;
+    }
 
-      p { 
-          margin: 16px 0 24px;
-          line-height: 1.5;
-          color: rgba(0, 0, 0, 0.85);
+    @media @phone {
+      h2 {
+        font-size: 20px;
       }
+    }
 
-      .admin & p {
-        color: rgba(255, 255, 255, .85);
-      }
-  
-      .action {
-          text-align: right;
-      }
+    p {
+      margin: 16px 0 24px;
+      line-height: 1.5;
+      color: rgba(0, 0, 0, 0.85);
+    }
 
-      @media @tablet {      
+    .admin & p {
+      color: rgba(255, 255, 255, .85);
+    }
 
-        h1:not(.fixed) {
-          display: none;
-        }
-      }
+    .action {
+      text-align: right;
+    }
   }
 }
 
@@ -189,11 +154,11 @@ sui-input[type=submit] {
   padding: 12px 32px;
   white-space: nowrap;
 
-  &.withIcon svg {
+  &.with-icon svg {
     position: absolute;
     left: 32px;
 
-    & + * {
+    &+* {
       display: inline-block;
       margin-left: 28px;
     }
@@ -201,7 +166,7 @@ sui-input[type=submit] {
 }
 
 /** start sui-elements **/
-sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
+sui-input:not([type=checkbox], [type=radio], [type=submit], [type=reset]) {
   border: 1px solid rgba(0, 0, 0, 0.4);
   background: #fff;
   box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -220,13 +185,13 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
     input::placeholder {
       color: rgba(255, 255, 255, 0.4);
     }
-    
+
     background: rgba(255, 255, 255, 0.08);
   }
 
   &:focus-within {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset;
-    
+
     .admin & {
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset;
     }
@@ -240,7 +205,7 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
     }
   }
 
-  .admin .selectInput & {
+  .admin .select-input & {
     background-color: transparent;
   }
 }
@@ -250,7 +215,7 @@ sui-input[type=checkbox] {
   filter: none;
   border-width: 2px;
   cursor: pointer;
-  
+
   .admin & {
     color: #fff;
   }
@@ -259,7 +224,7 @@ sui-input[type=checkbox] {
   &:focus:not([disabled]) {
 
     &[checked] {
-      outline: 3px solid  rgba(41, 63, 230, 0.3);
+      outline: 3px solid rgba(41, 63, 230, 0.3);
 
       .admin & {
         outline: 3px solid rgba(0, 0, 0, 0.2);
@@ -267,12 +232,12 @@ sui-input[type=checkbox] {
     }
 
     &:not([checked]) {
-      outline: 3px solid  rgba(41, 63, 230, 0.1);
-      background-color:  rgba(41, 63, 230, 0.1);
+      outline: 3px solid rgba(41, 63, 230, 0.1);
+      background-color: rgba(41, 63, 230, 0.1);
 
       .admin & {
         outline: 3px solid rgba(0, 0, 0, 0.2);
-        background-color:  rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.2);
       }
     }
   }
@@ -291,10 +256,10 @@ sui-input[type=radio] {
   &[checked]::after {
     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25);
   }
-  
+
   &:active:not([disabled]) {
     &[checked] {
-      background-color:  rgba(41, 63, 230, 0.3);
+      background-color: rgba(41, 63, 230, 0.3);
     }
   }
 }
@@ -314,9 +279,9 @@ sui-input[type=checkbox] {
     }
 
     &[disabled] {
-      
-        background: rgba(0, 0, 0, 0.25);
-        color: rgba(255, 255, 255, 0.6);
+
+      background: rgba(0, 0, 0, 0.25);
+      color: rgba(255, 255, 255, 0.6);
 
       .admin & {
         background: rgba(255, 255, 255, 0.6);
@@ -338,17 +303,18 @@ sui-select {
 
   &:focus-within {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset !important;
+
     .admin & {
       box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--dark-highlight-color) inset !important;
     }
-    
+
     outline: none;
 
-    
+
   }
 }
 
-.selectInput {
+.select-input {
   background: rgba(255, 255, 255, 0.08);
   box-shadow: var(--input-box-shadow);
   border-radius: 4px;
@@ -358,13 +324,14 @@ sui-select {
   position: relative;
   vertical-align: middle;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  
-  &.noBorder {
+
+  &.no-border {
     border: none;
   }
 
-  .selectField,
-  .inputField {
+  .select-field,
+  .input-field {
+
     sui-input,
     sui-select {
       background: transparent;
@@ -372,9 +339,9 @@ sui-select {
       border: none !important;
       outline: 0;
       width: 100%;
-  
+
       &:focus-within {
-  
+
         &,
         & input {
           outline: none !important;
@@ -384,7 +351,11 @@ sui-select {
       }
     }
   }
-  
+
+  .input-field {
+    flex-grow: 1;
+  }
+
   &:focus-within {
     outline: none;
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), 0 0 0 2px var(--primary-color) inset;
@@ -405,32 +376,32 @@ sui-button {
   line-height: 1;
   padding: 12px 32px;
 
-  &:not(.textButton) {
+  &:not(.text-button) {
     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65), 0 0 0 1px rgba(0, 0, 0, 0.4);
   }
 
-  &:not([disabled],.fab):hover,
-  &:not([disabled],.fab):focus {
+  &:not([disabled], .fab):hover,
+  &:not([disabled], .fab):focus {
     background-color: #4F61E9;
   }
-  
+
   &:not([disabled]):active {
     box-shadow: rgba(128, 128, 128, 0.25) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.75) 0px 1px 3px inset, rgba(255, 255, 255, 0.25) -1px -1px 1px inset;
     background-color: #0D26E1;
   }
-  
-  .lineButton {
+
+  .line-button {
     background-color: transparent;
-    box-shadow: none; 
+    box-shadow: none;
     border: 1px solid;
     padding: 11px 32px;
   }
 
   .admin & {
     background-color: var(--primary-color);
-    
-    &.lineButton {
-      .lineButton;
+
+    &.line-button {
+      .line-button;
       border-color: rgba(255, 255, 255, 0.65);
       background-color: rgba(217, 217, 217, 0.08);
       color: #fff;
@@ -443,8 +414,8 @@ sui-button {
     background-color: #D9D9D9;
   }
 
-  &.lineButton {
-    .lineButton;
+  &.line-button {
+    .line-button;
     border-color: var(--primary-color);
     color: var(--primary-color);
 
@@ -485,7 +456,7 @@ sui-button {
     }
   }
 
-  &.textButton {
+  &.text-button {
     background-color: transparent;
     box-shadow: none;
     color: var(--primary-color);
@@ -528,7 +499,7 @@ sui-button {
     }
   }
 
-  &.iconButton {
+  &.icon-button {
     background: transparent;
     outline: none;
     padding: .6em .6em;
@@ -544,6 +515,7 @@ sui-button {
     &:not([disabled]):hover {
       background: #FFFFFF14;
     }
+
     .admin &:active,
     .admin &:focus {
       background: #FFFFFF14;
@@ -567,7 +539,7 @@ sui-button {
     outline: none;
     border-color: transparent;
 
-    &.openMenu svg {
+    &.open-menu svg {
       height: 28px;
       width: 28px;
     }
@@ -594,10 +566,12 @@ sui-tooltip {
     white-space: pre-wrap;
   }
 }
+
 [loading] {
   pointer-events: none;
 }
-/** end sui-elements **/ 
+
+/** end sui-elements **/
 
 .toast {
   position: fixed;
@@ -618,22 +592,22 @@ sui-tooltip {
   z-index: 99;
 
   svg:not(.close) {
-      height: 32px;
-      width: 32px;
-      color: #293FE6;    
+    height: 32px;
+    width: 32px;
+    color: #293FE6;
   }
-  
+
   .close {
-      position: absolute;
-      top: 11px;
-      right: 11px;
-      cursor: pointer;
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    cursor: pointer;
   }
 
   .title {
-      display: inline-block;
-      font-weight: bold;
-      color: #293FE6;
+    display: inline-block;
+    font-weight: bold;
+    color: #293FE6;
   }
 
   .body {
@@ -642,62 +616,62 @@ sui-tooltip {
 
 
   @media @tablet {
-      column-gap: 12px;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 20px 50px 28px 20px;
-      color: rgba(0,0,0,.8);
-      border-radius: 0;
-      filter: drop-shadow(0px -2px 4px rgba(0, 0, 0, 0.25));
-      max-width: unset;
-      
-      svg:not(.close) {
-          height: 32px;
-          width: 32px;
-      }
+    column-gap: 12px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 50px 28px 20px;
+    color: rgba(0, 0, 0, .8);
+    border-radius: 0;
+    filter: drop-shadow(0px -2px 4px rgba(0, 0, 0, 0.25));
+    max-width: unset;
+
+    svg:not(.close) {
+      height: 32px;
+      width: 32px;
+    }
   }
 
-  
+
   &-enter-active,
   &-leave-active {
-      transition: opacity 0.5s ease, bottom 0.5s ease;
+    transition: opacity 0.5s ease, bottom 0.5s ease;
   }
 
   &-enter-from,
   &-leave-to {
-      opacity: 0;
-      bottom: -10px;
+    opacity: 0;
+    bottom: -10px;
   }
 }
 
 .popup {
-	background: #333333;
-	border: 1px solid #808080;
-	box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
-	border-radius: 8px;
-	padding: 60px 32px;
-	margin: 12px;
-	text-align: center;
+  background: #333333;
+  border: 1px solid #808080;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 60px 32px;
+  margin: 12px;
+  text-align: center;
   min-width: 350px;
 
-	svg {
-		height: 38px;
-		width: 38px;
-	}
+  svg {
+    height: 38px;
+    width: 38px;
+  }
 
-	.title {
+  .title {
     color: #F04E4E;
     font-weight: bold;
 
-		&>div {
-			margin-top: 12px;
-			font-size: 20px;
-		}
-	}
+    &>div {
+      margin-top: 12px;
+      font-size: 20px;
+    }
+  }
 
-	.body {
-		padding: 20px 0 40px 0;
+  .body {
+    padding: 20px 0 40px 0;
     line-height: 1.5;
 
     p {
@@ -716,9 +690,9 @@ sui-tooltip {
       border-radius: 4px;
       margin-top: 24px;
     }
-	}
+  }
 
-	.foot sui-button:first-child:not(:only-child) {
-		margin-right: 12px;
-	}
+  .foot sui-button:first-child:not(:only-child) {
+    margin-right: 12px;
+  }
 }

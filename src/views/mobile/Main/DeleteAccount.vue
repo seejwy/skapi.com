@@ -1,4 +1,7 @@
 <template lang="pug">
+NavBarProxy
+    template(v-slot:leftButton)
+        div
 .form.container(v-if="processStep < 3" :loading="promiseRunning || null")
     Icon(style="height: 32px; width: 32px; fill: #F04E4E;") warning
     h2(style="color: #F04E4E;") Delete Your Account
@@ -73,13 +76,14 @@
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, onBeforeUnmount, onMounted } from 'vue';
+import { ref, onBeforeUnmount, onMounted } from 'vue';
 import { state, skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
-import Icon from './Icon.vue';
-import PasswordInput from './PasswordInput.vue';
-import SubmitButton from './SubmitButton.vue';
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
+import Icon from '@/components/Icon.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -98,8 +102,7 @@ const promiseRunning = ref(false);
 
 const close = () => {
     if(promiseRunning.value) return false;
-    if(state.viewport === 'desktop') emit('close');
-    else router.replace('');
+    router.replace('');
 }
 
 const goto = (step) => {
@@ -195,14 +198,6 @@ const deleteAccount = async (e) => {
     }
 }
 
-watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop') {
-        router.replace('');
-    } else if(viewport === 'mobile') {
-        emit('close');
-    }
-});
-
 onMounted(() => {    
     processStep.value = 0;
 });
@@ -213,19 +208,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .form.container {
     text-align: center;
-    padding: 40px;
-    background: #FAFAFA;
     color: #000000d9;
-    width: 542px;
-    max-width: 100%;
-    border: 1px solid #808080;
-    box-shadow: 4px 4px 12px #00000040;
-    border-radius: 8px;
-
+    margin: var(--head-space) auto 0;
+    
     h2 {
         margin: 40px;
     }
@@ -290,14 +277,6 @@ onBeforeUnmount(() => {
                 background-color: var(--primary-color);
             }
         }
-    }
-
-    @media @tablet {
-        border: none;
-        box-shadow: none;
-        background-color: transparent;
-        padding: 0px;
-        margin: var(--head-space) auto 0;
     }
 }
 

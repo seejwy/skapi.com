@@ -1,6 +1,8 @@
 <template lang="pug">
-.pageHeader.headSpaceHelper
-    h1 Record
+NavBarProxy
+    template(v-slot:title)
+        div Records
+.page-header.head-space-helper
     p.
         Records are data objects created by you or your users and stored within your database.
         skapi's database is designed for flexibility and features automatic indexing.
@@ -8,115 +10,82 @@
 
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
-            sui-button.lineButton(type="button") Find out More
-// search form
-RecordSearch#recordSearch
+            sui-button.line-button(type="button") Find out More
 
-sui-button(type="button" style='float:right;' @click='()=>addRecord()') + Add Record
-div(style="clear:both;")
-
-// record view
-sui-overlay(ref='openRecord' @mousedown="close" style="background-color:rgba(0 0 0 / 60%)")
-    .viewRecordOverlay
-        ViewRecord(v-if='recordToOpen && typeof recordToOpen === "object"' ref="viewRecord" :record='recordToOpen' @close="()=>openRecord.close(() => { recordToOpen = null; })")
-
-.tableContainer#dataContainer
-    .header.labelHead
-        span.notClickable Table name
-        div.notClickable
+.table-container#data-container
+    .header.label-head
+        span.not-clickable Table name
+        div.not-clickable
             span Size
             span # of records
-        Icon.clickable(:class="{'animationRotation': fetchingData}" @click="()=>{ if(!fetchingData) getTables(); }") refresh
+
+    // skeleton
+    .tableHead.animation-skeleton(v-if='recordTables === null' v-for="t in numberOfSkeletons()")
+        span &nbsp;
 
     // table list
-    template(v-if='recordTables !== null')
-        .noRecords(v-if='!recordTables.list?.length')
+    template(v-else)
+        .no-records(v-if='!recordTables.list?.length')
             div
                 .title No Record Tables
                 p List of tables will show when there is data
 
-        template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch] && !fetchingData")
-            template(v-for="batchIdx in [currentSelectedTableBatch + 1]")
-                template(v-for="pageIdx in [currentSelectedTablePage + 1]")
+        template(v-else-if="groupedTableList && groupedTableList[currentSelectedTableBatch]")
+            template(v-for="batchIdx in groupedTableList?.length")
+                template(v-for="pageIdx in groupedTableList[batchIdx - 1]?.length")
                     // when v-for by number, it starts with 1
                     template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
-                        .tableWrapper(v-if="t.number_of_records")
-                            .tableHead.labelHead.clickable(@click='()=>{t.opened = !t.opened;}')
+                        .table-wrapper(v-if="t.number_of_records")
+                            .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
                                 span {{ t.table }}
                                 div
                                     span {{getSize(t.size)}}
                                     span {{t.number_of_records}}
 
                                 template(v-if='t.records')
-                                    template
-                                        Icon.clickable(v-if="!t.opened") plus
-                                        Icon.clickable(v-else) minus
+                                    Icon.clickable(style="color: rgba(255, 255, 255, .6)") right
 
-                                Icon.animationRotation(v-else) refresh
+                                Icon.animation-rotation(v-else) refresh
+                .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
+                    span &nbsp;
 
-                            div(v-if="t.opened && t.records" style="max-height: 60vh;overflow-y: auto;" @scroll.passive="(e)=>getMoreRecords(e, t, serviceId)")
-                                .noRecords(v-if='!t.records.list?.length')
-                                    div
-                                        sui-flextext(min-size='14' max-size='24') No Records
-                                        br
-                                        p This table will be automatically removed.
+.page-action.showOnTablet(@blur="isFabOpen = false")
+    // @blur should be at the parent div
+    sui-button.fab.open-menu(type="button" @click.stop="isFabOpen = !isFabOpen")
+        Icon menu_vertical
 
-                                .records(v-else v-for="r in t.records.list" style="cursor:pointer;" @click="()=>displayRecord(r)" :class="{'deleting': r.deleting ? true : null}" :loading="r.deleting || null")
-                                    div
-                                        span.labelHead RECORD:
-                                        span {{ r.record_id }}
-                                    div
-                                        span.labelHead USER:
-                                        span {{ r.user_id }}
-                                    div
-                                        span.labelHead UPLOADED:
-                                        span {{ dateFormat(r.uploaded) }}
-
-                                .loadMore(v-if="!t.records.endOfList")
-                                    Icon.animationRotation refresh
-                .paginator
-                    Icon.arrow(
-                        :class="{active: currentSelectedTableBatch || currentSelectedTablePage}"
-                        @click="()=>{ if(currentSelectedTablePage) currentSelectedTablePage--; else if(currentSelectedTableBatch) { currentSelectedTablePage = numberOfPagePerBatch - 1; currentSelectedTableBatch--; } }") left
-                    span.morePage(
-                        :class="{active: currentSelectedTableBatch}"
-                        @click="()=>{ if(currentSelectedTableBatch > 0) {currentSelectedTableBatch--; currentSelectedTablePage = numberOfPagePerBatch - 1} }") ...
-
-                    span.page(
-                        v-for="(i, idx) in groupedTableList[currentSelectedTableBatch].length"
-                        :class="{active: idx === currentSelectedTablePage}"
-                        @click="()=>currentSelectedTablePage = idx") {{ currentSelectedTableBatch * numberOfPagePerBatch + i }}
-
-                    span.morePage(
-                        :class="{active: !isEndOfList || !isLastBatch }"
-                        @click="getMoreTables") ...
-                    Icon.arrow(
-                        :class="{active: !isEndOfList || !isLastBatch || !isLastPage }"
-                        @click="() => { if(!isLastPage) currentSelectedTablePage++; else if(isLastPage && !isLastBatch) { currentSelectedTableBatch++; currentSelectedTablePage = 0;} else if(isLastBatch && !isEndOfList) getMoreTables() }"
-                        ) right
-
+    Transition
+        div(v-if="isFabOpen" @click.stop)
+            sui-button.fab(type="button" @click="router.push({name: 'mobileSearchRecord'})")
+                Icon search
+            sui-button.fab(type="button" @click='()=>addRecord()')
+                Icon plus2
 </template>
 <!-- script below -->
 <script setup>
 import { inject, ref, watch, computed, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
-import { getSize, dateFormat, groupArray } from '@/helper/common.js';
+import { getSize, dateFormat, groupArray } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
-import { tableList, recordTables, refreshTables, getMoreRecords } from '@/helper/records.js';
-import RecordSearch from '@/components/desktop/RecordSearch.vue';
-import ViewRecord from '@/views/desktop/Service/Records/ViewRecord.vue';
+import { tableList, recordTables, refreshTables, getMoreRecords } from '@/helper/records';
+
+import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
+import RecordSearch from '@/components/recordSearch.vue';
 import Icon from '@/components/Icon.vue';
 
-let openRecord = ref(null);
-let recordToOpen = inject('recordToOpen');
 const viewRecord = ref(null);
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
+let record = inject('recordToOpen');
 const service = inject('service');
 
 // flag
 let fetchingData = inject('fetchingData');
+let isFabOpen = ref(false);
+
+// data
+let searchResult = inject('searchResult');
 
 // for paginators
 let fetchLimit = 50;
@@ -154,45 +123,15 @@ if (groupedTableList.value) {
     }
 }
 
-onMounted(() => {
-    if (recordToOpen.value) {
-        displayRecord(recordToOpen.value);
-    }
-});
+function addRecord() {
+    record.value = null;
 
-function addRecord(mobile = false) {
-    recordToOpen.value = {};
-    if (mobile) {
-        router.push({
-            name: 'mobileRecordView',
-            query: {
-                id: 'Add Record'
-            }
-        });
-    }
-    else {
-        nextTick(() => {
-            viewRecord.value.editRecord();
-            openRecord.value.open();
-        });
-    }
-}
-
-async function displayRecord(r) {
-    if (typeof r === 'string') {
-        let rec = await skapi.getRecords({
-            service: serviceId,
-            record_id: r
-        });
-        recordToOpen.value = rec.list[0];
-        openRecord.value.open();
-    }
-    else {
-        if (r.record_id) {
-            recordToOpen.value = r;
-            openRecord.value.open();
+    router.push({
+        name: 'mobileRecordView',
+        query: {
+            id: 'Add Record'
         }
-    }
+    });
 }
 
 let getMoreTablesQueue = null;
@@ -256,19 +195,33 @@ function getTables() {
     refreshTables(serviceId).then(() => {
         fetchingData.value = false;
     });
+
 }
 
 // get tables on created (if not already fetched)
-console.log(recordTables.value)
 if (!recordTables.value) {
-    console.log("Tables empty")
     getTables();
 }
+
+function numberOfSkeletons() {
+    // calculated by available vertical space
+    return parseInt((window.innerHeight / 2) / 48);
+}
+
+function viewRecordList(t) {
+    searchResult.value = t.records;
+    router.push(`/admin/${serviceId}/records/list?table=${t.table}`);
+}
+
+// watchers
+let appStyle = inject('appStyle');
 
 const close = async () => {
     await state.blockingPromise;
     viewRecord.value.close();
 }
+
+appStyle.background = '#434343';
 
 watch(currentSelectedTablePage, n => {
     // close opened table on page change
@@ -276,7 +229,7 @@ watch(currentSelectedTablePage, n => {
         t.opened = false;
     }
     nextTick(() => {
-        window.document.getElementById('dataContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
 
@@ -286,19 +239,32 @@ watch(currentSelectedTableBatch, n => {
         t.opened = false;
     }
     nextTick(() => {
-        window.document.getElementById('dataContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.document.getElementById('data-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
 
 document.body.classList.add('table');
 
+function scrollEventMobile(event) {
+    if ((window.document.documentElement.clientHeight + window.scrollY) >= document.body.offsetHeight - 60) {
+        // scrolled to bottom
+        getMoreTables();
+    }
+}
+
+window.addEventListener('scroll', scrollEventMobile, { passive: true });
+
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
+    window.removeEventListener('scroll', scrollEventMobile, { passive: true });
+    // set padding to original value
+    appStyle.mainPadding = null;
+    appStyle.background = null;
 });
 </script>
 
 <style lang="less" scoped>
-.pageAction {
+.page-action {
     position: fixed;
     bottom: 76px;
     right: 16px;
@@ -337,15 +303,10 @@ onBeforeUnmount(() => {
     max-width: 100%;
 }
 
-.tableContainer {
+.table-container {
     background-color: #434343;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25),
-        inset 1px 1px 1px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
     margin: 24px 0 0 0;
-    padding: 24px 20px;
 
     svg {
         color: white;
@@ -358,12 +319,12 @@ onBeforeUnmount(() => {
         align-items: center;
         flex-wrap: wrap;
 
-        &+.tableWrapper {
+        &+.table-wrapper {
             margin-top: 24px;
         }
     }
 
-    .tableWrapper {
+    .table-wrapper {
         background-color: #333333;
         border-radius: 8px;
 
@@ -374,7 +335,6 @@ onBeforeUnmount(() => {
             justify-content: space-between;
             font-size: 14px;
             padding: 16px 20px;
-            flex-direction: row;
 
             &:nth-child(odd) {
                 background-color: rgba(255, 255, 255, 0.04);
@@ -396,7 +356,7 @@ onBeforeUnmount(() => {
                 span {
                     font-family: Courier;
 
-                    &.labelHead {
+                    &.label-head {
                         color: rgba(255, 255, 255, 0.6);
                     }
                 }
@@ -407,20 +367,20 @@ onBeforeUnmount(() => {
             }
         }
 
-        .loadMore {
+        .load-more {
             text-align: center;
             padding: 8px;
         }
     }
 
 
-    .labelHead {
+    .label-head {
         &>span {
             display: inline-block;
             text-align: left;
             max-width: 50%;
             flex-grow: 1;
-            padding-right: 1em;
+            padding-right: 0.5em;
             display: inline-block;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -434,7 +394,7 @@ onBeforeUnmount(() => {
                 display: inline-block;
                 width: 50%;
                 white-space: nowrap;
-                padding-right: 1em;
+                padding-right: 0.5em;
             }
         }
     }
@@ -464,7 +424,7 @@ onBeforeUnmount(() => {
         }
     }
 
-    .noRecords {
+    .no-records {
         color: rgba(255, 255, 255, 0.4);
         padding: 60px 0 60px 0;
         margin: 0 -20px -24px -20px;

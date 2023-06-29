@@ -2,9 +2,9 @@
 // search form
 form(@submit.prevent="submitSearch")
     // navbar for mobile search
-    SearchNavBar(v-if='viewport === "mobile" && route.name === "mobileSearchRecord"')
+    SearchNavBar
         template(v-slot:left)    
-            Icon.showOnTablet.clickable.back-button(@click="router.push({name: 'records'})") left
+            Icon.clickable.back-button(@click="router.push({name: 'records'})") left
         sui-input(
             type="search"
             :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
@@ -19,33 +19,7 @@ form(@submit.prevent="submitSearch")
         template(v-slot:right) 
             sui-button(type="submit").icon-button  
                 Icon.showOnTablet.placeholder-icon search
-
-    // mask clicker for closing advanced search
-    .mask(v-if='searchForm.isAdvanced && viewport === "desktop"' @click='openAdvancedForm')
-    .select-input.no-border(v-if="viewport === 'desktop'" style="width: 400px;")
-        // main search
-        .select-field
-            sui-select(
-                name='search_type'
-                :value="searchForm.type"
-                @input="e => {searchForm.value = ''; searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
-                option(value="table" selected) Table Name
-                option(value="user") User ID
-                option(value="record") Record ID
-
-        .input-field.search
-            sui-input(
-                type="search"
-                :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
-                placeholder="      Search"
-                :required='searchForm.isAdvanced ? "true" : null'
-                :value="searchForm.value"
-                @input="e=>{ searchForm.value = e.target.value; }"
-                @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
-                autocomplete="off")
-            Icon.clickable.option-button(v-if='searchForm.type !== "record"' @click="openAdvancedForm") filter
-
-    .mobile-search-type(v-else style="margin: 8px 0;")
+    .mobile-search-type(style="margin: 8px 0;")
         sui-select(
             name='search_type'
             :value="searchForm.type"
@@ -54,10 +28,10 @@ form(@submit.prevent="submitSearch")
             option(value="user") Search By User ID
             option(value="record") Search By Record ID
 
-    .toggle-advanced-form.showOnTablet(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
+    .toggle-advanced-form(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
         hr
         span(:class="{'close': searchForm.isAdvanced }") Advanced Search
-        Icon.showOnTablet down2
+        Icon down2
 
     // advanced search
     .advanced-form(ref="advancedFormEl" v-if='searchForm.isAdvanced && searchForm.type !== "record"')
@@ -204,7 +178,6 @@ import Icon from '@/components/Icon.vue';
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
-let viewport = inject('viewport');
 
 function submitSearch(ev) {
     // using vue route instead of vanila get request to prevent browser refresh
@@ -414,10 +387,7 @@ function search(searchParams) {
     }
 
     fetchingData.value = true;
-
-    if (viewport.value === 'mobile') {
-        searchResult.value = null;
-    }
+    searchResult.value = null;
 
     skapi.getRecords(params, { limit: 50 })
         .then(r => {
@@ -451,6 +421,9 @@ watch(() => route.query, n => {
 @import '@/assets/variables.less';
 
 form {
+    display: block;
+    width: 100%;
+
     .mobile-search-type {
         width: 100%;
         padding: 8px var(--side-padding);
@@ -463,24 +436,16 @@ form {
         }
     }
 
-    @media @tablet {
-        display: block;
-        width: 100%;
-        // position: relative;
-    }
-
     .select-input.isMobile {
-        @media @tablet {
-            width: 100% !important;
-            margin: 0px;
-            background: none;
-            display: block;
-            box-shadow: none;
-            border-radius: 0;
+        width: 100% !important;
+        margin: 0px;
+        background: none;
+        display: block;
+        box-shadow: none;
+        border-radius: 0;
 
-            &>*:first-child::after {
-                display: none;
-            }
+        &>*:first-child::after {
+            display: none;
         }
     }
 
@@ -525,27 +490,8 @@ form {
     }
 
     .advanced-form {
-        position: absolute;
-        margin-top: 8px;
-        border-radius: 5px;
-        width: 100%;
-        border: 1px solid #808080;
-        padding: 24px 20px;
-        box-shadow: 4px 4px 12px rgba(0 0 0 / 25%);
-        background-color: #333;
-        top: 100%;
-
-        @media @tablet {
-            position: relative;
-            margin-top: 1em;
-            border-radius: 0;
-            padding: 0 20px;
-            width: 100%;
-            border: none;
-            box-shadow: none;
-            background-color: transparent;
-            top: unset;
-        }
+        margin-top: 1em;
+        padding: 0 20px;
 
         @media @phone {
             padding: 0 16px;
