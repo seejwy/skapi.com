@@ -46,12 +46,12 @@ provide('appStyle', {
     document.body.style.setProperty('--app-nav-bg-color', v);
   },
   get mainPadding() {
-    return document.getElementById('app-main').style.padding;
+    return document.getElementById('appMain').style.padding;
   },
   set mainPadding(v) {
-    document.getElementById('app-main').style.padding = v;
+    document.getElementById('appMain').style.padding = v;
     if(v) {
-      document.getElementById('app-main').style.paddingBottom = '80px';
+      document.getElementById('appMain').style.paddingBottom = '80px';
     }
   }
 });
