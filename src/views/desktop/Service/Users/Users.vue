@@ -1,9 +1,5 @@
 <template lang="pug">
-SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
-    div {{ mobilePageTitle }}
-    template(v-slot:right) 
-        Icon.showOnTablet.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchUser'}); getUsers(true); serviceUsers = null; }") X2
-.page-header.head-space-helper(v-if="viewport === 'desktop' || !route.query.search")
+.pageHeader.headSpaceHelper
     h1 Users
     p.
         Users are individuals who have successfully created an account and logged in at least once. 
@@ -12,11 +8,11 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
 
     .action
         a(href="https://docs.skapi.com/authentication" target="_blank")
-            sui-button.line-button(type="button") Find out More
+            sui-button.lineButton(type="button") Find out More
     div(style="clear:both;")
-.actions-wrapper(v-if="viewport === 'desktop'" :loading="promiseRunning || null")
+.actionsWrapper(:loading="promiseRunning || null")
     form(@submit.prevent="search" action="")
-        .search-input-wrapper
+        .searchInputWrapper
             sui-select(name='search_type' style="width: 150px;" :value="searchParams.searchFor" @change="(e) => { searchParams.searchFor = e.target.value; changeSearchType(e.target.value); searchParams.value = '';}")
                 option(value="timestamp") Date Created
                 option(value="user_id") User ID
@@ -28,8 +24,8 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                 option(value="locale") Locale
                 option(value="birthdate") Birth Date
         
-            .select-input.no-border(@click.stop)
-                .input-field
+            .selectInput.noBorder(@click.stop)
+                .inputField
                     sui-input(
                         v-if="searchParams.searchFor === 'locale'"
                         ref="searchField" 
@@ -51,12 +47,12 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         @input="(e) => { searchParams.value = e.target.value; e.target.setCustomValidity(''); }"
                         :inputmode="searchParams.searchFor === 'email' ? searchParams.searchFor : null"
                         required)
-                .select-field(v-if="searchParams.searchFor === 'timestamp'")
+                .selectField(v-if="searchParams.searchFor === 'timestamp'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
                         option(value=">=") &gt;=
                         option(value="<=") &lt;=
                         option(value="=") =
-                .select-field(v-else-if="searchParams.searchFor === 'birthdate'")
+                .selectField(v-else-if="searchParams.searchFor === 'birthdate'")
                     sui-select(style="width: 70px; text-align: center;" :value="searchParams.condition" name='search_condition' @change="(e) => searchParams.condition = e.target.value")
                         option(value=">") &gt;
                         option(value="<") &lt;
@@ -69,135 +65,82 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
                         //- option(value="=") =
     
     .actions
-        sui-button.text-button(type="button" @click="blockUsers" :disabled="((selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || !state.user.email_verified) || null")
+        sui-button.textButton(type="button" @click="blockUsers" :disabled="((selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon block
-            span.hide-when-pre-tablet block
-        sui-button.text-button(type="button" @click="unblockUsers" :disabled="((selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || !state.user.email_verified) || null")
+            span block
+        sui-button.textButton(type="button" @click="unblockUsers" :disabled="((selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || !state.user.email_verified) || null")
             Icon unblock
-            span.hide-when-pre-tablet unblock
-        sui-button.text-button(type="button" @click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
+            span unblock
+        sui-button.textButton(type="button" @click="deleteUsers" :disabled="(selectedUsers.length === 0 || !state.user.email_verified) || null")
             Icon trash
-            span.hide-when-pre-tablet delete
-.table-outer-wrapper(:loading="promiseRunning || null")
-    .search-query(v-if="route.query.search && viewport === 'desktop'")
+            span delete
+.tableOuterWrapper(:loading="promiseRunning || null")
+    .searchQuery(v-if="route.query.search")
         span Result of {{ visibleFields[route.query.search].text }} : "{{ route.query.value }}" {{ route.query.condition }}
         .clickable(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name:'users'})}")
             span(style="vertical-align:middle;") Clear
             Icon X2
-    .table-actions(v-if="!route.query.search || viewport === 'desktop' && fetchingData" :class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
-        .header-actions--before(v-if="viewport === 'desktop' && showSetting" @click="toggleSetting(false)")
-        .header-actions(v-if="!route.query.search || groupedUserList?.length" @click="toggleSetting(true)")
+    .tableActions(v-if="!route.query.search || fetchingData" :class="{'roundedBorder' : !groupedUserList?.length && fetchingData}")
+        .headerActionsBefore(v-if="showSetting" @click="toggleSetting(false)")
+        .headerActions(v-if="!route.query.search || groupedUserList?.length" @click="toggleSetting(true)")
             div.dropdown
                 span Headers
                 Icon down2
-            template(v-if="viewport === 'desktop'")
-                .filter-wrapper
-                    .filter(ref="filterEl" v-if="showSetting")
-                        .label(v-for="(field, key) in visibleFields")
-                            label
-                                sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show"  :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
-                                span {{  field.text }}
-            template(v-else)
-                sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
-                    template(v-for="(field, key) in visibleFields")
-                        option(v-if="key !== 'approved'" :value="key") {{  field.text  }}
-        .header-actions(v-else)
-        Icon.refresh(v-if="viewport === 'desktop' && !route.query.search || viewport === 'desktop' && fetchingData" :class="{'animation-rotation': fetchingData}" @click="getUsers") refresh
-        .actions(v-if="viewport === 'mobile'")
-            sui-button.icon-button(type="button" @click="blockUsers" :disabled="(selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || null")
-                Icon block
-            sui-button.icon-button(type="button" @click="unblockUsers" :disabled="(selectedBlockedUsers.length === 0 || selectedUnblockedUsers.length > 0) || null")
-                Icon unblock
-            sui-button.icon-button(type="button" @click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
-                Icon trash
+            .filterWrapper
+                .filter(ref="filterEl" v-if="showSetting")
+                    .label(v-for="(field, key) in visibleFields")
+                        label
+                            sui-input(type="checkbox" :checked="field.show || null" @input="field.show = !field.show" :disabled="computedVisibleFields.length === 1 && field.show ? true : null")
+                            span {{  field.text }}
+        .headerActions(v-else)
+        Icon.refresh(v-if="!route.query.search || fetchingData" :class="{'animationRotation': fetchingData}" @click="getUsers") refresh
 
-    .table-wrapper
-        table(v-if="viewport === 'mobile' && !groupedUserList?.length && fetchingData")
-            tbody
-                tr(v-for="x in numberOfSkeletons()").animation-skeleton
-                    td
-        table(v-else)
+    .tableWrapper
+        table
             thead(v-if="groupedUserList?.length && (!fetchingData || groupedUserList?.length)")
                 tr(:class="{rounded: fetchingData || null}")
                     th
-                        sui-input(v-if="viewport === 'desktop'" type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
-                    th(v-if="viewport === 'mobile'" style="width: 52px;") Block
-                    th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+                        sui-input(type="checkbox" :checked="selectedUsers.length === groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length || null" @change="selectAllHandler")
+                    th(v-for="key in computedVisibleFields" :class="{'iconTd': key === 'block' || key === 'status', 'userId': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields.length <= 2")
             tbody(v-if="groupedUserList?.length")
-                template(v-if="viewport === 'desktop'")
-                    tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']" :id="user['user_id']")
-                        td
-                            sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                        td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}") 
-                            template(v-if="key === 'approved'")
-                                Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
-                                Icon(v-else) unblock
-                            template(v-else-if="key === 'group'")                     
-                                Icon(v-if="user[key] > 0") check_circle
-                                Icon(v-else) x
-                            template(v-else-if="key === 'access_group'")
-                                span(v-if="user['group'] === 99") Admin
-                                span(v-else) User
-                            template(v-else-if="key === 'timestamp'")
-                                span {{ dateFormat(user[key]) }}
-                            template(v-else) {{ user[key] || '-' }}
+                tr(v-for="(user, userIndex) in groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage]" :key="user['user_id']" :id="user['user_id']")
+                    td
+                        sui-input(type="checkbox" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
+                    td(v-for="(key, index) in computedVisibleFields" :class="{'iconTd' : key === 'block' || key === 'status'}") 
+                        template(v-if="key === 'approved'")
+                            Icon(v-if="user[key]?.includes('suspended')" style="opacity: 40%;") block
+                            Icon(v-else) unblock
+                        template(v-else-if="key === 'group'")                     
+                            Icon(v-if="user[key] > 0") check_circle
+                            Icon(v-else) x
+                        template(v-else-if="key === 'access_group'")
+                            span(v-if="user['group'] === 99") Admin
+                            span(v-else) User
+                        template(v-else-if="key === 'timestamp'")
+                            span {{ dateFormat(user[key]) }}
+                        template(v-else) {{ user[key] || '-' }}
+                    td(v-if="computedVisibleFields.length <= 2")
+                //- Below code needs to change to page list not full users list
+                template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
+                    tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
+                        td  
+                        td(v-for="(key, index) in computedVisibleFields")
                         td(v-if="computedVisibleFields.length <= 2")
-                    //- Below code needs to change to page list not full users list
-                    template(v-if="groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length < 10")
-                        tr(v-for="num in numberOfUsersPerPage - groupedUserList?.[currentSelectedUsersBatch][currentSelectedUsersPage].length")
-                            td  
-                            td(v-for="(key, index) in computedVisibleFields")
-                            td(v-if="computedVisibleFields.length <= 2")
-                    
-                template(v-else)
-                    template(v-for="batch in groupedUserList")
-                        template(v-for="page in batch")
-                            tr(v-for="(user, userIndex) in page" :key="user['user_id']" :id="user['user_id']")
-                                td
-                                    sui-input(type="checkbox" :disabled="promiseRunning || null" :value="user.user_id" :checked="selectedUsers.includes(user.user_id) || null" @change="userSelectionHandler")
-                                td(v-if="viewport === 'mobile'" style="width: 52px;")
-                                    Icon(v-if="user['approved']?.includes('suspended')" style="opacity: 40%;") block
-                                    Icon(v-else) unblock
-                                template(v-if="viewport === 'desktop'")
-                                    td(v-for="(key, index) in computedVisibleFields" :class="{'icon-td' : key === 'block' || key === 'status'}"  @click="openUser(user['user_id'])") 
-                                        template(v-if="key === 'group'")                     
-                                            Icon(v-if="user[key] > 0") check_circle
-                                            Icon(v-else) x
-                                        template(v-else-if="key === 'access_group'")
-                                            span(v-if="user['group'] === 99") Admin
-                                            span(v-else) User
-                                        template(v-else) {{ user[key] || '-' }}
-                                    td(v-if="computedVisibleFields.length <= 2")
-                                template(v-else)
-                                    td(@click="openUser(user['user_id'])")
-                                        template(v-if="mobileVisibleField === 'group'")                     
-                                            Icon(v-if="user[mobileVisibleField] > 0") check_circle
-                                            Icon(v-else) x
-                                        template(v-else-if="mobileVisibleField === 'access_group'")
-                                            span(v-if="user['group'] === 99") Admin
-                                            span(v-else) User
-                                        template(v-else) {{ user[mobileVisibleField] || '-' }}
-                                    td
-                    template(v-if="fetchingData")
-                        tr(v-for="x in numberOfSkeletons()").animation-skeleton
-                            td
-                            td(style="width: 52px;")
-                            td
-                            td
-    .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
+
+    .noUsersFound(v-if="!groupedUserList?.length && !fetchingData")
         template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
             p You have no existing users yet
         template(v-else) 
             .title No Users Found
             p There were no users matching the query.
-    .paginator.hideOnTablet(v-if="groupedUserList?.length")
+    .paginator(v-if="groupedUserList?.length")
         Icon(
             :class="{active: currentSelectedUsersPage || currentSelectedUsersBatch}"
             @click="()=>{ if(currentSelectedUsersPage) currentSelectedUsersPage--; else if(currentSelectedUsersBatch) { currentSelectedUsersPage = numberOfPagePerBatch - 1; currentSelectedUsersBatch--; } }"
             ) left
-        span.more-page(
+        span.morePage(
             :class="{active: currentSelectedUsersBatch}"
             @click="()=>{ if(currentSelectedUsersBatch > 0) {currentSelectedUsersBatch--; currentSelectedUsersPage = numberOfPagePerBatch - 1} }"
             ) ...
@@ -206,7 +149,7 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             :class="{active: idx === currentSelectedUsersPage}"
             @click="currentSelectedUsersPage = idx"
             ) {{ currentSelectedUsersBatch * numberOfPagePerBatch + i }}
-        span.more-page(
+        span.morePage(
             :class="{active: !isEndOfList || !isLastBatch }"
             @click="getMoreUsers") ...
 
@@ -215,14 +158,6 @@ SearchNavBar(v-if="route.query.search && viewport === 'mobile'")
             @click="() => { if(!isLastPage) currentSelectedUsersPage++; else if(isLastPage && !isLastBatch) { currentSelectedUsersBatch++; currentSelectedUsersPage = 0;} else if(isLastBatch && !isEndOfList) getMoreUsers() }"
             ) right
 
-.page-action(v-if="viewport === 'mobile' && !route.query.search" @blur="isFabOpen = false")
-    sui-button.fab.open-menu(type="button" @click.stop="isFabOpen = !isFabOpen")
-        Icon menu_vertical
-
-    Transition
-        div(v-if="isFabOpen" @click.stop)
-            sui-button.fab(type="button" @click="router.push({name: 'mobileSearchUser'})")
-                Icon search
 sui-overlay(ref="confirmOverlay")
     .popup
         .title
@@ -233,20 +168,19 @@ sui-overlay(ref="confirmOverlay")
         .body 
             p Do you wish to continue?
         .foot
-            sui-button.text-button(type="button") No 
-            sui-button.text-button(type="button") Yes
+            sui-button.textButton(type="button") No 
+            sui-button.textButton(type="button") Yes
 </template>
 <script setup>
-import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
+import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import { changeSearchCondition, getValidationMessage, placeholder } from '@/helper/users';
 import { skapi, state } from '@/main';
-import { dateFormat, groupArray } from '@/helper/common'
+import { groupArray, dateFormat } from '@/helper/common';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 import SearchNavBar from '@/components/SearchNavBar.vue';
 
-const viewport = inject('viewport');
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -258,8 +192,6 @@ let fetchLimit = 50;
 let numberOfUsersPerPage = 10;
 let numberOfPagePerBatch = fetchLimit / numberOfUsersPerPage;
 
-const appStyle = inject('appStyle');
-const mobilePageTitle = ref('');
 const filterEl = ref(null);
 
 const currentSelectedUsersBatch = ref(0);
@@ -268,11 +200,11 @@ const currentSelectedUsersPage = ref(0);
 const visibleFields = reactive({
     approved: {
         text: 'Block',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     group: {
         text: 'Active',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     access_group: {
         text: 'Access',
@@ -284,11 +216,11 @@ const visibleFields = reactive({
     },
     name: {
         text: 'Name',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     email: {
         text: 'Email',
-        show: state?.viewport === 'desktop',
+        show: true,
     },
     address: {
         text: 'Address',
@@ -433,13 +365,11 @@ const callSearch = () => {
         };
     });
 }
-const mobileVisibleField = ref('user_id');
 
 let showSetting = ref(false);
 
 const computedVisibleFields = computed(() => {
-    if(viewport.value === 'desktop') return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
-    return [mobileVisibleField.value];
+    return Object.entries(visibleFields).filter(field => field[1].show).map(field => field[0]);
 });
 const selectedBlockedUsers = ref([]);
 const selectedUnblockedUsers = ref([]);
@@ -536,12 +466,6 @@ async function getMoreUsers() {
     fetchingData.value = false;
 }
 
-const mobileScrollHandler = (e) => {
-    if (viewport.value === 'mobile' && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
-        getMoreUsers();
-    }
-}
-
 function getUsers(refresh = false) {
     // initial table fetch
     if (!refresh && serviceUsers.value) {
@@ -582,18 +506,6 @@ if(route.query.search) {
     searchParams.searchFor = route.query.search;
     searchParams.condition = route.query.condition;
     searchParams.value = route.query.value;
-}
-
-const toggleMobileDesktopSearchView = () => {
-    if(viewport.value === 'mobile' && route.query.search) {
-        appStyle.mainPadding = '0';
-        pageTitle.value = null;
-        mobilePageTitle.value = `${visibleFields[route.query.search].text} : ${route.query.value}`;
-        appStyle.background = '#333333';
-    } else {
-        appStyle.mainPadding = null;
-        appStyle.background = null;
-    }
 }
 
 function numberOfSkeletons() {
@@ -725,26 +637,9 @@ onMounted(() => {
             getUsers(true);
         }
     }
-
-    window.addEventListener('scroll', mobileScrollHandler, { passive: true });
-    toggleMobileDesktopSearchView();
 });
 
-watch(() => viewport.value, (viewport) => {
-    if(viewport === 'mobile') {
-        pageTitle.value = 'Users';
-    } else {
-        pageTitle.value = `Service "${service.value.name}"`;
-    }
-
-    selectedBlockedUsers.value = [];
-    selectedUnblockedUsers.value = [];
-    toggleMobileDesktopSearchView();
-}, {
-    immediate: true
-});
-
-watch([viewport, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
+watch([currentSelectedUsersBatch, currentSelectedUsersPage], () => {
     selectedBlockedUsers.value = [];
     selectedUnblockedUsers.value = [];
 });
@@ -756,14 +651,13 @@ watch(() => route.query, () => {
         searchParams.value = route.query.value;
     } 
     else {
-        if(viewport.value === 'desktop') getUsers(true);
+        getUsers(true);
     }
 })
 
 document.body.classList.add('table');
 onBeforeUnmount(() => {
     document.body.classList.remove('table');
-    window.removeEventListener('scroll', mobileScrollHandler, { passive: true });
 });
 
 onBeforeRouteLeave((to, from) => {
@@ -773,8 +667,7 @@ onBeforeRouteLeave((to, from) => {
 });
 </script>
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-.actions-wrapper {
+.actionsWrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -786,10 +679,6 @@ onBeforeRouteLeave((to, from) => {
             display: inline-block;
             margin-left: 16px;
             padding: 9px 12px;
-
-            @media @tablet {
-                margin-left: 0;
-            }
         }
 
         svg {
@@ -800,7 +689,7 @@ onBeforeRouteLeave((to, from) => {
 
     }
 
-    .input-field {
+    .inputField {
         .icon {
             padding-right: 12px;
 
@@ -823,7 +712,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.table-outer-wrapper {
+.tableOuterWrapper {
     position: relative;
     margin-top: 24px;
     background-color: #434343;
@@ -831,40 +720,7 @@ onBeforeRouteLeave((to, from) => {
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.25), inset 1px 1px 1px rgba(0, 0, 0, 0.5);
 
-    .mobile-search-nav + & {
-        background-color: transparent;
-        margin: 0;
-
-        @media @tablet {
-            .table-actions {
-                padding: 14px 20px 14px 20px
-            }
-        }
-
-        table {
-            tbody tr,
-            thead tr {
-                background-color: transparent;
-                th {
-                    background-color: transparent;
-                }
-            }
-                
-            tbody {
-                tr {
-                    &:nth-child(odd) {
-                        background: rgba(255, 255, 255, .04);
-                    }
-                }
-            }
-        }
-
-        .no-users-found {
-            background-color: transparent;
-        }
-    }
-
-    .search-query {
+    .searchQuery {
         display: flex;
         justify-content: space-between;
         font-weight: bold;
@@ -872,7 +728,7 @@ onBeforeRouteLeave((to, from) => {
         background: #434343;
         border-radius: 8px 8px 0 0;
 
-        & + .table-actions {
+        & + .tableActions {
             border-radius: 0;
         }
 
@@ -881,7 +737,7 @@ onBeforeRouteLeave((to, from) => {
         }
     }
 
-    .table-actions {
+    .tableActions {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -890,15 +746,11 @@ onBeforeRouteLeave((to, from) => {
         border-radius: 8px 8px 0 0;
         color: rgba(255, 255, 255, 0.6);
 
-        @media @tablet {        
-            padding: 14px 16px 14px 20px;
-        }
-
         &>* {
             cursor: pointer;
         }
 
-        &.rounded-border {
+        &.roundedBorder {
             border-radius: 8px;
         }
 
@@ -906,10 +758,10 @@ onBeforeRouteLeave((to, from) => {
             color: #fff;
         }
 
-        .header-actions {
+        .headerActions {
             position: relative;
 
-            &--before {
+            &Before {
                 position: fixed;
                 top: 0;
                 bottom: 0;
@@ -957,7 +809,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.table-wrapper {
+.tableWrapper {
     max-height: calc(52px * 11 + 52px);
     overflow: auto;
 
@@ -1002,16 +854,16 @@ onBeforeRouteLeave((to, from) => {
                 top: 0;
                 text-align: left;
 
-                &.icon-td {
+                &.iconTd {
                     width: 48px;
                     text-align: center;
                 }
 
-                &.user-id {
+                &.userId {
                     min-width: 330px;
                 }
 
-                &:last-child:not(.icon-td) {
+                &:last-child:not(.iconTd) {
                     width: 100%;
                 }
             }
@@ -1039,12 +891,12 @@ onBeforeRouteLeave((to, from) => {
                 td {
                     font-size: 14px;
 
-                    &.icon-td {
+                    &.iconTd {
                         width: 48px;
                         text-align: center;
                     }
 
-                    &:last-child:not(.icon-td) {
+                    &:last-child:not(.iconTd) {
                         width: 100%;
                     }
                 }
@@ -1061,7 +913,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.no-users-found {
+.noUsersFound {
     text-align: center;
     padding: 40px 0 60px 0;
     border-radius: 0 0 8px 8px;
@@ -1074,10 +926,6 @@ onBeforeRouteLeave((to, from) => {
     
     p {
         margin: 20px 0 0 0;
-    }
-
-    @media @tablet {    
-        padding: 60px 0;
     }
 }
 
@@ -1103,7 +951,7 @@ onBeforeRouteLeave((to, from) => {
             }
         }
 
-        &.more-page {
+        &.morePage {
             visibility: hidden;
 
             &.active {
@@ -1124,50 +972,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-@media @tablet {
-    .table-wrapper {
-        max-height: unset;
-        overflow: hidden;
-
-        table {
-            thead th.user-id {
-                min-width: unset;
-            }
-
-            tbody td {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                max-width: 0;
-                width: 100%;
-            }
-        }
-    }
-
-    .table-outer-wrapper {
-        margin: auto -20px;
-        border-radius: 0;
-        box-shadow: none;
-        border: none;
-
-        .table-actions {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 0;
-
-            .actions {
-                margin: -14px 0;
-            }
-        }
-    }
-}
-
-@media @phone {
-    .table-outer-wrapper {
-        margin: auto -16px;
-    }
-}
-
-.page-action {
+.pageAction {
     position: fixed;
     bottom: 76px;
     right: 16px;
@@ -1199,15 +1004,15 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.search-input-wrapper {
+.searchInputWrapper {
     & > sui-select {
         background: rgba(255, 255, 255, 0.08);
     }
 }
-.select-input {
+.selectInput {
     width: 300px;
     margin-left: 16px;
-    .input-field {
+    .inputField {
         width: 100%;
     }
 
@@ -1223,12 +1028,6 @@ onBeforeRouteLeave((to, from) => {
             top: 50%;
             transform: translateY(-50%);
         }
-    }
-}
-
-.hide-when-pre-tablet {
-    @media screen and (max-width: 870px) {
-        display: none;
     }
 }
 

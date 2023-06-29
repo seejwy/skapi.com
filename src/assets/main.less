@@ -24,15 +24,15 @@
   }
 }
 
-.animation-rotation {
+.animationRotation {
   animation: rotation 2s infinite linear;
 }
 
-.animation-rotation--slow-in-out {
+.animationRotation--slow-in-out {
   animation: rotation 1s infinite cubic-bezier(0.09, 0.43, 0.94, 0.59);
 }
 
-.animation-skeleton {
+.animationSkeleton {
   border-radius: 4px;
   animation: woosh-woosh 1.6s infinite linear;
 }
@@ -85,7 +85,7 @@ body {
   box-sizing: border-box;
 }
 
-.inline-vertical-middle {
+.inlineVerticalMiddle {
   vertical-align: middle;
 }
 
@@ -94,7 +94,7 @@ body {
   cursor: pointer !important;
 }
 
-.not-clickable {
+.notClickable {
   user-select: none;
   cursor: default !important;
 }
@@ -131,11 +131,11 @@ main {
     box-sizing: content-box;  
   }
 
-  .head-space-helper {
+  .headSpaceHelper {
     margin-top: var(--head-space);
   }
   
-  .page-header {
+  .pageHeader {
       margin-bottom: 60px;
 
       h1, h2 {
@@ -189,7 +189,7 @@ sui-input[type=submit] {
   padding: 12px 32px;
   white-space: nowrap;
 
-  &.with-icon svg {
+  &.withIcon svg {
     position: absolute;
     left: 32px;
 
@@ -240,7 +240,7 @@ sui-input:not([type=checkbox],[type=radio],[type=submit],[type=reset]) {
     }
   }
 
-  .admin .select-input & {
+  .admin .selectInput & {
     background-color: transparent;
   }
 }
@@ -348,7 +348,7 @@ sui-select {
   }
 }
 
-.select-input {
+.selectInput {
   background: rgba(255, 255, 255, 0.08);
   box-shadow: var(--input-box-shadow);
   border-radius: 4px;
@@ -359,12 +359,12 @@ sui-select {
   vertical-align: middle;
   border: 1px solid rgba(255, 255, 255, 0.4);
   
-  &.no-border {
+  &.noBorder {
     border: none;
   }
 
-  .select-field,
-  .input-field {
+  .selectField,
+  .inputField {
     sui-input,
     sui-select {
       background: transparent;
@@ -405,7 +405,7 @@ sui-button {
   line-height: 1;
   padding: 12px 32px;
 
-  &:not(.text-button) {
+  &:not(.textButton) {
     box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.25), inset 1px 1px 2px rgba(255, 255, 255, 0.65), 0 0 0 1px rgba(0, 0, 0, 0.4);
   }
 
@@ -419,7 +419,7 @@ sui-button {
     background-color: #0D26E1;
   }
   
-  .line-button {
+  .lineButton {
     background-color: transparent;
     box-shadow: none; 
     border: 1px solid;
@@ -429,8 +429,8 @@ sui-button {
   .admin & {
     background-color: var(--primary-color);
     
-    &.line-button {
-      .line-button;
+    &.lineButton {
+      .lineButton;
       border-color: rgba(255, 255, 255, 0.65);
       background-color: rgba(217, 217, 217, 0.08);
       color: #fff;
@@ -443,8 +443,8 @@ sui-button {
     background-color: #D9D9D9;
   }
 
-  &.line-button {
-    .line-button;
+  &.lineButton {
+    .lineButton;
     border-color: var(--primary-color);
     color: var(--primary-color);
 
@@ -485,7 +485,7 @@ sui-button {
     }
   }
 
-  &.text-button {
+  &.textButton {
     background-color: transparent;
     box-shadow: none;
     color: var(--primary-color);
@@ -528,7 +528,7 @@ sui-button {
     }
   }
 
-  &.icon-button {
+  &.iconButton {
     background: transparent;
     outline: none;
     padding: .6em .6em;

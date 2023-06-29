@@ -41,28 +41,29 @@ div(v-for="pageType in pages" :class="pageType" ref="container")
         sui-button(type="reset") Reset
         sui-button(type="reset" disabled) Disabled Reset
         br
-        sui-button.line-button(type="button") Line Button
-        sui-button.line-button(type="button" disabled) Disabled Button
+        sui-button.lineButton(type="button") Line Button
+        sui-button.lineButton(type="button" disabled) Disabled Button
         br
-        sui-button.text-button(type="button") Text Button
-        sui-button.text-button(type="button" disabled) Disabled Button
+        sui-button.textButton(type="button") Text Button
+        sui-button.textButton(type="button" disabled) Disabled Button
         br
         SubmitButton Submit
         SubmitButton(disabled @click="test") Submit
         SubmitButton(loading @click="test") Submit
         br
-        sui-button.icon-button 
+        sui-button.iconButton 
     br
     sui-select
         option(value="hello") Hello
     sui-select(disabled)
         option(value="hello") Hello 
     br
-    .select-input
+    .selectInput
         sui-input 
         sui-select
             option(value="hello") Hello
 </template>
+
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 import SubmitButton from '@/components/SubmitButton.vue';
@@ -108,7 +109,6 @@ onMounted(async () => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .admin {
     background-color: #505050;
 }

@@ -4,14 +4,14 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 FeedBackForm(v-else-if="state?.user && route.query.new === 'feedback'")
 div(v-else-if="state?.user")
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h1.fixed Admin
         p.
             You can see a list of all the services you are running.
             To create a new service, click on "New Service".
 
         .action
-            sui-button.with-icon(type="button" @click="NewServiceConditions" :disabled="!state.user.email_verified || null")
+            sui-button.withIcon(type="button" @click="NewServiceConditions" :disabled="!state.user.email_verified || null")
                 Icon plus2
                 span New Service
     .container(v-if="serviceList?.length")
@@ -23,12 +23,12 @@ div(v-else-if="state?.user")
                         span {{ service.name }}
                     Icon right
                 .details
-                    .item(v-for="(value, key) in filterServiceDetails(service)" :class="{'hide-mobile': key.toLowerCase() !== 'cors'}")
+                    .item(v-for="(value, key) in filterServiceDetails(service)")
                         .title {{  key }}
                         .value {{ value || '-' }}
     .container.empty(v-else-if="isFetchingServices")
-        Icon.animation-rotation(style="position: absolute; right: 24px; top: 24px; fill: var(--primary-color)") refresh
-    .container.empty.no-service(v-else)
+        Icon.animationRotation(style="position: absolute; right: 24px; top: 24px; fill: var(--primary-color)") refresh
+    .container.empty.noService(v-else)
         div(style="position: absolute; width: 100%;")
             .title No Services
             span Get started by creating a new service.
@@ -39,20 +39,21 @@ div(v-else-if="state?.user")
             div
             .body Please verify your email to prevent your services from shutting down.
             Icon.close(@click="state.setVerificationDelay") X2
-    sui-overlay(v-if="isOpen && state.viewport === 'desktop'" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeNewServiceWindow")
+    sui-overlay(v-if="isOpen" ref="newServiceWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeNewServiceWindow")
         div.overlay
             NewService(@close="closeNewServiceWindow")
-    sui-overlay(v-if="feedBackOpen && state.viewport === 'desktop'" ref="feedBackWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeFeedBackWindow")
+    sui-overlay(v-if="feedBackOpen" ref="feedBackWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="closeFeedBackWindow")
         div.overlay
             FeedBackForm(@close="closeFeedBackWindow" @closeFeedBack="feedBackOpen=false; isOpen=true;")
 </template>
+
 <script setup>
-import { inject, ref, watch, nextTick, computed } from 'vue';
-import { state, skapi, awaitConnection } from '@/main';
+import { inject, ref, watch, nextTick } from 'vue';
+import { state, skapi } from '@/main';
 import { dateFormat, localeName } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
-import NewService from '@/components/NewService.vue';
+import NewService from '@/components/desktop/NewService.vue';
 import FeedBackForm from '@/views/desktop/Main/FeedBackForm.vue';
 import Icon from '@/components/Icon.vue';
 
@@ -75,18 +76,18 @@ const filterServiceDetails = (service) => {
         'Service Location': localeName(service.region),
         'CORS': service.cors,
         'Date Created': dateFormat(service.timestamp).split(' ')[0]
-    }
-}
+    };
+};
 
 const closeNewServiceWindow = async () => {
     await state.blockingPromise;
     newServiceWindow.value.close(() => isOpen.value = false);
-}
+};
 
 const closeFeedBackWindow = async () => {
     await state.blockingPromise;
     feedBackWindow.value.close(() => feedBackOpen.value = false);
-}
+};
 
 const NewServiceConditions = async () => {
     await getServices(state.getServices);
@@ -94,11 +95,12 @@ const NewServiceConditions = async () => {
     skapi.getProfile().then((r) => {
         if (r.misc === 'feedback complete') {
             if (state.user.email_verified) {
-                if (state.viewport === 'desktop') {
-                    isOpen.value = true;
-                } else {
-                    router.push('?new=service');
-                }
+                // if (state.viewport === 'desktop') {
+                //     isOpen.value = true;
+                // } else {
+                //     router.push('?new=service');
+                // }
+                isOpen.value = true;
             } else {
                 return null;
             }
@@ -121,51 +123,29 @@ const NewServiceConditions = async () => {
 
                 if (users_count > 0) {
                     if (state.user.email_verified) {
-                        if (state.viewport === 'desktop') {
-                            feedBackOpen.value = true;
-                        } else {
-                            router.push('?new=feedback');
-                        }
+                        feedBackOpen.value = true;
                     } else {
                         return null;
                     }
                 } else {
                     if (state.user.email_verified) {
-                        if (state.viewport === 'desktop') {
-                            isOpen.value = true;
-                        } else {
-                            router.push('?new=service');
-                        }
+                        isOpen.value = true;
                     } else {
                         return null;
                     }
                 }
             } else {
                 if (state.user.email_verified) {
-                    if (state.viewport === 'desktop') {
-                        isOpen.value = true;
-                    } else {
-                        router.push('?new=service');
-                    }
+                    isOpen.value = true;
                 } else {
                     return null;
                 }
             }
         }
-    })
+    });
 
 
-}
-
-const openNewServiceWindow = () => {
-    if (state.viewport === 'mobile') router.push('?new=service');
-    else newServiceWindow.value.open();
-}
-
-const openFeedBackWindow = () => {
-    if (state.viewport === 'mobile') router.push('?new=feedback');
-    else feedBackWindow.value.open();
-}
+};
 
 async function getServices(gs) {
     if (!(gs instanceof Promise) || !state.user) {
@@ -197,38 +177,20 @@ getServices(state.getServices);
 // watch is for users visiting the page directly
 watch(() => state.getServices, getServices);
 watch(() => isOpen.value, async () => {
-    if (state.viewport === 'desktop') {
-        await nextTick();
-        if (isOpen.value) {
-            openNewServiceWindow();
-        }
-    }
-});
-watch(() => state.viewport, (viewport) => {
-    if (viewport === 'desktop') {
-        isOpen.value = false;
-        router.replace('/admin');
+    await nextTick();
+    if (isOpen.value) {
+        newServiceWindow.value.open();
     }
 });
 watch(() => feedBackOpen.value, async () => {
-    if (state.viewport === 'desktop') {
-        await nextTick();
-        if (feedBackOpen.value) {
-            openFeedBackWindow();
-        }
-    }
-});
-watch(() => state.viewport, (viewport) => {
-    if (viewport === 'desktop') {
-        feedBackOpen.value = false;
-        router.replace('/admin');
+    await nextTick();
+    if (feedBackOpen.value) {
+        feedBackWindow.value.open();
     }
 });
 </script>
     
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .container {
     &.empty {
         position: relative;
@@ -248,17 +210,8 @@ watch(() => state.viewport, (viewport) => {
         }
 
         &,
-        &.no-service {
+        &.noService {
             height: 175.33px;
-
-            @media screen and (max-width: 825px) {
-                height: 156px;
-            }
-
-            @media @phone {
-                height: 123.33px;
-            }
-
         }
     }
 
@@ -272,12 +225,6 @@ watch(() => state.viewport, (viewport) => {
 
         &:hover {
             background: #8C8C8C;
-        }
-
-        @media @tablet {
-            &:hover {
-                background: #595959;
-            }
         }
 
         &:not(:last-child) {
@@ -308,18 +255,6 @@ watch(() => state.viewport, (viewport) => {
 
             .item {
                 width: 200px;
-            }
-
-            @media screen and (max-width: 825px) {
-
-                .item {
-                    display: flex;
-                    width: 100%;
-                }
-
-                .hide-mobile {
-                    display: none;
-                }
             }
 
             .title {
@@ -372,28 +307,6 @@ watch(() => state.viewport, (viewport) => {
 
         svg {
             color: #434343;
-        }
-    }
-}
-
-@media @tablet {
-    .container {
-        .service {
-            padding: 24px;
-
-            .name span {
-                font-size: 20px;
-            }
-
-            .details .item {
-
-                .title,
-                .value {
-                    display: inline-block;
-                    margin: 0 12px 0 0;
-                    vertical-align: middle;
-                }
-            }
         }
     }
 }

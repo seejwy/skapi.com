@@ -31,6 +31,7 @@ form.container.login(@submit.prevent="login" action="" :loading="promiseRunning 
         RouterLink(to="/signup") Create an account
 
 </template>
+
 <script setup>
 import { onMounted, inject, watch, reactive, ref, onBeforeUnmount } from 'vue';
 import { skapi, state } from '@/main';
@@ -48,9 +49,6 @@ const promiseRunning = ref(false);
 
 // set page title
 let pageTitle = inject('pageTitle');
-let appStyle = inject('appStyle');
-let viewport = inject('viewport');
-const currentBgColor = appStyle.background;
 
 onMounted(() => {
     if (document.body.classList.contains('admin')) {
@@ -61,7 +59,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    appStyle.background = currentBgColor;
     if (document.body.classList.contains('admin-login')) {
         document.body.classList.remove('admin-login');
         if (route.path.includes('/admin')) {
@@ -70,11 +67,8 @@ onBeforeUnmount(() => {
     }
 });
 
-if (state.viewport === 'mobile') {
-    appStyle.background = '#fff';
-}
-
 pageTitle.value = 'skapi';
+
 let form = reactive({
     email: '',
     password: ''
@@ -181,9 +175,8 @@ function login() {
     });
 }
 </script>
-<style lang="less" scoped>
-@import '@/assets/variables.less';
 
+<style lang="less" scoped>
 .container {
     text-align: center;
     padding: 40px;
@@ -196,18 +189,6 @@ function login() {
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     margin: auto;
-
-    @media @tablet {
-        margin: var(--head-space) auto 0;
-        background: #FFF;
-        padding: 0 20px;
-        border: 0;
-        box-shadow: none;
-    }
-
-    @media @tablet {
-        padding: 0;
-    }
 
     h1 {
         font-size: 32px;

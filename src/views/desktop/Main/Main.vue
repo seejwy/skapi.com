@@ -1,9 +1,6 @@
 <template lang="pug">
 NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 10;background-color: var(--app-nav-bg-color);')
-    ul.inline-vertical-middle(@click='bypassSameRoute')
-        li.showOnTablet
-            router-link(to="/" tag="li")
-                img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
+    ul.inlineVerticalMiddle(@click='bypassSameRoute')
         li
                 a(href="https://docs.skapi.com" target="_blank") Documentation
 
@@ -23,10 +20,7 @@ NavBar(:is-parent-level='Object.keys(route.query).length === 0' style='z-index: 
                 li
                     router-link(to="/admin") Login
 
-                li.showOnTablet
-                    router-link(to="/signup") Sign-up
-
-                li.hideOnTablet
+                li
                     sui-button.signup(type="button" @click="()=>router.push('/signup')" style="padding: 12px 16px") Sign-up
 main(v-if="route.name === 'home'")
     router-view
@@ -36,17 +30,14 @@ main.app(v-else)
     .wrapper
         Login
 </template>
-<style lang="less" scoped>
-@import '@/assets/variables.less';
 
-@media @tablet_excl {
-    main .wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 0;
-        min-height: calc(100vh - 140px);
-    }
+<style lang="less" scoped>
+main .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    min-height: calc(100vh - 140px);
 }
 
 sui-button.signup {
@@ -71,15 +62,15 @@ sui-button.signup {
 </style>
 
 <script setup>
-import NavBar from '@/components/mobile/Navbar.vue';
-import { ref, inject, onMounted, onUpdated, nextTick } from 'vue';
+import { ref, inject } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { skapi, state, awaitConnection } from '@/main';
+import { skapi, state } from '@/main';
 
+import NavBar from '@/components/desktop/Navbar.vue';
 import Login from './Login.vue';
+
 let router = useRouter();
 let route = useRoute();
-let appStyle = inject('appStyle');
 const overlay = ref(null);
 
 let pageTitle = inject('pageTitle');

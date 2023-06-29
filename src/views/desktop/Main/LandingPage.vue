@@ -197,7 +197,7 @@ section.sectionBox.trySkapi
 </template>
 
 <script setup>
-import { onMounted, ref, onUnmounted, nextTick, onBeforeUnmount } from 'vue';
+import { onMounted, ref, nextTick, onBeforeUnmount } from 'vue';
 import gsap from 'gsap';
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -308,6 +308,7 @@ onBeforeUnmount(() => {
     }
 });
 </script>
+
 <style lang="less">
 main {
     &.landing {

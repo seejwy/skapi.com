@@ -1,53 +1,46 @@
 <template lang="pug">
 // search form
 form(@submit.prevent="submitSearch")
-    // navbar for mobile search
-    SearchNavBar
-        template(v-slot:left)    
-            Icon.clickable.back-button(@click="router.push({name: 'records'})") left
-        sui-input(
-            type="search"
-            :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
-            :placeholder="searchForm.type === 'table' ? 'Table name' : searchForm.type === 'user' ? 'User id' : 'Record id'"
-            :value="searchForm.value"
-            @input="e=>{ searchForm.value = e.target.value; }"
-            @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
-            @mounted="focusMe"
-            autocomplete="off"
-            required)
-            
-        template(v-slot:right) 
-            sui-button(type="submit").icon-button  
-                Icon.showOnTablet.placeholderIcon search
-    .mobile-search-type(style="margin: 8px 0;")
-        sui-select(
-            name='search_type'
-            :value="searchForm.type"
-            @input="e => {searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; searchForm.value = ''; }")
-            option(value="table" selected) Search By Table Name
-            option(value="user") Search By User ID
-            option(value="record") Search By Record ID
+    // mask clicker for closing advanced search
+    .mask(v-if='searchForm.isAdvanced' @click='openAdvancedForm')
+    .selectInput.noBorder(style="width: 400px;")
+        // main search
+        .selectField
+            sui-select(
+                name='search_type'
+                :value="searchForm.type"
+                @input="e => {searchForm.value = ''; searchForm.type = e.target.value; if(e.target.value === 'record') searchForm.isAdvanced = false; }")
+                option(value="table" selected) Table Name
+                option(value="user") User ID
+                option(value="record") Record ID
 
-    .toggle-advanced-form(v-if="searchForm.type !== 'record'" @click="searchForm.isAdvanced=!searchForm.isAdvanced")
-        hr
-        span(:class="{'close': searchForm.isAdvanced }") Advanced Search
-        Icon down2
+        .inputField.search
+            sui-input(
+                type="search"
+                :name="searchForm.type === 'table' ? 'table' : searchForm.type === 'user' ? 'reference' : 'record_id'"
+                placeholder="      Search"
+                :required='searchForm.isAdvanced ? "true" : null'
+                :value="searchForm.value"
+                @input="e=>{ searchForm.value = e.target.value; }"
+                @change="e => { if(!searchForm.isAdvanced) advancedForm = advancedFormInit(); }"
+                autocomplete="off")
+            Icon.clickable.optionButton(v-if='searchForm.type !== "record"' @click="openAdvancedForm") filter
 
     // advanced search
-    .advanced-form(ref="advancedFormEl" v-if='searchForm.isAdvanced && searchForm.type !== "record"')
+    .advancedForm(ref="advancedFormEl" v-if='searchForm.isAdvanced && searchForm.type !== "record"')
         .formLabel Access Group
         .form
             .labelRadio.clickable
-                label.inline-vertical-middle(for='ag-reg') Registered
-                sui-input#ag-reg(type='radio' value='1' name='access_group' @change='advancedForm.access_group = 1' :checked='advancedForm.access_group === 1 ? true : null')
+                label.inlineVerticalMiddle(for='agReg') Registered
+                sui-input#agReg(type='radio' value='1' name='access_group' @change='advancedForm.access_group = 1' :checked='advancedForm.access_group === 1 ? true : null')
 
             .labelRadio.clickable
-                label.inline-vertical-middle(for='ag-pub') Public
-                sui-input#ag-pub(type='radio' value='0' name='access_group' @change='advancedForm.access_group = 0' :checked='advancedForm.access_group === 0 ? true : null')
+                label.inlineVerticalMiddle(for='agPub') Public
+                sui-input#agPub(type='radio' value='0' name='access_group' @change='advancedForm.access_group = 0' :checked='advancedForm.access_group === 0 ? true : null')
 
             .labelRadio.clickable
-                label.inline-vertical-middle(for='ag-prv') Private
-                sui-input#ag-prv(type='radio' value='private' name='access_group' @change='advancedForm.access_group = "private"' :checked='advancedForm.access_group === "private" ? true : null')
+                label.inlineVerticalMiddle(for='agPrv') Private
+                sui-input#agPrv(type='radio' value='private' name='access_group' @change='advancedForm.access_group = "private"' :checked='advancedForm.access_group === "private" ? true : null')
 
         template(v-if='searchForm.type === "user"')
             .formLabel Table Name
@@ -63,19 +56,19 @@ form(@submit.prevent="submitSearch")
 
             .formLabel Table Subscription
             .form
-                .inline-vertical-middle(style='vertical-align: middle;width: 100%;display:inline-block;')
+                .inlineVerticalMiddle(style='vertical-align: middle;width: 100%;display:inline-block;')
                     // subscription
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='subscription-none') None
-                        sui-input#subscription-none(type='radio' name='subscription' value='null' @change='e=>{advancedForm.subscription = null; parseIndexType()}' :checked="advancedForm.subscription === null || null")
+                        label.inlineVerticalMiddle(for='subscriptionNone') None
+                        sui-input#subscriptionNone(type='radio' name='subscription' value='null' @change='e=>{advancedForm.subscription = null; parseIndexType()}' :checked="advancedForm.subscription === null || null")
 
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='subscription-public') Public
-                        sui-input#subscription-public(type='radio' name='subscription' value='false' @change='e=>{advancedForm.subscription = false; parseIndexType()}' :checked="advancedForm.subscription === false || null")
+                        label.inlineVerticalMiddle(for='subscriptionPublic') Public
+                        sui-input#subscriptionPublic(type='radio' name='subscription' value='false' @change='e=>{advancedForm.subscription = false; parseIndexType()}' :checked="advancedForm.subscription === false || null")
 
                     .labelRadio.clickable
-                        label.inline-vertical-middle(for='subscription-sub') Subscribed
-                        sui-input#subscription-sub(type='radio' name='subscription' value='true' @change='e=>{advancedForm.subscription = true; parseIndexType()}' :checked="advancedForm.subscription === true || null")
+                        label.inlineVerticalMiddle(for='subscriptionSub') Subscribed
+                        sui-input#subscriptionSub(type='radio' name='subscription' value='true' @change='e=>{advancedForm.subscription = true; parseIndexType()}' :checked="advancedForm.subscription === true || null")
 
         .formLabel Index
         .form
@@ -103,18 +96,18 @@ form(@submit.prevent="submitSearch")
                 option(value="number") Number
                 option(value="boolean") Boolean
 
-            .inline-vertical-middle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
+            .inlineVerticalMiddle(v-if='advancedForm.index_type === "boolean"' style='vertical-align: middle;width: calc(100% - 100px - 1em);display:inline-block;')
                 // index value (boolean)
                 .labelRadio.clickable
-                    label.inline-vertical-middle(for='typ-bool-true') True
-                    sui-input#typ-bool-true(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
+                    label.inlineVerticalMiddle(for='typBoolTrue') True
+                    sui-input#typBoolTrue(type='radio' name='index_value' value="true" @change='e=>{advancedForm.index_value = true; parseIndexType()}' :checked="(advancedForm.index_value === true) ? true : null")
 
                 .labelRadio.clickable
-                    label.inline-vertical-middle(for='typ-bool-false') False
-                    sui-input#typ-bool-false(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
-            .select-input(v-else style='width: calc(100% - 100px - 1em);')
+                    label.inlineVerticalMiddle(for='typBoolFalse') False
+                    sui-input#typBoolFalse(type='radio' name='index_value' value="false" @change='e=>{advancedForm.index_value = false; parseIndexType()}' :checked="(advancedForm.index_value === false) ? true : null")
+            .selectInput(v-else style='width: calc(100% - 100px - 1em);')
                 // index value
-                .input-field
+                .inputField
                     sui-input(
                         autocomplete="off"
                         ref='indexValueFormElement'
@@ -126,7 +119,7 @@ form(@submit.prevent="submitSearch")
                         :value="advancedForm.index_value"
                         @input="()=>parseIndexType()")
 
-                .select-field(style='overflow:hidden;flex-shrink: 0;')
+                .selectField(style='overflow:hidden;flex-shrink: 0;')
                     // index value condition
                     sui-select(
                         style='width:60px'
@@ -172,7 +165,6 @@ import { inject, reactive, ref, watch } from 'vue';
 import { skapi } from '@/main';
 import { useRoute, useRouter } from 'vue-router';
 
-import SearchNavBar from '@/components/SearchNavBar.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
@@ -387,7 +379,6 @@ function search(searchParams) {
     }
 
     fetchingData.value = true;
-    searchResult.value = null;
 
     skapi.getRecords(params, { limit: 50 })
         .then(r => {
@@ -418,38 +409,8 @@ watch(() => route.query, n => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 form {
-    display: block;
-    width: 100%;
-
-    .mobile-search-type {
-        width: 100%;
-        padding: 8px var(--side-padding);
-
-        sui-select {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 0.5px solid #8C8C8C;
-            box-shadow: inset -1px -1px 2px rgb(0 0 0 / 25%), inset 1px 1px 2px rgb(255 255 255 / 65%);
-        }
-    }
-
-    .select-input.isMobile {
-        width: 100% !important;
-        margin: 0px;
-        background: none;
-        display: block;
-        box-shadow: none;
-        border-radius: 0;
-
-        &>*:first-child::after {
-            display: none;
-        }
-    }
-
-    .input-field.search {
+    .inputField.search {
         display: flex;
         flex-grow: 1;
         align-items: center;
@@ -469,33 +430,16 @@ form {
         margin: 8px .5em;
     }
 
-    .toggle-advanced-form {
-        user-select: none;
-        display: flex;
-        align-items: center;
-        color: rgba(255, 255, 255, 0.6);
-        cursor: pointer;
-        padding: 8px var(--side-padding);
-
-        hr {
-            flex-grow: 1;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-            margin-right: 16px;
-        }
-
-        span {
-            margin-right: 12px;
-        }
-    }
-
-    .advanced-form {
-        margin-top: 1em;
-        padding: 0 20px;
-
-        @media @phone {
-            padding: 0 16px;
-        }
+    .advancedForm {
+        position: absolute;
+        margin-top: 8px;
+        border-radius: 5px;
+        width: 100%;
+        border: 1px solid #808080;
+        padding: 24px 20px;
+        box-shadow: 4px 4px 12px rgba(0 0 0 / 25%);
+        background-color: #333;
+        top: 100%;
 
         .formLabel {
             font-weight: 700;
@@ -541,47 +485,42 @@ form {
     }
 }
 
-.placeholderIcon {
-    color: #fff;
-    flex-shrink: 0;
-}
-
-.option-button {
+.optionButton {
     flex-shrink: 0;
     margin-right: 12px;
     color: rgba(255, 255, 255, .6);
 }
 
-.select-input {
+.selectInput {
 
-    &>.select-field {
+  &>.selectField {
     display: inline-block;
     position: relative;
-    }
+  }
 
-    &>*:first-child {
+  &>*:first-child {
     &::after {
-        content: '';
-        display: inline-block;
-        width: 1px;
-        height: 1em;
-        vertical-align: middle;
-        background-color: rgba(255, 255, 255, .2);
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      vertical-align: middle;
+      background-color: rgba(255, 255, 255, .2);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
     }
-    }
+  }
 
-    &>.select-field {
+  &>.selectField {
     sui-select {
-        width: 8em;
-        box-shadow: none;
-        border: 0;
-        background: transparent;
-        vertical-align: middle;
+      width: 8em;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
+      vertical-align: middle;
     }
-    }
+  }
 }
 input {
     -webkit-appearance: none;

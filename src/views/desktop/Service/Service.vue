@@ -1,7 +1,7 @@
 <template lang="pug">
 EditService(v-if="state?.user && route.query.edit === 'service'" @close="router.replace({query: null})")
 template(v-else)
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h2 Service
         p.
             A service is a collection of serverless resources working together to form your backend.
@@ -9,44 +9,32 @@ template(v-else)
 
         div.action
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
-                sui-button.line-button(type="button") Find out More
+                sui-button.lineButton(type="button") Find out More
     .container
-        .title-actions-wrapper.showOnTablet
-            .title-wrapper
-                Icon information
-                h2 Service Information
-            .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
-                Icon trash
-        .inner-container 
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
+        .innerContainer 
+            .titleActionsWrapper
+                .titleWrapper
                     Icon information
                     h2 Service Information
                 .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
                     span(style="font-size:14px") Delete Service
-            .information-grid
-                .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
+            .informationGrid
+                .informationGridItem(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
                     .name {{ info.name }}
                     .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
                     .value(v-else) {{ service[info.key] }}
 
     .container
-        .title-actions-wrapper.showOnTablet
-            .title-wrapper
-                Icon setting
-                h2 Service Setting 
-            .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
-                Icon pencil
-        .inner-container 
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
+        .innerContainer 
+            .titleActionsWrapper
+                .titleWrapper
                     Icon setting
                     h2 Service Setting 
                 .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
                     Icon pencil
                     span Edit
-            .setting-grid 
-                .setting-grid-item(v-for="setting in settingGrid")
+            .settingGrid 
+                .settingGridItem(v-for="setting in settingGrid")
                     .name 
                         span {{ setting.name }}
                         sui-tooltip(v-if="setting.tip")
@@ -58,36 +46,33 @@ template(v-else)
                         span(v-else) Disabled
                     .value(v-else) {{  service[setting.key] || '-' }}
     .container
-        .title-actions-wrapper.showOnTablet
-            .title-wrapper
-                h2 Manage your Service 
-        .inner-container.services
-            .title-actions-wrapper.hideOnTablet
-                .title-wrapper
+        .innerContainer.services
+            .titleActionsWrapper
+                .titleWrapper
                     h2 Manage your Service 
-            .service-grid 
-                RouterLink(:to="{name: 'users'}").service-grid-item
+            .serviceGrid 
+                RouterLink(:to="{name: 'users'}").serviceGridItem
                     .content
                         .title
                             Icon users
                             span Users
                         .body Within your service, users are individuals who have successfully created an account and logged in at least once. You can search for and apply access control using our easy to use user database management system.
                     .goto Go to Users >
-                RouterLink(:to="{name: 'records'}").service-grid-item  
+                RouterLink(:to="{name: 'records'}").serviceGridItem  
                     .content
                         .title
                             Icon folder_open
                             span Record
                         .body Records are data objects created by you or your users and stored within your database. You can efficiently search, modify, or create new records using our database management system.
                     .goto Go to Records >
-                //- RouterLink(to="/").service-grid-item 
+                //- RouterLink(to="/").serviceGridItem 
                     .content
                         .title
                             Icon mail
                             span Email System
                         .body Users are data that your service user's will store and read from your service database. 
                     .goto Go to Mail >
-    sui-overlay(v-if="isEdit && state.viewport === 'desktop'" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
+    sui-overlay(v-if="isEdit" ref="settingWindow" style="background: rgba(0, 0, 0, 0.6)" @mousedown="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
         div.overlay
             EditService(@close="async()=>{await state.blockingPromise; settingWindow.close(()=>isEdit = false)}")
 sui-overlay(ref="deleteConfirmOverlay")
@@ -100,8 +85,8 @@ sui-overlay(ref="deleteConfirmOverlay")
             p To confirm deletion, enter Service ID #[br] #[span(style="font-weight: bold") {{ service.service }}]
             sui-input(:placeholder="service.service" :value="confirmationCode" @input="(e) => confirmationCode = e.target.value")
         .foot
-            sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = ''}").text-button Cancel
-            SubmitButton(:loading="isDisabled" class="text-button" backgroundColor="51, 51, 51") Delete
+            sui-button(type="button" @click="()=> { deleteConfirmOverlay.close(); confirmationCode = ''}").textButton Cancel
+            SubmitButton(:loading="isDisabled" class="textButton" backgroundColor="51, 51, 51") Delete
 sui-overlay(ref="deleteErrorOverlay")
     .popup
         .title
@@ -109,15 +94,16 @@ sui-overlay(ref="deleteErrorOverlay")
             div Something went wrong!
         .body {{ deleteErrorMessage }}
         .foot
-            sui-button.line-button(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
+            sui-button.lineButton(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
+
 <script setup>
 import { inject, reactive, ref, watch, nextTick } from 'vue';
 import { state, skapi } from '@/main';
 import { localeName, dateFormat, getSize } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
-import EditService from '@/components/EditService.vue';
+import EditService from '@/components/desktop/EditService.vue';
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
@@ -213,8 +199,7 @@ const settingGrid = reactive([
 
 const edit = () => {
     if(!state.user.email_verified) return false;
-    if(state.viewport === 'desktop') isEdit.value = true;
-    else router.push('?edit=service');
+    isEdit.value = true;
 }
 
 const deleteServiceAsk = () => {
@@ -246,11 +231,6 @@ const deleteService = () => {
     });
 }
 
-const opensettingWindow = () => {
-    if(state.viewport === 'mobile') router.push('?new=service');
-    else settingWindow.value.open();
-}
-
 if(!service.value.hasOwnProperty('storage')) {
     skapi.storageInformation(service.value.service).then((storage) => {
         service.value.storage = storage.cloud + storage.database + storage.email;
@@ -258,28 +238,22 @@ if(!service.value.hasOwnProperty('storage')) {
 }
 
 watch(() => isEdit.value, async () => {
-    if(state.viewport === 'desktop') {
-        await nextTick();
-        if(isEdit.value) {
-            opensettingWindow();
-        }
+    await nextTick();
+    if(isEdit.value) {
+        settingWindow.value.open();
     }
 });
-
-watch(() => state.viewport, () => {
-    if(isEdit.value) isEdit.value = false;
-});
 </script>
+
 <style lang="less" scoped>
-@import '@/assets/variables.less';
 .container {
     margin: 0 0 40px 0;
 
-    .inner-container {    
+    .innerContainer {    
         padding: 40px;
         background: #434343;
         border-radius: 12px;
-        .title-actions-wrapper {
+        .titleActionsWrapper {
             margin-bottom: 32px;
 
             h2 {
@@ -301,10 +275,6 @@ watch(() => state.viewport, () => {
         font-size: 24px;
         margin-bottom: 50px;
         font-weight: bold;
-
-        @media @tablet {        
-            margin-bottom: 28px;
-        }
     }
 
     p {
@@ -312,7 +282,7 @@ watch(() => state.viewport, () => {
         line-height: 1.5;
     }
 
-    .title-actions-wrapper {
+    .titleActionsWrapper {
         display: flex;
         justify-content: space-between;
         margin-bottom: 16px;
@@ -323,7 +293,7 @@ watch(() => state.viewport, () => {
         }
     }
 
-    .title-wrapper {
+    .titleWrapper {
         h2 {
             margin: 0;
         }
@@ -348,44 +318,18 @@ watch(() => state.viewport, () => {
         }
     }
 
-    @media @tablet {    
-        margin: 40px 0 0;
-        border-radius: 0;
-
-        &:first-child {
-            margin-top: 0;
-        }
-
-        .inner-container {    
-            padding: 20px;
-
-            &.services {
-                padding: 0;
-                background-color: transparent;
-            }
-        }
-    }
-
     &:last-child {
         margin-bottom: 0;
     }
 }
 
-.information-grid {
+.informationGrid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 20px;
     row-gap: 28px;
 
-    @media @tablet {   
-        grid-template-columns: 1fr 1fr;
-    }
-
-    @media @phone {
-        grid-template-columns: 1fr;
-    }
-
-    &-item {
+    &Item {
         min-width: 0;
 
         .name {
@@ -399,22 +343,14 @@ watch(() => state.viewport, () => {
             color: rgba(255, 255, 255, 0.85);
             word-break: break-all;
         }
-        
-        @media @phone {
-        // @media screen and (max-width: 520px) {
-            &.span-2 {
-                grid-column: span 2;
-            }
-        }
-
     }
 }
 
-.setting-grid {
+.settingGrid {
     display: flex;
     justify-content: space-between;
     
-    &-item {
+    &Item {
         .name {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
@@ -426,36 +362,19 @@ watch(() => state.viewport, () => {
             color: rgba(255, 255, 255, 0.85);
         }
 
-        &.span-2 {
+        &.span2 {
             grid-column: span 2;
-        }
-    }
-
-    @media screen and (max-width: 980px) {    
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    @media screen and (max-width: 730px) {    
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media @phone {
-        grid-template-columns: repeat(1, 1fr);
-        &-item {
-            &.span-2 {
-                grid-column: span 1;
-            }
         }
     }
 }
 
-.setting-grid {
+.settingGrid {
     display: grid;
     column-gap: 12px;
     row-gap:28px;
     grid-template-columns: repeat(4, calc(25% - 30px)) 72px;
 
-    &-item {
+    &Item {
         .name {
             font-size: 14px;
             line-height: 1;
@@ -481,44 +400,15 @@ watch(() => state.viewport, () => {
             align-self: flex-end;
             justify-self: flex-end;
         }
-    }
-
-    @media screen and (max-width: 1000px) {
-        grid-template-columns: repeat(2, calc(50% - 6px));
-        &-item {
-            &.actions {
-                grid-column: span 2;
-                align-self: flex-end;
-                justify-self: flex-end;
-            }
-        }
-    }
-
-    @media @phone {
-        display: flex;
-        flex-direction: column;
-
-        &-item {
-            &.actions {         
-                grid-column: span 2;
-                justify-self: flex-end;
-            }
-        }
-    }
-
-    
+    }  
 }
 
-.service-grid {
+.serviceGrid {
     display: flex;
     justify-content: space-between;
     gap: 20px;
 
-    @media screen and (max-width: 825px) {
-        flex-direction: column;
-    }
-
-    &-item {
+    &Item {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -556,27 +446,11 @@ watch(() => state.viewport, () => {
             text-decoration: none;
         }
     }
-    a.service-grid-item {
+    a.serviceGridItem {
         text-align: left;
         color: rgba(255, 255, 255, 0.85);
         font-size: 14px;
         text-decoration: none;
-    }
-
-    @media screen and (max-width: 940px) {
-        flex-direction: column;
-        gap: 20px;
-
-        &-item { 
-            border-radius: 12px;
-        }
-    }
-
-    @media @tablet {
-        &-item {
-            padding: 24px;
-            background: #434343;
-        }
     }
 }
 sui-tooltip {

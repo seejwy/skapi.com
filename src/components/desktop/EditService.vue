@@ -1,16 +1,10 @@
 <template lang="pug">
-NavBarProxy
-    template(v-slot:title)
-        div Service Setting
-    template(v-slot:rightButton)
-        div(style="position: relative; width: 28px; height: 28px;" v-if="isDisabled")
-            LoadingCircle(style="--bgColor: 80, 80, 80; --ringColor: 250, 250, 250;")
-        span(v-else @click="save" style="font-weight: bold; cursor: pointer") Save
-.overlay-container(v-if="service" :loading="isDisabled || null")
+.overlayContainer(v-if="service" :loading="isDisabled || null")
     form(@submit.prevent="save" @keydown.enter.prevent="" action="")
+        .overlayContainerTitle Service Setting
         .toggle(style="margin-bottom: 40px")
             span Enable/Disable
-            .toggleBar 
+            .toggleBar
                 .toggleBall(@click="toggle" :class="{'active': serviceStatus > 0 }")
         .input
             label Name of Service
@@ -21,6 +15,8 @@ NavBarProxy
         .input(style="margin-bottom: 40px;")
             label API Key
             sui-input(type="text" :value="apiKey" @input="(e) => apiKey = e.target.value")
+        sui-button.textButton(type="button" style="margin-right: 16px;" @click="emit('close', '')") Cancel
+        SubmitButton(:loading="isDisabled") Save
 sui-overlay(ref="disableConfirmOverlay")
     .popup
         .title
@@ -44,18 +40,20 @@ sui-overlay(ref="disableErrorOverlay")
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, onBeforeUnmount } from 'vue';
+import { inject, ref, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
-import NavBarProxy from '@/components/mobile/NavBarProxy.vue';
-import LoadingCircle from '@/components/LoadingCircle.vue';
 import Icon from '@/components/Icon.vue';
+import SubmitButton from '@/components/SubmitButton.vue';
 
+const emit = defineEmits(['close']);
+
+let route = useRoute();
 let router = useRouter();
-let appStyle = inject('appStyle');
+let pageTitle = inject('pageTitle');
 let service = inject('service');
-let navbarMobileRightButton = inject('navbarMobileRightButton');
+let navbarBackDestination = inject('navbarBackDestination');
 let isDisabled = ref(false);
 const serviceStatus = ref(0);
 const serviceName = ref('');
@@ -79,10 +77,10 @@ const validateCors = (event) => {
     });
 
     if(isValid) {
-        event.target.setCustomValidity('');
+		event.target.setCustomValidity('');
     } else {
-        event.target.setCustomValidity('Invalid CORS');
-        event.target.reportValidity();
+		event.target.setCustomValidity('Invalid CORS');
+		event.target.reportValidity();
     }
 }
 
@@ -111,7 +109,6 @@ let confirmDisable = () => {
             disableErrorOverlay.value.open();
             console.error(e);
         }
-
         isDisabled.value = false;
         res();
     });
@@ -124,7 +121,7 @@ const save = async () => {
         service.value.cors === cors.value &&
         service.value.api_key === apiKey.value
     ) {
-        router.replace({query: null});
+        emit('close', '');
         return;
     }
 
@@ -154,7 +151,7 @@ const saveFunction = async () => {
         isDisabled.value = false;
     }
         
-    router.replace({query: null});
+    emit('close', '');
     
     return res;
 }
@@ -164,16 +161,30 @@ const toggle = () => {
     serviceStatus.value > 0 ? serviceStatus.value = 0 : serviceStatus.value = 1;
 }
 
-appStyle.background = '#333333';
-
 onBeforeUnmount(() => {
-    appStyle.background = null;
+    pageTitle.value = `Service "${service.value.name}"`;
+    navbarBackDestination.value = null;
 });
+
 </script>
 
 <style lang="less" scoped>
-.overlay-container {
-    margin-top: var(--head-space);
+.overlayContainer {
+    background-color: #505050;
+    border: 1px solid #808080;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
+    color: #fff;
+    text-align: center;
+    padding: 40px;
+    width: 500px;
+    max-width: 100%;
+    border-radius: 8px;
+
+    &Title {
+        font-weight: bold;
+        font-size: 28px;
+        margin-bottom: 40px;
+    }
 
     .input {
         margin: 20px auto;
@@ -225,15 +236,6 @@ onBeforeUnmount(() => {
             left: calc(100% - 10px);
             background: #5AD858;
         }
-    }
-}
-.delete-button {
-    padding: 0;
-    margin-top: 4px;
-    color: rgba(255, 255, 255, 0.85);
-
-    &:hover {
-        background-color: transparent;
     }
 }
 

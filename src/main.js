@@ -86,7 +86,7 @@ if (mql.matches) {
     import('@/assets/mobile.less');
 } else {
     router = import('@/router/desktop.js');
-    import('@/assets/desktop.less');
+    import('@/assets/main.less');
 }
 
 router.then((module) => {

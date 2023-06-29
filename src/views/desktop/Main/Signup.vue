@@ -86,6 +86,7 @@
             .ball(v-for="num in 2" @click="() => { num < step ? step = num : null; password = '';  passwordConfirm = '';}" :class="{'active': step === num}")
 
 </template>
+
 <script setup>
 import { inject, watch, reactive, ref, onBeforeMount } from 'vue';
 import { skapi, state } from '@/main';
@@ -104,7 +105,6 @@ let questionsError = ref({
 })
 const page = ref('signup');
 let step = ref(1);
-const secondsTillReady = ref(null);
 const promiseRunning = ref(false);
 const passwordField = ref(null);
 const confirmPasswordField = ref(null);
@@ -210,20 +210,14 @@ function signup() {
 }
 
 </script>
-<style lang="less" scoped>
-@import '@/assets/variables.less';
 
+<style lang="less" scoped>
 .wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 60px 0;
     min-height: calc(100vh - 140px);
-
-    @media @tablet {
-        align-items: flex-start;
-        padding: 0;
-    }
 }
 
 .container {
@@ -237,16 +231,6 @@ function signup() {
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     margin-top: 60px;
-
-    @media @tablet {
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-        border: none;
-        background: #FFF;
-        padding: 0;
-        margin-top: var(--head-space);
-    }
 
     h1 {
         font-size: 32px;
@@ -376,4 +360,5 @@ function signup() {
             margin: 0;
         }
     }
-}</style>
+}
+</style>
