@@ -18,7 +18,7 @@
                 li
                     a.clickable(@click="logout") Logout
 
-        main.app#app-main(v-if='state.connection')
+        main.app#appMain(v-if='state.connection')
             NotExists(v-if='service === 404')
             template(v-else-if='service')
                 router-view
