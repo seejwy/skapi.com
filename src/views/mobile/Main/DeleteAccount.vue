@@ -21,7 +21,7 @@ NavBarProxy
             .actions
                 sui-button(type="button" @click="close") No, keep my account
                 sui-button.textButton(type="button" style="margin-top: 24px;" @click="() => { form.confirm ? processStep = 1 : form.error = true}") Yes, delete my account
-            .step-wrapper
+            .stepWrapper
                 .step.active
                 .step
                 .step

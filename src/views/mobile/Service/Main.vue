@@ -26,7 +26,7 @@
             sui-overlay(v-else-if="state.viewport !== 'mobile'" ref="overlay" style="background: rgba(0, 0, 0, 0.6);")
                 Login
             Login(v-else-if="!state.user")
-    .sidebar-holder
+    .sidebarHolder
         .sidebar(v-if="state.user")
             router-link(:to="{name: 'service'}" :class="{'router-link-active-mobile': !route.path.split('/')[3]}")
                 Icon home
@@ -62,7 +62,7 @@ Transition(name="toast")
         color: inherit;
     }
 
-    .sidebar-holder {
+    .sidebarHolder {
         position: fixed;
         z-index: 10;
         bottom: 0;

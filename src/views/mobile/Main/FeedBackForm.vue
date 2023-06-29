@@ -297,7 +297,7 @@ const inputFeedback = () => {
         font-weight: bold;
     }
 
-    .line-button {
+    .lineButton {
         display: block;
     }
 }

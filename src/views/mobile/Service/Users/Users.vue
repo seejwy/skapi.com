@@ -2,11 +2,11 @@
 SearchNavBar(v-if="route.query.search")
     div {{ mobilePageTitle }}
     template(v-slot:right) 
-        Icon.placeholder-icon(@click="cancelSearch") X2        
+        Icon.placeholderIcon(@click="cancelSearch") X2        
 NavBarProxy(v-else)
     template(v-slot:title)
         div Users
-.page-header.head-space-helper(v-if="!route.query.search")
+.pageHeader.headSpaceHelper(v-if="!route.query.search")
     p.
         Users are individuals who have successfully created an account and logged in at least once. 
         You can perform searches and apply access control on this page.
@@ -14,18 +14,18 @@ NavBarProxy(v-else)
 
     .action
         a(href="https://docs.skapi.com/authentication" target="_blank")
-            sui-button.line-button(type="button") Find out More
+            sui-button.lineButton(type="button") Find out More
     div(style="clear:both;")
-.table-outer-wrapper(:loading="promiseRunning || null")
-    .table-actions(v-if="!route.query.search" :class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
-        .header-actions(v-if="!route.query.search || groupedUserList?.length")
+.tableOuterWrapper(:loading="promiseRunning || null")
+    .tableActions(v-if="!route.query.search" :class="{'rounded-border' : !groupedUserList?.length && fetchingData}")
+        .headerActions(v-if="!route.query.search || groupedUserList?.length")
             div.dropdown
                 span Headers
                 Icon down2
             sui-select(:value="mobileVisibleField" @change="(e) => mobileVisibleField = e.target.value")
                 template(v-for="(field, key) in visibleFields")
                     option(v-if="key !== 'approved'" :value="key") {{  field.text  }}
-        .header-actions(v-else)
+        .headerActions(v-else)
         .actions
             sui-button.icon-button(type="button" @click="blockUsers" :disabled="(selectedUnblockedUsers.length === 0 || selectedBlockedUsers.length > 0) || null")
                 Icon block
@@ -34,7 +34,7 @@ NavBarProxy(v-else)
             sui-button.icon-button(type="button" @click="deleteUsers" :disabled="selectedUsers.length === 0 || null")
                 Icon trash
 
-    .table-wrapper
+    .tableWrapper
         table(v-if="!groupedUserList?.length && fetchingData")
             tbody
                 tr(v-for="x in numberOfSkeletons()").animation-skeleton
@@ -45,7 +45,7 @@ NavBarProxy(v-else)
                     th
 
                     th(style="width: 52px;") Block
-                    th(v-for="key in computedVisibleFields" :class="{'icon-td': key === 'block' || key === 'status', 'user-id': key === 'user_id'}") {{ visibleFields[key].text }}
+                    th(v-for="key in computedVisibleFields" :class="{'iconTd': key === 'block' || key === 'status', 'userId': key === 'user_id'}") {{ visibleFields[key].text }}
                     th(v-if="computedVisibleFields?.length <= 2")
             tbody(v-if="groupedUserList?.length")
                 template(v-for="batch in groupedUserList")
@@ -71,15 +71,15 @@ NavBarProxy(v-else)
                         td(style="width: 52px;")
                         td
                         td
-    .no-users-found(v-if="!groupedUserList?.length && !fetchingData")
+    .noUsersFound(v-if="!groupedUserList?.length && !fetchingData")
         template(v-if="!route.query.value && !groupedUserList?.length")     
             .title No Users
             p You have no existing users yet
         template(v-else) 
             .title No Users Found
             p There were no users matching the query.
-.page-action(v-if="!route.query.search" @blur="isFabOpen = false")
-    sui-button.fab.open-menu(type="button" @click.stop="isFabOpen = !isFabOpen")
+.pageAction(v-if="!route.query.search" @blur="isFabOpen = false")
+    sui-button.fab.openMenu(type="button" @click.stop="isFabOpen = !isFabOpen")
         Icon menu_vertical
 
     Transition
@@ -602,7 +602,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.table-outer-wrapper {
+.tableOuterWrapper {
     position: relative;
     margin: auto -20px;
     background-color: #434343;
@@ -616,7 +616,7 @@ onBeforeRouteLeave((to, from) => {
         background-color: transparent;
         margin: 0;
 
-        .table-actions {
+        .tableActions {
             padding: 14px 20px 14px 20px;
             background: rgba(255, 255, 255, 0.04);
             border-radius: 0;
@@ -646,7 +646,7 @@ onBeforeRouteLeave((to, from) => {
             }
         }
 
-        .no-users-found {
+        .noUsersFound {
             background-color: transparent;
         }
     }
@@ -659,7 +659,7 @@ onBeforeRouteLeave((to, from) => {
         background: #434343;
         border-radius: 8px 8px 0 0;
 
-        &+.table-actions {
+        &+.tableActions {
             border-radius: 0;
         }
 
@@ -668,7 +668,7 @@ onBeforeRouteLeave((to, from) => {
         }
     }
 
-    .table-actions {
+    .tableActions {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -689,17 +689,8 @@ onBeforeRouteLeave((to, from) => {
             color: #fff;
         }
 
-        .header-actions {
+        .headerActions {
             position: relative;
-
-            &--before {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                z-index: 8;
-            }
 
             .dropdown>* {
                 vertical-align: middle;
@@ -740,7 +731,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.table-wrapper {
+.tableWrapper {
     overflow: hidden;
 
     table {
@@ -784,12 +775,12 @@ onBeforeRouteLeave((to, from) => {
                 top: 0;
                 text-align: left;
 
-                &.icon-td {
+                &.iconTd {
                     width: 48px;
                     text-align: center;
                 }
 
-                &:last-child:not(.icon-td) {
+                &:last-child:not(.iconTd) {
                     width: 100%;
                 }
             }
@@ -822,12 +813,12 @@ onBeforeRouteLeave((to, from) => {
                     width: 100%;
                     font-size: 14px;
 
-                    &.icon-td {
+                    &.iconTd {
                         width: 48px;
                         text-align: center;
                     }
 
-                    &:last-child:not(.icon-td) {
+                    &:last-child:not(.iconTd) {
                         width: 100%;
                     }
                 }
@@ -844,7 +835,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.no-users-found {
+.noUsersFound {
     text-align: center;
     padding: 60px 0;
     border-radius: 0 0 8px 8px;
@@ -903,7 +894,7 @@ onBeforeRouteLeave((to, from) => {
     }
 }
 
-.page-action {
+.pageAction {
     position: fixed;
     bottom: 76px;
     right: 16px;

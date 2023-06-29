@@ -10,14 +10,14 @@ form.form.container(@submit.prevent="verifyEmail" action="")
         sui-input(:disabled="promiseRunning" type="text" placeholder="Verification Code" autocomplete="one-time-code" @input="(e) => verificationCode.value = e.target.value" :value="verificationCode.value")
     .input
         label Haven't got any code?
-        sui-button.line-button(type="button" @click="resendCode" :disabled="promiseRunning || secondsTillReady")
+        sui-button.lineButton(type="button" @click="resendCode" :disabled="promiseRunning || secondsTillReady")
             template(v-if="secondsTillReady") Code has been sent
             template(v-else) Re-send Code
         .error(v-if="verificationCode.error")
                 Icon warning
                 span {{ verificationCode.error }}
     .actions
-        sui-button.line-button(type="button" @click="close" :disabled="promiseRunning") Cancel
+        sui-button.lineButton(type="button" @click="close" :disabled="promiseRunning") Cancel
         SubmitButton(:loading="promiseRunning") Verify
 </template>
 <!-- script below -->
@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
     .actions {
         margin-top: 40px;
     }
-    .step-wrapper {
+    .stepWrapper {
         margin-top: 56px;
 
         .step {
@@ -181,7 +181,7 @@ onBeforeUnmount(() => {
     }
 }
 
-.line-button {
+.lineButton {
     & ~ sui-button {
         margin-left: 16px;
     }

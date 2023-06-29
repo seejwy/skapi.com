@@ -5,7 +5,7 @@ ChangePassword(v-if="state?.user && route.query.page === 'password'")
 VerifyEmail(v-else-if="state?.user && route.query.page === 'verify'")
 DeleteAccount(v-else-if="state?.user && route.query.page === 'delete'")
 div(v-else-if="state?.user" :loading="isSaving || null")
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h1.fixed Account Settings
     .settings-wrapper
         form.settings(@submit.prevent="updateUserSettings" @keydown.enter.prevent="" action="")
@@ -52,7 +52,7 @@ div(v-else-if="state?.user" :loading="isSaving || null")
             hr
             .submit
                 template(v-if="isEdit")
-                    sui-button.line-button(type="button" @click="cancelEdit") Cancel
+                    sui-button.lineButton(type="button" @click="cancelEdit") Cancel
                     SubmitButton(:loading="isSaving") Save
                 sui-button(v-else type="button" @click="isEdit = true") Edit Account
 
@@ -196,7 +196,7 @@ onMounted(() => {
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 
-.page-header {
+.pageHeader {
     text-align: center;
     margin-bottom: 12px;
 
@@ -351,7 +351,7 @@ onMounted(() => {
     margin: 80px -16px 28px;
 }
 
-.line-button {
+.lineButton {
     &~sui-button {
         margin-left: 16px;
     }

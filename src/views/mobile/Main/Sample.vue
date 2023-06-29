@@ -41,8 +41,8 @@ div(v-for="pageType in pages" :class="pageType" ref="container")
         sui-button(type="reset") Reset
         sui-button(type="reset" disabled) Disabled Reset
         br
-        sui-button.line-button(type="button") Line Button
-        sui-button.line-button(type="button" disabled) Disabled Button
+        sui-button.lineButton(type="button") Line Button
+        sui-button.lineButton(type="button" disabled) Disabled Button
         br
         sui-button.textButton(type="button") Text Button
         sui-button.textButton(type="button" disabled) Disabled Button

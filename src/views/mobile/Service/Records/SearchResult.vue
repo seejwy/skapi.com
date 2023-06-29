@@ -2,9 +2,9 @@
 SearchNavBar
     div {{ searchTitle }}
     template(v-slot:right) 
-        Icon.placeholder-icon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchRecord'})}") X2
+        Icon.placeholderIcon(@click="()=>{ searchResult=null; currentSelectedRecordPage=0; currentSelectedRecordBatch=0; router.push({name: 'mobileSearchRecord'})}") X2
 
-.record-container#data-container
+.recordContainer#data-container
     // skeleton
     .recordWrapper.animation-skeleton(v-if='searchResult === null')
         .records.clickable(v-for="t in numberOfSkeletons()")
@@ -20,7 +20,7 @@ SearchNavBar
 
     template(v-else)
         div(v-if='!searchResult.list.length')
-            .no-records-found
+            .noRecordsFound
                 .title No Records Found
                 p There was no record matching the query:
                 .query(v-if='route.query?.access_group')
@@ -223,7 +223,7 @@ function displayRecord(r) {
     max-width: 100%;
 }
 
-.record-container {
+.recordContainer {
     svg {
         color: white;
         margin-left: 4px;
@@ -307,7 +307,7 @@ function displayRecord(r) {
         }
     }
 
-    .no-records-found {
+    .noRecordsFound {
         text-align: center;
         padding: 60px 0 32px 0;
         border-radius: 0 0 8px 8px;

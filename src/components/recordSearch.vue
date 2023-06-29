@@ -18,7 +18,7 @@ form(@submit.prevent="submitSearch")
             
         template(v-slot:right) 
             sui-button(type="submit").icon-button  
-                Icon.showOnTablet.placeholder-icon search
+                Icon.showOnTablet.placeholderIcon search
     .mobile-search-type(style="margin: 8px 0;")
         sui-select(
             name='search_type'
@@ -162,7 +162,7 @@ form(@submit.prevent="submitSearch")
                     @input="e => advancedForm.reference = e.target.value")
 
         div(style='text-align:center;')
-            sui-input.line-button(type='reset' @click.prevent="advancedForm = advancedFormInit()")
+            sui-input.lineButton(type='reset' @click.prevent="advancedForm = advancedFormInit()")
             sui-input(style='margin: 8px .5em;width: 6em;' type='submit' value="Search")
 
 </template>
@@ -465,7 +465,7 @@ form {
         }
     }
 
-    .line-button {
+    .lineButton {
         margin: 8px .5em;
     }
 
@@ -541,7 +541,7 @@ form {
     }
 }
 
-.placeholder-icon {
+.placeholderIcon {
     color: #fff;
     flex-shrink: 0;
 }

@@ -10,8 +10,8 @@ NavBarProxy
     form(@submit.prevent="save" @keydown.enter.prevent="" action="")
         .toggle(style="margin-bottom: 40px")
             span Enable/Disable
-            .toggle-bar 
-                .toggle-ball(@click="toggle" :class="{'active': serviceStatus > 0 }")
+            .toggleBar 
+                .toggleBall(@click="toggle" :class="{'active': serviceStatus > 0 }")
         .input
             label Name of Service
             sui-input(type="text" placeholder="Name of Service" :value="serviceName" @input="(e) => serviceName = e.target.value" required)
@@ -40,7 +40,7 @@ sui-overlay(ref="disableErrorOverlay")
             div Something went wrong!
         .body {{ errorMessage }}
         .foot
-            sui-button.line-button(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
+            sui-button.lineButton(type="button" @click="()=> { disableErrorOverlay.close(); }") Ok
 </template>
 <!-- script below -->
 <script setup>
@@ -198,7 +198,7 @@ onBeforeUnmount(() => {
     font-weight: bold;
     color: rgba(255, 255, 255, .6);
 
-    &-bar {
+    &Bar {
         position: relative;
         height: 8px;
         width: 40px;
@@ -208,7 +208,7 @@ onBeforeUnmount(() => {
         border-radius: 2px;
         margin-right: 10px;
     }
-    &-ball {
+    &Ball {
         position: absolute;
         cursor: pointer;
         height: 20px;
