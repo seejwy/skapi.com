@@ -4,7 +4,7 @@ NavBarProxy(backgroundColor="#505050")
         div Service: "{{ service.name }}"
 EditService(v-if="state?.user && route.query.edit === 'service'")
 template(v-else)
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h2 Service
         p.
             A service is a collection of serverless resources working together to form your backend.
@@ -12,31 +12,31 @@ template(v-else)
 
         div.action
             a(href="https://docs.skapi.com/the-basics/#connecting-to-your-service" target="_blank")
-                sui-button.line-button(type="button") Find out More
+                sui-button.lineButton(type="button") Find out More
     .container
-        .title-actions-wrapper
-            .title-wrapper
+        .titleActionsWrapper
+            .titleWrapper
                 Icon information
                 h2 Service Information
             .actions(@click="deleteServiceAsk" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon trash
-        .inner-container 
-            .information-grid
-                .information-grid-item(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
+        .innerContainer 
+            .informationGrid
+                .informationGridItem(v-for="info in informationGrid" :class="[info.span ? `span-${info?.span}` : '']")
                     .name {{ info.name }}
                     .value(v-if="info.filter") {{ info.filter(service[info.key]) }}
                     .value(v-else) {{ service[info.key] }}
 
     .container
-        .title-actions-wrapper
-            .title-wrapper
+        .titleActionsWrapper
+            .titleWrapper
                 Icon setting
                 h2 Service Setting 
             .actions(@click="edit" :class="{'disabled': !state.user.email_verified ? true : null}")
                 Icon pencil
-        .inner-container
-            .setting-grid 
-                .setting-grid-item(v-for="setting in settingGrid")
+        .innerContainer
+            .settingGrid 
+                .settingGridItem(v-for="setting in settingGrid")
                     .name 
                         span {{ setting.name }}
                         sui-tooltip(v-if="setting.tip")
@@ -48,26 +48,26 @@ template(v-else)
                         span(v-else) Disabled
                     .value(v-else) {{  service[setting.key] || '-' }}
     .container
-        .title-actions-wrapper
-            .title-wrapper
+        .titleActionsWrapper
+            .titleWrapper
                 h2 Manage your Service 
-        .inner-container.services
-            .service-grid 
-                RouterLink(:to="{name: 'users'}").service-grid-item
+        .innerContainer.services
+            .serviceGrid 
+                RouterLink(:to="{name: 'users'}").serviceGrid-item
                     .content
                         .title
                             Icon users
                             span Users
                         .body Within your service, users are individuals who have successfully created an account and logged in at least once. You can search for and apply access control using our easy to use user database management system.
                     .goto Go to Users >
-                RouterLink(:to="{name: 'records'}").service-grid-item  
+                RouterLink(:to="{name: 'records'}").serviceGrid-item  
                     .content
                         .title
                             Icon folder_open
                             span Record
                         .body Records are data objects created by you or your users and stored within your database. You can efficiently search, modify, or create new records using our database management system.
                     .goto Go to Records >
-                //- RouterLink(to="/").service-grid-item 
+                //- RouterLink(to="/").serviceGrid-item 
                     .content
                         .title
                             Icon mail
@@ -93,7 +93,7 @@ sui-overlay(ref="deleteErrorOverlay")
             div Something went wrong!
         .body {{ deleteErrorMessage }}
         .foot
-            sui-button.line-button(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
+            sui-button.lineButton(type="button" @click="()=> { deleteErrorOverlay.close(); }") Ok
 </template>
 <script setup>
 import { inject, reactive, ref, watch, nextTick, onMounted } from 'vue';
@@ -241,11 +241,11 @@ if(!service.value.hasOwnProperty('storage')) {
     margin: 40px 0 0;
     border-radius: 0;
 
-    .inner-container {    
+    .innerContainer {    
         padding: 20px;
         background: #434343;
         border-radius: 12px;
-        .title-actions-wrapper {
+        .titleActionsWrapper {
             margin-bottom: 32px;
 
             h2 {
@@ -279,7 +279,7 @@ if(!service.value.hasOwnProperty('storage')) {
         line-height: 1.5;
     }
 
-    .title-actions-wrapper {
+    .titleActionsWrapper {
         display: flex;
         justify-content: space-between;
         margin-bottom: 16px;
@@ -290,7 +290,7 @@ if(!service.value.hasOwnProperty('storage')) {
         }
     }
 
-    .title-wrapper {
+    .titleWrapper {
         h2 {
             margin: 0;
         }
@@ -324,7 +324,7 @@ if(!service.value.hasOwnProperty('storage')) {
     }
 }
 
-.information-grid {
+.informationGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 20px;
@@ -334,7 +334,7 @@ if(!service.value.hasOwnProperty('storage')) {
         grid-template-columns: 1fr;
     }
 
-    &-item {
+    &Item {
         min-width: 0;
 
         .name {
@@ -359,12 +359,12 @@ if(!service.value.hasOwnProperty('storage')) {
     }
 }
 
-.setting-grid {
+.settingGrid {
     display: flex;
     justify-content: space-between;
     grid-template-columns: repeat(2, 1fr);
 
-    &-item {
+    &Item {
         .name {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
@@ -383,7 +383,7 @@ if(!service.value.hasOwnProperty('storage')) {
 
     @media @phone {
         grid-template-columns: repeat(1, 1fr);
-        &-item {
+        &Item {
             &.span-2 {
                 grid-column: span 1;
             }
@@ -391,12 +391,12 @@ if(!service.value.hasOwnProperty('storage')) {
     }
 }
 
-.setting-grid {
+.settingGrid {
     display: grid;
     column-gap: 12px;
     row-gap:28px;
 
-    &-item {
+    &Item {
         .name {
             font-size: 14px;
             line-height: 1;
@@ -426,7 +426,7 @@ if(!service.value.hasOwnProperty('storage')) {
 
     @media screen and (max-width: 1000px) {
         grid-template-columns: repeat(2, calc(50% - 6px));
-        &-item {
+        &Item {
             &.actions {
                 grid-column: span 2;
                 align-self: flex-end;
@@ -439,7 +439,7 @@ if(!service.value.hasOwnProperty('storage')) {
         display: flex;
         flex-direction: column;
 
-        &-item {
+        &Item {
             &.actions {         
                 grid-column: span 2;
                 justify-self: flex-end;
@@ -450,8 +450,8 @@ if(!service.value.hasOwnProperty('storage')) {
     
 }
 
-.service-grid {
-    &-item {
+.serviceGrid {
+    &Item {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -491,7 +491,7 @@ if(!service.value.hasOwnProperty('storage')) {
             text-decoration: none;
         }
     }
-    a.service-grid-item {
+    a.serviceGrid-item {
         text-align: left;
         color: rgba(255, 255, 255, 0.85);
         font-size: 14px;

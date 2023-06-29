@@ -2,7 +2,7 @@
 NavBarProxy
     template(v-slot:title)
         div Records
-.page-header.head-space-helper
+.pageHeader.headSpaceHelper
     p.
         Records are data objects created by you or your users and stored within your database.
         skapi's database is designed for flexibility and features automatic indexing.
@@ -10,7 +10,7 @@ NavBarProxy
 
     .action
         a(href="https://docs.skapi.com/database" target="_blank")
-            sui-button.line-button(type="button") Find out More
+            sui-button.lineButton(type="button") Find out More
 
 .table-container#data-container
     .header.label-head
@@ -35,7 +35,7 @@ NavBarProxy
                 template(v-for="pageIdx in groupedTableList[batchIdx - 1]?.length")
                     // when v-for by number, it starts with 1
                     template(v-for="t in groupedTableList[batchIdx - 1][pageIdx - 1]")
-                        .table-wrapper(v-if="t.number_of_records")
+                        .tableWrapper(v-if="t.number_of_records")
                             .tableHead.label-head.clickable(@click='()=>{viewRecordList(t)}')
                                 span {{ t.table }}
                                 div
@@ -49,9 +49,9 @@ NavBarProxy
                 .tableHead.animation-skeleton.showOnTablet(v-if='fetchingData' v-for="t in numberOfSkeletons()")
                     span &nbsp;
 
-.page-action.showOnTablet(@blur="isFabOpen = false")
+.pageAction.showOnTablet(@blur="isFabOpen = false")
     // @blur should be at the parent div
-    sui-button.fab.open-menu(type="button" @click.stop="isFabOpen = !isFabOpen")
+    sui-button.fab.openMenu(type="button" @click.stop="isFabOpen = !isFabOpen")
         Icon menu_vertical
 
     Transition
@@ -264,7 +264,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="less" scoped>
-.page-action {
+.pageAction {
     position: fixed;
     bottom: 76px;
     right: 16px;
@@ -319,12 +319,12 @@ onBeforeUnmount(() => {
         align-items: center;
         flex-wrap: wrap;
 
-        &+.table-wrapper {
+        &+.tableWrapper {
             margin-top: 24px;
         }
     }
 
-    .table-wrapper {
+    .tableWrapper {
         background-color: #333333;
         border-radius: 8px;
 

@@ -249,7 +249,7 @@ NavBarProxy
 							div
 								Icon attached
 								span.hideOnTablet(style="margin-right: 6px;") Drag and Drop OR
-								sui-button.line-button(@click.prevent.stop="" type="button") Upload
+								sui-button.lineButton(@click.prevent.stop="" type="button") Upload
 							.error(v-if="fileError === record.key && record.key !== ''" style="display: block; text-align: center;") 
 								Icon warning
 								span You must upload a file
@@ -286,7 +286,7 @@ NavBarProxy
 					sui-input.data-input-field(v-else type="text" style="height: auto;" :name="record.key" spellcheck="false" placeholder="Key Value" :value="record.data.toString()") {{  record.data  }}
 
 			div
-				sui-button.line-button(type="button" style="width: 100%;" @click.prevent="addField") Add Data
+				sui-button.lineButton(type="button" style="width: 100%;" @click.prevent="addField") Add Data
 
 sui-overlay(ref="deleteConfirmOverlay")
 	.popup
@@ -313,7 +313,7 @@ sui-overlay(ref="filesizeExceedsOverlay")
 			div File Size Exceeded
 		.body Your total file size exceeds {{ fileSizeLimit }}MB.
 		.foot
-			sui-button.line-button(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
+			sui-button.lineButton(type="button" @click="()=>filesizeExceedsOverlay.close()") OK
 </template>
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';
@@ -976,7 +976,7 @@ defineExpose({
 			padding: 0;
 		}
 
-		&-item {
+		&Item {
 			display: inline-flex;
 			align-items: center;
 			height: 40px;

@@ -5,7 +5,7 @@
         p Please check your inbox at #[span(style="color: var(--primary-color)") {{ email }}] for a confirmation email. Click the link in the email to confirm your email address. 
         p(style="color: var(--primary-color)") Continue to login after confirmation.
         p(style="text-align: left; ") Haven't got any code?
-        sui-button.line-button(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") 
+        sui-button.lineButton(type="button" @click="resendSignupConfirmation" :disabled="secondsTillReady || null") 
             template(v-if="secondsTillReady") Email has been sent
             template(v-else) Re-send Confirmation Email
 </template>

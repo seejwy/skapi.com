@@ -1,7 +1,7 @@
 <template lang="pug">
 template(v-if="record")
     ViewRecord(ref='viewRecord' :record='record')
-.no-records-found(v-else-if="hasNoRecords")
+.noRecordsFound(v-else-if="hasNoRecords")
     .title Record Not Found
     p Record does not exist
 div(v-else style="text-align: center; padding: 1em;")
@@ -71,7 +71,7 @@ onBeforeUnmount(() => {
 });
 </script>
 <style lang="less">
-.no-records-found {
+.noRecordsFound {
     text-align: center;
     border-radius: 0 0 8px 8px;
     color: rgba(255, 255, 255, .4);

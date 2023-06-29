@@ -15,7 +15,7 @@ form(
             required)
         template(v-slot:right)
             sui-button(type="submit").icon-button  
-                    Icon.showOnTablet.placeholder-icon search
+                    Icon.showOnTablet.placeholderIcon search
 .mobile-search-type
     sui-select(
         name='search_type'

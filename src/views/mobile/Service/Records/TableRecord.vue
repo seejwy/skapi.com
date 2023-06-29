@@ -6,7 +6,7 @@ NavBarProxy(v-if="route.query.table")
         div {{ route.query.table }}
     template(v-slot:rightButton)
         div
-.record-container#data-container
+.recordContainer#data-container
     .recordWrapper.animation-skeleton(v-if='searchResult === null')
         .records.clickable(v-for="t in numberOfSkeletons()")
             div
@@ -21,7 +21,7 @@ NavBarProxy(v-if="route.query.table")
 
     template(v-else)
         div(v-if='!searchResult.list.length')
-            .no-records-found
+            .noRecordsFound
                 .title No Records
                 p There are no records in this table
         template(v-else)
@@ -165,7 +165,7 @@ function displayRecord(r) {
 <style lang="less" scoped>
 @import '@/assets/variables.less';
 
-.record-container {
+.recordContainer {
     position: relative;
     margin: 0;
     padding: 0;
@@ -234,7 +234,7 @@ function displayRecord(r) {
         }
     }
 
-    .no-records-found {
+    .noRecordsFound {
         text-align: center;
         border-radius: 0 0 8px 8px;
         color: rgba(255, 255, 255, .4);

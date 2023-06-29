@@ -4,7 +4,7 @@ div(v-if='!state?.connection')
 NewService(v-else-if="state?.user && route.query.new === 'service'")
 FeedBackForm(v-else-if="state?.user && route.query.new === 'feedback'")
 div(v-else-if="state?.user")
-    .page-header.head-space-helper
+    .pageHeader.headSpaceHelper
         h1.fixed Admin
         p.
             You can see a list of all the services you are running.
