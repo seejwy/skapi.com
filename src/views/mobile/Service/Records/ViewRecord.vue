@@ -14,8 +14,8 @@ NavBarProxy
 		.title
 		.menu
 			ul
-				li.menu-item(@click="view = 'information'" :class="{'active': view === 'information'}") Information
-				li.menu-item(@click="view = 'record'" :class="{'active': view === 'record'}") Data
+				li.menuItem(@click="view = 'information'" :class="{'active': view === 'information'}") Information
+				li.menuItem(@click="view = 'record'" :class="{'active': view === 'record'}") Data
 			.action
 				Icon(@click="() => deleteConfirmOverlay.open()") trash
 	.content
@@ -119,8 +119,8 @@ NavBarProxy
 			.title 
 			.menu
 				ul
-					li.menu-item(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
-					li.menu-item(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
+					li.menuItem(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
+					li.menuItem(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
 
 		.content#setting(v-show="view === 'information'")
 			.row
