@@ -31,8 +31,8 @@ sui-overlay(ref="disableConfirmOverlay")
             p(v-if="service?.active > 0") Your service will go offline if you disable "{{ service.name }}"? #[br] Do you wish to continue?
             p(v-else) Your service will be resumed if you enable "{{ service.name }}"? #[br] Do you wish to continue?
         .foot
-            sui-button.text-button(type="button" @click="rejectDisable") No 
-            sui-button.text-button(type="button" @click="confirmDisable") Yes
+            sui-button.textButton(type="button" @click="rejectDisable") No 
+            sui-button.textButton(type="button" @click="confirmDisable") Yes
 sui-overlay(ref="disableErrorOverlay")
     .popup
         .title
