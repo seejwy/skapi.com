@@ -53,21 +53,21 @@ template(v-else)
                 h2 Manage your Service 
         .innerContainer.services
             .serviceGrid 
-                RouterLink(:to="{name: 'users'}").serviceGrid-item
+                RouterLink(:to="{name: 'users'}").serviceGridItem
                     .content
                         .title
                             Icon users
                             span Users
                         .body Within your service, users are individuals who have successfully created an account and logged in at least once. You can search for and apply access control using our easy to use user database management system.
                     .goto Go to Users >
-                RouterLink(:to="{name: 'records'}").serviceGrid-item  
+                RouterLink(:to="{name: 'records'}").serviceGridItem  
                     .content
                         .title
                             Icon folder_open
                             span Record
                         .body Records are data objects created by you or your users and stored within your database. You can efficiently search, modify, or create new records using our database management system.
                     .goto Go to Records >
-                //- RouterLink(to="/").serviceGrid-item 
+                //- RouterLink(to="/").serviceGridItem 
                     .content
                         .title
                             Icon mail
@@ -491,7 +491,7 @@ if(!service.value.hasOwnProperty('storage')) {
             text-decoration: none;
         }
     }
-    a.serviceGrid-item {
+    a.serviceGridItem {
         text-align: left;
         color: rgba(255, 255, 255, 0.85);
         font-size: 14px;

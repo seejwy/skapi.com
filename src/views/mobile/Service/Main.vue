@@ -2,7 +2,7 @@
 .servicePageShell
     .sideScreen
         NavBar(v-if="route.name !== 'mobileSearchRecord' && route.name !== 'recordSearch' && route.name !== 'mobileSearchUser' && !(route.name === 'users' && route.query.search)" style="background-color: #505050")
-            ul.inline-vertical-middle
+            ul.inlineVerticalMiddle
                 li
                     router-link(to="/" tag="li")
                         img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
