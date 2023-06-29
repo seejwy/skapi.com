@@ -68,7 +68,7 @@ Transition(name="toast")
         bottom: 0;
         left: 0;
         right: 0;
-        width: 100vw;
+        width: 100%;
     }
     .sidebar {
         display: flex;

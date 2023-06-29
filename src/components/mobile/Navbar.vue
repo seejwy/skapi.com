@@ -78,7 +78,7 @@ function open() {
 <style lang="less">
 @import '@/assets/variables.less';
 
-#nav-overlay {
+#navOverlay {
     min-width: 70vw;
     background-color: #1F1F1F;
     height: 100vh;
