@@ -10,7 +10,7 @@ sui-nav#top-nav(auto-hide)
 
     sui-overlay(ref='navOverlay' transition-time='0.2s' @click='()=>close(true)' style='background-color: rgba(31, 31, 31, .6); color:white;' position="right")
         // nested events do not bubble in sui-overlay, thus adding additional click event to close menu
-        #nav-overlay(@click="()=>close(true)")
+        #navOverlay(@click="()=>close(true)")
             slot
 </template>
 <script setup>
@@ -78,7 +78,7 @@ function open() {
 <style lang="less">
 @import '@/assets/variables.less';
 
-#nav-overlay {
+#navOverlay {
     min-width: 70vw;
     background-color: #1F1F1F;
     height: 100vh;
