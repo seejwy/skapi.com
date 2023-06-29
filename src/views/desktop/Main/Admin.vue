@@ -95,11 +95,6 @@ const NewServiceConditions = async () => {
     skapi.getProfile().then((r) => {
         if (r.misc === 'feedback complete') {
             if (state.user.email_verified) {
-                // if (state.viewport === 'desktop') {
-                //     isOpen.value = true;
-                // } else {
-                //     router.push('?new=service');
-                // }
                 isOpen.value = true;
             } else {
                 return null;

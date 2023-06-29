@@ -115,7 +115,7 @@
 					li.menuItem(@click="() => view = 'information'" :class="{'active': view === 'information'}") Setting
 					li.menuItem(@click="() => view = 'record'" :class="{'active': view === 'record'}") Data
 
-		.content#setting.desktop(v-show="view === 'information'")
+		.content#setting(v-show="view === 'information'")
 			.row
 				.section(style="width: 100%;")
 					.name Table Name
@@ -218,7 +218,7 @@
 			//- 		TagsInput(:value="form.private_access" @change="(value) => form.private_access = value")
 
 	form(ref="formEl")
-		.content#record.desktop(v-show="view === 'record'")
+		.content#record(v-show="view === 'record'")
 			.dataRow(v-for="(record, recordIndex) in data")
 				.dataNameAction
 					.selectInput
