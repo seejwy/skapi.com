@@ -96,8 +96,8 @@ sui-overlay(ref="confirmOverlay")
         .body 
             p Do you wish to continue?
         .foot
-            sui-button.text-button(type="button") No 
-            sui-button.text-button(type="button") Yes
+            sui-button.textButton(type="button") No 
+            sui-button.textButton(type="button") Yes
 </template>
 <script setup>
 import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';

@@ -20,7 +20,7 @@ NavBarProxy
                 .error(v-if="form.error") You must acknowledge the this in order to proceed
             .actions
                 sui-button(type="button" @click="close") No, keep my account
-                sui-button.text-button(type="button" style="margin-top: 24px;" @click="() => { form.confirm ? processStep = 1 : form.error = true}") Yes, delete my account
+                sui-button.textButton(type="button" style="margin-top: 24px;" @click="() => { form.confirm ? processStep = 1 : form.error = true}") Yes, delete my account
             .step-wrapper
                 .step.active
                 .step
@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
     }
 }
 
-.text-button {
+.textButton {
     padding: 0;
     display: block;
     &:hover,

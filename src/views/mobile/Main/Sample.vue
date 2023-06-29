@@ -44,8 +44,8 @@ div(v-for="pageType in pages" :class="pageType" ref="container")
         sui-button.line-button(type="button") Line Button
         sui-button.line-button(type="button" disabled) Disabled Button
         br
-        sui-button.text-button(type="button") Text Button
-        sui-button.text-button(type="button" disabled) Disabled Button
+        sui-button.textButton(type="button") Text Button
+        sui-button.textButton(type="button" disabled) Disabled Button
         br
         SubmitButton Submit
         SubmitButton(disabled @click="test") Submit
