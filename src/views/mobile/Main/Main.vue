@@ -1,5 +1,5 @@
 <template lang="pug">
-NavBar(:is-parent-level="Object.keys(route.query).length === 0 || route.name === 'confirmation'" style='z-index: 10;background-color: var(--app-nav-bg-color);')
+NavBar(:is-parent-level="Object.keys(route.query).length === 0 || route.name === 'settings' || route.name === 'confirmation'" style='z-index: 10;background-color: var(--app-nav-bg-color);')
     ul.inline-vertical-middle(@click='bypassSameRoute')
         li
             router-link(to="/" tag="li")
