@@ -23,6 +23,8 @@
     }
 }
 .logo {
+    height: 35px;
+    width: auto;
     -webkit-mask: url(@/assets/img/logo.svg) no-repeat center;
     mask: url(@/assets/img/logo.svg) no-repeat center;
     background-color: var(--primary-color);
