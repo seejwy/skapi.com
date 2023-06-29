@@ -795,13 +795,8 @@ const download = async (secureUrl, fileName) => {
 
 const onDrop = (event, keyIndex) => {
 	event.preventDefault();
-<<<<<<< HEAD:src/components/viewRecord.vue
-	if(isSaving.value) return false;
-	
-=======
 	if (isSaving.value) return false;
 
->>>>>>> 6bb878875b1b05c306f534771094547acace21db:src/views/mobile/Service/Records/ViewRecord.vue
 	const files = event.dataTransfer.files;
 	let fileData = data.value[keyIndex].data || [];
 	fileData = [...fileData, ...files];
