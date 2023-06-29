@@ -18,8 +18,8 @@
                 .error(v-if="form.error") You must acknowledge the this in order to proceed
             .actions
                 sui-button(type="button" @click="close") No, keep my account
-                sui-button.text-button(type="button" style="margin-top: 24px;" @click="() => { form.confirm ? processStep = 1 : form.error = true}") Yes, delete my account
-            .step-wrapper
+                sui-button.textButton(type="button" style="margin-top: 24px;" @click="() => { form.confirm ? processStep = 1 : form.error = true}") Yes, delete my account
+            .stepWrapper
                 .step.active
                 .step
                 .step
@@ -46,9 +46,9 @@
                         @input="(e) => { form.reasonText = e.target.value; }" 
                         :value="form.reasonText")
             .actions
-                sui-button.line-button(type="button" @click="close") Cancel
+                sui-button.lineButton(type="button" @click="close") Cancel
                 sui-button(type="button" @click="processStep = 2") Continue
-            .step-wrapper
+            .stepWrapper
                 .step.clickable(@click="goto(0)")
                 .step.active
                 .step
@@ -65,25 +65,24 @@
                         :required="true")
                     .error(v-if="form.error") {{ form.error }}
             .actions
-                sui-button.line-button(type="button" @click="close") Cancel
+                sui-button.lineButton(type="button" @click="close") Cancel
                 SubmitButton(:loading="promiseRunning") Delete
-            .step-wrapper
+            .stepWrapper
                 .step.clickable(@click="goto(0)")
                 .step.clickable(@click="goto(1)")
                 .step.active
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, onBeforeUnmount, onMounted } from 'vue';
+import { ref, onBeforeUnmount, onMounted } from 'vue';
 import { state, skapi } from '@/main';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
 const router = useRouter();
-const route = useRoute();
 
 const emit = defineEmits(['close']);
 const processStep = ref(0);
@@ -99,8 +98,7 @@ const promiseRunning = ref(false);
 
 const close = () => {
     if(promiseRunning.value) return false;
-    if(state.viewport === 'desktop') emit('close');
-    else router.replace('');
+    emit('close');
 }
 
 const goto = (step) => {
@@ -196,14 +194,6 @@ const deleteAccount = async (e) => {
     }
 }
 
-watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop') {
-        router.replace('');
-    } else if(viewport === 'mobile') {
-        emit('close');
-    }
-});
-
 onMounted(() => {    
     processStep.value = 0;
 });
@@ -214,8 +204,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .form.container {
     text-align: center;
     padding: 40px;
@@ -272,7 +260,7 @@ onBeforeUnmount(() => {
     .actions {
         margin-top: 40px;
     }
-    .step-wrapper {
+    .stepWrapper {
         margin-top: 56px;
 
         .step {
@@ -292,17 +280,9 @@ onBeforeUnmount(() => {
             }
         }
     }
-
-    @media @tablet {
-        border: none;
-        box-shadow: none;
-        background-color: transparent;
-        padding: 0px;
-        margin: var(--head-space) auto 0;
-    }
 }
 
-.text-button {
+.textButton {
     padding: 0;
     display: block;
     &:hover,
@@ -313,7 +293,7 @@ onBeforeUnmount(() => {
     }
 }
 
-.line-button {
+.lineButton {
     & ~ sui-button {
         margin-left: 16px;
     }

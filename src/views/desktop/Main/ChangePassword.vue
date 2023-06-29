@@ -18,9 +18,9 @@
                     Icon warning
                     span {{ password.current.error }}
             .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                sui-button.lineButton(type="button" @click="closePasswordChange") Cancel
                 SubmitButton(type="submit" :loading="promiseRunning") Continue
-            .step-wrapper
+            .stepWrapper
                 .step.active
                 .step
     template(v-else-if="processStep === 1")
@@ -48,9 +48,9 @@
                     Icon warning
                     span {{ password.confirm.error }}
             .actions
-                sui-button.line-button(type="button" @click="closePasswordChange") Cancel
+                sui-button.lineButton(type="button" @click="closePasswordChange") Cancel
                 SubmitButton(:loading="promiseRunning") Change Password
-            .step-wrapper
+            .stepWrapper
                 .step.clickable(@click="processStep = 0")
                 .step.active
 .form.container.success(v-else)
@@ -62,16 +62,15 @@
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, onBeforeUnmount } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { state, skapi } from '@/main';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
 const router = useRouter();
-const route = useRoute();
 
 const emit = defineEmits(['close']);
 const processStep = ref(0);
@@ -94,8 +93,7 @@ const password = ref({
 const promiseRunning = ref(false);
 
 const closePasswordChange = () => {
-    if(state.viewport === 'desktop') emit('close');
-    else router.replace('');
+    emit('close');
     processStep.value = 0;
     password.value.current.value = '';
     password.value.confirm.value = '';
@@ -168,22 +166,12 @@ const logout = async () => {
     });
 }
 
-watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop' && route.query.page === 'password') {
-        router.replace('');
-    } else if(viewport === 'mobile') {
-        emit('close');
-    }
-});
-
 onBeforeUnmount(() => {
     router.replace('');
 });
 </script>
 
 <style lang="less" scoped>
-@import '@/assets/variables.less';
-
 .form.container {
     text-align: center;
     padding: 40px;
@@ -237,7 +225,7 @@ onBeforeUnmount(() => {
     .actions {
         margin-top: 40px;
     }
-    .step-wrapper {
+    .stepWrapper {
         margin-top: 56px;
 
         .step {
@@ -265,17 +253,9 @@ onBeforeUnmount(() => {
             height: 56px;
         }
     }
-
-    @media @tablet {
-        border: none;
-        box-shadow: none;
-        background-color: transparent;
-        padding: 0px;
-        margin: var(--head-space) auto 0;
-    }
 }
 
-.line-button {
+.lineButton {
     & ~ sui-button {
         margin-left: 16px;
     }
