@@ -78,9 +78,9 @@ import { useRoute, useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
-import ChangePassword from '@/components/ChangePassword.vue';
-import VerifyEmail from '@/components/VerifyEmail.vue';
-import DeleteAccount from '@/components/DeleteAccount.vue';
+import ChangePassword from '@/views/desktop/Main/ChangePassword.vue';
+import VerifyEmail from '@/views/desktop/Main/VerifyEmail.vue';
+import DeleteAccount from '@/views/desktop/Main/DeleteAccount.vue';
 
 import { skapi } from '@/main';
 
