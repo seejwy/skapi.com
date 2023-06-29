@@ -75,7 +75,7 @@ function open() {
 }
 
 </script>
-<style lang="less" scoped>
+<style lang="less">
 @import '@/assets/variables.less';
 
 #navOverlay {

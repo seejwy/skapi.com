@@ -1,6 +1,6 @@
 <template lang="pug">
 NavBar(:is-parent-level="Object.keys(route.query).length === 0 || route.name === 'settings' || route.name === 'confirmation'" style='z-index: 10;background-color: var(--app-nav-bg-color);')
-    ul.inline-vertical-middle(@click='bypassSameRoute')
+    ul.inlineVerticalMiddle(@click='bypassSameRoute')
         li
             router-link(to="/" tag="li")
                 img(src="@/assets/img/logo.svg" style="width: 90px; height: 35px;")
