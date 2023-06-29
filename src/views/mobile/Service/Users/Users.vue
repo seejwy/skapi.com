@@ -298,7 +298,7 @@ let searchResult = inject('searchResult');
 let getMoreUsersQueue = null;
 
 async function getMoreUsers() {
-    if (serviceUsers.value?.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
+    if (fetchingData.value || serviceUsers.value?.endOfList && groupedUserList.value.length - 1 === currentSelectedUsersBatch.value) {
         return;
     }
     fetchingData.value = true;
