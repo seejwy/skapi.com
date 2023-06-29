@@ -7,7 +7,7 @@ form.form.container(@submit.prevent="verifyEmail" action="")
     p Verification Email has been sent. Please check your email and enter the verification code.
     .input
         label Verification Code
-        sui-input(:disabled="promiseRunning" type="text" placeholder="Verification Code" autocomplete="one-time-code" @input="(e) => verificationCode.value = e.target.value" :value="verificationCode.value")
+        sui-input(:disabled="promiseRunning" type="text" placeholder="Verification Code" inputmode="numeric" autocomplete="one-time-code" @input="(e) => verificationCode.value = e.target.value" :value="verificationCode.value" required)
     .input
         label Haven't got any code?
         sui-button.lineButton(type="button" @click="resendCode" :disabled="promiseRunning || secondsTillReady")
