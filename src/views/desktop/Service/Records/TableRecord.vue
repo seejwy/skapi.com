@@ -48,16 +48,15 @@ sui-overlay(ref='openRecord' @click='()=>openRecord.close()' style="background-c
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onBeforeUnmount, onMounted } from 'vue';
+import { inject, ref, onMounted } from 'vue';
 import { skapi } from '@/main';
-import { dateFormat, groupArray } from '@/helper/common'
-import { useRoute, useRouter } from 'vue-router';
+import { dateFormat } from '@/helper/common'
+import { useRoute } from 'vue-router';
 
 import ViewRecord from '@/views/desktop/Service/Records/ViewRecord.vue';
 import Icon from '@/components/Icon.vue';
 
 let route = useRoute();
-let router = useRouter();
 let serviceId = route.params.service;
 let viewRecord = ref(null);
 

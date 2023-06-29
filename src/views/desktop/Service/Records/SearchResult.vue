@@ -94,7 +94,7 @@ sui-overlay(ref='openRecord' @click="close" style="background-color:rgba(0 0 0 /
 </template>
 <!-- script below -->
 <script setup>
-import { inject, ref, watch, computed, nextTick, onBeforeUnmount } from 'vue';
+import { inject, ref, watch, computed, nextTick } from 'vue';
 import { state, skapi } from '@/main';
 import { dateFormat, groupArray } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';

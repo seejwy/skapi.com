@@ -172,7 +172,7 @@ sui-overlay(ref="confirmOverlay")
             sui-button.textButton(type="button") Yes
 </template>
 <script setup>
-import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, onBeforeUpdate, nextTick } from 'vue';
+import { inject, ref, reactive, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import { changeSearchCondition, getValidationMessage, placeholder } from '@/helper/users';
 import { skapi, state } from '@/main';
 import { groupArray, dateFormat } from '@/helper/common';
@@ -181,7 +181,6 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import Icon from '@/components/Icon.vue';
 import SearchNavBar from '@/components/SearchNavBar.vue';
 
-// const viewport = inject('viewport');
 let route = useRoute();
 let router = useRouter();
 let serviceId = route.params.service;
@@ -640,9 +639,6 @@ onMounted(() => {
     }
 });
 
-// 항상 데탑이므로 viewport을 watch 할 필요없음.
-// viewport 변수는 app.vue 에서 viewport 설정을 담고있는 변수를 provide() 에서 여기서 inject()로 읽고 있는 변수임.
-// watch([viewport, currentSelectedUsersBatch, currentSelectedUsersPage], () => {
 watch([currentSelectedUsersBatch, currentSelectedUsersPage], () => {
     selectedBlockedUsers.value = [];
     selectedUnblockedUsers.value = [];

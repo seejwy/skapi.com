@@ -10,7 +10,6 @@
 
 <script setup>
 import { inject } from 'vue';
-import { skapi, state } from '@/main';
 import { useRouter } from 'vue-router';
 
 let router = useRouter();

@@ -62,12 +62,13 @@ sui-button.signup {
 </style>
 
 <script setup>
-import NavBar from '@/components/desktop/Navbar.vue';
-import { ref, inject, onMounted, onUpdated, nextTick } from 'vue';
+import { ref, inject } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { skapi, state, awaitConnection } from '@/main';
+import { skapi, state } from '@/main';
 
+import NavBar from '@/components/desktop/Navbar.vue';
 import Login from './Login.vue';
+
 let router = useRouter();
 let route = useRoute();
 const overlay = ref(null);

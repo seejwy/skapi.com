@@ -57,15 +57,13 @@
 
 <script setup>
 import { inject, ref, onBeforeUnmount } from 'vue';
-import { skapi, state } from '@/main';
-import { useRoute, useRouter } from 'vue-router';
+import { skapi } from '@/main';
 
 import Icon from '@/components/Icon.vue';
 import SubmitButton from '@/components/SubmitButton.vue';
 
 let pageTitle = inject('pageTitle');
 
-let router = useRouter();
 const emit = defineEmits(['closeFeedBack']);
 const promiseRunning = ref(false);
 const error = ref(false);
@@ -76,7 +74,6 @@ let idx = 0;
 onBeforeUnmount(() => {
     pageTitle.value = 'skapi';
 });
-
 
 const inputStar = () => {
     promiseRunning.value = true;

@@ -115,14 +115,8 @@ let router = useRouter();
 let serviceId = route.params.service;
 const service = inject('service');
 
-let pageTitle = inject('pageTitle');
-
 // flag
 let fetchingData = inject('fetchingData');
-let isFabOpen = ref(false);
-
-// data
-let searchResult = inject('searchResult');
 
 // for paginators
 let fetchLimit = 50;

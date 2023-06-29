@@ -9,7 +9,6 @@
 
 <script setup>
 import { inject } from 'vue';
-import { skapi, state } from '@/main';
 import { useRouter } from 'vue-router';
 
 import Icon from '@/components/Icon.vue';

@@ -319,10 +319,10 @@ sui-overlay(ref="filesizeExceedsOverlay")
 
 <script setup>
 import { ref, nextTick, inject, onMounted } from 'vue';
-import { useRoute, onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { skapi, state } from '@/main';
 import { dateFormat, getSize } from '@/helper/common';
-import { tableList, getMoreRecords, recordTables, refreshTables } from '@/helper/records';
+import { tableList, recordTables, refreshTables } from '@/helper/records';
 import TagsInput from '@/components/TagsInput.vue';
 import JsonInput from '@/components/JsonInput.vue';
 import Icon from '@/components/Icon.vue';

@@ -48,8 +48,8 @@ div(v-else-if="state?.user")
 </template>
 
 <script setup>
-import { inject, ref, watch, nextTick, computed } from 'vue';
-import { state, skapi, awaitConnection } from '@/main';
+import { inject, ref, watch, nextTick } from 'vue';
+import { state, skapi } from '@/main';
 import { dateFormat, localeName } from '@/helper/common';
 import { useRoute, useRouter } from 'vue-router';
 
