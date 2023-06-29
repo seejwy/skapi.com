@@ -14,8 +14,8 @@ form.form.container(@submit.prevent="verifyEmail" action="")
             template(v-if="secondsTillReady") Code has been sent
             template(v-else) Re-send Code
         .error(v-if="verificationCode.error")
-                Icon warning
-                span {{ verificationCode.error }}
+            Icon warning
+            span {{ verificationCode.error }}
     .actions
         sui-button.lineButton(type="button" @click="close" :disabled="promiseRunning") Cancel
         SubmitButton(:loading="promiseRunning") Verify
@@ -33,7 +33,6 @@ import SubmitButton from '@/components/SubmitButton.vue';
 const router = useRouter();
 const route = useRoute();
 
-const emit = defineEmits(['close']);
 const verificationCode = ref({
     value: '',
     error: ''
@@ -43,29 +42,28 @@ const promiseRunning = ref(false);
 const verifyEmail = () => {
     verificationCode.value.error = '';
     promiseRunning.value = true;
-    skapi.verifyEmail({code: verificationCode.value.value}).then((res) => {
+    skapi.verifyEmail({ code: verificationCode.value.value }).then((res) => {
         state.user.email_verified = true;
         verificationCode.value.value = '';
         verificationCode.value.error = '';
 
-        if(state.viewport === 'desktop') emit('close');
-        else router.replace('');
+        router.replace('');
     }).catch((e) => {
-        console.log({e: e.code});
+        console.log({ e: e.code });
         console.log(e.code);
         verificationCode.value.error = 'Verification Failed';
-    }).finally(() => {    
+    }).finally(() => {
         promiseRunning.value = false;
     });
 }
 
 const secondsTillReady = ref(null);
 const resendCode = async () => {
-    if(secondsTillReady.value !== null) return false;
+    if (secondsTillReady.value !== null) return false;
 
     try {
         let countDown = setInterval(() => {
-            if(secondsTillReady.value > 0) secondsTillReady.value--;
+            if (secondsTillReady.value > 0) secondsTillReady.value--;
             else {
                 secondsTillReady.value = null;
                 clearInterval(countDown);
@@ -75,9 +73,9 @@ const resendCode = async () => {
         secondsTillReady.value = 30;
 
         await skapi.verifyEmail();
-    } catch(e) {
-        console.log({e:e});
-        if(e.code === 'LimitExceededException') {
+    } catch (e) {
+        console.log({ e: e });
+        if (e.code === 'LimitExceededException') {
             verificationCode.value.error = "Limit exceeded. Please try again later.";
         }
     }
@@ -86,23 +84,13 @@ const resendCode = async () => {
 const close = () => {
     verificationCode.value.value = '';
     verificationCode.value.error = '';
-
-    state.viewport === 'desktop' ? emit('close') : router.replace('');
+    router.replace('');
 }
-
-watch(() => state.viewport, (viewport) => {
-    if(viewport === 'desktop' && route.query.page === 'verify') {
-        router.replace('');
-    } else if(viewport === 'mobile') {
-        emit('close');
-    }
-});
 
 onBeforeUnmount(() => {
     router.replace('');
 });
 </script>
-
 <style lang="less" scoped>
 .form.container {
     text-align: center;
@@ -124,12 +112,15 @@ onBeforeUnmount(() => {
             color: rgba(0, 0, 0, 0.65);
             margin-bottom: 8px;
         }
+
         label {
             font-weight: bold;
         }
+
         sui-input {
             width: 100%;
         }
+
         sui-button {
             width: 100%;
         }
@@ -139,7 +130,7 @@ onBeforeUnmount(() => {
             margin-top: 4px;
 
             * {
-                display: inline;           
+                display: inline;
                 color: #F04E4E;
             }
 
@@ -148,9 +139,11 @@ onBeforeUnmount(() => {
             }
         }
     }
+
     .actions {
         margin-top: 40px;
     }
+
     .stepWrapper {
         margin-top: 56px;
 
@@ -182,7 +175,7 @@ onBeforeUnmount(() => {
 }
 
 .lineButton {
-    & ~ sui-button {
+    &~sui-button {
         margin-left: 16px;
     }
 }
